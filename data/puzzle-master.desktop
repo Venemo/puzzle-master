@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Name=Puzzle Master
+Icon=puzzle-master
+Exec=/opt/puzzle-master/puzzle-master
+X-Osso-Type=application/x-executable

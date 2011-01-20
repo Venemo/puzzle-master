@@ -1,0 +1,326 @@
+"DeployProject"
+{
+"VSVersion" = "3:701"
+"ProjectType" = "8:{AB322303-2255-48EF-A496-5904EB18DA55}"
+"IsWebType" = "8:FALSE"
+"ProjectName" = "8:puzzle-master-installer"
+"LanguageId" = "3:1033"
+"CodePage" = "3:1252"
+"SccProjectName" = "8:"
+"SccLocalPath" = "8:"
+"SccAuxPath" = "8:"
+"SccProvider" = "8:"
+    "Hierarchy"
+    {
+        "Entry"
+        {
+        "MsmKey" = "8:_553DEABE899940E1B8357CD3518127F4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7623F57A975546E09C22CDFA465C4E4D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9A6C06FC6FD245C8884FF6FF7ADD2CBF"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_EBC32C9C86384BDD807DC2CF711D8B0D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F86A7C015B644038925AFD8A83B5F2B6"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+    }
+    "Configurations"
+    {
+        "Debug"
+        {
+        "DisplayName" = "8:Debug"
+        "IsDebugOnly" = "11:TRUE"
+        "IsReleaseOnly" = "11:FALSE"
+        "OutputFilename" = "8:Debug\\puzzle-master-installer.cab"
+        "PackageFileSize" = "3:-2147483648"
+        "CabType" = "3:1"
+        "SignOutput" = "11:FALSE"
+        "CertificateHash" = "8:"
+        "TimeStampServer" = "8:"
+        }
+        "Release"
+        {
+        "DisplayName" = "8:Release"
+        "IsDebugOnly" = "11:FALSE"
+        "IsReleaseOnly" = "11:TRUE"
+        "OutputFilename" = "8:Release\\puzzle-master-installer.cab"
+        "PackageFileSize" = "3:-2147483648"
+        "CabType" = "3:1"
+        "SignOutput" = "11:FALSE"
+        "CertificateHash" = "8:"
+        "TimeStampServer" = "8:"
+        }
+    }
+    "Deployable"
+    {
+        "File"
+        {
+            "{BA458234-9B71-4F46-8107-E91156377184}:_7623F57A975546E09C22CDFA465C4E4D"
+            {
+            "SourcePath" = "8:C:\\Qt\\qt-everywhere-opensource-src-4.7.1\\plugins\\imageformats\\qjpeg4.dll"
+            "TargetName" = "8:qjpeg4.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_0FA2854CE8F34793995BC10E9345B5B0"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{BA458234-9B71-4F46-8107-E91156377184}:_9A6C06FC6FD245C8884FF6FF7ADD2CBF"
+            {
+            "SourcePath" = "8:C:\\Qt\\qt-everywhere-opensource-src-4.7.1\\lib\\QtGui4.dll"
+            "TargetName" = "8:QtGui4.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_67357C19D3FE44058ED66CF5B50BD741"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{BA458234-9B71-4F46-8107-E91156377184}:_EBC32C9C86384BDD807DC2CF711D8B0D"
+            {
+            "SourcePath" = "8:C:\\Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\ce\\dll\\armv4i\\msvcr90.dll"
+            "TargetName" = "8:msvcr90.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_67357C19D3FE44058ED66CF5B50BD741"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{BA458234-9B71-4F46-8107-E91156377184}:_F86A7C015B644038925AFD8A83B5F2B6"
+            {
+            "SourcePath" = "8:C:\\Qt\\qt-everywhere-opensource-src-4.7.1\\lib\\QtCore4.dll"
+            "TargetName" = "8:QtCore4.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_67357C19D3FE44058ED66CF5B50BD741"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+        }
+        "Folder"
+        {
+            "{F6DFDB62-1DD1-498B-89B7-27BAC542EE5A}:_614DA7DDD782474EA4452783ED3D44FA"
+            {
+            "Name" = "8:#1916"
+            "Condition" = "8:"
+            "Property" = "8:%CE11%"
+                "Folders"
+                {
+                }
+            }
+            "{D5B00AC1-E6C3-4CC5-90FF-8E0F53D9E5E0}:_67357C19D3FE44058ED66CF5B50BD741"
+            {
+            "DefaultLocation" = "8:%InstallDir%"
+            "Name" = "8:#1920"
+            "Condition" = "8:"
+            "Property" = "8:%InstallDir%"
+                "Folders"
+                {
+                    "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_CD30C7AF435842248240CEF08C5A52E0"
+                    {
+                    "Name" = "8:plugins"
+                    "Condition" = "8:"
+                    "Property" = "8:_1B280F8F4EBB416A8DA02BC7E366282D"
+                        "Folders"
+                        {
+                            "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_0FA2854CE8F34793995BC10E9345B5B0"
+                            {
+                            "Name" = "8:imageformats"
+                            "Condition" = "8:"
+                            "Property" = "8:_223691537FCB4FA5BD335D14D2130DFE"
+                                "Folders"
+                                {
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            "{F6DFDB62-1DD1-498B-89B7-27BAC542EE5A}:_FE168E28AE1B49A89EB642FB05457870"
+            {
+            "Name" = "8:#1911"
+            "Condition" = "8:"
+            "Property" = "8:%CE1%"
+                "Folders"
+                {
+                }
+            }
+        }
+        "Product"
+        {
+        "Name" = "8:Microsoft Visual Studio"
+        "ProductName" = "8:Puzzle Master"
+        "Manufacturer" = "8:Venemo"
+        "OSVersionMin" = "8:4.0"
+        "OSVersionMax" = "8:6.99"
+        "NoUninstall" = "11:FALSE"
+        "Compress" = "11:TRUE"
+        "CESetupDLL" = "8:"
+        }
+        "ProjectOutput"
+        {
+            "{605BE39E-5046-48BD-AEC0-63C3A46626D5}:_553DEABE899940E1B8357CD3518127F4"
+            {
+            "SourcePath" = "8:..\\puzzle-master\\build\\puzzle-master.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_67357C19D3FE44058ED66CF5B50BD741"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:0"
+            "OutputConfiguration" = "8:Release|Windows Mobile 6 Professional SDK (ARMV4I)"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{48348715-8162-396C-8B14-337F243C6631}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+        }
+        "Registry"
+        {
+            "HKLM"
+            {
+                "Keys"
+                {
+                    "{B1EBC968-6B66-4532-A885-748B79AF4477}:_599EC2A9BD664655ABA150094FBE1CF5"
+                    {
+                    "Name" = "8:Software"
+                    "Condition" = "8:"
+                        "Keys"
+                        {
+                            "{B1EBC968-6B66-4532-A885-748B79AF4477}:_21914E5E73184C4DBF6ED0DE882B3BA9"
+                            {
+                            "Name" = "8:Venemo"
+                            "Condition" = "8:"
+                                "Keys"
+                                {
+                                    "{B1EBC968-6B66-4532-A885-748B79AF4477}:_DBA63615115F4AAC99B8C68C10551674"
+                                    {
+                                    "Name" = "8:Puzzle Master"
+                                    "Condition" = "8:"
+                                        "Keys"
+                                        {
+                                        }
+                                        "Values"
+                                        {
+                                            "{C3684F64-58E2-4092-8E3C-D7483080DE5A}:_86D415AACDB346C6B204BA977FD84EF8"
+                                            {
+                                            "Name" = "8:Version"
+                                            "Condition" = "8:"
+                                            "ValueTypes" = "3:1"
+                                            "Value" = "8:1.0"
+                                            }
+                                        }
+                                    }
+                                }
+                                "Values"
+                                {
+                                }
+                            }
+                        }
+                        "Values"
+                        {
+                        }
+                    }
+                }
+            }
+            "HKCU"
+            {
+                "Keys"
+                {
+                }
+            }
+            "HKCR"
+            {
+                "Keys"
+                {
+                }
+            }
+            "HKU"
+            {
+                "Keys"
+                {
+                }
+            }
+            "HKPU"
+            {
+                "Keys"
+                {
+                }
+            }
+        }
+        "Shortcut"
+        {
+            "{971D45E9-E38C-49AC-B36E-4C5BEA533350}:_7AA5E8F79AB0439F95057D2DFC4AE7B8"
+            {
+            "Name" = "8:Puzzle Master"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "Target" = "8:_553DEABE899940E1B8357CD3518127F4"
+            "Folder" = "8:_614DA7DDD782474EA4452783ED3D44FA"
+            "WorkingFolder" = "8:_67357C19D3FE44058ED66CF5B50BD741"
+            }
+        }
+    }
+}

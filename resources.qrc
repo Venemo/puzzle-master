@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="image1.jpg">data/Bamboo-Zen.jpg</file>
+        <file alias="image2.jpg">data/Blue_Dock_by_dimage.jpg</file>
+        <file alias="image3.jpg">data/Solar_1920x1200_SunRiseTime.jpg</file>
+        <file>data/puzzle-master.png</file>
+        <file alias="image4.jpg">data/West_Wittering_-_All_along_the_Beach_Huts.jpg</file>
+        <file alias="image5.jpg">data/Squirrel.jpg</file>
+        <file alias="about.txt">data/about.txt</file>
+    </qresource>
+</RCC>
