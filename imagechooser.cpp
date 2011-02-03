@@ -16,6 +16,11 @@ QDataStream &operator>>(QDataStream &in, ImageItem &item)
     return in;
 }
 
+bool operator==(const ImageItem &item1, const ImageItem &item2)
+{
+    return item1.path == item2.path;
+}
+
 ImageChooser::ImageChooser(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ImageChooser)
@@ -75,15 +80,7 @@ void ImageChooser::addItem(const QString &path, const QString &caption, bool sel
     }
     else
     {
-        QMessageBox::warning(this,
-                             "Error",
-                             "This file is not a valid image file or not supported by your Qt installation.",
-                     #if defined(Q_WS_MAEMO_5)
-                             QMessageBox::Cancel
-                     #else
-                             QMessageBox::Ok
-                     #endif
-                             );
+        QMessageBox::warning(this, "Error", "This file is not a valid image file or not supported by your Qt installation.");
     }
 }
 
@@ -121,8 +118,15 @@ void ImageChooser::recoverItems()
 
         foreach (ImageItem item, items)
         {
-            // only showing the items but not saving them again
-            addItem(item, false, false);
+            if (QFile::exists(item.path))
+            {
+                // only showing the items but not saving them again
+                addItem(item, false, false);
+            }
+            else
+            {
+                items.removeOne(item);
+            }
         }
     }
     else
@@ -134,4 +138,12 @@ void ImageChooser::recoverItems()
         addItem(":/image4.jpg", "The beach huts by Greg Roberts", false);
         addItem(":/image5.jpg", QString::fromUtf8("Squirrel by Gábor Bányász"), false);
     }
+}
+
+void ImageChooser::on_btnOk_clicked()
+{
+    if (QFile::exists(map[ui->listWidget->selectedItems().at(0)]))
+        accept();
+    else
+        QMessageBox::warning(this, "Error", "This file doesn't exist. Please select a file that exists.");
 }

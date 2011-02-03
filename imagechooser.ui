@@ -79,22 +79,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>btnOk</sender>
-   <signal>clicked()</signal>
-   <receiver>ImageChooser</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>747</x>
-     <y>225</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>124</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>listWidget</sender>
    <signal>doubleClicked(QModelIndex)</signal>
    <receiver>ImageChooser</receiver>

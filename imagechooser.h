@@ -16,6 +16,7 @@ typedef struct
 
 QDataStream &operator<<(const QDataStream &out, const ImageItem &item);
 QDataStream &operator>>(const QDataStream &in, ImageItem &item);
+bool operator==(const ImageItem &item1, const ImageItem &item2);
 
 class ImageChooser : public QDialog
 {
@@ -38,6 +39,7 @@ public slots:
 
 private slots:
     void on_btnOther_clicked();
+    void on_btnOk_clicked();
 };
 
 #endif // IMAGECHOOSER_H
