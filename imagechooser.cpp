@@ -125,7 +125,7 @@ void ImageChooser::recoverItems()
             }
             else
             {
-                items.removeOne(item);
+                items.removeAll(item);
             }
         }
     }
