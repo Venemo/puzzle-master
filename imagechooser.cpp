@@ -2,29 +2,26 @@
 #include "imagechooser.h"
 #include "ui_imagechooser.h"
 
+#define SETTING_IMAGE_LIST "AdditionalImageList"
+
+QDataStream &operator<<(QDataStream &out, const ImageItem &item)
+{
+    out << item.icon << item.path << item.caption;
+    return out;
+}
+
+QDataStream &operator>>(QDataStream &in, ImageItem &item)
+{
+    in >> item.icon >> item.path >> item.caption;
+    return in;
+}
+
 ImageChooser::ImageChooser(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ImageChooser)
 {
     ui->setupUi(this);
-
-    QPixmap p1(":/image1.jpg");
-    QPixmap p2(":/image2.jpg");
-    QPixmap p3(":/image3.jpg");
-    QPixmap p4(":/image4.jpg");
-    QPixmap p5(":/image5.jpg");
-    QListWidgetItem *item1 = new QListWidgetItem(QIcon(p1.scaled(64, 64, Qt::KeepAspectRatio)), "Bamboo Zen by MissNysha", ui->listWidget);
-    QListWidgetItem *item2 = new QListWidgetItem(QIcon(p2.scaled(64, 64, Qt::KeepAspectRatio)), "Blue Dock by dimage", ui->listWidget);
-    QListWidgetItem *item3 = new QListWidgetItem(QIcon(p3.scaled(64, 64, Qt::KeepAspectRatio)), "Solar by the Fedora project", ui->listWidget);
-    QListWidgetItem *item4 = new QListWidgetItem(QIcon(p4.scaled(64, 64, Qt::KeepAspectRatio)), "The beach huts by Greg Roberts", ui->listWidget);
-    QListWidgetItem *item5 = new QListWidgetItem(QIcon(p5.scaled(64, 64, Qt::KeepAspectRatio)), QString::fromUtf8("Squirrel by Gábor Bányász"), ui->listWidget);
-    ui->listWidget->setCurrentItem(item1);
-
-    map[item1] = ":/image1.jpg";
-    map[item2] = ":/image2.jpg";
-    map[item3] = ":/image3.jpg";
-    map[item4] = ":/image4.jpg";
-    map[item5] = ":/image5.jpg";
+    recoverItems();
 
 #if defined(Q_WS_MAEMO_5)
     setFixedHeight(250);
@@ -42,6 +39,7 @@ ImageChooser::ImageChooser(QWidget *parent) :
 
 ImageChooser::~ImageChooser()
 {
+    saveItems();
     delete ui;
 }
 
@@ -59,7 +57,81 @@ void ImageChooser::on_btnOther_clicked()
     if (str.isEmpty())
         return;
 
-    QPixmap p(str);
-    QListWidgetItem *item = new QListWidgetItem(QIcon(p.scaled(64, 64, Qt::KeepAspectRatio)), str, ui->listWidget);
-    map[item] = str;
+    addItem(str, str, true);
+}
+
+void ImageChooser::addItem(const QString &path, const QString &caption, bool select, bool save)
+{
+    QPixmap pix(path);
+
+    if (!pix.isNull())
+    {
+        ImageItem item;
+        item.icon = QIcon(pix.scaled(64, 64, Qt::KeepAspectRatio));
+        item.path = path;
+        item.caption = caption;
+
+        addItem(item, select, save);
+    }
+    else
+    {
+        QMessageBox::warning(this,
+                             "Error",
+                             "This file is not a valid image file or not supported by your Qt installation.",
+                     #if defined(Q_WS_MAEMO_5)
+                             QMessageBox::Cancel
+                     #else
+                             QMessageBox::Ok
+                     #endif
+                             );
+    }
+}
+
+void ImageChooser::addItem(const ImageItem &item, bool select, bool save)
+{
+    if (save)
+        items.append(item);
+
+    QListWidgetItem *widgetItem = new QListWidgetItem(item.icon, item.caption, ui->listWidget);
+    map[widgetItem] = item.path;
+
+    if (select)
+        ui->listWidget->setCurrentItem(widgetItem);
+}
+
+void ImageChooser::saveItems()
+{
+    // serializing to QSettings
+    QByteArray array;
+    QDataStream stream(&array, QIODevice::WriteOnly);
+    stream << items;
+    QSettings s;
+    s.setValue(SETTING_IMAGE_LIST, array);
+}
+
+void ImageChooser::recoverItems()
+{
+    QSettings s;
+    if (s.contains(SETTING_IMAGE_LIST))
+    {
+        // deserializing from QSettings
+        QByteArray array = s.value(SETTING_IMAGE_LIST).toByteArray();
+        QDataStream stream(&array, QIODevice::ReadOnly);
+        stream >> items;
+
+        foreach (ImageItem item, items)
+        {
+            // only showing the items but not saving them again
+            addItem(item, false, false);
+        }
+    }
+    else
+    {
+        // adding the default images
+        addItem(":/image1.jpg", "Bamboo Zen by MissNysha", false);
+        addItem(":/image2.jpg", "Blue Dock by dimage", false);
+        addItem(":/image3.jpg", "Solar by the Fedora project", false);
+        addItem(":/image4.jpg", "The beach huts by Greg Roberts", false);
+        addItem(":/image5.jpg", QString::fromUtf8("Squirrel by Gábor Bányász"), false);
+    }
 }
