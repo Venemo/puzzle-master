@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     timer->setInterval(1000);
     connect(timer, SIGNAL(timeout()), this, SLOT(elapsedSecond()));
+    setFocus();
 
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     connect(accelerometer, SIGNAL(readingChanged()), this, SLOT(accelerometerReadingChanged()));
@@ -35,11 +36,23 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::focusInEvent(QFocusEvent *event)
+{
+    if (_isPlaying)
+        timer->start();
+    QMainWindow::focusInEvent(event);
+}
+
+void MainWindow::focusOutEvent(QFocusEvent *event)
+{
+    if (timer->isActive())
+        timer->stop();
+    QMainWindow::focusOutEvent(event);
+}
+
 void MainWindow::on_actionHigh_scores_triggered()
 {
-    timer->stop();
     highscores->exec();
-    timer->start();
 }
 
 void MainWindow::on_btnOpenImage_clicked()
@@ -193,9 +206,7 @@ void MainWindow::endGame()
 
 void MainWindow::on_actionSettings_triggered()
 {
-    timer->stop();
     settings->exec();
-    timer->start();
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     if (SettingsDialog::useAccelerometer() && !accelerometer->isActive())
         accelerometer->start();

@@ -31,6 +31,10 @@ class MainWindow : public QMainWindow
     void initializeGame();
     void endGame();
 
+protected:
+    void focusOutEvent(QFocusEvent *event);
+    void focusInEvent(QFocusEvent *event);
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
