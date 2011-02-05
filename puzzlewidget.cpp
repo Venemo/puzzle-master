@@ -8,7 +8,7 @@ static int randomInt(int low, int high)
 }
 
 PuzzleWidget::PuzzleWidget(const QPixmap &pixmap, const QSize &unitSize, QWidget *parent) :
-        QLabel(parent), PuzzlePiece(), _unit(unitSize), _dragging(false), _canMerge(false), _tolerance(5), _weight(randomInt(50, 950) / 1000.0)
+    QLabel(parent), PuzzlePiece(), _unit(unitSize), _dragging(false), _canMerge(false), _tolerance(5), _weight(randomInt(50, 950) / 1000.0)
 {
     setPixmap(pixmap);
     setMask(pixmap.mask());
@@ -63,11 +63,15 @@ bool PuzzleWidget::merge(PuzzlePiece *piece)
         {
             _dragging = false;
             _canMerge = false;
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
             QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", this);
             anim->setEndValue(QPoint(0, 0));
             anim->setDuration(1000);
             connect(anim, SIGNAL(finished()), this, SIGNAL(noNeighbours()));
             anim->start(QAbstractAnimation::DeleteWhenStopped);
+#else
+            setPosition(0, 0);
+#endif
         }
 
         return true;
@@ -145,19 +149,30 @@ void PuzzleWidget::moveEvent(QMoveEvent *ev)
 
 void PuzzleWidget::shuffle(QList<PuzzleWidget *> *list, int x, int y, int width, int height)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
+#endif
     for (int i = 0; i < x * y; i++)
     {
         PuzzleWidget *widget = (PuzzleWidget*)list->operator [](i);
+        QPoint newPos(randomInt(0, width) - widget->position().x() * widget->_unit.width(), randomInt(0, height) - widget->position().y() * widget->_unit.height());
 
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+        connect(group, SIGNAL(finished()), widget, SLOT(enableMerge()));
         QPropertyAnimation *anim = new QPropertyAnimation(widget, "pos", group);
-        anim->setEndValue(QPoint(randomInt(0, width) - widget->position().x() * widget->_unit.width(), randomInt(0, height) - widget->position().y() * widget->_unit.height()));
+        anim->setEndValue(newPos);
         anim->setDuration(1500);
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutInBack));
         group->addAnimation(anim);
         if (randomInt(0, 10) > 5)
             widget->raise();
-        connect(group, SIGNAL(finished()), widget, SLOT(enableMerge()));
+#else
+        widget->setPosition(newPos);
+#endif
+
     }
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     group->start(QAbstractAnimation::DeleteWhenStopped);
+#endif
+
 }

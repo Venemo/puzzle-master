@@ -150,18 +150,8 @@ void MainWindow::accelerometerReadingChanged()
 
 void MainWindow::onWon()
 {
-    // stopping the widget from moving
-    PuzzleWidget *widget = (PuzzleWidget*) ui->frame->children().operator [](0);
-    widget->setMerge(false);
-
     // ending the game
     endGame();
-
-    // moving the widget to 0,0
-    QPropertyAnimation *anim = new QPropertyAnimation(widget, "pos", this);
-    anim->setEndValue(QPoint(0, 0));
-    anim->setDuration(1000);
-    anim->start(QAbstractAnimation::DeleteWhenStopped);
 
     // Showing congratulations
 #if defined(Q_WS_MAEMO_5)
