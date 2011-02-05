@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(elapsedSecond()));
     setFocus();
 
+    board->addItem(new QGraphicsTextItem("To start playing, please press the 'New game' button!"));
     ui->graphicsView->setScene(board);
     ui->graphicsView->setViewport(new QGLWidget(this));
 }
@@ -78,6 +79,7 @@ void MainWindow::on_btnOpenImage_clicked()
             }
 
             board = new JigsawPuzzleBoard(ui->graphicsView);
+            board->setBackgroundBrush(QBrush(Qt::white));
             connect(board, SIGNAL(loadProgressChanged(int)), progress, SLOT(setValue(int)));
             connect(board, SIGNAL(gameStarted()), progress, SLOT(deleteLater()));
             connect(board, SIGNAL(gameWon()), this, SLOT(onWon()));
