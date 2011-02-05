@@ -26,6 +26,10 @@ JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, const QSize &unitSize,
     _tolerance(5),
     _weight(randomInt(50, 950) / 1000.0)
 {
+    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect();
+    effect->setBlurRadius(20);
+    effect->setOffset(0);
+    this->setGraphicsEffect(effect);
 }
 
 bool JigsawPuzzleItem::canMerge() const
@@ -202,34 +206,32 @@ void JigsawPuzzleItem::verifyPosition()
     }
 }
 
-void JigsawPuzzleItem::shuffle(QList<JigsawPuzzleItem *> *list, int x, int y, int width, int height)
+void JigsawPuzzleItem::shuffle(QList<JigsawPuzzleItem *> *list, int width, int height)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
 #endif
-    for (int i = 0; i < x * y; i++)
+    foreach (JigsawPuzzleItem *item, *list)
     {
-        JigsawPuzzleItem *widget = (JigsawPuzzleItem*)list->operator [](i);
         QPoint newPos(randomInt(0, width), randomInt(0, height));
 
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-        connect(group, SIGNAL(finished()), widget, SLOT(enableMerge()));
-        QPropertyAnimation *anim = new QPropertyAnimation(widget, "pos", group);
+        connect(group, SIGNAL(finished()), item, SLOT(enableMerge()));
+        QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
         anim->setEndValue(newPos);
         anim->setDuration(1500);
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutInBack));
         group->addAnimation(anim);
         if (randomInt(0, 10) > 5)
-            widget->raise();
+            item->raise();
 #else
-        widget->setPuzzleCoordinates(newPos);
+        item->setPos(newPos);
 #endif
 
     }
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     group->start(QAbstractAnimation::DeleteWhenStopped);
 #endif
-
 }
 
 void JigsawPuzzleItem::raise()
@@ -259,4 +261,28 @@ void JigsawPuzzleItem::raise()
         setZValue(max);
     }
 
+}
+
+void JigsawPuzzleItem::assemble(QList<JigsawPuzzleItem *> *list)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    QParallelAnimationGroup *group = new QParallelAnimationGroup();
+#endif
+    foreach (JigsawPuzzleItem *item, *list)
+    {
+        QPointF newPos(item->puzzleCoordinates().x() * item->_unit.width(), item->puzzleCoordinates().y() * item->_unit.height());
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+        QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
+        anim->setEndValue(newPos);
+        anim->setDuration(2000);
+        anim->setEasingCurve(QEasingCurve(QEasingCurve::OutInBack));
+        group->addAnimation(anim);
+#else
+        widget->setPos(newPos);
+#endif
+
+    }
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    group->start(QAbstractAnimation::DeleteWhenStopped);
+#endif
 }

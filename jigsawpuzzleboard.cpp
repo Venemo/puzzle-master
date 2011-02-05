@@ -45,18 +45,21 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
     PuzzleItem::setNeighbours(&list1, cols, rows);
     emit gameStarted();
 
-    JigsawPuzzleItem::shuffle(&list2, cols, rows, width() - unit.width() - 1, height() - unit.height() - 1);
+    JigsawPuzzleItem::shuffle(&list2, width() - unit.width() - 1, height() - unit.height() - 1);
 }
 
 void JigsawPuzzleBoard::surrenderGame()
 {
-    foreach (QGraphicsItem *item, items())
+    QList<JigsawPuzzleItem*> list2;
+    foreach (QGraphicsItem *gi, items())
     {
-        if (JigsawPuzzleItem *widget = dynamic_cast<JigsawPuzzleItem*>(item))
+        if (JigsawPuzzleItem *item = dynamic_cast<JigsawPuzzleItem*>(gi))
         {
-            widget->setMerge(false);
+            item->setMerge(false);
+            list2.append(item);
         }
     }
+    JigsawPuzzleItem::assemble(&list2);
 }
 
 void JigsawPuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)
