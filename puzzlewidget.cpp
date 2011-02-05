@@ -1,17 +1,32 @@
 #include <QtGui>
 #include "puzzlewidget.h"
 
+QPointF operator*(const QPoint &point, const QSize &size)
+{
+    return QPointF(point.x() * size.width(), point.y() * size.height());
+}
+
 static int randomInt(int low, int high)
 {
     // Random number between low and high
     return qrand() % ((high + 1) - low) + low;
 }
 
-PuzzleWidget::PuzzleWidget(const QPixmap &pixmap, const QSize &unitSize, QWidget *parent) :
-    QLabel(parent), PuzzlePiece(), _unit(unitSize), _dragging(false), _canMerge(false), _tolerance(5), _weight(randomInt(50, 950) / 1000.0)
+static int max(int i, int j)
 {
-    setPixmap(pixmap);
-    setMask(pixmap.mask());
+    return i > j? i : j;
+}
+
+PuzzleWidget::PuzzleWidget(const QPixmap &pixmap, const QSize &unitSize, QGraphicsItem *parent, QGraphicsScene *scene) :
+    QObject(scene),
+    QGraphicsPixmapItem(pixmap, parent, scene),
+    PuzzlePiece(),
+    _unit(unitSize),
+    _dragging(false),
+    _canMerge(false),
+    _tolerance(5),
+    _weight(randomInt(50, 950) / 1000.0)
+{
 }
 
 bool PuzzleWidget::canMerge() const
@@ -29,6 +44,11 @@ void PuzzleWidget::enableMerge()
     setMerge(true);
 }
 
+void PuzzleWidget::disableMerge()
+{
+    setMerge(false);
+}
+
 double PuzzleWidget::weight()
 {
     return _weight;
@@ -40,23 +60,52 @@ bool PuzzleWidget::merge(PuzzlePiece *piece)
     if (PuzzlePiece::merge(piece))
     {
         w->_canMerge = _canMerge = false;
-        //_weight *= sqrt(w->_weight);
-        QPixmap pix(pixmap()->width(), pixmap()->height());
+
+        QPoint vector = w->position() - position();
+        int x1, x2, y1, y2, u1, v1;
+        if (vector.x() >= 0)
+        {
+            x1 = 0;
+            u1 = 0;
+            x2 = vector.x() * _unit.width();
+        }
+        else
+        {
+            x1 = - vector.x() * _unit.width();
+            u1 = - vector.x();
+            x2 = 0;
+        }
+        if (vector.y() >= 0)
+        {
+            y1 = 0;
+            v1 = 0;
+            y2 = vector.y() * _unit.height();
+        }
+        else
+        {
+            y1 = - vector.y() * _unit.height();
+            v1 = - vector.y();
+            y2 = 0;
+        }
+
+        QPixmap pix(max(x1 + pixmap().width(), x2 + w->pixmap().width()),
+                    max(y1 + pixmap().height(), y2 + w->pixmap().height()));
         pix.fill(Qt::transparent);
 
         QPainter p;
         p.begin(&pix);
         p.setClipping(false);
 
-        p.drawPixmap(0, 0, *pixmap());
-        p.drawPixmap(0, 0, *w->pixmap());
+        p.drawPixmap(x1, y1, pixmap());
+        p.drawPixmap(x2, y2, w->pixmap());
 
         p.end();
-
         setPixmap(pix);
-        setMask(pix.mask());
-
-        w->deleteLater();
+        setPosition(position() - QPoint(u1, v1));
+        setPos(pos().x() - x1, pos().y() - y1);
+        _dragStart = _dragStart + QPointF(x1, y1);
+        w->hide();
+        delete w;
         _canMerge = true;
 
         if (neighbours().count() == 0)
@@ -71,6 +120,7 @@ bool PuzzleWidget::merge(PuzzlePiece *piece)
             anim->start(QAbstractAnimation::DeleteWhenStopped);
 #else
             setPosition(0, 0);
+            emit noNeighbours();
 #endif
         }
 
@@ -79,7 +129,7 @@ bool PuzzleWidget::merge(PuzzlePiece *piece)
     return false;
 }
 
-void PuzzleWidget::mousePressEvent(QMouseEvent *event)
+void PuzzleWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && _canMerge)
     {
@@ -89,61 +139,67 @@ void PuzzleWidget::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void PuzzleWidget::mouseReleaseEvent(QMouseEvent *event)
+void PuzzleWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
         _dragging = false;
 }
 
-void PuzzleWidget::mouseMoveEvent(QMouseEvent *event)
+void PuzzleWidget::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (_dragging)
     {
-        setGeometry(QRect(geometry().topLeft() + event->pos() - _dragStart, rect().size()));
-        //qDebug() << "moved" << position();
+        setPos(pos() + event->pos() - _dragStart);
 
         if (_canMerge)
         {
             foreach (PuzzlePiece *p, neighbours())
             {
                 PuzzleWidget *w = (PuzzleWidget*) p;
-                QPoint posDiff = pos() - w->pos();
+                QPointF posDiff1 = pos() - w->pos();
+                QPointF posDiff2 = (position() * _unit - w->position() * _unit);
+                QPointF relative = posDiff1 - posDiff2;
 
-                if (abs(posDiff.x()) < _tolerance && abs(posDiff.y()) < _tolerance)
+                if (abs(relative.x()) < _tolerance && abs(relative.y()) < _tolerance)
                 {
                     merge(w);
                 }
             }
+
+            verifyPosition();
         }
     }
 }
 
-void PuzzleWidget::moveEvent(QMoveEvent *ev)
+void PuzzleWidget::verifyPosition()
 {
-    QLabel::moveEvent(ev);
+    int x = pos().x();// + position().x() * _unit.width();
+    int maxX = scene()->width() - _unit.width() / 2;
+    int minX = - pixmap().width() + _unit.width() / 2;
 
-    int x = (pos().x() + mask().boundingRect().x());
-    int maxX = parentWidget()->width() - _unit.width() / 2;
-    int minX = - _unit.width() / 2;
-    int y = (pos().y() + mask().boundingRect().y());
-    int maxY = parentWidget()->height() - _unit.height() / 2;
-    int minY = - _unit.height() / 2;
+    int y = pos().y();// + position().y() * _unit.height();
+    int maxY = scene()->height() - _unit.height() / 2;
+    int minY = - pixmap().height() + _unit.height() / 2;
 
-    int xx = mask().boundingRect().width() - _unit.width();
-    int yy = mask().boundingRect().height() - _unit.height();
-
-    if (!(x < maxX && x > (minX - xx) && y < maxY && y > (minY - yy)))
+    if (!(x < maxX && x > (minX) && y < maxY && y > (minY)))
     {
         int pX = x >= maxX ? pos().x() - 50 : (x <= minX ? pos().x() + 50 : pos().x());
         int pY = y >= maxY ? pos().y() - 50 : (y <= minY ? pos().y() + 50 : pos().y());
-        _canMerge = false;
         _dragging = false;
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
         QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", this);
-        anim->setEndValue(QPoint(pX, pY));
+        anim->setEndValue(QPointF(pX, pY));
         anim->setDuration(200);
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutBounce));
-        connect(anim, SIGNAL(finished()), this, SLOT(enableMerge()));
+        if (canMerge())
+        {
+            disableMerge();
+            connect(anim, SIGNAL(finished()), this, SLOT(enableMerge()));
+        }
         anim->start(QAbstractAnimation::DeleteWhenStopped);
+#else
+        setPos(pX, pY);
+#endif
     }
 }
 
@@ -155,7 +211,7 @@ void PuzzleWidget::shuffle(QList<PuzzleWidget *> *list, int x, int y, int width,
     for (int i = 0; i < x * y; i++)
     {
         PuzzleWidget *widget = (PuzzleWidget*)list->operator [](i);
-        QPoint newPos(randomInt(0, width) - widget->position().x() * widget->_unit.width(), randomInt(0, height) - widget->position().y() * widget->_unit.height());
+        QPoint newPos(randomInt(0, width), randomInt(0, height));
 
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
         connect(group, SIGNAL(finished()), widget, SLOT(enableMerge()));
@@ -174,5 +230,34 @@ void PuzzleWidget::shuffle(QList<PuzzleWidget *> *list, int x, int y, int width,
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     group->start(QAbstractAnimation::DeleteWhenStopped);
 #endif
+
+}
+
+void PuzzleWidget::raise()
+{
+    QGraphicsItem *maxItem = this;
+    foreach (QGraphicsItem *item, scene()->items())
+    {
+        if (item->zValue() > maxItem->zValue())
+        {
+            maxItem = item;
+        }
+    }
+    if (maxItem != this)
+    {
+        qreal max = maxItem->zValue();
+        foreach (QGraphicsItem *item, scene()->items())
+        {
+            if (item->zValue() > this->zValue())
+            {
+                item->setZValue(item->zValue() - 1);
+            }
+            else if (item != this && item->zValue() == this->zValue())
+            {
+                item->stackBefore(this);
+            }
+        }
+        setZValue(max);
+    }
 
 }

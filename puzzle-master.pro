@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui
+QT += core gui opengl
 
 TARGET = puzzle-master
 TEMPLATE = app
@@ -25,7 +25,9 @@ SOURCES += \
     puzzlewidget.cpp \
     settingsdialog.cpp \
     imagechooser.cpp \
-    highscoresdialog.cpp
+    highscoresdialog.cpp \
+    jigsawpuzzleboard.cpp \
+    puzzleboard.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -33,7 +35,9 @@ HEADERS += \
     puzzlewidget.h \
     settingsdialog.h \
     imagechooser.h \
-    highscoresdialog.h
+    highscoresdialog.h \
+    jigsawpuzzleboard.h \
+    puzzleboard.h
 
 FORMS += \
     mainwindow.ui \
@@ -62,4 +66,9 @@ win32 {
 }
 wince {
     RC_FILE = puzzle-master.rc
+}
+
+maemo5 {
+    target.path = /opt/usr/bin
+    INSTALLS += target
 }

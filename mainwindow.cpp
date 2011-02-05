@@ -1,23 +1,23 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "puzzlewidget.h"
-#include  <QtGui>
+#include "jigsawpuzzleboard.h"
+#include <QtGui>
+#include <QGLWidget>
 
 #if defined(Q_WS_MAEMO_5)
 #include <QtMaemo5>
 #endif
 
 MainWindow::MainWindow(QWidget *parent) :
-        QMainWindow(parent),
-        ui(new Ui::MainWindow),
-        timer(new QTimer(this)),
-        settings(new SettingsDialog(this)),
-        chooser(new ImageChooser(this)),
-        highscores(new HighScoresDialog(this)),
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-        accelerometer(new QtMobility::QAccelerometer(this)),
-#endif
-        _isPlaying(false)
+    QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    timer(new QTimer(this)),
+    settings(new SettingsDialog(this)),
+    chooser(new ImageChooser(this)),
+    highscores(new HighScoresDialog(this)),
+    board(new JigsawPuzzleBoard(this)),
+    _isPlaying(false)
 {
     ui->setupUi(this);
     ui->lblTime->hide();
@@ -26,9 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(elapsedSecond()));
     setFocus();
 
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-    connect(accelerometer, SIGNAL(readingChanged()), this, SLOT(accelerometerReadingChanged()));
-#endif
+    ui->graphicsView->setScene(board);
+    ui->graphicsView->setViewport(new QGLWidget(this));
 }
 
 MainWindow::~MainWindow()
@@ -66,54 +65,26 @@ void MainWindow::on_btnOpenImage_clicked()
             return;
 
         _isPlaying = true;
-        qDeleteAll(ui->frame->children());
-
-        QProgressDialog *progress = new QProgressDialog(this);
-        progress->setWindowTitle("Generating puzzle...");
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-#else
-        progress->setFixedWidth(450);
-#endif
-        progress->setMaximum(rows * cols);
-        progress->show();
-
-        QList<PuzzlePiece*> list1;
-        QList<PuzzleWidget*> list2;
 
         QPixmap pixmap;
-        if (pixmap.load(chooser->getPictureFile()))
+        if (pixmap.load(chooser->getPictureFile()) && !pixmap.isNull())
         {
-            pixmap = pixmap.scaled(ui->frame->width(), ui->frame->height(), Qt::KeepAspectRatio);
-            QSize unit(pixmap.width() / cols, pixmap.height() / rows);
-            QPainter p;
+            QProgressDialog *progress = new QProgressDialog("Generating puzzle...", "Cancel", 0, rows * cols, this);
+            progress->setWindowTitle("Generating puzzle...");
+            progress->show();
 
-            for (int i = 0; i < cols; i++)
+            if (board != 0)
             {
-                for (int j = 0; j < rows; j++)
-                {
-                    QPixmap px(pixmap.width(), pixmap.height());
-                    px.fill(Qt::transparent);
-                    p.begin(&px);
-                    p.setRenderHint(QPainter::Antialiasing);
-
-                    QPainterPath clip;
-                    clip.addRect(i * unit.width(), j * unit.height(), unit.width(), unit.height());
-                    p.setClipPath(clip);
-                    p.setClipping(true);
-
-                    p.drawPixmap(0, 0, pixmap);
-                    p.end();
-                    PuzzleWidget *w = new PuzzleWidget(px, unit, ui->frame);
-                    w->setPosition(QPoint(i, j));
-                    list1.append(w);
-                    list2.append(w);
-                    connect(w, SIGNAL(noNeighbours()), this, SLOT(onWon()));
-                    w->show();
-                    progress->setValue(i * rows + j + 1);
-                }
+                board->deleteLater();
             }
-            PuzzlePiece::setNeighbours(&list1, cols, rows);
-            PuzzleWidget::shuffle(&list2, cols, rows, ui->frame->width() - unit.width() - 1, ui->frame->height() - unit.height() - 1);
+
+            board = new JigsawPuzzleBoard(ui->graphicsView);
+            connect(board, SIGNAL(loadProgressChanged(int)), progress, SLOT(setValue(int)));
+            connect(board, SIGNAL(gameStarted()), progress, SLOT(deleteLater()));
+            connect(board, SIGNAL(gameWon()), this, SLOT(onWon()));
+            ui->graphicsView->setScene(board);
+            board->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
+            board->startGame(pixmap, rows, cols);
 
             initializeGame();
         }
@@ -122,31 +93,14 @@ void MainWindow::on_btnOpenImage_clicked()
             QMessageBox::warning(this, "Error", "Could not load the selected image.");
             _isPlaying = false;
         }
-
-        progress->deleteLater();
-
     }
     else if (QMessageBox::Yes == QMessageBox::question(this, "Are you sure?", "Are you sure you want to abandon this game?", QMessageBox::Yes, QMessageBox::Cancel))
     {
-        ui->lblTime->hide();
-        qDeleteAll(ui->frame->children());
+        board->surrenderGame();
         endGame();
     }
 }
 
-void MainWindow::accelerometerReadingChanged()
-{
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-    QtMobility::QAccelerometerReading *reading = accelerometer->reading();
-    //qDebug() << reading->x() << reading->y() << reading->z();
-    for (int i = 0; i < ui->frame->children().count(); i++)
-    {
-        PuzzleWidget *widget = (PuzzleWidget*) ui->frame->children().operator [](i);
-        if (widget->canMerge())
-            widget->move(widget->pos().x() - reading->x() * widget->weight() / 2, widget->pos().y() + reading->y() * widget->weight() / 2);
-    }
-#endif
-}
 
 void MainWindow::onWon()
 {
@@ -173,10 +127,7 @@ void MainWindow::initializeGame()
 
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     if (SettingsDialog::useAccelerometer())
-    {
-        accelerometer->connectToBackend();
-        accelerometer->start();
-    }
+        board->enableAccelerometer();
 #endif
     _isPlaying = true;
     ui->btnOpenImage->setText("Surrender");
@@ -190,7 +141,7 @@ void MainWindow::endGame()
     ui->btnOpenImage->setText("New game...");
     _isPlaying = false;
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-    accelerometer->stop();
+    board->disableAccelerometer();
 #endif
 }
 
@@ -198,10 +149,10 @@ void MainWindow::on_actionSettings_triggered()
 {
     settings->exec();
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-    if (SettingsDialog::useAccelerometer() && !accelerometer->isActive())
-        accelerometer->start();
-    else if (!SettingsDialog::useAccelerometer() && accelerometer->isActive())
-        accelerometer->stop();
+    if (SettingsDialog::useAccelerometer() && !board->isAccelerometerActive())
+        board->enableAccelerometer();
+    else if (!SettingsDialog::useAccelerometer() && board->isAccelerometerActive())
+        board->disableAccelerometer();
 #endif
 }
 
@@ -214,9 +165,9 @@ void MainWindow::about()
     QString str = QString::fromUtf8(file.readAll().constData());
     file.close();
     QMessageBox::information(this, "About", str, QMessageBox::Ok
-#if defined(Q_WS_MAEMO_5)
+                         #if defined(Q_WS_MAEMO_5)
                              , QMessageBox::Cancel // So the user can close it by tapping on the blurred area
-#endif
+                         #endif
                              );
     if (wasActive)
         timer->start();

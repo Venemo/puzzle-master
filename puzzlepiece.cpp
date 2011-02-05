@@ -69,6 +69,7 @@ void PuzzlePiece::setNeighbours(QList<PuzzlePiece *> *list, int x, int y)
     if (list->count() != x * y)
     {
         qDebug() << "The Puzzle piece list was inconsistent with x and y";
+        return;
     }
 
     foreach(PuzzlePiece *p, *list)

@@ -5,10 +5,9 @@
 #include "settingsdialog.h"
 #include "imagechooser.h"
 #include "highscoresdialog.h"
+#include "puzzleboard.h"
 
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-#include <QAccelerometer>
-#endif
+
 
 namespace Ui {
     class MainWindow;
@@ -22,9 +21,7 @@ class MainWindow : public QMainWindow
     SettingsDialog *settings;
     ImageChooser *chooser;
     HighScoresDialog *highscores;
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-    QtMobility::QAccelerometer *accelerometer;
-#endif
+    PuzzleBoard *board;
     bool _isPlaying;
     int _secsElapsed;
 
@@ -44,7 +41,6 @@ private slots:
     void on_actionSettings_triggered();
     void on_btnOpenImage_clicked();
     void onWon();
-    void accelerometerReadingChanged();
     void about();
     void elapsedSecond();
 };
