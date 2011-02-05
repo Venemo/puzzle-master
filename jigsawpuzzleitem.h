@@ -1,12 +1,12 @@
-#ifndef PUZZLEWIDGET_H
-#define PUZZLEWIDGET_H
+#ifndef JIGSAWPUZZLEITEM_H
+#define JIGSAWPUZZLEITEM_H
 
 #include <QtGui>
 #include "puzzlepiece.h"
 
 QPointF operator*(const QPoint &point, const QSize &size);
 
-class PuzzleWidget : public QObject, public QGraphicsPixmapItem, public PuzzlePiece
+class JigsawPuzzleItem : public QObject, public QGraphicsPixmapItem, public PuzzlePiece
 {
     Q_OBJECT
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
@@ -18,12 +18,12 @@ class PuzzleWidget : public QObject, public QGraphicsPixmapItem, public PuzzlePi
     double _weight;
 
 public:
-    explicit PuzzleWidget(const QPixmap &pixmap,  const QSize &unitSize, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+    explicit JigsawPuzzleItem(const QPixmap &pixmap,  const QSize &unitSize, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
     virtual bool merge(PuzzlePiece *piece);
     bool canMerge() const;
     void setMerge(bool canMerge);
     double weight();
-    static void shuffle(QList<PuzzleWidget*> *list, int x, int y, int width, int height);
+    static void shuffle(QList<JigsawPuzzleItem*> *list, int x, int y, int width, int height);
     void raise();
     void verifyPosition();
 
@@ -41,4 +41,4 @@ protected:
 
 };
 
-#endif // PUZZLEWIDGET_H
+#endif // JIGSAWPUZZLEITEM_H

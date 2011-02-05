@@ -10,7 +10,7 @@ JigsawPuzzleBoard::JigsawPuzzleBoard(QObject *parent) :
 void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned cols)
 {
     QList<PuzzlePiece*> list1;
-    QList<PuzzleWidget*> list2;
+    QList<JigsawPuzzleItem*> list2;
 
     QPixmap pixmap = image.scaled(width(), height(), Qt::KeepAspectRatio);
     QSize unit(pixmap.width() / cols, pixmap.height() / rows);
@@ -43,7 +43,7 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
             p.end();
 
             // creating the piece
-            PuzzleWidget *w = new PuzzleWidget(px, unit, 0, 0);
+            JigsawPuzzleItem *w = new JigsawPuzzleItem(px, unit, 0, 0);
             w->setPosition(QPoint(i, j));
             list1.append(w);
             list2.append(w);
@@ -57,14 +57,14 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
     PuzzlePiece::setNeighbours(&list1, cols, rows);
     emit gameStarted();
 
-    PuzzleWidget::shuffle(&list2, cols, rows, width() - unit.width() - 1, height() - unit.height() - 1);
+    JigsawPuzzleItem::shuffle(&list2, cols, rows, width() - unit.width() - 1, height() - unit.height() - 1);
 }
 
 void JigsawPuzzleBoard::surrenderGame()
 {
     foreach (QGraphicsItem *item, items())
     {
-        if (PuzzleWidget *widget = dynamic_cast<PuzzleWidget*>(item))
+        if (JigsawPuzzleItem *widget = dynamic_cast<JigsawPuzzleItem*>(item))
         {
             widget->setMerge(false);
         }
@@ -76,7 +76,7 @@ void JigsawPuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)
     Q_UNUSED(z);
     foreach (QGraphicsItem *item, items())
     {
-        PuzzleWidget *widget = (PuzzleWidget*) item;
+        JigsawPuzzleItem *widget = (JigsawPuzzleItem*) item;
         if (widget->canMerge())
         {
             widget->setPos(widget->pos().x() - x * widget->weight() / 2, widget->pos().y() + y * widget->weight() / 2);

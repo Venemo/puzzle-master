@@ -22,7 +22,7 @@ SOURCES += \
     main.cpp\
     mainwindow.cpp \
     puzzlepiece.cpp \
-    puzzlewidget.cpp \
+    jigsawpuzzleitem.cpp \
     settingsdialog.cpp \
     imagechooser.cpp \
     highscoresdialog.cpp \
@@ -32,7 +32,7 @@ SOURCES += \
 HEADERS += \
     mainwindow.h \
     puzzlepiece.h \
-    puzzlewidget.h \
+    jigsawpuzzleitem.h \
     settingsdialog.h \
     imagechooser.h \
     highscoresdialog.h \

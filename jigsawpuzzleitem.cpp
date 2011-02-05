@@ -1,5 +1,5 @@
 #include <QtGui>
-#include "puzzlewidget.h"
+#include "jigsawpuzzleitem.h"
 
 QPointF operator*(const QPoint &point, const QSize &size)
 {
@@ -17,7 +17,7 @@ static int max(int i, int j)
     return i > j? i : j;
 }
 
-PuzzleWidget::PuzzleWidget(const QPixmap &pixmap, const QSize &unitSize, QGraphicsItem *parent, QGraphicsScene *scene) :
+JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, const QSize &unitSize, QGraphicsItem *parent, QGraphicsScene *scene) :
     QObject(scene),
     QGraphicsPixmapItem(pixmap, parent, scene),
     PuzzlePiece(),
@@ -29,34 +29,34 @@ PuzzleWidget::PuzzleWidget(const QPixmap &pixmap, const QSize &unitSize, QGraphi
 {
 }
 
-bool PuzzleWidget::canMerge() const
+bool JigsawPuzzleItem::canMerge() const
 {
     return _canMerge;
 }
 
-void PuzzleWidget::setMerge(bool canMerge)
+void JigsawPuzzleItem::setMerge(bool canMerge)
 {
     _canMerge = canMerge;
 }
 
-void PuzzleWidget::enableMerge()
+void JigsawPuzzleItem::enableMerge()
 {
     setMerge(true);
 }
 
-void PuzzleWidget::disableMerge()
+void JigsawPuzzleItem::disableMerge()
 {
     setMerge(false);
 }
 
-double PuzzleWidget::weight()
+double JigsawPuzzleItem::weight()
 {
     return _weight;
 }
 
-bool PuzzleWidget::merge(PuzzlePiece *piece)
+bool JigsawPuzzleItem::merge(PuzzlePiece *piece)
 {
-    PuzzleWidget *w = (PuzzleWidget*)piece;
+    JigsawPuzzleItem *w = (JigsawPuzzleItem*)piece;
     if (PuzzlePiece::merge(piece))
     {
         w->_canMerge = _canMerge = false;
@@ -129,7 +129,7 @@ bool PuzzleWidget::merge(PuzzlePiece *piece)
     return false;
 }
 
-void PuzzleWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && _canMerge)
     {
@@ -139,13 +139,13 @@ void PuzzleWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
-void PuzzleWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void JigsawPuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
         _dragging = false;
 }
 
-void PuzzleWidget::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (_dragging)
     {
@@ -155,7 +155,7 @@ void PuzzleWidget::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         {
             foreach (PuzzlePiece *p, neighbours())
             {
-                PuzzleWidget *w = (PuzzleWidget*) p;
+                JigsawPuzzleItem *w = (JigsawPuzzleItem*) p;
                 QPointF posDiff1 = pos() - w->pos();
                 QPointF posDiff2 = (position() * _unit - w->position() * _unit);
                 QPointF relative = posDiff1 - posDiff2;
@@ -171,7 +171,7 @@ void PuzzleWidget::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
-void PuzzleWidget::verifyPosition()
+void JigsawPuzzleItem::verifyPosition()
 {
     int x = pos().x();// + position().x() * _unit.width();
     int maxX = scene()->width() - _unit.width() / 2;
@@ -203,14 +203,14 @@ void PuzzleWidget::verifyPosition()
     }
 }
 
-void PuzzleWidget::shuffle(QList<PuzzleWidget *> *list, int x, int y, int width, int height)
+void JigsawPuzzleItem::shuffle(QList<JigsawPuzzleItem *> *list, int x, int y, int width, int height)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
 #endif
     for (int i = 0; i < x * y; i++)
     {
-        PuzzleWidget *widget = (PuzzleWidget*)list->operator [](i);
+        JigsawPuzzleItem *widget = (JigsawPuzzleItem*)list->operator [](i);
         QPoint newPos(randomInt(0, width), randomInt(0, height));
 
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
@@ -233,7 +233,7 @@ void PuzzleWidget::shuffle(QList<PuzzleWidget *> *list, int x, int y, int width,
 
 }
 
-void PuzzleWidget::raise()
+void JigsawPuzzleItem::raise()
 {
     QGraphicsItem *maxItem = this;
     foreach (QGraphicsItem *item, scene()->items())

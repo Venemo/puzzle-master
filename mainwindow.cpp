@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "puzzlewidget.h"
 #include "jigsawpuzzleboard.h"
 #include <QtGui>
 #include <QGLWidget>
