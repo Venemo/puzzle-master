@@ -6,16 +6,16 @@
 class PuzzleItem : public QGraphicsPixmapItem
 {
 private:
-    QPoint _position;
+    QPoint _puzzleCoordinates;
     QList<PuzzleItem*> _neighbours;
 
 public:
     explicit PuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
 
-    const QPoint &position() const;
+    const QPoint &puzzleCoordinates() const;
     const QList<PuzzleItem*> &neighbours() const;
 
-    void setPosition(const QPoint &p);
+    void setPuzzleCoordinates(const QPoint &p);
     void addNeighbour(PuzzleItem *piece);
     void removeNeighbour(PuzzleItem *piece);
 
@@ -23,7 +23,7 @@ public:
     virtual bool merge(PuzzleItem *piece);
 
     static void setNeighbours(QList<PuzzleItem*> *pieces, int x, int y);
-    static PuzzleItem *find(QList<PuzzleItem*> *pieces, QPoint position);
+    static PuzzleItem *find(QList<PuzzleItem*> *pieces, QPoint puzzleCoordinates);
 
 };
 

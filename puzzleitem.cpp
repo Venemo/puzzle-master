@@ -5,9 +5,9 @@ PuzzleItem::PuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent, QGraphicsSc
 {
 }
 
-const QPoint &PuzzleItem::position() const
+const QPoint &PuzzleItem::puzzleCoordinates() const
 {
-    return _position;
+    return _puzzleCoordinates;
 }
 
 const QList<PuzzleItem*> &PuzzleItem::neighbours() const
@@ -15,16 +15,16 @@ const QList<PuzzleItem*> &PuzzleItem::neighbours() const
     return _neighbours;
 }
 
-void PuzzleItem::setPosition(const QPoint &p)
+void PuzzleItem::setPuzzleCoordinates(const QPoint &p)
 {
-    _position = p;
+    _puzzleCoordinates = p;
 }
 
 void PuzzleItem::addNeighbour(PuzzleItem *piece)
 {
     if (piece != this)
     {
-        //qDebug() << position() << "added" << piece->position() << "as neighbour";
+        //qDebug() << puzzleCoordinates() << "added" << piece->puzzleCoordinates() << "as neighbour";
         if (!_neighbours.contains(piece))
             _neighbours.append(piece);
         if (!piece->_neighbours.contains(this))
@@ -59,7 +59,7 @@ bool PuzzleItem::merge(PuzzleItem *piece)
             piece->removeNeighbour(n);
             this->addNeighbour(n);
         }
-        //qDebug() << "merged" << position() << "and" << piece->position();
+        //qDebug() << "merged" << puzzleCoordinates() << "and" << piece->puzzleCoordinates();
         return true;
     }
     return false;
@@ -75,19 +75,19 @@ void PuzzleItem::setNeighbours(QList<PuzzleItem *> *list, int x, int y)
 
     foreach(PuzzleItem *p, *list)
     {
-        if (p->position().x() != x - 1)
-            p->addNeighbour(find(list, p->position() + QPoint(1, 0)));
+        if (p->puzzleCoordinates().x() != x - 1)
+            p->addNeighbour(find(list, p->puzzleCoordinates() + QPoint(1, 0)));
 
-        if (p->position().y() != y - 1)
-            p->addNeighbour(find(list, p->position() + QPoint(0, 1)));
+        if (p->puzzleCoordinates().y() != y - 1)
+            p->addNeighbour(find(list, p->puzzleCoordinates() + QPoint(0, 1)));
     }
 }
 
-PuzzleItem *PuzzleItem::find(QList<PuzzleItem *> *pieces, QPoint position)
+PuzzleItem *PuzzleItem::find(QList<PuzzleItem *> *pieces, QPoint puzzleCoordinates)
 {
     foreach(PuzzleItem *p, *pieces)
     {
-        if (p->position() == position)
+        if (p->puzzleCoordinates() == puzzleCoordinates)
             return p;
     }
     return 0;

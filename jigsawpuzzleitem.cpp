@@ -60,7 +60,7 @@ bool JigsawPuzzleItem::merge(PuzzleItem *piece)
     {
         w->_canMerge = _canMerge = false;
 
-        QPoint vector = w->position() - position();
+        QPoint vector = w->puzzleCoordinates() - puzzleCoordinates();
         int x1, x2, y1, y2, u1, v1;
         if (vector.x() >= 0)
         {
@@ -100,7 +100,7 @@ bool JigsawPuzzleItem::merge(PuzzleItem *piece)
 
         p.end();
         setPixmap(pix);
-        setPosition(position() - QPoint(u1, v1));
+        setPuzzleCoordinates(puzzleCoordinates() - QPoint(u1, v1));
         setPos(pos().x() - x1, pos().y() - y1);
         _dragStart = _dragStart + QPointF(x1, y1);
         w->hide();
@@ -118,7 +118,7 @@ bool JigsawPuzzleItem::merge(PuzzleItem *piece)
             connect(anim, SIGNAL(finished()), this, SIGNAL(noNeighbours()));
             anim->start(QAbstractAnimation::DeleteWhenStopped);
 #else
-            setPosition(0, 0);
+            setPuzzleCoordinates(0, 0);
             emit noNeighbours();
 #endif
         }
@@ -156,7 +156,7 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             {
                 JigsawPuzzleItem *w = (JigsawPuzzleItem*) p;
                 QPointF posDiff1 = pos() - w->pos();
-                QPointF posDiff2 = (position() * _unit - w->position() * _unit);
+                QPointF posDiff2 = (puzzleCoordinates() * _unit - w->puzzleCoordinates() * _unit);
                 QPointF relative = posDiff1 - posDiff2;
 
                 if (abs(relative.x()) < _tolerance && abs(relative.y()) < _tolerance)
@@ -172,11 +172,11 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void JigsawPuzzleItem::verifyPosition()
 {
-    int x = pos().x();// + position().x() * _unit.width();
+    int x = pos().x();// + puzzleCoordinates().x() * _unit.width();
     int maxX = scene()->width() - _unit.width() / 2;
     int minX = - pixmap().width() + _unit.width() / 2;
 
-    int y = pos().y();// + position().y() * _unit.height();
+    int y = pos().y();// + puzzleCoordinates().y() * _unit.height();
     int maxY = scene()->height() - _unit.height() / 2;
     int minY = - pixmap().height() + _unit.height() / 2;
 
@@ -222,7 +222,7 @@ void JigsawPuzzleItem::shuffle(QList<JigsawPuzzleItem *> *list, int x, int y, in
         if (randomInt(0, 10) > 5)
             widget->raise();
 #else
-        widget->setPosition(newPos);
+        widget->setPuzzleCoordinates(newPos);
 #endif
 
     }

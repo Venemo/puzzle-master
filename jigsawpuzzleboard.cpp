@@ -21,7 +21,6 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
         for (unsigned j = 0; j < rows; j++)
         {
             // creating the pixmap for the piece
-
             QPixmap px(unit.width(), unit.height());
             px.fill(Qt::transparent);
             p.begin(&px);
@@ -32,13 +31,14 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
 
             // creating the piece
             JigsawPuzzleItem *w = new JigsawPuzzleItem(px, unit, 0, 0);
-            w->setPosition(QPoint(i, j));
+            w->setPuzzleCoordinates(QPoint(i, j));
             list1.append(w);
             list2.append(w);
             connect(w, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
             addItem(w);
             w->show();
             w->setZValue(i * rows + j + 1);
+
             emit loadProgressChanged(i * rows + j + 1);
         }
     }
