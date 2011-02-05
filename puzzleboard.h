@@ -17,6 +17,7 @@ class PuzzleBoard : public QGraphicsScene
 public:
     explicit PuzzleBoard(QObject *parent = 0);
     virtual void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols) = 0;
+    bool isDropshadowActive();
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     bool isAccelerometerActive();
 #endif
@@ -36,6 +37,8 @@ private slots:
 
 public slots:
     virtual void surrenderGame() = 0;
+    void enableDropshadow();
+    void disableDropshadow();
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     void enableAccelerometer();
     void disableAccelerometer();

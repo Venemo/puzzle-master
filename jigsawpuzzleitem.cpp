@@ -26,10 +26,6 @@ JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, const QSize &unitSize,
     _tolerance(5),
     _weight(randomInt(50, 950) / 1000.0)
 {
-    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect();
-    effect->setBlurRadius(20);
-    effect->setOffset(0);
-    this->setGraphicsEffect(effect);
 }
 
 bool JigsawPuzzleItem::canMerge() const

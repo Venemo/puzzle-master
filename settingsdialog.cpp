@@ -3,16 +3,17 @@
 #include "ui_settingsdialog.h"
 
 #define SETTING_USE_ACCELEROMETER "UseAccelerometer"
+#define SETTING_USE_DROPSHADOW "UseDropshadow"
+#define SETTING_BOARDBACKGROUND "BoardBackground"
 #define SETTING_ROWS "Rows"
 #define SETTING_COLS "Columns"
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::SettingsDialog)
+    QDialog(parent),
+    ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-    setFixedHeight(180);
     setFixedWidth(parentWidget()->width());
 
     // This ensures the correct look on Maemo 5 too
@@ -21,9 +22,9 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     buttonBox->addButton(ui->btnClose, QDialogButtonBox::ActionRole);
     layout()->addWidget(buttonBox);
 #else
-    setFixedHeight(50);
+    setFixedHeight(height() - ui->chkAccelerometer->height());
     setFixedWidth(450);
-    ui->chkAccelerometer->hide();
+    ui->chkAccelerometer->deleteLater();
 #endif
     connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
     connect(this, SIGNAL(rejected()), this, SLOT(saveSettings()));
@@ -54,7 +55,10 @@ void SettingsDialog::saveSettings()
         i = 3;
     }
     s.setValue(SETTING_ROWS, i);
+    s.setValue(SETTING_USE_DROPSHADOW, ui->chkUseDropshadow->isChecked());
+#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     s.setValue(SETTING_USE_ACCELEROMETER, ui->chkAccelerometer->isChecked());
+#endif
 }
 
 void SettingsDialog::on_btnClose_clicked()
@@ -65,7 +69,10 @@ void SettingsDialog::on_btnClose_clicked()
 
 void SettingsDialog::showEvent(QShowEvent *e)
 {
+#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     ui->chkAccelerometer->setChecked(useAccelerometer());
+#endif
+    ui->chkUseDropshadow->setChecked(useDropShadow());
     ui->txtRows->setText(QString::number(rows()));
     ui->txtColumns->setText(QString::number(columns()));
 
@@ -76,11 +83,11 @@ bool SettingsDialog::useAccelerometer()
 {
     QSettings s;
     return s.value(SETTING_USE_ACCELEROMETER,
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
+               #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
                    true
-#else
+               #else
                    false
-#endif
+               #endif
                    ).toBool();
 }
 
@@ -97,3 +104,14 @@ int SettingsDialog::columns()
     return s.value(SETTING_COLS, 3).toInt();
 }
 
+bool SettingsDialog::useDropShadow()
+{
+    QSettings s;
+    return s.value(SETTING_USE_DROPSHADOW, true).toBool();
+}
+
+QColor SettingsDialog::boardBackground()
+{
+    QSettings s;
+    return s.value(SETTING_BOARDBACKGROUND, QColor(Qt::white)).value<QColor>();
+}

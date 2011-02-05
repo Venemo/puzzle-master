@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>90</height>
+    <height>114</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -66,6 +66,13 @@
       <widget class="QCheckBox" name="chkAccelerometer">
        <property name="text">
         <string>Use the accelerometer</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="chkUseDropshadow">
+       <property name="text">
+        <string>Use drop shadow effect</string>
        </property>
       </widget>
      </item>

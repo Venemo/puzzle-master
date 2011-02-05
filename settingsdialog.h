@@ -1,7 +1,7 @@
 #ifndef SETTINGSDIALOG_H
 #define SETTINGSDIALOG_H
 
-#include <QDialog>
+#include <QtGui>
 
 namespace Ui {
     class SettingsDialog;
@@ -19,6 +19,8 @@ public:
     static int rows();
     static int columns();
     static bool useAccelerometer();
+    static bool useDropShadow();
+    static QColor boardBackground();
 
 protected:
     void showEvent(QShowEvent *e);

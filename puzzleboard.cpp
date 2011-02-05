@@ -1,4 +1,5 @@
 #include "puzzleboard.h"
+#include "puzzleitem.h"
 
 PuzzleBoard::PuzzleBoard(QObject *parent) :
     QGraphicsScene(parent)
@@ -7,6 +8,49 @@ PuzzleBoard::PuzzleBoard(QObject *parent) :
     accelerometer = new QtMobility::QAccelerometer(this);
     connect(accelerometer, SIGNAL(readingChanged()), this, SLOT(accelerometerReadingChanged()));
 #endif
+}
+
+bool PuzzleBoard::isDropshadowActive()
+{
+    foreach (QGraphicsItem *gi, items())
+    {
+        if (PuzzleItem *item = dynamic_cast<PuzzleItem*>(gi))
+        {
+            if (QGraphicsDropShadowEffect *effect = dynamic_cast<QGraphicsDropShadowEffect*>(item->graphicsEffect()))
+            {
+                Q_UNUSED(effect);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void PuzzleBoard::enableDropshadow()
+{
+    QColor c(0, 0, 0, 200);
+    foreach (QGraphicsItem *gi, items())
+    {
+        if (PuzzleItem *item = dynamic_cast<PuzzleItem*>(gi))
+        {
+            QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect();
+            effect->setBlurRadius(20);
+            effect->setOffset(0);
+            effect->setColor(c);
+            item->setGraphicsEffect(effect);
+        }
+    }
+}
+
+void PuzzleBoard::disableDropshadow()
+{
+    foreach (QGraphicsItem *gi, items())
+    {
+        if (PuzzleItem *item = dynamic_cast<PuzzleItem*>(gi))
+        {
+            item->setGraphicsEffect(0);
+        }
+    }
 }
 
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)

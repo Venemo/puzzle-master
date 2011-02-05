@@ -79,7 +79,7 @@ void MainWindow::on_btnOpenImage_clicked()
             }
 
             board = new JigsawPuzzleBoard(ui->graphicsView);
-            board->setBackgroundBrush(QBrush(Qt::white));
+            board->setBackgroundBrush(QBrush(SettingsDialog::boardBackground()));
             connect(board, SIGNAL(loadProgressChanged(int)), progress, SLOT(setValue(int)));
             connect(board, SIGNAL(gameStarted()), progress, SLOT(deleteLater()));
             connect(board, SIGNAL(gameWon()), this, SLOT(onWon()));
@@ -126,6 +126,8 @@ void MainWindow::initializeGame()
     ui->lblTime->show();
     _secsElapsed = 0;
 
+    if (SettingsDialog::useDropShadow())
+        board->enableDropshadow();
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     if (SettingsDialog::useAccelerometer())
         board->enableAccelerometer();
@@ -149,6 +151,10 @@ void MainWindow::endGame()
 void MainWindow::on_actionSettings_triggered()
 {
     settings->exec();
+    if (SettingsDialog::useDropShadow() && !board->isDropshadowActive())
+        board->enableDropshadow();
+    else if (!SettingsDialog::useDropShadow() && board->isDropshadowActive())
+        board->disableDropshadow();
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     if (SettingsDialog::useAccelerometer() && !board->isAccelerometerActive())
         board->enableAccelerometer();
