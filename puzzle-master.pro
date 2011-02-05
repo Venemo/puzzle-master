@@ -21,7 +21,7 @@ DESTDIR = build
 SOURCES += \
     main.cpp\
     mainwindow.cpp \
-    puzzlepiece.cpp \
+    puzzleitem.cpp \
     jigsawpuzzleitem.cpp \
     settingsdialog.cpp \
     imagechooser.cpp \
@@ -31,7 +31,7 @@ SOURCES += \
 
 HEADERS += \
     mainwindow.h \
-    puzzlepiece.h \
+    puzzleitem.h \
     jigsawpuzzleitem.h \
     settingsdialog.h \
     imagechooser.h \

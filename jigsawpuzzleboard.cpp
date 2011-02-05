@@ -9,7 +9,7 @@ JigsawPuzzleBoard::JigsawPuzzleBoard(QObject *parent) :
 
 void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned cols)
 {
-    QList<PuzzlePiece*> list1;
+    QList<PuzzleItem*> list1;
     QList<JigsawPuzzleItem*> list2;
 
     QPixmap pixmap = image.scaled(width(), height(), Qt::KeepAspectRatio);
@@ -21,18 +21,6 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
         for (unsigned j = 0; j < rows; j++)
         {
             // creating the pixmap for the piece
-//            QPixmap px(pixmap.width(), pixmap.height());
-//            px.fill(Qt::transparent);
-//            p.begin(&px);
-//            p.setRenderHint(QPainter::Antialiasing);
-
-//            QPainterPath clip;
-//            clip.addRect(i * unit.width(), j * unit.height(), unit.width(), unit.height());
-//            p.setClipPath(clip);
-//            p.setClipping(true);
-
-//            p.drawPixmap(0, 0, pixmap);
-//            p.end();
 
             QPixmap px(unit.width(), unit.height());
             px.fill(Qt::transparent);
@@ -54,7 +42,7 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
             emit loadProgressChanged(i * rows + j + 1);
         }
     }
-    PuzzlePiece::setNeighbours(&list1, cols, rows);
+    PuzzleItem::setNeighbours(&list1, cols, rows);
     emit gameStarted();
 
     JigsawPuzzleItem::shuffle(&list2, cols, rows, width() - unit.width() - 1, height() - unit.height() - 1);

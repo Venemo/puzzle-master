@@ -2,11 +2,11 @@
 #define JIGSAWPUZZLEITEM_H
 
 #include <QtGui>
-#include "puzzlepiece.h"
+#include "puzzleitem.h"
 
 QPointF operator*(const QPoint &point, const QSize &size);
 
-class JigsawPuzzleItem : public QObject, public QGraphicsPixmapItem, public PuzzlePiece
+class JigsawPuzzleItem : public QObject, public PuzzleItem
 {
     Q_OBJECT
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
@@ -18,8 +18,8 @@ class JigsawPuzzleItem : public QObject, public QGraphicsPixmapItem, public Puzz
     double _weight;
 
 public:
-    explicit JigsawPuzzleItem(const QPixmap &pixmap,  const QSize &unitSize, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
-    virtual bool merge(PuzzlePiece *piece);
+    explicit JigsawPuzzleItem(const QPixmap &pixmap, const QSize &unitSize, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+    virtual bool merge(PuzzleItem *piece);
     bool canMerge() const;
     void setMerge(bool canMerge);
     double weight();

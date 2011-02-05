@@ -1,25 +1,26 @@
-#include "puzzlepiece.h"
+#include "puzzleitem.h"
 
-PuzzlePiece::PuzzlePiece()
+PuzzleItem::PuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent, QGraphicsScene *scene)
+    : QGraphicsPixmapItem(pixmap, parent, scene)
 {
 }
 
-const QPoint &PuzzlePiece::position() const
+const QPoint &PuzzleItem::position() const
 {
     return _position;
 }
 
-const QList<PuzzlePiece*> &PuzzlePiece::neighbours() const
+const QList<PuzzleItem*> &PuzzleItem::neighbours() const
 {
     return _neighbours;
 }
 
-void PuzzlePiece::setPosition(const QPoint &p)
+void PuzzleItem::setPosition(const QPoint &p)
 {
     _position = p;
 }
 
-void PuzzlePiece::addNeighbour(PuzzlePiece *piece)
+void PuzzleItem::addNeighbour(PuzzleItem *piece)
 {
     if (piece != this)
     {
@@ -31,7 +32,7 @@ void PuzzlePiece::addNeighbour(PuzzlePiece *piece)
     }
 }
 
-void PuzzlePiece::removeNeighbour(PuzzlePiece *piece)
+void PuzzleItem::removeNeighbour(PuzzleItem *piece)
 {
     if (piece != this)
     {
@@ -42,18 +43,18 @@ void PuzzlePiece::removeNeighbour(PuzzlePiece *piece)
     }
 }
 
-bool PuzzlePiece::isNeighbourOf(const PuzzlePiece *piece) const
+bool PuzzleItem::isNeighbourOf(const PuzzleItem *piece) const
 {
-    if (piece->neighbours().contains((PuzzlePiece*)this) && this->neighbours().contains((PuzzlePiece*)piece))
+    if (piece->neighbours().contains((PuzzleItem*)this) && this->neighbours().contains((PuzzleItem*)piece))
         return true;
     return false;
 }
 
-bool PuzzlePiece::merge(PuzzlePiece *piece)
+bool PuzzleItem::merge(PuzzleItem *piece)
 {
     if (isNeighbourOf(piece))
     {
-        foreach (PuzzlePiece *n, piece->_neighbours)
+        foreach (PuzzleItem *n, piece->_neighbours)
         {
             piece->removeNeighbour(n);
             this->addNeighbour(n);
@@ -64,7 +65,7 @@ bool PuzzlePiece::merge(PuzzlePiece *piece)
     return false;
 }
 
-void PuzzlePiece::setNeighbours(QList<PuzzlePiece *> *list, int x, int y)
+void PuzzleItem::setNeighbours(QList<PuzzleItem *> *list, int x, int y)
 {
     if (list->count() != x * y)
     {
@@ -72,7 +73,7 @@ void PuzzlePiece::setNeighbours(QList<PuzzlePiece *> *list, int x, int y)
         return;
     }
 
-    foreach(PuzzlePiece *p, *list)
+    foreach(PuzzleItem *p, *list)
     {
         if (p->position().x() != x - 1)
             p->addNeighbour(find(list, p->position() + QPoint(1, 0)));
@@ -82,9 +83,9 @@ void PuzzlePiece::setNeighbours(QList<PuzzlePiece *> *list, int x, int y)
     }
 }
 
-PuzzlePiece *PuzzlePiece::find(QList<PuzzlePiece *> *pieces, QPoint position)
+PuzzleItem *PuzzleItem::find(QList<PuzzleItem *> *pieces, QPoint position)
 {
-    foreach(PuzzlePiece *p, *pieces)
+    foreach(PuzzleItem *p, *pieces)
     {
         if (p->position() == position)
             return p;

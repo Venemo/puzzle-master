@@ -19,8 +19,7 @@ static int max(int i, int j)
 
 JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, const QSize &unitSize, QGraphicsItem *parent, QGraphicsScene *scene) :
     QObject(scene),
-    QGraphicsPixmapItem(pixmap, parent, scene),
-    PuzzlePiece(),
+    PuzzleItem(pixmap, parent, scene),
     _unit(unitSize),
     _dragging(false),
     _canMerge(false),
@@ -54,10 +53,10 @@ double JigsawPuzzleItem::weight()
     return _weight;
 }
 
-bool JigsawPuzzleItem::merge(PuzzlePiece *piece)
+bool JigsawPuzzleItem::merge(PuzzleItem *piece)
 {
     JigsawPuzzleItem *w = (JigsawPuzzleItem*)piece;
-    if (PuzzlePiece::merge(piece))
+    if (PuzzleItem::merge(piece))
     {
         w->_canMerge = _canMerge = false;
 
@@ -153,7 +152,7 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
         if (_canMerge)
         {
-            foreach (PuzzlePiece *p, neighbours())
+            foreach (PuzzleItem *p, neighbours())
             {
                 JigsawPuzzleItem *w = (JigsawPuzzleItem*) p;
                 QPointF posDiff1 = pos() - w->pos();
