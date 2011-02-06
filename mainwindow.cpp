@@ -67,7 +67,8 @@ void MainWindow::focusOutEvent(QFocusEvent *event)
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
-    QMainWindow::resizeEvent(event);
+    if (event)
+        QMainWindow::resizeEvent(event);
 
     // The first resize event will contain garbage
     if (_oldGraphicsViewSize == QSize(0, 0))
@@ -85,22 +86,31 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     // On every other resize event, actually scale the graphics view's content
 
     // Calculating scale ratio
+    qreal oldScaleRatio = _currentScaleRatio;
     QSize s1 = board->originalPixmapSize();
     QSize s2 = board->originalPixmapSize();
     s1.scale(ui->graphicsView->size(), Qt::KeepAspectRatio);
     s2.scale(_oldGraphicsViewSize, Qt::KeepAspectRatio);
     _currentScaleRatio = (qreal)s1.width() / (qreal)s2.width();
 
-    //qDebug() << _oldGraphicsViewSize << ui->graphicsView->size() << ratio;
+    qDebug() << "old size" << _oldGraphicsViewSize << "new size" << ui->graphicsView->size() << "ratio" << _currentScaleRatio;
 
     // Setting scene rect and scale
+    QSizeF olds = (_oldGraphicsViewSize / oldScaleRatio - board->originalPixmapSize()) / 2;
     if (intro.isNull())
+    {
         board->setSceneRect(0, 0, ui->graphicsView->width() / _currentScaleRatio, ui->graphicsView->height() / _currentScaleRatio);
+    }
     ui->graphicsView->scale(_currentScaleRatio, _currentScaleRatio);
 
-    // Making sure every piece is visible
+    // Making sure every piece is visible and has a nice position
+    QSizeF news = (board->sceneRect().size() - board->originalPixmapSize()) / 2;
+    QSizeF p = news - olds;
     foreach (QGraphicsItem *item, board->items())
     {
+        QPointF newPos(item->pos().x() + p.width(),
+                       item->pos().y() + p.height());
+        item->setPos(newPos);
         if (JigsawPuzzleItem *jpi = dynamic_cast<JigsawPuzzleItem*>(item))
         {
             jpi->verifyPosition();
@@ -140,19 +150,21 @@ void MainWindow::on_btnOpenImage_clicked()
                 board->deleteLater();
             }
 
+            ui->graphicsView->resetTransform();
             board = new JigsawPuzzleBoard(ui->graphicsView);
             board->setBackgroundBrush(QBrush(SettingsDialog::boardBackground()));
             connect(board, SIGNAL(loadProgressChanged(int)), progress, SLOT(setValue(int)));
             connect(board, SIGNAL(gameStarted()), progress, SLOT(deleteLater()));
             connect(board, SIGNAL(gameWon()), this, SLOT(onWon()));
             ui->graphicsView->setScene(board);
-            board->setSceneRect(0, 0, ui->graphicsView->width() / _currentScaleRatio, ui->graphicsView->height() / _currentScaleRatio);
+            board->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
 
             connect(board, SIGNAL(gameStarted()), this, SLOT(initializeGame()));
             if (SettingsDialog::useDropShadow())
                 connect(board, SIGNAL(loaded()), board, SLOT(enableDropshadow()));
 
             board->startGame(pixmap, rows, cols);
+            //_currentScaleRatio = 1;
             _oldGraphicsViewSize = ui->graphicsView->size();
         }
         else
