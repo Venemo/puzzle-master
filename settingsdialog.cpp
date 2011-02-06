@@ -94,7 +94,7 @@ void SettingsDialog::on_btnBoardColor_clicked()
 #else
     QColor newColor = QColorDialog::getColor(_boardBackground, this);
 #endif
-    if (newColor != _boardBackground)
+    if (newColor.isValid() && newColor != _boardBackground)
     {
         _boardBackground = newColor;
         QPixmap pm(80, 30);
