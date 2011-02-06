@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "jigsawpuzzleboard.h"
+#include "jigsawpuzzleitem.h"
 #include <QtGui>
 #include <QGLWidget>
 
@@ -24,7 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->setInterval(1000);
     connect(timer, SIGNAL(timeout()), this, SLOT(elapsedSecond()));
     setFocus();
-    _baseSize = QSize(ui->graphicsView->width(), ui->graphicsView->height());
 
     QColor bg = SettingsDialog::boardBackground();
     board->setBackgroundBrush(QBrush(bg));
@@ -33,6 +33,10 @@ MainWindow::MainWindow(QWidget *parent) :
     board->addItem(intro);
     ui->graphicsView->setScene(board);
     ui->graphicsView->setViewport(new QGLWidget(this));
+
+#if defined(Q_WS_MAEMO_5)
+    setAttribute(Qt::WA_Maemo5AutoOrientation);
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -59,27 +63,24 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     QMainWindow::resizeEvent(event);
     if (intro.isNull() || !intro->isVisible())
     {
-        if (event->size().width() >= _baseSize.width() && event->size().height() >= _baseSize.height())
+        QSize s1 = board->originalPixmapSize();
+        QSize s2 = board->originalPixmapSize();
+        s1.scale(ui->graphicsView->size(), Qt::KeepAspectRatio);
+        s2.scale(_oldGraphicsViewSize, Qt::KeepAspectRatio);
+        qreal ratio = (qreal)s1.width() / (qreal)s2.width();
+
+        board->setSceneRect(0, 0, ui->graphicsView->width() / ratio, ui->graphicsView->height() / ratio);
+        ui->graphicsView->scale(ratio, ratio);
+
+        foreach (QGraphicsItem *item, board->items())
         {
-            ui->graphicsView->resetTransform();
-            QSize diff = event->size() - event->oldSize();
-            foreach (QGraphicsItem *item, board->items())
+            if (JigsawPuzzleItem *jpi = dynamic_cast<JigsawPuzzleItem*>(item))
             {
-                item->setPos(QPointF(item->pos().x() + diff.width() / 2, item->pos().y() + diff.height() / 2));
+                jpi->verifyPosition();
             }
-            board->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
-        }
-        else
-        {
-            QSize s1 = _baseSize;
-            QSize s2 = _baseSize;
-            s1.scale(event->size(), Qt::KeepAspectRatio);
-            s2.scale(event->oldSize(), Qt::KeepAspectRatio);
-            qreal ratio = (qreal)s1.width() / (qreal)s2.width();
-            qDebug() << ratio;
-            ui->graphicsView->scale(ratio, ratio);
         }
     }
+    _oldGraphicsViewSize = ui->graphicsView->size();
 }
 
 void MainWindow::on_actionHigh_scores_triggered()
@@ -111,20 +112,20 @@ void MainWindow::on_btnOpenImage_clicked()
                 board->deleteLater();
             }
 
-            _baseSize = QSize(ui->graphicsView->width(), ui->graphicsView->height());
             board = new JigsawPuzzleBoard(ui->graphicsView);
             board->setBackgroundBrush(QBrush(SettingsDialog::boardBackground()));
             connect(board, SIGNAL(loadProgressChanged(int)), progress, SLOT(setValue(int)));
             connect(board, SIGNAL(gameStarted()), progress, SLOT(deleteLater()));
             connect(board, SIGNAL(gameWon()), this, SLOT(onWon()));
             ui->graphicsView->setScene(board);
-            board->setSceneRect(0, 0, _baseSize.width() - 10, _baseSize.height() - 10);
+            board->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
 
             connect(board, SIGNAL(gameStarted()), this, SLOT(initializeGame()));
             if (SettingsDialog::useDropShadow())
                 connect(board, SIGNAL(loaded()), board, SLOT(enableDropshadow()));
 
             board->startGame(pixmap, rows, cols);
+            _oldGraphicsViewSize = ui->graphicsView->size();
         }
         else
         {

@@ -25,7 +25,7 @@ class MainWindow : public QMainWindow
     QPointer<QGraphicsTextItem> intro;
     bool _isPlaying;
     int _secsElapsed;
-    QSize _baseSize;
+    QSize _oldGraphicsViewSize;
 
 protected:
     void focusOutEvent(QFocusEvent *event);
