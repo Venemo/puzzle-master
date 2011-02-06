@@ -7,8 +7,15 @@
 #define SETTING_USE_ACCELEROMETER "UseAccelerometer"
 #define SETTING_USE_DROPSHADOW "UseDropshadow"
 #define SETTING_BOARDBACKGROUND "BoardBackground"
+#define SETTING_TOLERANCE "Tolerance"
 #define SETTING_ROWS "Rows"
 #define SETTING_COLS "Columns"
+
+#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60) || defined(Q_WS_WINCE)
+#define DEFAULT_TOLERANCE 10
+#else
+#define DEFAULT_TOLERANCE 5
+#endif
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
@@ -46,6 +53,7 @@ void SettingsDialog::saveSettings()
     s.setValue(SETTING_ROWS, ui->cbRows->currentIndex() + 2);
     s.setValue(SETTING_USE_DROPSHADOW, ui->chkUseDropshadow->isChecked());
     s.setValue(SETTING_BOARDBACKGROUND, _boardBackground);
+    s.setValue(SETTING_TOLERANCE, (ui->cbTolerance->currentIndex() + 1) * 5);
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     s.setValue(SETTING_USE_ACCELEROMETER, ui->chkAccelerometer->isChecked());
 #endif
@@ -70,8 +78,22 @@ void SettingsDialog::showEvent(QShowEvent *e)
     QPixmap pm(20, 20);
     pm.fill(_boardBackground);
     ui->btnBoardColor->setIcon(QIcon(pm));
+    int t = CLAMP(tolerance(), 5, 15);
+    ui->cbTolerance->setCurrentIndex(t / 5 - 1);
 
     QDialog::showEvent(e);
+}
+
+void SettingsDialog::on_btnBoardColor_clicked()
+{
+    QColor newColor = QColorDialog::getColor(_boardBackground, this);
+    if (newColor != _boardBackground)
+    {
+        _boardBackground = newColor;
+        QPixmap pm(20, 20);
+        pm.fill(_boardBackground);
+        ui->btnBoardColor->setIcon(QIcon(pm));
+    }
 }
 
 bool SettingsDialog::useAccelerometer()
@@ -111,14 +133,8 @@ QColor SettingsDialog::boardBackground()
     return s.value(SETTING_BOARDBACKGROUND, QColor(Qt::white)).value<QColor>();
 }
 
-void SettingsDialog::on_btnBoardColor_clicked()
+int SettingsDialog::tolerance()
 {
-    QColor newColor = QColorDialog::getColor(_boardBackground, this);
-    if (newColor != _boardBackground)
-    {
-        _boardBackground = newColor;
-        QPixmap pm(20, 20);
-        pm.fill(_boardBackground);
-        ui->btnBoardColor->setIcon(QIcon(pm));
-    }
+    QSettings s;
+    return s.value(SETTING_TOLERANCE, DEFAULT_TOLERANCE).toInt();
 }

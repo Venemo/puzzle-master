@@ -39,7 +39,7 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
             item->setZValue(i * rows + j + 1);
 
             QPointF oldPos((width() - pixmap.width()) / 2 + (item->puzzleCoordinates().x() * unit.width()),
-                          (height() - pixmap.height()) / 2 + (item->puzzleCoordinates().y() * unit.height()));
+                           (height() - pixmap.height()) / 2 + (item->puzzleCoordinates().y() * unit.height()));
             item->setPos(oldPos);
             item->show();
 
@@ -54,16 +54,23 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
     JigsawPuzzleItem::shuffle(&list2, pixmap.width(), pixmap.height());
 }
 
+void JigsawPuzzleBoard::setToleranceForPieces(int tolerance)
+{
+    foreach (QGraphicsItem *gi, items())
+    {
+        JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
+        item->setTolerance(tolerance);
+    }
+}
+
 void JigsawPuzzleBoard::surrenderGame()
 {
     QList<JigsawPuzzleItem*> list2;
     foreach (QGraphicsItem *gi, items())
     {
-        if (JigsawPuzzleItem *item = dynamic_cast<JigsawPuzzleItem*>(gi))
-        {
-            item->setMerge(false);
-            list2.append(item);
-        }
+        JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
+        item->setMerge(false);
+        list2.append(item);
     }
     JigsawPuzzleItem::assemble(&list2, _pixmapSize.width(), _pixmapSize.height());
 }

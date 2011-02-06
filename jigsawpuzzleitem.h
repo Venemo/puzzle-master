@@ -23,6 +23,8 @@ public:
     bool canMerge() const;
     void setMerge(bool canMerge);
     double weight();
+    void setTolerance(int t);
+    int tolerance();
     static void shuffle(QList<JigsawPuzzleItem*> *list, int width, int height);
     static void assemble(QList<JigsawPuzzleItem*> *list, int width, int height);
     void raise();

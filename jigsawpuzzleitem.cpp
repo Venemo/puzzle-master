@@ -54,6 +54,16 @@ double JigsawPuzzleItem::weight()
     return _weight;
 }
 
+void JigsawPuzzleItem::setTolerance(int t)
+{
+    _tolerance = t;
+}
+
+int JigsawPuzzleItem::tolerance()
+{
+    return _tolerance;
+}
+
 bool JigsawPuzzleItem::merge(PuzzleItem *piece)
 {
     JigsawPuzzleItem *w = (JigsawPuzzleItem*)piece;

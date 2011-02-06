@@ -22,6 +22,7 @@ public:
     static bool useAccelerometer();
     static bool useDropShadow();
     static QColor boardBackground();
+    static int tolerance();
 
 protected:
     void showEvent(QShowEvent *e);

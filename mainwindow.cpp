@@ -163,6 +163,10 @@ void MainWindow::initializeGame()
     ui->lblTime->show();
     _secsElapsed = 0;
 
+    if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
+    {
+        jpb->setToleranceForPieces(SettingsDialog::tolerance());
+    }
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     if (SettingsDialog::useAccelerometer())
         board->enableAccelerometer();
@@ -192,6 +196,10 @@ void MainWindow::on_actionSettings_triggered()
         board->setBackgroundBrush(QBrush(bg));
         if (!intro.isNull())
             intro->setDefaultTextColor(QColor(0xFFFFFF - bg.rgb()));
+    }
+    if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
+    {
+        jpb->setToleranceForPieces(SettingsDialog::tolerance());
     }
     if (SettingsDialog::useDropShadow() && !board->isDropshadowActive())
         board->enableDropshadow();
