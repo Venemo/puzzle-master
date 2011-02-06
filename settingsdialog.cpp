@@ -10,7 +10,8 @@
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::SettingsDialog)
+    ui(new Ui::SettingsDialog),
+    _boardBackground(boardBackground())
 {
     ui->setupUi(this);
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
@@ -56,6 +57,7 @@ void SettingsDialog::saveSettings()
     }
     s.setValue(SETTING_ROWS, i);
     s.setValue(SETTING_USE_DROPSHADOW, ui->chkUseDropshadow->isChecked());
+    s.setValue(SETTING_BOARDBACKGROUND, _boardBackground);
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     s.setValue(SETTING_USE_ACCELEROMETER, ui->chkAccelerometer->isChecked());
 #endif
@@ -75,6 +77,10 @@ void SettingsDialog::showEvent(QShowEvent *e)
     ui->chkUseDropshadow->setChecked(useDropShadow());
     ui->txtRows->setText(QString::number(rows()));
     ui->txtColumns->setText(QString::number(columns()));
+
+    QPixmap pm(20, 20);
+    pm.fill(_boardBackground);
+    ui->btnBoardColor->setIcon(QIcon(pm));
 
     QDialog::showEvent(e);
 }
@@ -114,4 +120,16 @@ QColor SettingsDialog::boardBackground()
 {
     QSettings s;
     return s.value(SETTING_BOARDBACKGROUND, QColor(Qt::white)).value<QColor>();
+}
+
+void SettingsDialog::on_btnBoardColor_clicked()
+{
+    QColor newColor = QColorDialog::getColor(_boardBackground, this);
+    if (newColor != _boardBackground)
+    {
+        _boardBackground = newColor;
+        QPixmap pm(20, 20);
+        pm.fill(_boardBackground);
+        ui->btnBoardColor->setIcon(QIcon(pm));
+    }
 }

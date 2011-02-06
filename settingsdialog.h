@@ -11,6 +11,7 @@ class SettingsDialog : public QDialog
 {
     Q_OBJECT
     Ui::SettingsDialog *ui;
+    QColor _boardBackground;
 
 public:
     explicit SettingsDialog(QWidget *parent = 0);
@@ -28,6 +29,7 @@ protected:
 private slots:
     void saveSettings();
     void on_btnClose_clicked();
+    void on_btnBoardColor_clicked();
 };
 
 #endif // SETTINGSDIALOG_H

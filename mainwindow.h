@@ -22,6 +22,7 @@ class MainWindow : public QMainWindow
     ImageChooser *chooser;
     HighScoresDialog *highscores;
     PuzzleBoard *board;
+    QPointer<QGraphicsTextItem> intro;
     bool _isPlaying;
     int _secsElapsed;
 

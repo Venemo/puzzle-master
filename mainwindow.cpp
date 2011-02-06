@@ -25,7 +25,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(elapsedSecond()));
     setFocus();
 
-    board->addItem(new QGraphicsTextItem("To start playing, please press the 'New game' button!"));
+    QColor bg = SettingsDialog::boardBackground();
+    board->setBackgroundBrush(QBrush(bg));
+    intro = new QGraphicsTextItem("To start playing, please press the 'New game' button!");
+    intro->setDefaultTextColor(QColor(255 - bg.red(), 255 - bg.green(), 255 - bg.blue()));
+    board->addItem(intro);
     ui->graphicsView->setScene(board);
     ui->graphicsView->setViewport(new QGLWidget(this));
 }
@@ -151,6 +155,13 @@ void MainWindow::endGame()
 void MainWindow::on_actionSettings_triggered()
 {
     settings->exec();
+    QColor bg = SettingsDialog::boardBackground();
+    if (board->backgroundBrush().color() != bg)
+    {
+        board->setBackgroundBrush(QBrush(bg));
+        if (!intro.isNull())
+            intro->setDefaultTextColor(QColor(255 - bg.red(), 255 - bg.green(), 255 - bg.blue()));
+    }
     if (SettingsDialog::useDropShadow() && !board->isDropshadowActive())
         board->enableDropshadow();
     else if (!SettingsDialog::useDropShadow() && board->isDropshadowActive())
