@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->setInterval(1000);
     connect(timer, SIGNAL(timeout()), this, SLOT(elapsedSecond()));
     setFocus();
+    _baseSize = QSize(ui->graphicsView->width(), ui->graphicsView->height());
 
     QColor bg = SettingsDialog::boardBackground();
     board->setBackgroundBrush(QBrush(bg));
@@ -51,6 +52,34 @@ void MainWindow::focusOutEvent(QFocusEvent *event)
     if (timer->isActive())
         timer->stop();
     QMainWindow::focusOutEvent(event);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    QMainWindow::resizeEvent(event);
+    if (intro.isNull() || !intro->isVisible())
+    {
+        if (event->size().width() >= _baseSize.width() && event->size().height() >= _baseSize.height())
+        {
+            ui->graphicsView->resetTransform();
+            QSize diff = event->size() - event->oldSize();
+            foreach (QGraphicsItem *item, board->items())
+            {
+                item->setPos(QPointF(item->pos().x() + diff.width() / 2, item->pos().y() + diff.height() / 2));
+            }
+            board->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
+        }
+        else
+        {
+            QSize s1 = _baseSize;
+            QSize s2 = _baseSize;
+            s1.scale(event->size(), Qt::KeepAspectRatio);
+            s2.scale(event->oldSize(), Qt::KeepAspectRatio);
+            qreal ratio = (qreal)s1.width() / (qreal)s2.width();
+            qDebug() << ratio;
+            ui->graphicsView->scale(ratio, ratio);
+        }
+    }
 }
 
 void MainWindow::on_actionHigh_scores_triggered()
@@ -82,13 +111,14 @@ void MainWindow::on_btnOpenImage_clicked()
                 board->deleteLater();
             }
 
+            _baseSize = QSize(ui->graphicsView->width(), ui->graphicsView->height());
             board = new JigsawPuzzleBoard(ui->graphicsView);
             board->setBackgroundBrush(QBrush(SettingsDialog::boardBackground()));
             connect(board, SIGNAL(loadProgressChanged(int)), progress, SLOT(setValue(int)));
             connect(board, SIGNAL(gameStarted()), progress, SLOT(deleteLater()));
             connect(board, SIGNAL(gameWon()), this, SLOT(onWon()));
             ui->graphicsView->setScene(board);
-            board->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
+            board->setSceneRect(0, 0, _baseSize.width() - 10, _baseSize.height() - 10);
             board->startGame(pixmap, rows, cols);
 
             initializeGame();

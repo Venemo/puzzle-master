@@ -25,6 +25,7 @@ class MainWindow : public QMainWindow
     QPointer<QGraphicsTextItem> intro;
     bool _isPlaying;
     int _secsElapsed;
+    QSize _baseSize;
 
     void initializeGame();
     void endGame();
@@ -32,6 +33,7 @@ class MainWindow : public QMainWindow
 protected:
     void focusOutEvent(QFocusEvent *event);
     void focusInEvent(QFocusEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
 public:
     explicit MainWindow(QWidget *parent = 0);
