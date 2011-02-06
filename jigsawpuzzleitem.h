@@ -27,6 +27,7 @@ public:
     static void assemble(QList<JigsawPuzzleItem*> *list, int width, int height);
     void raise();
     void verifyPosition();
+    void verifyCoveredSiblings();
 
 public slots:
     void enableMerge();

@@ -169,6 +169,7 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             }
 
             verifyPosition();
+            verifyCoveredSiblings();
         }
     }
 }
@@ -260,7 +261,19 @@ void JigsawPuzzleItem::raise()
         }
         setZValue(max);
     }
+}
 
+void JigsawPuzzleItem::verifyCoveredSiblings()
+{
+    foreach (QGraphicsItem *gi, scene()->items())
+    {
+        JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
+        if (item != this && item->zValue() < zValue() && item->pos().x() >= pos().x() && item->pos().y() >= pos().y() && item->pixmap().width() < pixmap().width() && item->pixmap().height() < pixmap().height())
+        {
+            item->raise();
+            break;
+        }
+    }
 }
 
 void JigsawPuzzleItem::assemble(QList<JigsawPuzzleItem *> *list, int width, int height)
