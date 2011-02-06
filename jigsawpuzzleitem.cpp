@@ -2,7 +2,7 @@
 #include "jigsawpuzzleitem.h"
 #include "jigsawpuzzleboard.h"
 
-QPointF operator*(const QPoint &point, const QSize &size)
+static QPointF operator*(const QPoint &point, const QSize &size)
 {
     return QPointF(point.x() * size.width(), point.y() * size.height());
 }

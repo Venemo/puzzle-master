@@ -2,7 +2,8 @@
 #define JIGSAWPUZZLEBOARD_H
 
 #include "puzzleboard.h"
-#include "jigsawpuzzleitem.h"
+
+class JigsawPuzzleItem;
 
 class JigsawPuzzleBoard : public PuzzleBoard
 {

@@ -1,6 +1,6 @@
 
-
 #include "jigsawpuzzleboard.h"
+#include "jigsawpuzzleitem.h"
 
 JigsawPuzzleBoard::JigsawPuzzleBoard(QObject *parent) :
     PuzzleBoard(parent)

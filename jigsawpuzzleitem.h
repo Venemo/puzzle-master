@@ -4,7 +4,7 @@
 #include <QtGui>
 #include "puzzleitem.h"
 
-QPointF operator*(const QPoint &point, const QSize &size);
+class JigsawPuzzleBoard;
 
 class JigsawPuzzleItem : public QObject, public PuzzleItem
 {
