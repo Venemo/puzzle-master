@@ -30,22 +30,28 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
             p.end();
 
             // creating the piece
-            JigsawPuzzleItem *w = new JigsawPuzzleItem(px, unit, 0, 0);
-            w->setPuzzleCoordinates(QPoint(i, j));
-            list1.append(w);
-            list2.append(w);
-            connect(w, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
-            addItem(w);
-            w->show();
-            w->setZValue(i * rows + j + 1);
+            JigsawPuzzleItem *item = new JigsawPuzzleItem(px, unit, 0, 0);
+            item->setPuzzleCoordinates(QPoint(i, j));
+            list1.append(item);
+            list2.append(item);
+            connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
+            addItem(item);
+            item->setZValue(i * rows + j + 1);
+
+            QPointF oldPos((width() - pixmap.width()) / 2 + (item->puzzleCoordinates().x() * unit.width()),
+                          (height() - pixmap.height()) / 2 + (item->puzzleCoordinates().y() * unit.height()));
+            item->setPos(oldPos);
+            item->show();
 
             emit loadProgressChanged(i * rows + j + 1);
         }
     }
     PuzzleItem::setNeighbours(&list1, cols, rows);
-    emit gameStarted();
+    QTimer::singleShot(3000, this, SIGNAL(gameStarted()));
+    emit loaded();
+    _pixmapSize = QSize(pixmap.width(), pixmap.height());
 
-    JigsawPuzzleItem::shuffle(&list2, width() - unit.width() - 1, height() - unit.height() - 1);
+    JigsawPuzzleItem::shuffle(&list2, pixmap.width(), pixmap.height());
 }
 
 void JigsawPuzzleBoard::surrenderGame()
@@ -59,7 +65,7 @@ void JigsawPuzzleBoard::surrenderGame()
             list2.append(item);
         }
     }
-    JigsawPuzzleItem::assemble(&list2);
+    JigsawPuzzleItem::assemble(&list2, _pixmapSize.width(), _pixmapSize.height());
 }
 
 void JigsawPuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)

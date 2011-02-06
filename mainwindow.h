@@ -27,9 +27,6 @@ class MainWindow : public QMainWindow
     int _secsElapsed;
     QSize _baseSize;
 
-    void initializeGame();
-    void endGame();
-
 protected:
     void focusOutEvent(QFocusEvent *event);
     void focusInEvent(QFocusEvent *event);
@@ -46,6 +43,8 @@ private slots:
     void onWon();
     void about();
     void elapsedSecond();
+    void initializeGame();
+    void endGame();
 };
 
 #endif // MAINWINDOW_H

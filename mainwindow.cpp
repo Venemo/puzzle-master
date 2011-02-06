@@ -119,9 +119,12 @@ void MainWindow::on_btnOpenImage_clicked()
             connect(board, SIGNAL(gameWon()), this, SLOT(onWon()));
             ui->graphicsView->setScene(board);
             board->setSceneRect(0, 0, _baseSize.width() - 10, _baseSize.height() - 10);
-            board->startGame(pixmap, rows, cols);
 
-            initializeGame();
+            connect(board, SIGNAL(gameStarted()), this, SLOT(initializeGame()));
+            if (SettingsDialog::useDropShadow())
+                connect(board, SIGNAL(loaded()), board, SLOT(enableDropshadow()));
+
+            board->startGame(pixmap, rows, cols);
         }
         else
         {
@@ -160,8 +163,6 @@ void MainWindow::initializeGame()
     ui->lblTime->show();
     _secsElapsed = 0;
 
-    if (SettingsDialog::useDropShadow())
-        board->enableDropshadow();
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     if (SettingsDialog::useAccelerometer())
         board->enableAccelerometer();

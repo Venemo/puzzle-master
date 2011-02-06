@@ -28,6 +28,7 @@ protected:
 signals:
     void gameStarted();
     void gameWon();
+    void loaded();
     void loadProgressChanged(int progress);
 
 private slots:
