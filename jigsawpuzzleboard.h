@@ -8,7 +8,6 @@ class JigsawPuzzleItem;
 class JigsawPuzzleBoard : public PuzzleBoard
 {
     Q_OBJECT
-    QSize _pixmapSize;
 
 public:
     explicit JigsawPuzzleBoard(QObject *parent = 0);

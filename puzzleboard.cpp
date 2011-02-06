@@ -10,6 +10,16 @@ PuzzleBoard::PuzzleBoard(QObject *parent) :
 #endif
 }
 
+const QSize &PuzzleBoard::originalPixmapSize()
+{
+    return _originalPixmapSize;
+}
+
+void PuzzleBoard::setOriginalPixmapSize(const QSize &size)
+{
+    _originalPixmapSize = size;
+}
+
 bool PuzzleBoard::isDropshadowActive()
 {
     foreach (QGraphicsItem *gi, items())

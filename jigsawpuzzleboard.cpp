@@ -13,6 +13,7 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
     QList<JigsawPuzzleItem*> list2;
 
     QPixmap pixmap = image.scaled(width(), height(), Qt::KeepAspectRatio);
+    setOriginalPixmapSize(pixmap.size());
     QSize unit(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
 
@@ -49,7 +50,6 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
     PuzzleItem::setNeighbours(&list1, cols, rows);
     QTimer::singleShot(3000, this, SIGNAL(gameStarted()));
     emit loaded();
-    _pixmapSize = QSize(pixmap.width(), pixmap.height());
 
     JigsawPuzzleItem::shuffle(&list2, pixmap.width(), pixmap.height());
 }
@@ -72,7 +72,7 @@ void JigsawPuzzleBoard::surrenderGame()
         item->setMerge(false);
         list2.append(item);
     }
-    JigsawPuzzleItem::assemble(&list2, _pixmapSize.width(), _pixmapSize.height());
+    JigsawPuzzleItem::assemble(&list2, originalPixmapSize().width(), originalPixmapSize().height());
 }
 
 void JigsawPuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)
