@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QColor bg = SettingsDialog::boardBackground();
     board->setBackgroundBrush(QBrush(bg));
     intro = new QGraphicsTextItem("To start playing, please press the 'New game' button!");
-    intro->setDefaultTextColor(QColor(255 - bg.red(), 255 - bg.green(), 255 - bg.blue()));
+    intro->setDefaultTextColor(QColor(0xFFFFFF - bg.rgb()));
     board->addItem(intro);
     ui->graphicsView->setScene(board);
     ui->graphicsView->setViewport(new QGLWidget(this));
@@ -160,7 +160,7 @@ void MainWindow::on_actionSettings_triggered()
     {
         board->setBackgroundBrush(QBrush(bg));
         if (!intro.isNull())
-            intro->setDefaultTextColor(QColor(255 - bg.red(), 255 - bg.green(), 255 - bg.blue()));
+            intro->setDefaultTextColor(QColor(0xFFFFFF - bg.rgb()));
     }
     if (SettingsDialog::useDropShadow() && !board->isDropshadowActive())
         board->enableDropshadow();
