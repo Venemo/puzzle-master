@@ -8,6 +8,7 @@
 
 #if defined(Q_WS_MAEMO_5)
 #include <QtMaemo5>
+#include <hildon-extras-1/hildon-extras/qt-he-wrapper.h>
 #endif
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -238,15 +239,22 @@ void MainWindow::about()
 {
     bool wasActive = timer->isActive();
     timer->stop();
+#if defined(Q_WS_MAEMO_5)
+    QtHeWrapper::showHeAboutDialog(this,
+                                   "Fun and addictive jigsaw puzzle game\nfor your mobile computer",
+                                   "Licensed under the terms of EUPL 1.1 - 2011, Timur Kristóf",
+                                   "http://gitorious.org/colorful-apps/pages/PuzzleMaster",
+                                   "http://talk.maemo.org/showthread.php?t=67139",
+                                   "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=venemo%40msn%2ecom&lc=US&item_name=to%20Timur%20Kristof%2c%20for%20Puzzle%20Master%20development&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted",
+                                   "puzzle-master");
+#else
     QFile file(":/about.txt");
     file.open(QIODevice::ReadOnly);
     QString str = QString::fromUtf8(file.readAll().constData());
     file.close();
-    QMessageBox::information(this, "About", str, QMessageBox::Ok
-                         #if defined(Q_WS_MAEMO_5)
-                             , QMessageBox::Cancel // So the user can close it by tapping on the blurred area
-                         #endif
-                             );
+    QMessageBox::Help == QMessageBox::information(this, "About", str, QMessageBox::Ok);
+#endif
+
     if (wasActive)
         timer->start();
 }
