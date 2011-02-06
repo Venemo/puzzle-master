@@ -2,6 +2,8 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
 
+#define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
+
 #define SETTING_USE_ACCELEROMETER "UseAccelerometer"
 #define SETTING_USE_DROPSHADOW "UseDropshadow"
 #define SETTING_BOARDBACKGROUND "BoardBackground"
@@ -40,22 +42,8 @@ void SettingsDialog::saveSettings()
 {
     // Saving settings
     QSettings s;
-    int i;
-    bool ok;
-    if (!((i = ui->txtColumns->text().toInt(&ok)) > 1 && ok))
-    {
-        QMessageBox::information(this, "Invalid value", "The column value is invalid", QMessageBox::Ok);
-        ui->txtColumns->setText("4");
-        i = 4;
-    }
-    s.setValue(SETTING_COLS, i);
-    if (!((i = ui->txtRows->text().toInt(&ok)) > 1 && ok))
-    {
-        QMessageBox::information(this, "Invalid value", "The row value is invalid", QMessageBox::Ok);
-        ui->txtRows->setText("3");
-        i = 3;
-    }
-    s.setValue(SETTING_ROWS, i);
+    s.setValue(SETTING_COLS, ui->cbColumns->currentIndex() + 2);
+    s.setValue(SETTING_ROWS, ui->cbRows->currentIndex() + 2);
     s.setValue(SETTING_USE_DROPSHADOW, ui->chkUseDropshadow->isChecked());
     s.setValue(SETTING_BOARDBACKGROUND, _boardBackground);
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
@@ -75,8 +63,9 @@ void SettingsDialog::showEvent(QShowEvent *e)
     ui->chkAccelerometer->setChecked(useAccelerometer());
 #endif
     ui->chkUseDropshadow->setChecked(useDropShadow());
-    ui->txtRows->setText(QString::number(rows()));
-    ui->txtColumns->setText(QString::number(columns()));
+    int r = CLAMP(rows(), 2, 15), c = CLAMP(columns(), 2, 15);
+    ui->cbRows->setCurrentIndex(r - 2);
+    ui->cbColumns->setCurrentIndex(c - 2);
 
     QPixmap pm(20, 20);
     pm.fill(_boardBackground);
