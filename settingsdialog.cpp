@@ -2,6 +2,10 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
 
+#if defined(Q_WS_MAEMO_5)
+#include <hildon-extras-1/hildon-extras/qt-he-wrapper.h>
+#endif
+
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 
 #define SETTING_USE_ACCELEROMETER "UseAccelerometer"
@@ -75,7 +79,7 @@ void SettingsDialog::showEvent(QShowEvent *e)
     ui->cbRows->setCurrentIndex(r - 2);
     ui->cbColumns->setCurrentIndex(c - 2);
 
-    QPixmap pm(20, 20);
+    QPixmap pm(80, 30);
     pm.fill(_boardBackground);
     ui->btnBoardColor->setIcon(QIcon(pm));
     int t = CLAMP(tolerance(), 5, 15);
@@ -86,11 +90,15 @@ void SettingsDialog::showEvent(QShowEvent *e)
 
 void SettingsDialog::on_btnBoardColor_clicked()
 {
+#if defined(Q_WS_MAEMO_5)
+    QColor newColor = QtHeWrapper::showHeSimpleColorDialog(this, _boardBackground, true);
+#else
     QColor newColor = QColorDialog::getColor(_boardBackground, this);
+#endif
     if (newColor != _boardBackground)
     {
         _boardBackground = newColor;
-        QPixmap pm(20, 20);
+        QPixmap pm(80, 30);
         pm.fill(_boardBackground);
         ui->btnBoardColor->setIcon(QIcon(pm));
     }

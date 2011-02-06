@@ -52,6 +52,8 @@ maemo5 {
     CONFIG += mobility
     MOBILITY += sensors
     QT += maemo5
+    CONFIG += link_pkgconfig
+    PKGCONFIG += hildon-extras-1
 }
 symbian {
     CONFIG += mobility
