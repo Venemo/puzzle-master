@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "jigsawpuzzleboard.h"
 #include "jigsawpuzzleitem.h"
+#include "util.h"
 #include <QtGui>
 #include <QGLWidget>
 
@@ -91,7 +92,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     QSize s2 = board->originalPixmapSize();
     s1.scale(ui->graphicsView->size(), Qt::KeepAspectRatio);
     s2.scale(_oldGraphicsViewSize, Qt::KeepAspectRatio);
-    _currentScaleRatio = (qreal)s1.width() / (qreal)s2.width();
+    _currentScaleRatio = min<qreal>((qreal)s1.width() / (qreal)s2.width(), (qreal)s1.height() / (qreal)s2.height());
 
     qDebug() << "old size" << _oldGraphicsViewSize << "new size" << ui->graphicsView->size() << "ratio" << _currentScaleRatio;
 

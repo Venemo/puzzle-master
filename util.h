@@ -19,7 +19,8 @@ inline int max(int i, int j)
     return i > j? i : j;
 }
 
-inline int min(int i, int j)
+template<class T>
+inline T min(T i, T j)
 {
     return i < j? i : j;
 }
