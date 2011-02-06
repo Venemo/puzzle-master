@@ -23,13 +23,13 @@ public:
     bool isDropshadowActive();
     const QSize &originalPixmapSize();
     void setNeighbours(int x, int y);
+    void setOriginalPixmapSize(const QSize &size);
     PuzzleItem *find(QPoint puzzleCoordinates);
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     bool isAccelerometerActive();
 #endif
 
 protected:
-    void setOriginalPixmapSize(const QSize &size);
     virtual void accelerometerMovement(qreal x, qreal y, qreal z) = 0;
 
 signals:

@@ -17,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     chooser(new ImageChooser(this)),
     highscores(new HighScoresDialog(this)),
     board(new JigsawPuzzleBoard(this)),
-    _isPlaying(false)
+    _isPlaying(false),
+    _oldGraphicsViewSize(0, 0)
 {
     ui->setupUi(this);
     ui->lblTime->hide();
@@ -31,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
     intro = new QGraphicsTextItem("To start playing, please press the 'New game' button!");
     intro->setDefaultTextColor(QColor(0xFFFFFF - bg.rgb()));
     board->addItem(intro);
+    board->setOriginalPixmapSize(ui->graphicsView->size());
+
     ui->graphicsView->setScene(board);
     ui->graphicsView->setViewport(new QGLWidget(this));
 
@@ -61,25 +64,46 @@ void MainWindow::focusOutEvent(QFocusEvent *event)
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
-    if (intro.isNull() || !intro->isVisible())
+
+    // The first resize event will contain garbage
+    if (_oldGraphicsViewSize == QSize(0, 0))
     {
-        QSize s1 = board->originalPixmapSize();
-        QSize s2 = board->originalPixmapSize();
-        s1.scale(ui->graphicsView->size(), Qt::KeepAspectRatio);
-        s2.scale(_oldGraphicsViewSize, Qt::KeepAspectRatio);
-        qreal ratio = (qreal)s1.width() / (qreal)s2.width();
+        _oldGraphicsViewSize = QSize(0,1);
+        return;
+    }
+    // Second resize event, don't scale just remember the size
+    else if (_oldGraphicsViewSize == QSize(0, 1))
+    {
+        _oldGraphicsViewSize = ui->graphicsView->size();
+        return;
+    }
 
+    // On every other resize event, actually scale the graphics view's content
+
+    // Calculating scale ratio
+    QSize s1 = board->originalPixmapSize();
+    QSize s2 = board->originalPixmapSize();
+    s1.scale(ui->graphicsView->size(), Qt::KeepAspectRatio);
+    s2.scale(_oldGraphicsViewSize, Qt::KeepAspectRatio);
+    qreal ratio = (qreal)s1.width() / (qreal)s2.width();
+
+    //qDebug() << _oldGraphicsViewSize << ui->graphicsView->size() << ratio;
+
+    // Setting scene rect and scale
+    if (intro.isNull())
         board->setSceneRect(0, 0, ui->graphicsView->width() / ratio, ui->graphicsView->height() / ratio);
-        ui->graphicsView->scale(ratio, ratio);
+    ui->graphicsView->scale(ratio, ratio);
 
-        foreach (QGraphicsItem *item, board->items())
+    // Making sure every piece is visible
+    foreach (QGraphicsItem *item, board->items())
+    {
+        if (JigsawPuzzleItem *jpi = dynamic_cast<JigsawPuzzleItem*>(item))
         {
-            if (JigsawPuzzleItem *jpi = dynamic_cast<JigsawPuzzleItem*>(item))
-            {
-                jpi->verifyPosition();
-            }
+            jpi->verifyPosition();
         }
     }
+
+    // Saving size
     _oldGraphicsViewSize = ui->graphicsView->size();
 }
 
