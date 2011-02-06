@@ -111,14 +111,15 @@ bool JigsawPuzzleItem::merge(PuzzleItem *piece)
         {
             _dragging = false;
             _canMerge = false;
+            QPointF newPos((scene()->width() - pixmap().width()) / 2, (scene()->height() - pixmap().height()) / 2);
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
             QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", this);
-            anim->setEndValue(QPoint(0, 0));
+            anim->setEndValue(newPos);
             anim->setDuration(1000);
             connect(anim, SIGNAL(finished()), this, SIGNAL(noNeighbours()));
             anim->start(QAbstractAnimation::DeleteWhenStopped);
 #else
-            setPuzzleCoordinates(0, 0);
+            setPos(newPos);
             emit noNeighbours();
 #endif
         }
