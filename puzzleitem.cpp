@@ -64,31 +64,3 @@ bool PuzzleItem::merge(PuzzleItem *piece)
     }
     return false;
 }
-
-void PuzzleItem::setNeighbours(QList<PuzzleItem *> *list, int x, int y)
-{
-    if (list->count() != x * y)
-    {
-        qDebug() << "The Puzzle piece list was inconsistent with x and y";
-        return;
-    }
-
-    foreach(PuzzleItem *p, *list)
-    {
-        if (p->puzzleCoordinates().x() != x - 1)
-            p->addNeighbour(find(list, p->puzzleCoordinates() + QPoint(1, 0)));
-
-        if (p->puzzleCoordinates().y() != y - 1)
-            p->addNeighbour(find(list, p->puzzleCoordinates() + QPoint(0, 1)));
-    }
-}
-
-PuzzleItem *PuzzleItem::find(QList<PuzzleItem *> *pieces, QPoint puzzleCoordinates)
-{
-    foreach(PuzzleItem *p, *pieces)
-    {
-        if (p->puzzleCoordinates() == puzzleCoordinates)
-            return p;
-    }
-    return 0;
-}

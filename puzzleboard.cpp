@@ -20,6 +20,36 @@ void PuzzleBoard::setOriginalPixmapSize(const QSize &size)
     _originalPixmapSize = size;
 }
 
+void PuzzleBoard::setNeighbours(int x, int y)
+{
+    if (items().count() != x * y)
+    {
+        qDebug() << "The Puzzle piece list was inconsistent with x and y";
+        return;
+    }
+
+    foreach(QGraphicsItem *gi, items())
+    {
+        PuzzleItem *p = (PuzzleItem*)gi;
+        if (p->puzzleCoordinates().x() != x - 1)
+            p->addNeighbour(find(p->puzzleCoordinates() + QPoint(1, 0)));
+
+        if (p->puzzleCoordinates().y() != y - 1)
+            p->addNeighbour(find(p->puzzleCoordinates() + QPoint(0, 1)));
+    }
+}
+
+PuzzleItem *PuzzleBoard::find(QPoint puzzleCoordinates)
+{
+    foreach(QGraphicsItem *gi, items())
+    {
+        PuzzleItem *p = (PuzzleItem*)gi;
+        if (p->puzzleCoordinates() == puzzleCoordinates)
+            return p;
+    }
+    return 0;
+}
+
 bool PuzzleBoard::isDropshadowActive()
 {
     foreach (QGraphicsItem *gi, items())

@@ -13,6 +13,8 @@ public:
     explicit JigsawPuzzleBoard(QObject *parent = 0);
     void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols);
     void setToleranceForPieces(int tolerance);
+    void shuffle();
+    void assemble();
 
 protected:
     void accelerometerMovement(qreal x, qreal y, qreal z);

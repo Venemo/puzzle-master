@@ -1,6 +1,7 @@
 
 #include "jigsawpuzzleboard.h"
 #include "jigsawpuzzleitem.h"
+#include "util.h"
 
 JigsawPuzzleBoard::JigsawPuzzleBoard(QObject *parent) :
     PuzzleBoard(parent)
@@ -47,11 +48,67 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
             emit loadProgressChanged(i * rows + j + 1);
         }
     }
-    PuzzleItem::setNeighbours(&list1, cols, rows);
+    setNeighbours(cols, rows);
     QTimer::singleShot(3000, this, SIGNAL(gameStarted()));
     emit loaded();
 
-    JigsawPuzzleItem::shuffle(&list2, pixmap.width(), pixmap.height());
+    shuffle();
+}
+
+void JigsawPuzzleBoard::shuffle()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    QParallelAnimationGroup *group = new QParallelAnimationGroup();
+#endif
+    foreach (QGraphicsItem *gi, items())
+    {
+        JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
+        QPointF newPos(randomInt(0, originalPixmapSize().width() - item->unit().width()), randomInt(0, originalPixmapSize().height() - item->unit().width()));
+
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+        connect(group, SIGNAL(finished()), item, SLOT(enableMerge()));
+        QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
+        anim->setEndValue(newPos);
+        anim->setDuration(2000);
+        anim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+        group->addAnimation(anim);
+        if (randomInt(0, 10) > 5)
+            item->raise();
+#else
+        item->setPos(newPos);
+#endif
+
+    }
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    connect(group, SIGNAL(finished()), group, SLOT(deleteLater()));
+    QTimer::singleShot(1000, group, SLOT(start()));
+#endif
+}
+
+void JigsawPuzzleBoard::assemble()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    QParallelAnimationGroup *group = new QParallelAnimationGroup();
+#endif
+    foreach (QGraphicsItem *gi, items())
+    {
+        JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
+        QPointF newPos((item->scene()->width() - originalPixmapSize().width()) / 2 + (item->puzzleCoordinates().x() * item->unit().width()),
+                       (item->scene()->height() - originalPixmapSize().height()) / 2 + (item->puzzleCoordinates().y() * item->unit().height()));
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+        QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
+        anim->setEndValue(newPos);
+        anim->setDuration(2000);
+        anim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+        group->addAnimation(anim);
+#else
+        widget->setPos(newPos);
+#endif
+
+    }
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    group->start(QAbstractAnimation::DeleteWhenStopped);
+#endif
 }
 
 void JigsawPuzzleBoard::setToleranceForPieces(int tolerance)
@@ -72,7 +129,7 @@ void JigsawPuzzleBoard::surrenderGame()
         item->setMerge(false);
         list2.append(item);
     }
-    JigsawPuzzleItem::assemble(&list2, originalPixmapSize().width(), originalPixmapSize().height());
+    assemble();
 }
 
 void JigsawPuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)

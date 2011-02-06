@@ -37,7 +37,8 @@ HEADERS += \
     imagechooser.h \
     highscoresdialog.h \
     jigsawpuzzleboard.h \
-    puzzleboard.h
+    puzzleboard.h \
+    util.h
 
 FORMS += \
     mainwindow.ui \

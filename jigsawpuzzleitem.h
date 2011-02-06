@@ -25,8 +25,7 @@ public:
     double weight();
     void setTolerance(int t);
     int tolerance();
-    static void shuffle(QList<JigsawPuzzleItem*> *list, int width, int height);
-    static void assemble(QList<JigsawPuzzleItem*> *list, int width, int height);
+    const QSize &unit();
     void raise();
     void verifyPosition();
     void verifyCoveredSiblings();

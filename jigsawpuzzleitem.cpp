@@ -1,24 +1,7 @@
 #include <QtGui>
 #include "jigsawpuzzleitem.h"
 #include "jigsawpuzzleboard.h"
-
-#define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
-
-static QPointF operator*(const QPoint &point, const QSize &size)
-{
-    return QPointF(point.x() * size.width(), point.y() * size.height());
-}
-
-static int randomInt(int low, int high)
-{
-    // Random number between low and high
-    return qrand() % ((high + 1) - low) + low;
-}
-
-static int max(int i, int j)
-{
-    return i > j? i : j;
-}
+#include "util.h"
 
 JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, const QSize &unitSize, QGraphicsItem *parent, QGraphicsScene *scene) :
     QObject(scene),
@@ -64,6 +47,11 @@ void JigsawPuzzleItem::setTolerance(int t)
 int JigsawPuzzleItem::tolerance()
 {
     return _tolerance;
+}
+
+const QSize &JigsawPuzzleItem::unit()
+{
+    return _unit;
 }
 
 bool JigsawPuzzleItem::merge(PuzzleItem *piece)
@@ -218,35 +206,6 @@ void JigsawPuzzleItem::verifyPosition()
     }
 }
 
-void JigsawPuzzleItem::shuffle(QList<JigsawPuzzleItem *> *list, int width, int height)
-{
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-    QParallelAnimationGroup *group = new QParallelAnimationGroup();
-#endif
-    foreach (JigsawPuzzleItem *item, *list)
-    {
-        QPointF newPos(randomInt(0, width - item->_unit.width()), randomInt(0, height - item->_unit.width()));
-
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-        connect(group, SIGNAL(finished()), item, SLOT(enableMerge()));
-        QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
-        anim->setEndValue(newPos);
-        anim->setDuration(2000);
-        anim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
-        group->addAnimation(anim);
-        if (randomInt(0, 10) > 5)
-            item->raise();
-#else
-        item->setPos(newPos);
-#endif
-
-    }
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-    connect(group, SIGNAL(finished()), group, SLOT(deleteLater()));
-    QTimer::singleShot(1000, group, SLOT(start()));
-#endif
-}
-
 void JigsawPuzzleItem::raise()
 {
     QGraphicsItem *maxItem = this;
@@ -286,29 +245,4 @@ void JigsawPuzzleItem::verifyCoveredSiblings()
             break;
         }
     }
-}
-
-void JigsawPuzzleItem::assemble(QList<JigsawPuzzleItem *> *list, int width, int height)
-{
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-    QParallelAnimationGroup *group = new QParallelAnimationGroup();
-#endif
-    foreach (JigsawPuzzleItem *item, *list)
-    {
-        QPointF newPos((item->scene()->width() - width) / 2 + (item->puzzleCoordinates().x() * item->_unit.width()),
-                      (item->scene()->height() - height) / 2 + (item->puzzleCoordinates().y() * item->_unit.height()));
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-        QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
-        anim->setEndValue(newPos);
-        anim->setDuration(2000);
-        anim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
-        group->addAnimation(anim);
-#else
-        widget->setPos(newPos);
-#endif
-
-    }
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-    group->start(QAbstractAnimation::DeleteWhenStopped);
-#endif
 }

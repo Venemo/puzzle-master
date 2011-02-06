@@ -1,12 +1,11 @@
 #include <QtGui>
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
+#include "util.h"
 
 #if defined(Q_WS_MAEMO_5)
 #include <hildon-extras-1/hildon-extras/qt-he-wrapper.h>
 #endif
-
-#define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 
 #define SETTING_USE_ACCELEROMETER "UseAccelerometer"
 #define SETTING_USE_DROPSHADOW "UseDropshadow"

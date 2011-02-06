@@ -21,10 +21,6 @@ public:
 
     bool isNeighbourOf(const PuzzleItem *piece) const;
     virtual bool merge(PuzzleItem *piece);
-
-    static void setNeighbours(QList<PuzzleItem*> *pieces, int x, int y);
-    static PuzzleItem *find(QList<PuzzleItem*> *pieces, QPoint puzzleCoordinates);
-
 };
 
 #endif // PUZZLEPIECE_H

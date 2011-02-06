@@ -7,6 +7,8 @@
 #include <QAccelerometer>
 #endif
 
+class PuzzleItem;
+
 class PuzzleBoard : public QGraphicsScene
 {
     Q_OBJECT
@@ -20,6 +22,8 @@ public:
     virtual void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols) = 0;
     bool isDropshadowActive();
     const QSize &originalPixmapSize();
+    void setNeighbours(int x, int y);
+    PuzzleItem *find(QPoint puzzleCoordinates);
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     bool isAccelerometerActive();
 #endif
