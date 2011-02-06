@@ -61,7 +61,20 @@
       <item>
        <widget class="QLabel" name="lblTime">
         <property name="text">
-         <string>Elapsed time: 0</string>
+         <string>Wait a moment</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="btnFullscreen">
+        <property name="text">
+         <string>+</string>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextOnly</enum>
+        </property>
+        <property name="autoRaise">
+         <bool>false</bool>
         </property>
        </widget>
       </item>

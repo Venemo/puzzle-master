@@ -39,6 +39,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 #if defined(Q_WS_MAEMO_5)
     setAttribute(Qt::WA_Maemo5AutoOrientation);
+
+    ui->btnFullscreen->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    ui->btnFullscreen->setIcon(QIcon::fromTheme("general_fullsize"));
 #endif
 }
 
@@ -258,6 +261,20 @@ void MainWindow::about()
 void MainWindow::elapsedSecond()
 {
     _secsElapsed++;
-    QString str = "Elapsed time: " + QString::number(_secsElapsed) + " second";
+    QString str = "Elapsed " + QString::number(_secsElapsed) + " second";
     ui->lblTime->setText(_secsElapsed == 1 ? str : str + "s");
+}
+
+void MainWindow::on_btnFullscreen_clicked()
+{
+    if (isFullScreen())
+    {
+        ui->btnFullscreen->setText("+");
+        showNormal();
+    }
+    else
+    {
+        ui->btnFullscreen->setText("-");
+        showFullScreen();
+    }
 }

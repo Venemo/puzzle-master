@@ -45,6 +45,7 @@ private slots:
     void elapsedSecond();
     void initializeGame();
     void endGame();
+    void on_btnFullscreen_clicked();
 };
 
 #endif // MAINWINDOW_H
