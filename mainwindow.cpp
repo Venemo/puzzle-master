@@ -18,7 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
     highscores(new HighScoresDialog(this)),
     board(new JigsawPuzzleBoard(this)),
     _isPlaying(false),
-    _oldGraphicsViewSize(0, 0)
+    _oldGraphicsViewSize(0, 0),
+    _currentScaleRatio(1)
 {
     ui->setupUi(this);
     ui->lblTime->hide();
@@ -88,14 +89,14 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     QSize s2 = board->originalPixmapSize();
     s1.scale(ui->graphicsView->size(), Qt::KeepAspectRatio);
     s2.scale(_oldGraphicsViewSize, Qt::KeepAspectRatio);
-    qreal ratio = (qreal)s1.width() / (qreal)s2.width();
+    _currentScaleRatio = (qreal)s1.width() / (qreal)s2.width();
 
     //qDebug() << _oldGraphicsViewSize << ui->graphicsView->size() << ratio;
 
     // Setting scene rect and scale
     if (intro.isNull())
-        board->setSceneRect(0, 0, ui->graphicsView->width() / ratio, ui->graphicsView->height() / ratio);
-    ui->graphicsView->scale(ratio, ratio);
+        board->setSceneRect(0, 0, ui->graphicsView->width() / _currentScaleRatio, ui->graphicsView->height() / _currentScaleRatio);
+    ui->graphicsView->scale(_currentScaleRatio, _currentScaleRatio);
 
     // Making sure every piece is visible
     foreach (QGraphicsItem *item, board->items())
@@ -145,7 +146,7 @@ void MainWindow::on_btnOpenImage_clicked()
             connect(board, SIGNAL(gameStarted()), progress, SLOT(deleteLater()));
             connect(board, SIGNAL(gameWon()), this, SLOT(onWon()));
             ui->graphicsView->setScene(board);
-            board->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
+            board->setSceneRect(0, 0, ui->graphicsView->width() / _currentScaleRatio, ui->graphicsView->height() / _currentScaleRatio);
 
             connect(board, SIGNAL(gameStarted()), this, SLOT(initializeGame()));
             if (SettingsDialog::useDropShadow())
@@ -175,7 +176,8 @@ void MainWindow::onWon()
 
     // Showing congratulations
 #if defined(Q_WS_MAEMO_5)
-    QMaemo5InformationBox::information(0, "<b>You rock!</b><br />Congratulations!<br />You've successfully solved the given puzzle!", QMaemo5InformationBox::NoTimeout);
+    int timeout = width() > height() ? QMaemo5InformationBox::NoTimeout : 5000;
+    QMaemo5InformationBox::information(0, "<b>You rock!</b><br />Congratulations!<br />You've successfully solved the given puzzle!", timeout);
 #else
     QMessageBox::information(this, "You rock!", "Congratulations!\nYou've successfully solved the given puzzle!");
 #endif

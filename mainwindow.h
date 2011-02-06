@@ -26,6 +26,7 @@ class MainWindow : public QMainWindow
     bool _isPlaying;
     int _secsElapsed;
     QSize _oldGraphicsViewSize;
+    qreal _currentScaleRatio;
 
 protected:
     void focusOutEvent(QFocusEvent *event);
