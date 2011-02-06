@@ -25,7 +25,6 @@ class MainWindow : public QMainWindow
     QPointer<QGraphicsTextItem> intro;
     bool _isPlaying;
     int _secsElapsed;
-    QSize _oldGraphicsViewSize;
     qreal _currentScaleRatio;
 
 protected:

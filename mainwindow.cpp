@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
     highscores(new HighScoresDialog(this)),
     board(new JigsawPuzzleBoard(this)),
     _isPlaying(false),
-    _oldGraphicsViewSize(0, 0),
     _currentScaleRatio(1)
 {
     ui->setupUi(this);
@@ -34,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
     intro = new QGraphicsTextItem("To start playing, please press the 'New game' button!");
     intro->setDefaultTextColor(QColor(0xFFFFFF - bg.rgb()));
     board->addItem(intro);
-    board->setOriginalPixmapSize(ui->graphicsView->size());
+    board->setOriginalPixmapSize(QSize(intro->boundingRect().size().width(), intro->boundingRect().size().height()));
 
     ui->graphicsView->setScene(board);
     ui->graphicsView->setViewport(new QGLWidget(this));
@@ -71,42 +70,24 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     if (event)
         QMainWindow::resizeEvent(event);
 
-    // The first resize event will contain garbage
-    if (_oldGraphicsViewSize == QSize(0, 0))
-    {
-        _oldGraphicsViewSize = QSize(0,1);
-        return;
-    }
-    // Second resize event, don't scale just remember the size
-    else if (_oldGraphicsViewSize == QSize(0, 1))
-    {
-        _oldGraphicsViewSize = ui->graphicsView->size();
-        return;
-    }
-
-    // On every other resize event, actually scale the graphics view's content
+    // Scaling the graphics view's content
 
     // Calculating scale ratio
     qreal oldScaleRatio = _currentScaleRatio;
-    QSize s1 = board->originalPixmapSize();
-    QSize s2 = board->originalPixmapSize();
-    s1.scale(ui->graphicsView->size(), Qt::KeepAspectRatio);
-    s2.scale(_oldGraphicsViewSize, Qt::KeepAspectRatio);
-    _currentScaleRatio = min<qreal>((qreal)s1.width() / (qreal)s2.width(), (qreal)s1.height() / (qreal)s2.height());
+    QSize scaledPixmapSize = board->originalPixmapSize();
+    scaledPixmapSize.scale(ui->graphicsView->size(), Qt::KeepAspectRatio);
+    _currentScaleRatio = min<qreal>((qreal)scaledPixmapSize.width() / (qreal)board->originalPixmapSize().width(),
+                                    (qreal)scaledPixmapSize.height() / (qreal)board->originalPixmapSize().height());
 
-    qDebug() << "old size" << _oldGraphicsViewSize << "new size" << ui->graphicsView->size() << "ratio" << _currentScaleRatio;
+    //qDebug() << "new size" << ui->graphicsView->size() << "ratio" << _currentScaleRatio;
 
     // Setting scene rect and scale
-    QSizeF olds = (_oldGraphicsViewSize / oldScaleRatio - board->originalPixmapSize()) / 2;
-    if (intro.isNull())
-    {
-        board->setSceneRect(0, 0, ui->graphicsView->width() / _currentScaleRatio, ui->graphicsView->height() / _currentScaleRatio);
-    }
-    ui->graphicsView->scale(_currentScaleRatio, _currentScaleRatio);
+    QSizeF oldscenesize = board->sceneRect().size();
+    board->setSceneRect(0, 0, ui->graphicsView->width() / _currentScaleRatio, ui->graphicsView->height() / _currentScaleRatio);
+    ui->graphicsView->scale(_currentScaleRatio / oldScaleRatio, _currentScaleRatio / oldScaleRatio);
 
     // Making sure every piece is visible and has a nice position
-    QSizeF news = (board->sceneRect().size() - board->originalPixmapSize()) / 2;
-    QSizeF p = news - olds;
+    QSizeF p = (board->sceneRect().size() - oldscenesize) / 2;
     foreach (QGraphicsItem *item, board->items())
     {
         QPointF newPos(item->pos().x() + p.width(),
@@ -114,12 +95,10 @@ void MainWindow::resizeEvent(QResizeEvent *event)
         item->setPos(newPos);
         if (JigsawPuzzleItem *jpi = dynamic_cast<JigsawPuzzleItem*>(item))
         {
-            jpi->verifyPosition();
+            if (jpi->canMerge())
+                jpi->verifyPosition();
         }
     }
-
-    // Saving size
-    _oldGraphicsViewSize = ui->graphicsView->size();
 }
 
 void MainWindow::on_actionHigh_scores_triggered()
@@ -165,8 +144,7 @@ void MainWindow::on_btnOpenImage_clicked()
                 connect(board, SIGNAL(loaded()), board, SLOT(enableDropshadow()));
 
             board->startGame(pixmap, rows, cols);
-            //_currentScaleRatio = 1;
-            _oldGraphicsViewSize = ui->graphicsView->size();
+            _currentScaleRatio = 1;
         }
         else
         {
