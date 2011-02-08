@@ -184,17 +184,17 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void JigsawPuzzleItem::verifyPosition()
 {
     int x = pos().x();// + puzzleCoordinates().x() * _unit.width();
-    int maxX = scene()->width() - _unit.width() / 4;
-    int minX = - pixmap().width() + _unit.width() / 4;
+    int maxX = scene()->width() - _unit.width() / 3;
+    int minX = - pixmap().width() + _unit.width() / 3;
 
     int y = pos().y();// + puzzleCoordinates().y() * _unit.height();
-    int maxY = scene()->height() - _unit.height() / 4;
-    int minY = - pixmap().height() + _unit.height() /4;
+    int maxY = scene()->height() - _unit.height() / 3;
+    int minY = - pixmap().height() + _unit.height() / 3;
 
     if (!(x < maxX && x > (minX) && y < maxY && y > (minY)))
     {
-        int pX = CLAMP(x, minX + _unit.width() / 4, maxX - _unit.width() / 4);
-        int pY = CLAMP(y, minY + _unit.height() / 4, maxY - _unit.height() / 4);
+        int pX = CLAMP(x, minX + _unit.width() / 2, maxX - _unit.width() / 2);
+        int pY = CLAMP(y, minY + _unit.height() / 2, maxY - _unit.height() / 2);
         _dragging = false;
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
         QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", this);
