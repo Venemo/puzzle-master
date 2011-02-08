@@ -28,8 +28,10 @@ class MainWindow : public QMainWindow
     qreal _currentScaleRatio;
 
 protected:
-    void focusOutEvent(QFocusEvent *event);
-    void focusInEvent(QFocusEvent *event);
+#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60) || defined(Q_WS_WINCE)
+    void leaveEvent(QEvent *event);
+    void enterEvent(QEvent *event);
+#endif
     void resizeEvent(QResizeEvent *event);
 
 public:

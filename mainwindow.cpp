@@ -52,19 +52,21 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::focusInEvent(QFocusEvent *event)
+#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60) || defined(Q_WS_WINCE)
+void MainWindow::enterEvent(QEvent *event)
 {
     if (_isPlaying)
         timer->start();
-    QMainWindow::focusInEvent(event);
+    QMainWindow::enterEvent(event);
 }
 
-void MainWindow::focusOutEvent(QFocusEvent *event)
+void MainWindow::leaveEvent(QEvent *event)
 {
     if (timer->isActive())
         timer->stop();
-    QMainWindow::focusOutEvent(event);
+    QMainWindow::leaveEvent(event);
 }
+#endif
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
