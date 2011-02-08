@@ -62,21 +62,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60) || defined(Q_WS_WINCE)
-void MainWindow::enterEvent(QEvent *event)
+bool MainWindow::event(QEvent *event)
 {
-    if (_isPlaying)
+    bool result = QMainWindow::event(event);
+    if (event->type() == QEvent::WindowActivate)
         timer->start();
-    QMainWindow::enterEvent(event);
-}
-
-void MainWindow::leaveEvent(QEvent *event)
-{
-    if (timer->isActive())
+    else if (event->type() == QEvent::WindowDeactivate)
         timer->stop();
-    QMainWindow::leaveEvent(event);
+    return result;
 }
-#endif
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
