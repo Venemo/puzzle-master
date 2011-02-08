@@ -41,7 +41,7 @@ private slots:
     void on_btnOpenImage_clicked();
     void onWon();
     void about();
-    void elapsedSecond();
+    void updateElapsedTimeLabel();
     void initializeGame();
     void endGame();
     void on_btnFullscreen_clicked();

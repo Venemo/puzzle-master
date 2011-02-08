@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lblTime->hide();
 
     timer->setInterval(1000);
-    connect(timer, SIGNAL(timeout()), this, SLOT(elapsedSecond()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateElapsedTimeLabel()));
     setFocus();
 
     QColor bg = SettingsDialog::boardBackground();
@@ -192,13 +192,10 @@ void MainWindow::onWon()
 void MainWindow::initializeGame()
 {
     timer->start();
-    ui->lblTime->show();
-    _secsElapsed = 0;
+    updateElapsedTimeLabel();
 
     if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
-    {
         jpb->setToleranceForPieces(SettingsDialog::tolerance());
-    }
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     if (SettingsDialog::useAccelerometer())
         board->enableAccelerometer();
@@ -229,18 +226,17 @@ void MainWindow::on_actionSettings_triggered()
         if (!intro.isNull())
             intro->setDefaultTextColor(QColor(0xFFFFFF - bg.rgb()));
     }
-    if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
-    {
-        jpb->setToleranceForPieces(SettingsDialog::tolerance());
-    }
+    if (_isPlaying)
+        if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
+            jpb->setToleranceForPieces(SettingsDialog::tolerance());
     if (SettingsDialog::useDropShadow() && !board->isDropshadowActive())
         board->enableDropshadow();
     else if (!SettingsDialog::useDropShadow() && board->isDropshadowActive())
         board->disableDropshadow();
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-    if (SettingsDialog::useAccelerometer() && !board->isAccelerometerActive())
+    if (_isPlaying && SettingsDialog::useAccelerometer() && !board->isAccelerometerActive())
         board->enableAccelerometer();
-    else if (!SettingsDialog::useAccelerometer() && board->isAccelerometerActive())
+    else if (_isPlaying && !SettingsDialog::useAccelerometer() && board->isAccelerometerActive())
         board->disableAccelerometer();
 #endif
 }
@@ -268,9 +264,17 @@ void MainWindow::about()
         timer->start();
 }
 
-void MainWindow::elapsedSecond()
+void MainWindow::updateElapsedTimeLabel()
 {
-    _secsElapsed++;
+    if (_isPlaying && ui->lblTime->isVisible())
+    {
+        _secsElapsed++;
+    }
+    else if (_isPlaying)
+    {
+        _secsElapsed = 0;
+        ui->lblTime->show();
+    }
     QString str = "Elapsed " + QString::number(_secsElapsed) + " second";
     ui->lblTime->setText(_secsElapsed == 1 ? str : str + "s");
 }
