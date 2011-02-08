@@ -144,7 +144,10 @@ void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void JigsawPuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
+    {
+        verifyCoveredSiblings();
         _dragging = false;
+    }
 }
 
 void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -169,7 +172,6 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             }
 
             verifyPosition();
-            verifyCoveredSiblings();
         }
     }
 }
@@ -239,7 +241,14 @@ void JigsawPuzzleItem::verifyCoveredSiblings()
     foreach (QGraphicsItem *gi, scene()->items())
     {
         JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
-        if (item != this && item->zValue() < zValue() && item->pos().x() >= pos().x() && item->pos().y() >= pos().y() && item->pixmap().width() < pixmap().width() && item->pixmap().height() < pixmap().height())
+        if (item != this &&
+                item->zValue() < zValue() &&
+                item->pos().x() >= pos().x() &&
+                item->pos().y() >= pos().y() &&
+                item->pos().x() + item->pixmap().width() < pos().x() + pixmap().width() &&
+                item->pos().y() + item->pixmap().height() < pos().y() + pixmap().height() &&
+                item->pixmap().width() < pixmap().width() &&
+                item->pixmap().height() < pixmap().height())
         {
             item->raise();
             break;
