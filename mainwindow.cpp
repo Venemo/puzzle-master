@@ -11,6 +11,16 @@
 #include <hildon-extras-1/hildon-extras/qt-he-wrapper.h>
 #endif
 
+static QPointer<QString> aboutString = 0;
+
+static void fetchAboutString()
+{
+    QFile file(":/about.txt");
+    file.open(QIODevice::ReadOnly);
+    *aboutString = QString::fromUtf8(file.readAll().constData());
+    file.close();
+}
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -250,11 +260,10 @@ void MainWindow::about()
                                    "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=venemo%40msn%2ecom&lc=US&item_name=to%20Timur%20Kristof%2c%20for%20Puzzle%20Master%20development&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted",
                                    "puzzle-master");
 #else
-    QFile file(":/about.txt");
-    file.open(QIODevice::ReadOnly);
-    QString str = QString::fromUtf8(file.readAll().constData());
-    file.close();
-    QMessageBox::Help == QMessageBox::information(this, "About", str, QMessageBox::Ok);
+    if (aboutString == 0)
+        fetchAboutString();
+
+    QMessageBox::information(this, "About", aboutString, QMessageBox::Ok);
 #endif
 
     if (wasActive)
