@@ -11,7 +11,7 @@
 #include <hildon-extras-1/hildon-extras/qt-he-wrapper.h>
 #endif
 
-static QPointer<QString> aboutString = 0;
+static QString *aboutString = 0;
 
 static void fetchAboutString()
 {
@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QColor bg = SettingsDialog::boardBackground();
     board->setBackgroundBrush(QBrush(bg));
-    intro = new QGraphicsTextItem("To start playing, please press the 'New game' button!");
+    intro = new QGraphicsTextItem("Please press the 'New game' button!");
     intro->setDefaultTextColor(QColor(0xFFFFFF - bg.rgb()));
     board->addItem(intro);
     board->setOriginalPixmapSize(QSize(intro->boundingRect().size().width(), intro->boundingRect().size().height()));
@@ -83,6 +83,9 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     if (event)
         QMainWindow::resizeEvent(event);
 
+    if (intro != 0)
+        return;
+
     // Scaling the graphics view's content
 
     // Calculating scale ratio
@@ -112,6 +115,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
                 jpi->verifyPosition();
         }
     }
+    event->accept();
 }
 
 void MainWindow::on_actionHigh_scores_triggered()
@@ -263,7 +267,7 @@ void MainWindow::about()
     if (aboutString == 0)
         fetchAboutString();
 
-    QMessageBox::information(this, "About", aboutString, QMessageBox::Ok);
+    QMessageBox::information(this, "About", *aboutString, QMessageBox::Ok);
 #endif
 
     if (wasActive)
