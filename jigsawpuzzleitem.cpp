@@ -54,14 +54,19 @@ const QSize &JigsawPuzzleItem::unit()
     return _unit;
 }
 
-bool JigsawPuzzleItem::merge(PuzzleItem *piece)
+bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
 {
-    JigsawPuzzleItem *w = (JigsawPuzzleItem*)piece;
-    if (PuzzleItem::merge(piece))
+    if (isNeighbourOf(item))
     {
-        w->_canMerge = _canMerge = false;
+        foreach (PuzzleItem *n, item->neighbours())
+        {
+            item->removeNeighbour(n);
+            this->addNeighbour(n);
+        }
 
-        QPoint vector = w->puzzleCoordinates() - puzzleCoordinates();
+        item->_canMerge = _canMerge = false;
+
+        QPoint vector = item->puzzleCoordinates() - puzzleCoordinates();
         int x1, x2, y1, y2, u1, v1;
         if (vector.x() >= 0)
         {
@@ -88,8 +93,8 @@ bool JigsawPuzzleItem::merge(PuzzleItem *piece)
             y2 = 0;
         }
 
-        QPixmap pix(max(x1 + pixmap().width(), x2 + w->pixmap().width()),
-                    max(y1 + pixmap().height(), y2 + w->pixmap().height()));
+        QPixmap pix(max(x1 + pixmap().width(), x2 + item->pixmap().width()),
+                    max(y1 + pixmap().height(), y2 + item->pixmap().height()));
         pix.fill(Qt::transparent);
 
         QPainter p;
@@ -97,15 +102,15 @@ bool JigsawPuzzleItem::merge(PuzzleItem *piece)
         p.setClipping(false);
 
         p.drawPixmap(x1, y1, pixmap());
-        p.drawPixmap(x2, y2, w->pixmap());
+        p.drawPixmap(x2, y2, item->pixmap());
 
         p.end();
         setPixmap(pix);
         setPuzzleCoordinates(puzzleCoordinates() - QPoint(u1, v1));
         setPos(pos().x() - x1, pos().y() - y1);
         _dragStart = _dragStart + QPointF(x1, y1);
-        w->hide();
-        delete w;
+        item->hide();
+        delete item;
         _canMerge = true;
 
         if (neighbours().count() == 0)

@@ -19,7 +19,7 @@ class JigsawPuzzleItem : public QObject, public PuzzleItem
 
 public:
     explicit JigsawPuzzleItem(const QPixmap &pixmap, const QSize &unitSize, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
-    virtual bool merge(PuzzleItem *piece);
+    virtual bool merge(JigsawPuzzleItem *item);
     bool canMerge() const;
     void setMerge(bool canMerge);
     double weight();

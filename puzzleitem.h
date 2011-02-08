@@ -20,7 +20,6 @@ public:
     void removeNeighbour(PuzzleItem *piece);
 
     bool isNeighbourOf(const PuzzleItem *piece) const;
-    virtual bool merge(PuzzleItem *piece);
 };
 
 #endif // PUZZLEPIECE_H

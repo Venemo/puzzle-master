@@ -49,18 +49,3 @@ bool PuzzleItem::isNeighbourOf(const PuzzleItem *piece) const
         return true;
     return false;
 }
-
-bool PuzzleItem::merge(PuzzleItem *piece)
-{
-    if (isNeighbourOf(piece))
-    {
-        foreach (PuzzleItem *n, piece->_neighbours)
-        {
-            piece->removeNeighbour(n);
-            this->addNeighbour(n);
-        }
-        //qDebug() << "merged" << puzzleCoordinates() << "and" << piece->puzzleCoordinates();
-        return true;
-    }
-    return false;
-}
