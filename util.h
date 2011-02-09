@@ -32,7 +32,7 @@ inline const QString &fetchAboutString()
     {
         QFile file(":/about.txt");
         file.open(QIODevice::ReadOnly);
-        *aboutString = QString::fromUtf8(file.readAll().constData());
+        aboutString = new QString(QString::fromUtf8(file.readAll().constData()));
         file.close();
     }
     return *aboutString;

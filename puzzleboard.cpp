@@ -53,15 +53,11 @@ PuzzleItem *PuzzleBoard::find(QPoint puzzleCoordinates)
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
 bool PuzzleBoard::isDropshadowActive()
 {
-    foreach (QGraphicsItem *gi, items())
+    foreach (QGraphicsItem *item, items())
     {
-        if (PuzzleItem *item = dynamic_cast<PuzzleItem*>(gi))
+        if (dynamic_cast<QGraphicsDropShadowEffect*>(item->graphicsEffect()))
         {
-            if (QGraphicsDropShadowEffect *effect = dynamic_cast<QGraphicsDropShadowEffect*>(item->graphicsEffect()))
-            {
-                Q_UNUSED(effect);
-                return true;
-            }
+            return true;
         }
     }
     return false;

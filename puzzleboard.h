@@ -26,13 +26,9 @@ public:
     PuzzleItem *find(QPoint puzzleCoordinates);
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     bool isDropshadowActive();
-    void enableDropshadow();
-    void disableDropshadow();
 #endif
 #if defined(HAVE_QACCELEROMETER)
     bool isAccelerometerActive();
-    void enableAccelerometer();
-    void disableAccelerometer();
 #endif
 
 protected:
@@ -51,6 +47,14 @@ private slots:
 
 public slots:
     virtual void surrenderGame() = 0;
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    void enableDropshadow();
+    void disableDropshadow();
+#endif
+#if defined(HAVE_QACCELEROMETER)
+    void enableAccelerometer();
+    void disableAccelerometer();
+#endif
 
 };
 

@@ -61,9 +61,23 @@ bool MainWindow::event(QEvent *event)
 {
     bool result = QMainWindow::event(event);
     if (event->type() == QEvent::WindowActivate)
+    {
+#if defined(HAVE_QACCELEROMETER)
+        // Starting accelerometer
+        if (SettingsDialog::useAccelerometer())
+            board->enableAccelerometer();
+#endif
         timer->start();
+    }
     else if (event->type() == QEvent::WindowDeactivate)
+    {
         timer->stop();
+#if defined(HAVE_QACCELEROMETER)
+        // Stopping accelerometer
+        if (SettingsDialog::useAccelerometer())
+            board->disableAccelerometer();
+#endif
+    }
     return result;
 }
 
@@ -129,7 +143,10 @@ void MainWindow::on_btnOpenImage_clicked()
         {
             QProgressDialog *progress = new QProgressDialog("Generating puzzle...", "Cancel", 0, rows * cols, this);
             progress->setWindowTitle("Generating puzzle...");
-            progress->show();
+#ifndef MOBILE
+            if (rows * cols < 20)
+                progress->show();
+#endif
 
             if (board != 0)
             {
@@ -139,13 +156,13 @@ void MainWindow::on_btnOpenImage_clicked()
             ui->graphicsView->resetTransform();
             board = new JigsawPuzzleBoard(ui->graphicsView);
             board->setBackgroundBrush(QBrush(SettingsDialog::boardBackground()));
-            connect(board, SIGNAL(loadProgressChanged(int)), progress, SLOT(setValue(int)));
-            connect(board, SIGNAL(gameStarted()), progress, SLOT(deleteLater()));
-            connect(board, SIGNAL(gameWon()), this, SLOT(onWon()));
             ui->graphicsView->setScene(board);
             board->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
 
+            connect(board, SIGNAL(loadProgressChanged(int)), progress, SLOT(setValue(int)));
+            connect(board, SIGNAL(gameStarted()), progress, SLOT(deleteLater()));
             connect(board, SIGNAL(gameStarted()), this, SLOT(initializeGame()));
+            connect(board, SIGNAL(gameWon()), this, SLOT(onWon()));
 
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
             if (SettingsDialog::useDropShadow())
@@ -190,15 +207,17 @@ void MainWindow::initializeGame()
 {
     timer->start();
     updateElapsedTimeLabel();
+    _isPlaying = true;
+    ui->btnOpenImage->setText("Surrender");
 
+    // Snap tolerance
     if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
         jpb->setToleranceForPieces(SettingsDialog::tolerance());
 #if defined(HAVE_QACCELEROMETER)
+    // Accelerometer
     if (SettingsDialog::useAccelerometer())
         board->enableAccelerometer();
 #endif
-    _isPlaying = true;
-    ui->btnOpenImage->setText("Surrender");
 }
 
 void MainWindow::endGame()
@@ -208,6 +227,7 @@ void MainWindow::endGame()
     // Additional things
     ui->btnOpenImage->setText("New game...");
     _isPlaying = false;
+
 #if defined(HAVE_QACCELEROMETER)
     board->disableAccelerometer();
 #endif
@@ -216,6 +236,8 @@ void MainWindow::endGame()
 void MainWindow::on_actionSettings_triggered()
 {
     settings->exec();
+
+    // Board background
     QColor bg = SettingsDialog::boardBackground();
     if (board->backgroundBrush().color() != bg)
     {
@@ -223,16 +245,21 @@ void MainWindow::on_actionSettings_triggered()
         if (!intro.isNull())
             intro->setDefaultTextColor(QColor(0xFFFFFF - bg.rgb()));
     }
+
+    // Snap tolerance
     if (_isPlaying)
         if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
             jpb->setToleranceForPieces(SettingsDialog::tolerance());
+
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    // Drop shadows
     if (SettingsDialog::useDropShadow() && !board->isDropshadowActive())
         board->enableDropshadow();
     else if (!SettingsDialog::useDropShadow() && board->isDropshadowActive())
         board->disableDropshadow();
 #endif
 #if defined(HAVE_QACCELEROMETER)
+    // Accelerometer
     if (_isPlaying && SettingsDialog::useAccelerometer() && !board->isAccelerometerActive())
         board->enableAccelerometer();
     else if (_isPlaying && !SettingsDialog::useAccelerometer() && board->isAccelerometerActive())
@@ -242,8 +269,6 @@ void MainWindow::on_actionSettings_triggered()
 
 void MainWindow::about()
 {
-    bool wasActive = timer->isActive();
-    timer->stop();
 #if defined(Q_WS_MAEMO_5)
     QtHeWrapper::showHeAboutDialog(this,
                                    "Fun and addictive jigsaw puzzle game\nfor your mobile computer",
@@ -255,9 +280,6 @@ void MainWindow::about()
 #else
     QMessageBox::information(this, "About", fetchAboutString(), QMessageBox::Ok);
 #endif
-
-    if (wasActive)
-        timer->start();
 }
 
 void MainWindow::updateElapsedTimeLabel()

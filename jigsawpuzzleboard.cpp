@@ -49,7 +49,7 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
         }
     }
     setNeighbours(cols, rows);
-    QTimer::singleShot(3000, this, SIGNAL(gameStarted()));
+    connect(this, SIGNAL(shuffleComplete()), this, SIGNAL(gameStarted()));
     emit loaded();
 
     shuffle();
@@ -80,8 +80,11 @@ void JigsawPuzzleBoard::shuffle()
             item->raise();
     }
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    connect(group, SIGNAL(finished()), this, SIGNAL(shuffleComplete()));
     connect(group, SIGNAL(finished()), group, SLOT(deleteLater()));
     QTimer::singleShot(1000, group, SLOT(start()));
+#else
+    emit shuffleComplete();
 #endif
 }
 
