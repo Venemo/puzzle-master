@@ -14,7 +14,7 @@
 #define SETTING_ROWS "Rows"
 #define SETTING_COLS "Columns"
 
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60) || defined(Q_WS_WINCE)
+#if defined(MOBILE)
 #define DEFAULT_TOLERANCE 10
 #else
 #define DEFAULT_TOLERANCE 5
@@ -26,24 +26,30 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     _boardBackground(boardBackground())
 {
     ui->setupUi(this);
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-    setFixedWidth(parentWidget()->width());
-
+#if defined(Q_WS_MAEMO_5)
     // This ensures the correct look on Maemo 5 too
     QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Vertical, this);
     ui->btnClose->setDefault(true);
     buttonBox->addButton(ui->btnClose, QDialogButtonBox::ActionRole);
     layout()->addWidget(buttonBox);
 #else
-    setFixedHeight(height() - ui->chkAccelerometer->height());
     setFixedWidth(450);
+#endif
+
+#if defined(HAVE_QACCELEROMETER)
+#else
+    // Deleting the relevant UI if we don't have an accelerometer
+    setFixedHeight(height() - ui->chkAccelerometer->height());
     ui->chkAccelerometer->deleteLater();
 #endif
+
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
 #else
+    // Deleting the relevant UI if we don't have Qt 4.6 at least
     setFixedHeight(height() - ui->chkUseDropshadow->height());
     ui->chkUseDropshadow->deleteLater();
 #endif
+
     connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
     connect(this, SIGNAL(rejected()), this, SLOT(saveSettings()));
 }
@@ -80,7 +86,7 @@ void SettingsDialog::showEvent(QShowEvent *e)
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     ui->chkUseDropshadow->setChecked(useDropShadow());
 #endif
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
+#if defined(HAVE_QACCELEROMETER)
     ui->chkAccelerometer->setChecked(useAccelerometer());
 #endif
     int r = CLAMP(rows(), 2, 15), c = CLAMP(columns(), 2, 15);

@@ -10,19 +10,9 @@
 #include <hildon-extras-1/hildon-extras/qt-he-wrapper.h>
 #endif
 
-#if HAVE_OPENGL
+#if defined(HAVE_OPENGL)
 #include <QGLWidget>
 #endif
-
-static QString *aboutString = 0;
-
-static void fetchAboutString()
-{
-    QFile file(":/about.txt");
-    file.open(QIODevice::ReadOnly);
-    *aboutString = QString::fromUtf8(file.readAll().constData());
-    file.close();
-}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -50,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     board->setOriginalPixmapSize(QSize((int)intro->boundingRect().size().width(), (int)intro->boundingRect().size().height()));
 
     ui->graphicsView->setScene(board);
-#if HAVE_OPENGL
+#if defined(HAVE_OPENGL)
     ui->graphicsView->setViewport(new QGLWidget(this));
 #endif
 
@@ -186,8 +176,7 @@ void MainWindow::onWon()
 
     // Showing congratulations
 #if defined(Q_WS_MAEMO_5)
-    int timeout = width() > height() ? QMaemo5InformationBox::NoTimeout : 5000;
-    QMaemo5InformationBox::information(0, "<b>You rock!</b><br />Congratulations!<br />You've successfully solved the given puzzle!", timeout);
+    QMaemo5InformationBox::information(0, "<b>You rock!</b><br />Congratulations!<br />You've successfully solved the given puzzle!", 5000);
 #else
     QMessageBox::information(this, "You rock!", "Congratulations!\nYou've successfully solved the given puzzle!");
 #endif
@@ -204,7 +193,7 @@ void MainWindow::initializeGame()
 
     if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
         jpb->setToleranceForPieces(SettingsDialog::tolerance());
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
+#if defined(HAVE_QACCELEROMETER)
     if (SettingsDialog::useAccelerometer())
         board->enableAccelerometer();
 #endif
@@ -219,7 +208,7 @@ void MainWindow::endGame()
     // Additional things
     ui->btnOpenImage->setText("New game...");
     _isPlaying = false;
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
+#if defined(HAVE_QACCELEROMETER)
     board->disableAccelerometer();
 #endif
 }
@@ -243,7 +232,7 @@ void MainWindow::on_actionSettings_triggered()
     else if (!SettingsDialog::useDropShadow() && board->isDropshadowActive())
         board->disableDropshadow();
 #endif
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
+#if defined(HAVE_QACCELEROMETER)
     if (_isPlaying && SettingsDialog::useAccelerometer() && !board->isAccelerometerActive())
         board->enableAccelerometer();
     else if (_isPlaying && !SettingsDialog::useAccelerometer() && board->isAccelerometerActive())
@@ -264,10 +253,7 @@ void MainWindow::about()
                                    "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=venemo%40msn%2ecom&lc=US&item_name=to%20Timur%20Kristof%2c%20for%20Puzzle%20Master%20development&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted",
                                    "puzzle-master");
 #else
-    if (aboutString == 0)
-        fetchAboutString();
-
-    QMessageBox::information(this, "About", *aboutString, QMessageBox::Ok);
+    QMessageBox::information(this, "About", fetchAboutString(), QMessageBox::Ok);
 #endif
 
     if (wasActive)

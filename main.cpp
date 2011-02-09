@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
 
     QApplication::addLibraryPath("./plugins");
     QApplication::setApplicationName("Puzzle Master");
@@ -14,11 +14,11 @@ int main(int argc, char *argv[])
     qsrand((uint)QTime::currentTime().msec());
 
     MainWindow w;
-#if defined(Q_WS_S60)
+#if defined(MOBILE)
     w.showMaximized();
 #else
     w.show();
 #endif
 
-    return a.exec();
+    return app.exec();
 }

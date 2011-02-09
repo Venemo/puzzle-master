@@ -72,12 +72,12 @@ void JigsawPuzzleBoard::shuffle()
         anim->setDuration(2000);
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
         group->addAnimation(anim);
-        if (randomInt(0, 10) > 5)
-            item->raise();
 #else
         item->setPos(newPos);
+        item->enableMerge();
 #endif
-
+        if (randomInt(0, 10) > 5)
+            item->raise();
     }
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     connect(group, SIGNAL(finished()), group, SLOT(deleteLater()));
@@ -93,6 +93,7 @@ void JigsawPuzzleBoard::assemble()
     foreach (QGraphicsItem *gi, items())
     {
         JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
+        item->disableMerge();
         QPointF newPos((item->scene()->width() - originalPixmapSize().width()) / 2 + (item->puzzleCoordinates().x() * item->unit().width()),
                        (item->scene()->height() - originalPixmapSize().height()) / 2 + (item->puzzleCoordinates().y() * item->unit().height()));
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
@@ -104,7 +105,6 @@ void JigsawPuzzleBoard::assemble()
 #else
         item->setPos(newPos);
 #endif
-
     }
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     group->start(QAbstractAnimation::DeleteWhenStopped);
@@ -122,13 +122,6 @@ void JigsawPuzzleBoard::setToleranceForPieces(int tolerance)
 
 void JigsawPuzzleBoard::surrenderGame()
 {
-    QList<JigsawPuzzleItem*> list2;
-    foreach (QGraphicsItem *gi, items())
-    {
-        JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
-        item->setMerge(false);
-        list2.append(item);
-    }
     assemble();
 }
 

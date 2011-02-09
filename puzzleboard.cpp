@@ -4,7 +4,7 @@
 PuzzleBoard::PuzzleBoard(QObject *parent) :
     QGraphicsScene(parent)
 {
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
+#if defined(HAVE_QACCELEROMETER)
     accelerometer = new QtMobility::QAccelerometer(this);
     connect(accelerometer, SIGNAL(readingChanged()), this, SLOT(accelerometerReadingChanged()));
 #endif
@@ -95,7 +95,7 @@ void PuzzleBoard::disableDropshadow()
 }
 #endif
 
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
+#if defined(HAVE_QACCELEROMETER)
 bool PuzzleBoard::isAccelerometerActive()
 {
     return accelerometer->isActive();

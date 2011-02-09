@@ -50,32 +50,41 @@ RESOURCES += \
     resources.qrc
 
 maemo5 {
-    CONFIG += mobility
-    MOBILITY += sensors
+    # Maemo 5 Fremantle
     QT += maemo5
     DEFINES += MOBILE HAVE_QACCELEROMETER
-    CONFIG += link_pkgconfig
+
+    CONFIG += mobility link_pkgconfig
+    MOBILITY += sensors
     PKGCONFIG += hildon-extras-1
 }
 contains(QT_CONFIG, hildon): {
-    DEFINES += MOBILE
-    DEFINES -= HAVE_OPENGL
+    # Maemo 4 Diablo
     QT -= opengl
+    DEFINES -= HAVE_OPENGL
+    DEFINES += MOBILE
 }
 symbian {
+    # Symbian
+    QT -= opengl
+    DEFINES += MOBILE HAVE_QACCELEROMETER
+
     CONFIG += mobility
     MOBILITY += sensors
-    QT += opengl
-    DEFINES += MOBILE HAVE_QACCELEROMETER
+
     TARGET.UID3 = 0xe5b4435f
     # TARGET.CAPABILITY +=
     TARGET.EPOCSTACKSIZE = 0x14000
     TARGET.EPOCHEAPSIZE = 0x020000 0x800000
 }
 win32 {
+    # Windows desktop
     RC_FILE = puzzle-master.rc
 }
 wince {
+    # Windows Mobile
+    QT -= opengl
+    DEFINES -= HAVE_OPENGL
     DEFINES += MOBILE
     RC_FILE = puzzle-master.rc
 }

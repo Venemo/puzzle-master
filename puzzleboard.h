@@ -3,7 +3,7 @@
 
 #include <QGraphicsScene>
 
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
+#if defined(HAVE_QACCELEROMETER)
 #include <QAccelerometer>
 #endif
 
@@ -13,7 +13,7 @@ class PuzzleBoard : public QGraphicsScene
 {
     Q_OBJECT
     QSize _originalPixmapSize;
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
+#if defined(HAVE_QACCELEROMETER)
     QtMobility::QAccelerometer *accelerometer;
 #endif
 
@@ -29,7 +29,7 @@ public:
     void enableDropshadow();
     void disableDropshadow();
 #endif
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
+#if defined(HAVE_QACCELEROMETER)
     bool isAccelerometerActive();
     void enableAccelerometer();
     void disableAccelerometer();
@@ -45,7 +45,7 @@ signals:
     void loadProgressChanged(int progress);
 
 private slots:
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
+#if defined(HAVE_QACCELEROMETER)
     void accelerometerReadingChanged();
 #endif
 

@@ -25,4 +25,17 @@ inline T min(T i, T j)
     return i < j? i : j;
 }
 
+inline const QString &fetchAboutString()
+{
+    static QString *aboutString = 0;
+    if (aboutString == 0)
+    {
+        QFile file(":/about.txt");
+        file.open(QIODevice::ReadOnly);
+        *aboutString = QString::fromUtf8(file.readAll().constData());
+        file.close();
+    }
+    return *aboutString;
+}
+
 #endif // UTIL_H
