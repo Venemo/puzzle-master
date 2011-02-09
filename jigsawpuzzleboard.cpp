@@ -102,7 +102,7 @@ void JigsawPuzzleBoard::assemble()
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
         group->addAnimation(anim);
 #else
-        widget->setPos(newPos);
+        item->setPos(newPos);
 #endif
 
     }

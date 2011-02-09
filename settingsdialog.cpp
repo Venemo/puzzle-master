@@ -39,6 +39,11 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     setFixedWidth(450);
     ui->chkAccelerometer->deleteLater();
 #endif
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+#else
+    setFixedHeight(height() - ui->chkUseDropshadow->height());
+    ui->chkUseDropshadow->deleteLater();
+#endif
     connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
     connect(this, SIGNAL(rejected()), this, SLOT(saveSettings()));
 }
@@ -54,9 +59,11 @@ void SettingsDialog::saveSettings()
     QSettings s;
     s.setValue(SETTING_COLS, ui->cbColumns->currentIndex() + 2);
     s.setValue(SETTING_ROWS, ui->cbRows->currentIndex() + 2);
-    s.setValue(SETTING_USE_DROPSHADOW, ui->chkUseDropshadow->isChecked());
     s.setValue(SETTING_BOARDBACKGROUND, _boardBackground);
     s.setValue(SETTING_TOLERANCE, (ui->cbTolerance->currentIndex() + 1) * 5);
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    s.setValue(SETTING_USE_DROPSHADOW, ui->chkUseDropshadow->isChecked());
+#endif
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     s.setValue(SETTING_USE_ACCELEROMETER, ui->chkAccelerometer->isChecked());
 #endif
@@ -70,10 +77,12 @@ void SettingsDialog::on_btnClose_clicked()
 
 void SettingsDialog::showEvent(QShowEvent *e)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    ui->chkUseDropshadow->setChecked(useDropShadow());
+#endif
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     ui->chkAccelerometer->setChecked(useAccelerometer());
 #endif
-    ui->chkUseDropshadow->setChecked(useDropShadow());
     int r = CLAMP(rows(), 2, 15), c = CLAMP(columns(), 2, 15);
     ui->cbRows->setCurrentIndex(r - 2);
     ui->cbColumns->setCurrentIndex(c - 2);
@@ -103,6 +112,14 @@ void SettingsDialog::on_btnBoardColor_clicked()
     }
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+bool SettingsDialog::useDropShadow()
+{
+    QSettings s;
+    return s.value(SETTING_USE_DROPSHADOW, true).toBool();
+}
+#endif
+
 bool SettingsDialog::useAccelerometer()
 {
     QSettings s;
@@ -126,12 +143,6 @@ int SettingsDialog::columns()
 {
     QSettings s;
     return s.value(SETTING_COLS, 3).toInt();
-}
-
-bool SettingsDialog::useDropShadow()
-{
-    QSettings s;
-    return s.value(SETTING_USE_DROPSHADOW, true).toBool();
 }
 
 QColor SettingsDialog::boardBackground()

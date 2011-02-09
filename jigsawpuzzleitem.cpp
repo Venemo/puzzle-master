@@ -170,7 +170,7 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                 QPointF posDiff2 = (puzzleCoordinates() * _unit - w->puzzleCoordinates() * _unit);
                 QPointF relative = posDiff1 - posDiff2;
 
-                if (abs(relative.x()) < _tolerance && abs(relative.y()) < _tolerance)
+                if (abs((int)relative.x()) < _tolerance && abs((int)relative.y()) < _tolerance)
                 {
                     merge(w);
                 }
@@ -183,12 +183,12 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void JigsawPuzzleItem::verifyPosition()
 {
-    int x = pos().x();// + puzzleCoordinates().x() * _unit.width();
-    int maxX = scene()->width() - _unit.width() / 3;
+    int x = (int)pos().x();
+    int maxX = (int)scene()->width() - _unit.width() / 3;
     int minX = - pixmap().width() + _unit.width() / 3;
 
-    int y = pos().y();// + puzzleCoordinates().y() * _unit.height();
-    int maxY = scene()->height() - _unit.height() / 3;
+    int y = (int)pos().y();
+    int maxY = (int)scene()->height() - _unit.height() / 3;
     int minY = - pixmap().height() + _unit.height() / 3;
 
     if (!(x < maxX && x > (minX) && y < maxY && y > (minY)))
@@ -232,10 +232,12 @@ void JigsawPuzzleItem::raise()
             {
                 item->setZValue(item->zValue() - 1);
             }
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
             else if (item != this && item->zValue() == this->zValue())
             {
                 item->stackBefore(this);
             }
+#endif
         }
         setZValue(max);
     }

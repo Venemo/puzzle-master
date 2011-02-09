@@ -4,11 +4,14 @@
 #include "jigsawpuzzleitem.h"
 #include "util.h"
 #include <QtGui>
-#include <QGLWidget>
 
 #if defined(Q_WS_MAEMO_5)
 #include <QtMaemo5>
 #include <hildon-extras-1/hildon-extras/qt-he-wrapper.h>
+#endif
+
+#if HAVE_OPENGL
+#include <QGLWidget>
 #endif
 
 static QString *aboutString = 0;
@@ -44,10 +47,12 @@ MainWindow::MainWindow(QWidget *parent) :
     intro = new QGraphicsTextItem("Please press the 'New game' button!");
     intro->setDefaultTextColor(QColor(0xFFFFFF - bg.rgb()));
     board->addItem(intro);
-    board->setOriginalPixmapSize(QSize(intro->boundingRect().size().width(), intro->boundingRect().size().height()));
+    board->setOriginalPixmapSize(QSize((int)intro->boundingRect().size().width(), (int)intro->boundingRect().size().height()));
 
     ui->graphicsView->setScene(board);
+#if HAVE_OPENGL
     ui->graphicsView->setViewport(new QGLWidget(this));
+#endif
 
 #if defined(Q_WS_MAEMO_5)
     setAttribute(Qt::WA_Maemo5AutoOrientation);
@@ -151,8 +156,11 @@ void MainWindow::on_btnOpenImage_clicked()
             board->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
 
             connect(board, SIGNAL(gameStarted()), this, SLOT(initializeGame()));
+
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
             if (SettingsDialog::useDropShadow())
                 connect(board, SIGNAL(loaded()), board, SLOT(enableDropshadow()));
+#endif
 
             board->startGame(pixmap, rows, cols);
             _currentScaleRatio = 1;
@@ -229,10 +237,12 @@ void MainWindow::on_actionSettings_triggered()
     if (_isPlaying)
         if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
             jpb->setToleranceForPieces(SettingsDialog::tolerance());
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     if (SettingsDialog::useDropShadow() && !board->isDropshadowActive())
         board->enableDropshadow();
     else if (!SettingsDialog::useDropShadow() && board->isDropshadowActive())
         board->disableDropshadow();
+#endif
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     if (_isPlaying && SettingsDialog::useAccelerometer() && !board->isAccelerometerActive())
         board->enableAccelerometer();

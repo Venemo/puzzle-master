@@ -50,6 +50,7 @@ PuzzleItem *PuzzleBoard::find(QPoint puzzleCoordinates)
     return 0;
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
 bool PuzzleBoard::isDropshadowActive()
 {
     foreach (QGraphicsItem *gi, items())
@@ -92,6 +93,7 @@ void PuzzleBoard::disableDropshadow()
         }
     }
 }
+#endif
 
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
 bool PuzzleBoard::isAccelerometerActive()

@@ -20,7 +20,9 @@ public:
     static int rows();
     static int columns();
     static bool useAccelerometer();
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     static bool useDropShadow();
+#endif
     static QColor boardBackground();
     static int tolerance();
 

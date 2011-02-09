@@ -10,7 +10,7 @@ TARGET = puzzle-master
 TEMPLATE = app
 
 VERSION = 1.1.0
-DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+DEFINES += APP_VERSION=\\\"$$VERSION\\\" HAVE_OPENGL
 
 OBJECTS_DIR = build
 MOC_DIR = build
@@ -53,12 +53,20 @@ maemo5 {
     CONFIG += mobility
     MOBILITY += sensors
     QT += maemo5
+    DEFINES += MOBILE HAVE_QACCELEROMETER
     CONFIG += link_pkgconfig
     PKGCONFIG += hildon-extras-1
+}
+contains(QT_CONFIG, hildon): {
+    DEFINES += MOBILE
+    DEFINES -= HAVE_OPENGL
+    QT -= opengl
 }
 symbian {
     CONFIG += mobility
     MOBILITY += sensors
+    QT += opengl
+    DEFINES += MOBILE HAVE_QACCELEROMETER
     TARGET.UID3 = 0xe5b4435f
     # TARGET.CAPABILITY +=
     TARGET.EPOCSTACKSIZE = 0x14000
@@ -68,6 +76,7 @@ win32 {
     RC_FILE = puzzle-master.rc
 }
 wince {
+    DEFINES += MOBILE
     RC_FILE = puzzle-master.rc
 }
 

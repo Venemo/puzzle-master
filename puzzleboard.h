@@ -20,13 +20,19 @@ class PuzzleBoard : public QGraphicsScene
 public:
     explicit PuzzleBoard(QObject *parent = 0);
     virtual void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols) = 0;
-    bool isDropshadowActive();
     const QSize &originalPixmapSize();
     void setNeighbours(int x, int y);
     void setOriginalPixmapSize(const QSize &size);
     PuzzleItem *find(QPoint puzzleCoordinates);
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    bool isDropshadowActive();
+    void enableDropshadow();
+    void disableDropshadow();
+#endif
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     bool isAccelerometerActive();
+    void enableAccelerometer();
+    void disableAccelerometer();
 #endif
 
 protected:
@@ -45,12 +51,6 @@ private slots:
 
 public slots:
     virtual void surrenderGame() = 0;
-    void enableDropshadow();
-    void disableDropshadow();
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-    void enableAccelerometer();
-    void disableAccelerometer();
-#endif
 
 };
 
