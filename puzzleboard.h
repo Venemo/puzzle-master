@@ -24,12 +24,8 @@ public:
     void setNeighbours(int x, int y);
     void setOriginalPixmapSize(const QSize &size);
     PuzzleItem *find(QPoint puzzleCoordinates);
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     bool isDropshadowActive();
-#endif
-#if defined(HAVE_QACCELEROMETER)
     bool isAccelerometerActive();
-#endif
 
 protected:
     virtual void accelerometerMovement(qreal x, qreal y, qreal z) = 0;
@@ -41,20 +37,14 @@ signals:
     void loadProgressChanged(int progress);
 
 private slots:
-#if defined(HAVE_QACCELEROMETER)
     void accelerometerReadingChanged();
-#endif
 
 public slots:
     virtual void surrenderGame() = 0;
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     void enableDropshadow();
     void disableDropshadow();
-#endif
-#if defined(HAVE_QACCELEROMETER)
     void enableAccelerometer();
     void disableAccelerometer();
-#endif
 
 };
 

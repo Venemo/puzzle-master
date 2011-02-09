@@ -50,9 +50,9 @@ PuzzleItem *PuzzleBoard::find(QPoint puzzleCoordinates)
     return 0;
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
 bool PuzzleBoard::isDropshadowActive()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     foreach (QGraphicsItem *item, items())
     {
         if (dynamic_cast<QGraphicsDropShadowEffect*>(item->graphicsEffect()))
@@ -60,11 +60,13 @@ bool PuzzleBoard::isDropshadowActive()
             return true;
         }
     }
+#endif
     return false;
 }
 
 void PuzzleBoard::enableDropshadow()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QColor c(0, 0, 0, 200);
     foreach (QGraphicsItem *gi, items())
     {
@@ -77,10 +79,12 @@ void PuzzleBoard::enableDropshadow()
             item->setGraphicsEffect(effect);
         }
     }
+#endif
 }
 
 void PuzzleBoard::disableDropshadow()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     foreach (QGraphicsItem *gi, items())
     {
         if (PuzzleItem *item = dynamic_cast<PuzzleItem*>(gi))
@@ -88,29 +92,37 @@ void PuzzleBoard::disableDropshadow()
             item->setGraphicsEffect(0);
         }
     }
-}
 #endif
+}
 
-#if defined(HAVE_QACCELEROMETER)
 bool PuzzleBoard::isAccelerometerActive()
 {
+#if defined(HAVE_QACCELEROMETER)
     return accelerometer->isActive();
+#else
+    return false;
+#endif
 }
 
 void PuzzleBoard::accelerometerReadingChanged()
 {
+#if defined(HAVE_QACCELEROMETER)
     QtMobility::QAccelerometerReading *reading = accelerometer->reading();
     accelerometerMovement(reading->x(), reading->y(), reading->z());
+#endif
 }
 
 void PuzzleBoard::enableAccelerometer()
 {
+#if defined(HAVE_QACCELEROMETER)
     accelerometer->connectToBackend();
     accelerometer->start();
+#endif
 }
 
 void PuzzleBoard::disableAccelerometer()
 {
+#if defined(HAVE_QACCELEROMETER)
     accelerometer->stop();
-}
 #endif
+}

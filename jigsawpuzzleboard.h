@@ -13,7 +13,6 @@ public:
     explicit JigsawPuzzleBoard(QObject *parent = 0);
     void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols);
     void setToleranceForPieces(int tolerance);
-    void shuffle();
     void assemble();
 
 protected:
@@ -29,6 +28,7 @@ private slots:
 
 public slots:
     void surrenderGame();
+    void shuffle();
 
 };
 

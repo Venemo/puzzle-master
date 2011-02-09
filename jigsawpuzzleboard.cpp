@@ -52,7 +52,7 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
     connect(this, SIGNAL(shuffleComplete()), this, SIGNAL(gameStarted()));
     emit loaded();
 
-    shuffle();
+    QTimer::singleShot(1000, this, SLOT(shuffle()));
 }
 
 void JigsawPuzzleBoard::shuffle()
@@ -82,7 +82,7 @@ void JigsawPuzzleBoard::shuffle()
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     connect(group, SIGNAL(finished()), this, SIGNAL(shuffleComplete()));
     connect(group, SIGNAL(finished()), group, SLOT(deleteLater()));
-    QTimer::singleShot(1000, group, SLOT(start()));
+    group->start();
 #else
     emit shuffleComplete();
 #endif
