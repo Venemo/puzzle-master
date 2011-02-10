@@ -9,7 +9,6 @@ int main(int argc, char *argv[])
     QApplication::addLibraryPath("./plugins");
     QApplication::setApplicationName("Puzzle Master");
     QApplication::setOrganizationName("Venemo");
-    // APP_VERSION is defined in the .pro file
     QApplication::setApplicationVersion(QString(APP_VERSION));
 
     qsrand((uint)QTime::currentTime().msec());

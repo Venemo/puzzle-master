@@ -206,6 +206,7 @@ void MainWindow::onWon()
 void MainWindow::initializeGame()
 {
     timer->start();
+    _secsElapsed = 0;
     updateElapsedTimeLabel();
     _isPlaying = true;
     ui->btnOpenImage->setText("Surrender");
