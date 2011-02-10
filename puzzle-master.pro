@@ -10,7 +10,7 @@ TARGET = puzzle-master
 TEMPLATE = app
 
 VERSION = 1.1.1
-DEFINES += APP_VERSION=\\\"$$VERSION\\\" HAVE_OPENGL
+DEFINES += HAVE_OPENGL
 
 OBJECTS_DIR = build
 MOC_DIR = build
@@ -68,6 +68,7 @@ symbian {
     # Symbian
     QT -= opengl
     DEFINES += MOBILE HAVE_QACCELEROMETER
+    DEFINES -= HAVE_OPENGL
 
     CONFIG += mobility
     MOBILITY += sensors

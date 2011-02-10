@@ -1,6 +1,8 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#define APP_VERSION "1.1.1"
+
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 
 inline QPointF operator*(const QPoint &point, const QSize &size)
