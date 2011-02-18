@@ -140,6 +140,7 @@ void MainWindow::on_btnOpenImage_clicked()
         {
             ui->btnOpenImage->setIcon(QIcon(QPixmap(":/surrender.png")));
             ui->btnOpenImage->setText("Surrender");
+            _isPaused = false;
 
             QProgressDialog *progress = new QProgressDialog("Generating puzzle...", "Cancel", 0, rows * cols, this);
             progress->setWindowTitle("Generating puzzle...");
@@ -225,7 +226,6 @@ void MainWindow::initializeGame()
     {
         board->enableAccelerometer();
 #if defined(Q_WS_MAEMO_5)
-        setAttribute(Qt::WA_Maemo5AutoOrientation, false);
         if (width() > height())
             setAttribute(Qt::WA_Maemo5LandscapeOrientation);
         else
@@ -247,11 +247,7 @@ void MainWindow::endGame()
     {
         board->disableAccelerometer();
 #if defined(Q_WS_MAEMO_5)
-        if (width() > height())
-            setAttribute(Qt::WA_Maemo5LandscapeOrientation, false);
-        else
-            setAttribute(Qt::WA_Maemo5PortraitOrientation, false);
-        setAttribute(Qt::WA_Maemo5AutoOrientation, true);
+        setAttribute(Qt::WA_Maemo5AutoOrientation);
 #endif
     }
 }
