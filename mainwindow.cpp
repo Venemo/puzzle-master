@@ -52,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 
 #if defined(Q_WS_MAEMO_5)
+    setFixedHeight(424);
     setAttribute(Qt::WA_Maemo5AutoOrientation);
     ui->btnFullscreen->setIcon(QIcon::fromTheme("general_fullsize"));
 #endif
