@@ -13,6 +13,7 @@ class PuzzleBoard : public QGraphicsScene
 {
     Q_OBJECT
     QSize _originalPixmapSize;
+    qreal _originalScaleRatio;
 #if defined(HAVE_QACCELEROMETER)
     QtMobility::QAccelerometer *accelerometer;
 #endif
@@ -26,6 +27,8 @@ public:
     PuzzleItem *find(QPoint puzzleCoordinates);
     bool isDropshadowActive();
     bool isAccelerometerActive();
+    qreal originalScaleRatio();
+    void setOriginalScaleRatio(qreal value);
 
 protected:
     virtual void accelerometerMovement(qreal x, qreal y, qreal z) = 0;

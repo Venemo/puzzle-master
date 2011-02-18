@@ -2,7 +2,8 @@
 #include "puzzleitem.h"
 
 PuzzleBoard::PuzzleBoard(QObject *parent) :
-    QGraphicsScene(parent)
+    QGraphicsScene(parent),
+    _originalScaleRatio(1)
 {
     connect(this, SIGNAL(gameWon()), this, SIGNAL(gameEnded()));
 #if defined(HAVE_QACCELEROMETER)
@@ -19,6 +20,16 @@ const QSize &PuzzleBoard::originalPixmapSize()
 void PuzzleBoard::setOriginalPixmapSize(const QSize &size)
 {
     _originalPixmapSize = size;
+}
+
+qreal PuzzleBoard::originalScaleRatio()
+{
+    return _originalScaleRatio;
+}
+
+void PuzzleBoard::setOriginalScaleRatio(qreal value)
+{
+    _originalScaleRatio = value;
 }
 
 void PuzzleBoard::setNeighbours(int x, int y)

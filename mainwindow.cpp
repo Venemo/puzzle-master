@@ -175,7 +175,8 @@ void MainWindow::on_btnOpenImage_clicked()
 #endif
 
             board->startGame(pixmap, rows, cols);
-            _currentScaleRatio = 1;
+            _currentScaleRatio = board->originalScaleRatio();
+            ui->graphicsView->scale(_currentScaleRatio, _currentScaleRatio);
         }
         else
         {
