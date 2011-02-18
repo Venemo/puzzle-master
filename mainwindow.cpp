@@ -140,6 +140,8 @@ void MainWindow::on_btnOpenImage_clicked()
         {
             ui->btnOpenImage->setIcon(QIcon(QPixmap(":/surrender.png")));
             ui->btnOpenImage->setText("Surrender");
+            if (SettingsDialog::useAccelerometer())
+                fixCurrentOrientation();
             _isPaused = false;
 
             QProgressDialog *progress = new QProgressDialog("Generating puzzle...", "Cancel", 0, rows * cols, this);
@@ -165,6 +167,7 @@ void MainWindow::on_btnOpenImage_clicked()
             connect(board, SIGNAL(gameStarted()), progress, SLOT(deleteLater()));
             connect(board, SIGNAL(gameStarted()), this, SLOT(initializeGame()));
             connect(board, SIGNAL(gameWon()), this, SLOT(onWon()));
+            connect(board, SIGNAL(gameEnded()), this, SLOT(endGame()));
 
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
             if (SettingsDialog::useDropShadow())
@@ -182,11 +185,10 @@ void MainWindow::on_btnOpenImage_clicked()
     }
     else if (QMessageBox::Yes == QMessageBox::question(this, "Are you sure?", "Are you sure you want to abandon this game?", QMessageBox::Yes, QMessageBox::Cancel))
     {
-        board->surrenderGame();
-        endGame();
         _isPlaying = false;
         ui->btnOpenImage->setIcon(QIcon(QPixmap(":/play.png")));
         ui->btnOpenImage->setText("New game");
+        board->surrenderGame();
     }
 }
 
@@ -223,15 +225,7 @@ void MainWindow::initializeGame()
 
     // Accelerometer
     if (SettingsDialog::useAccelerometer())
-    {
         board->enableAccelerometer();
-#if defined(Q_WS_MAEMO_5)
-        if (width() > height())
-            setAttribute(Qt::WA_Maemo5LandscapeOrientation);
-        else
-            setAttribute(Qt::WA_Maemo5PortraitOrientation);
-#endif
-    }
 }
 
 void MainWindow::endGame()
@@ -246,9 +240,7 @@ void MainWindow::endGame()
     if (SettingsDialog::useAccelerometer())
     {
         board->disableAccelerometer();
-#if defined(Q_WS_MAEMO_5)
-        setAttribute(Qt::WA_Maemo5AutoOrientation);
-#endif
+        unfixCurrentOrientation();
     }
 }
 
@@ -277,13 +269,17 @@ void MainWindow::showSettings()
     else if (!SettingsDialog::useDropShadow() && board->isDropshadowActive())
         board->disableDropshadow();
 #endif
-#if defined(HAVE_QACCELEROMETER)
     // Accelerometer
-    if (_isPlaying && SettingsDialog::useAccelerometer() && !board->isAccelerometerActive())
+    if (_isPlaying && SettingsDialog::useAccelerometer())
+    {
         board->enableAccelerometer();
-    else if (_isPlaying && !SettingsDialog::useAccelerometer() && board->isAccelerometerActive())
+        fixCurrentOrientation();
+    }
+    else
+    {
         board->disableAccelerometer();
-#endif
+        unfixCurrentOrientation();
+    }
 }
 
 void MainWindow::about()
@@ -391,4 +387,21 @@ void MainWindow::togglePause()
 void MainWindow::on_btnPause_clicked()
 {
     togglePause();
+}
+
+void MainWindow::fixCurrentOrientation()
+{
+#if defined(Q_WS_MAEMO_5)
+    if (width() > height())
+        setAttribute(Qt::WA_Maemo5LandscapeOrientation);
+    else
+        setAttribute(Qt::WA_Maemo5PortraitOrientation);
+#endif
+}
+
+void MainWindow::unfixCurrentOrientation()
+{
+#if defined(Q_WS_MAEMO_5)
+    setAttribute(Qt::WA_Maemo5AutoOrientation);
+#endif
 }

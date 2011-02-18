@@ -92,6 +92,7 @@ void JigsawPuzzleBoard::assemble()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
+    connect(group, SIGNAL(finished()), this, SIGNAL(assembleComplete()));
 #endif
     foreach (QGraphicsItem *gi, items())
     {
@@ -107,6 +108,7 @@ void JigsawPuzzleBoard::assemble()
         group->addAnimation(anim);
 #else
         item->setPos(newPos);
+        emit assembleComplete();
 #endif
     }
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
@@ -125,6 +127,7 @@ void JigsawPuzzleBoard::setToleranceForPieces(int tolerance)
 
 void JigsawPuzzleBoard::surrenderGame()
 {
+    connect(this, SIGNAL(assembleComplete()), this, SIGNAL(gameEnded()));
     assemble();
 }
 

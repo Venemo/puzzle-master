@@ -28,6 +28,8 @@ class MainWindow : public QMainWindow
     bool _wasPaused;
     int _secsElapsed;
     qreal _currentScaleRatio;
+    void fixCurrentOrientation();
+    void unfixCurrentOrientation();
 
 protected:
     bool event(QEvent *event);

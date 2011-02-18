@@ -22,7 +22,7 @@ signals:
     void gameStarted();
     void gameWon();
     void shuffleComplete();
-    void loadProgressChanged(int progress);
+    void assembleComplete();
 
 private slots:
 
