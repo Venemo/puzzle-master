@@ -184,8 +184,8 @@ void MainWindow::on_btnOpenImage_clicked()
         board->surrenderGame();
         endGame();
         _isPlaying = false;
-        ui->btnOpenImage->setIcon(QIcon(QPixmap(":/surrender.png")));
-        ui->btnOpenImage->setText("Surrender");
+        ui->btnOpenImage->setIcon(QIcon(QPixmap(":/play.png")));
+        ui->btnOpenImage->setText("New game");
     }
 }
 
