@@ -65,7 +65,7 @@ MainWindow::~MainWindow()
 bool MainWindow::event(QEvent *event)
 {
     bool result = QMainWindow::event(event);
-    if (_isPlaying && !_wasPaused && event->type() == QEvent::WindowActivate)
+    if (_isPlaying && !_wasPaused && _isPaused && event->type() == QEvent::WindowActivate)
     {
         unpause();
     }
@@ -138,6 +138,9 @@ void MainWindow::on_btnOpenImage_clicked()
         QPixmap pixmap;
         if (pixmap.load(chooser->getPictureFile()) && !pixmap.isNull())
         {
+            ui->btnOpenImage->setIcon(QIcon(QPixmap(":/surrender.png")));
+            ui->btnOpenImage->setText("Surrender");
+
             QProgressDialog *progress = new QProgressDialog("Generating puzzle...", "Cancel", 0, rows * cols, this);
             progress->setWindowTitle("Generating puzzle...");
 #ifndef MOBILE
@@ -180,6 +183,9 @@ void MainWindow::on_btnOpenImage_clicked()
     {
         board->surrenderGame();
         endGame();
+        _isPlaying = false;
+        ui->btnOpenImage->setIcon(QIcon(QPixmap(":/surrender.png")));
+        ui->btnOpenImage->setText("Surrender");
     }
 }
 
@@ -203,22 +209,29 @@ void MainWindow::onWon()
 
 void MainWindow::initializeGame()
 {
+    qDebug() << "init game";
+
     timer->start();
     _secsElapsed = 0;
     updateElapsedTimeLabel();
-    _isPlaying = true;
-    ui->btnOpenImage->setIcon(QIcon(QPixmap(":/surrender.png")));
-    ui->btnOpenImage->setText("Surrender");
     ui->btnPause->show();
 
     // Snap tolerance
     if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
         jpb->setToleranceForPieces(SettingsDialog::tolerance());
-#if defined(HAVE_QACCELEROMETER)
+
     // Accelerometer
     if (SettingsDialog::useAccelerometer())
+    {
         board->enableAccelerometer();
+#if defined(Q_WS_MAEMO_5)
+        setAttribute(Qt::WA_Maemo5AutoOrientation, false);
+        if (width() > height())
+            setAttribute(Qt::WA_Maemo5LandscapeOrientation);
+        else
+            setAttribute(Qt::WA_Maemo5PortraitOrientation);
 #endif
+    }
 }
 
 void MainWindow::endGame()
@@ -229,11 +242,18 @@ void MainWindow::endGame()
     ui->btnOpenImage->setIcon(QIcon(QPixmap(":/play.png")));
     ui->btnOpenImage->setText("New game...");
     ui->btnPause->hide();
-    _isPlaying = false;
 
-#if defined(HAVE_QACCELEROMETER)
-    board->disableAccelerometer();
+    if (SettingsDialog::useAccelerometer())
+    {
+        board->disableAccelerometer();
+#if defined(Q_WS_MAEMO_5)
+        if (width() > height())
+            setAttribute(Qt::WA_Maemo5LandscapeOrientation, false);
+        else
+            setAttribute(Qt::WA_Maemo5PortraitOrientation, false);
+        setAttribute(Qt::WA_Maemo5AutoOrientation, true);
 #endif
+    }
 }
 
 void MainWindow::showSettings()
