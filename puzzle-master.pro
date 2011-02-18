@@ -50,6 +50,9 @@ RESOURCES += \
     resources.qrc
 
 maemo5 {
+    target.path = /opt/puzzle-master
+    INSTALLS += target
+
     # Maemo 5 Fremantle
     QT += maemo5
     DEFINES += MOBILE HAVE_QACCELEROMETER
@@ -88,9 +91,4 @@ wince {
     DEFINES -= HAVE_OPENGL
     DEFINES += MOBILE
     RC_FILE = puzzle-master.rc
-}
-
-maemo5 {
-    target.path = /opt/usr/bin
-    INSTALLS += target
 }
