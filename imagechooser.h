@@ -24,6 +24,7 @@ class ImageChooser : public QDialog
     QMap<QListWidgetItem*, QString> map;
     Ui::ImageChooser *ui;
     QList<ImageItem> items;
+    QSettings settings;
 
 public:
     explicit ImageChooser(QWidget *parent = 0);
@@ -40,6 +41,8 @@ public slots:
 private slots:
     void on_btnOther_clicked();
     void on_btnOk_clicked();
+    void on_btnClear_clicked();
+    void on_btnRemove_clicked();
 };
 
 #endif // IMAGECHOOSER_H

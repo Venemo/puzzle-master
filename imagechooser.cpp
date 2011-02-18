@@ -29,13 +29,15 @@ ImageChooser::ImageChooser(QWidget *parent) :
     recoverItems();
 
 #if defined(Q_WS_MAEMO_5)
-    setFixedHeight(250);
+    setFixedHeight(420);
     setFixedWidth(parentWidget()->width());
 
     // This ensures the correct look on Maemo 5 too
     QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Vertical, this);
     ui->btnOk->setDefault(true);
     buttonBox->addButton(ui->btnOther, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(ui->btnRemove, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(ui->btnClear, QDialogButtonBox::ActionRole);
     buttonBox->addButton(ui->btnCancel, QDialogButtonBox::ActionRole);
     buttonBox->addButton(ui->btnOk, QDialogButtonBox::ActionRole);
     layout()->addWidget(buttonBox);
@@ -57,12 +59,17 @@ QString ImageChooser::getPictureFile()
 
 void ImageChooser::on_btnOther_clicked()
 {
-    QString str = QFileDialog::getOpenFileName(this);
+    QString fileName = QFileDialog::getOpenFileName(this);
 
-    if (str.isEmpty())
+    if (fileName.isEmpty())
         return;
 
-    addItem(str, str, true);
+    QString caption = QInputDialog::getText(this, "Name the image", "Please give a name to this image.");
+
+    if (caption.isEmpty() || caption.length() == 0)
+        return;
+
+    addItem(fileName, caption, true);
 }
 
 void ImageChooser::addItem(const QString &path, const QString &caption, bool select, bool save)
@@ -102,17 +109,15 @@ void ImageChooser::saveItems()
     QByteArray array;
     QDataStream stream(&array, QIODevice::WriteOnly);
     stream << items;
-    QSettings s;
-    s.setValue(SETTING_IMAGE_LIST, array);
+    settings.setValue(SETTING_IMAGE_LIST, array);
 }
 
 void ImageChooser::recoverItems()
 {
-    QSettings s;
-    if (s.contains(SETTING_IMAGE_LIST))
+    if (settings.contains(SETTING_IMAGE_LIST))
     {
         // deserializing from QSettings
-        QByteArray array = s.value(SETTING_IMAGE_LIST).toByteArray();
+        QByteArray array = settings.value(SETTING_IMAGE_LIST).toByteArray();
         QDataStream stream(&array, QIODevice::ReadOnly);
         stream >> items;
 
@@ -142,8 +147,57 @@ void ImageChooser::recoverItems()
 
 void ImageChooser::on_btnOk_clicked()
 {
-    if (QFile::exists(map[ui->listWidget->selectedItems().at(0)]))
-        accept();
+    if (ui->listWidget->selectedItems().count() > 0)
+    {
+        if (QFile::exists(map[ui->listWidget->selectedItems().at(0)]))
+            accept();
+        else
+            QMessageBox::warning(this, "Error", "This file doesn't exist. Please select a file that exists.");
+    }
     else
-        QMessageBox::warning(this, "Error", "This file doesn't exist. Please select a file that exists.");
+    {
+        QMessageBox::warning(this, "Error", "Please select an image.");
+    }
+}
+
+void ImageChooser::on_btnClear_clicked()
+{
+    if (QMessageBox::Yes == QMessageBox::question(this, "Are you sure?", "Clear all custom images?", QMessageBox::Yes, QMessageBox::Cancel))
+    {
+        ui->listWidget->clear();
+        items.clear();
+        map.clear();
+        settings.remove(SETTING_IMAGE_LIST);
+
+        recoverItems();
+    }
+}
+
+void ImageChooser::on_btnRemove_clicked()
+{
+    if (ui->listWidget->selectedItems().count() > 0)
+    {
+        if (QMessageBox::Yes == QMessageBox::question(this, "Are you sure?", "Remove selected image?", QMessageBox::Yes, QMessageBox::Cancel))
+        {
+            QListWidgetItem *lwi = ui->listWidget->selectedItems().at(0);
+            ui->listWidget->removeItemWidget(lwi);
+            map.remove(lwi);
+
+            foreach (ImageItem item, items)
+            {
+                if (item.caption == lwi->text())
+                {
+                    qDebug() << lwi->text();
+                    items.removeAll(item);
+                }
+            }
+
+            delete lwi;
+            saveItems();
+        }
+    }
+    else
+    {
+        QMessageBox::information(this, "Error", "Select an image if you want to remove it.");
+    }
 }

@@ -38,7 +38,21 @@
      <item>
       <widget class="QPushButton" name="btnOther">
        <property name="text">
-        <string>Other...</string>
+        <string>New...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnRemove">
+       <property name="text">
+        <string>Remove</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnClear">
+       <property name="text">
+        <string>Clear</string>
        </property>
       </widget>
      </item>
