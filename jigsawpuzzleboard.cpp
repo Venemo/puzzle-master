@@ -13,8 +13,6 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
     QList<PuzzleItem*> list1;
     QList<JigsawPuzzleItem*> list2;
 
-    qDebug() << QApplication::desktop()->size();
-
     int w = min<int>(QApplication::desktop()->width(), image.width());
     int h = min<int>(QApplication::desktop()->height(), image.height());
 

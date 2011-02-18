@@ -5,7 +5,6 @@ PuzzleBoard::PuzzleBoard(QObject *parent) :
     QGraphicsScene(parent),
     _originalScaleRatio(1)
 {
-    connect(this, SIGNAL(gameWon()), this, SIGNAL(gameEnded()));
 #if defined(HAVE_QACCELEROMETER)
     accelerometer = new QtMobility::QAccelerometer(this);
     connect(accelerometer, SIGNAL(readingChanged()), this, SLOT(accelerometerReadingChanged()));

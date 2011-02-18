@@ -187,6 +187,7 @@ void MainWindow::on_btnOpenImage_clicked()
     else if (QMessageBox::Yes == QMessageBox::question(this, "Are you sure?", "Are you sure you want to abandon this game?", QMessageBox::Yes, QMessageBox::Cancel))
     {
         _isPlaying = false;
+        timer->stop();
         ui->btnOpenImage->setIcon(QIcon(QPixmap(":/play.png")));
         ui->btnOpenImage->setText("New game");
         board->surrenderGame();
@@ -196,7 +197,6 @@ void MainWindow::on_btnOpenImage_clicked()
 
 void MainWindow::onWon()
 {
-    // ending the game
     endGame();
 
     // Showing congratulations
@@ -213,8 +213,6 @@ void MainWindow::onWon()
 
 void MainWindow::initializeGame()
 {
-    qDebug() << "init game";
-
     timer->start();
     _secsElapsed = 0;
     updateElapsedTimeLabel();
@@ -231,6 +229,7 @@ void MainWindow::initializeGame()
 
 void MainWindow::endGame()
 {
+    _isPlaying = false;
     timer->stop();
 
     // Additional things
