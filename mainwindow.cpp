@@ -47,10 +47,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setViewport(new QGLWidget(this));
 #endif
 
+#if defined(MOBILE)
+    delete ui->lblTime;
+#endif
+
 #if defined(Q_WS_MAEMO_5)
     setAttribute(Qt::WA_Maemo5AutoOrientation);
-
-    delete ui->lblTime;
     ui->btnFullscreen->setIcon(QIcon::fromTheme("general_fullsize"));
 #endif
 }
@@ -292,7 +294,7 @@ void MainWindow::updateElapsedTimeLabel()
     else if (_isPlaying)
     {
         _secsElapsed = 0;
-#if defined(Q_WS_MAEMO_5) || defined(Q_OS_SYMBIAN)
+#if defined(MOBILE)
 #else
         ui->lblTime->show();
 #endif
@@ -300,7 +302,7 @@ void MainWindow::updateElapsedTimeLabel()
     QString str = "Elapsed " + QString::number(_secsElapsed) + " second";
     if (_secsElapsed > 1)
         str += "s";
-#if defined(Q_WS_MAEMO_5) || defined(Q_OS_SYMBIAN)
+#if defined(MOBILE)
     setWindowTitle(str);
 #else
     ui->lblTime->setText(str);
