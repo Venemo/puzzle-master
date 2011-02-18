@@ -40,7 +40,6 @@ MainWindow::MainWindow(QWidget *parent) :
     intro = new QGraphicsTextItem("Please press the new game button!");
     intro->setDefaultTextColor(QColor(0xFFFFFF - bg.rgb()));
     board->addItem(intro);
-    board->setOriginalPixmapSize(QSize((int)intro->boundingRect().size().width(), (int)intro->boundingRect().size().height()));
 
     ui->graphicsView->setScene(board);
 #if defined(HAVE_OPENGL)
