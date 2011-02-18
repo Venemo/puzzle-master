@@ -29,6 +29,8 @@ private slots:
 public slots:
     void surrenderGame();
     void shuffle();
+    void disable();
+    void enable();
 
 };
 

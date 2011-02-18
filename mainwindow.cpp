@@ -23,18 +23,21 @@ MainWindow::MainWindow(QWidget *parent) :
     highscores(new HighScoresDialog(this)),
     board(new JigsawPuzzleBoard(this)),
     _isPlaying(false),
+    _isPaused(false),
+    _wasPaused(false),
     _currentScaleRatio(1)
 {
     ui->setupUi(this);
-    ui->lblTime->hide();
 
+    ui->btnPause->hide();
+    ui->btnHelp->hide();
     timer->setInterval(1000);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateElapsedTimeLabel()));
     setFocus();
 
     QColor bg = SettingsDialog::boardBackground();
     board->setBackgroundBrush(QBrush(bg));
-    intro = new QGraphicsTextItem("Please press the 'New game' button!");
+    intro = new QGraphicsTextItem("Please press the new game button!");
     intro->setDefaultTextColor(QColor(0xFFFFFF - bg.rgb()));
     board->addItem(intro);
     board->setOriginalPixmapSize(QSize((int)intro->boundingRect().size().width(), (int)intro->boundingRect().size().height()));
@@ -47,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
 #if defined(Q_WS_MAEMO_5)
     setAttribute(Qt::WA_Maemo5AutoOrientation);
 
-    ui->btnFullscreen->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    delete ui->lblTime;
     ui->btnFullscreen->setIcon(QIcon::fromTheme("general_fullsize"));
 #endif
 }
@@ -60,23 +63,15 @@ MainWindow::~MainWindow()
 bool MainWindow::event(QEvent *event)
 {
     bool result = QMainWindow::event(event);
-    if (event->type() == QEvent::WindowActivate)
+    if (_isPlaying && !_wasPaused && event->type() == QEvent::WindowActivate)
     {
-#if defined(HAVE_QACCELEROMETER)
-        // Starting accelerometer
-        if (SettingsDialog::useAccelerometer())
-            board->enableAccelerometer();
-#endif
-        timer->start();
+        unpause();
     }
-    else if (event->type() == QEvent::WindowDeactivate)
+    else if (_isPlaying && event->type() == QEvent::WindowDeactivate)
     {
-        timer->stop();
-#if defined(HAVE_QACCELEROMETER)
-        // Stopping accelerometer
-        if (SettingsDialog::useAccelerometer())
-            board->disableAccelerometer();
-#endif
+        // If the game was paused before deactivating, it will be paused after activating.
+        _wasPaused = _isPaused;
+        pause();
     }
     return result;
 }
@@ -145,8 +140,9 @@ void MainWindow::on_btnOpenImage_clicked()
             progress->setWindowTitle("Generating puzzle...");
 #ifndef MOBILE
             if (rows * cols < 20)
-                progress->show();
 #endif
+                progress->show();
+
 
             if (board != 0)
             {
@@ -209,7 +205,9 @@ void MainWindow::initializeGame()
     _secsElapsed = 0;
     updateElapsedTimeLabel();
     _isPlaying = true;
+    ui->btnOpenImage->setIcon(QIcon(QPixmap(":/surrender.png")));
     ui->btnOpenImage->setText("Surrender");
+    ui->btnPause->show();
 
     // Snap tolerance
     if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
@@ -226,7 +224,9 @@ void MainWindow::endGame()
     timer->stop();
 
     // Additional things
+    ui->btnOpenImage->setIcon(QIcon(QPixmap(":/play.png")));
     ui->btnOpenImage->setText("New game...");
+    ui->btnPause->hide();
     _isPlaying = false;
 
 #if defined(HAVE_QACCELEROMETER)
@@ -234,7 +234,7 @@ void MainWindow::endGame()
 #endif
 }
 
-void MainWindow::on_actionSettings_triggered()
+void MainWindow::showSettings()
 {
     settings->exec();
 
@@ -285,29 +285,92 @@ void MainWindow::about()
 
 void MainWindow::updateElapsedTimeLabel()
 {
-    if (_isPlaying && ui->lblTime->isVisible())
+    if (_isPlaying)
     {
         _secsElapsed++;
     }
     else if (_isPlaying)
     {
         _secsElapsed = 0;
+#if defined(Q_WS_MAEMO_5) || defined(Q_OS_SYMBIAN)
+#else
         ui->lblTime->show();
+#endif
     }
     QString str = "Elapsed " + QString::number(_secsElapsed) + " second";
-    ui->lblTime->setText(_secsElapsed == 1 ? str : str + "s");
+    if (_secsElapsed > 1)
+        str += "s";
+#if defined(Q_WS_MAEMO_5) || defined(Q_OS_SYMBIAN)
+    setWindowTitle(str);
+#else
+    ui->lblTime->setText(str);
+#endif
 }
 
 void MainWindow::on_btnFullscreen_clicked()
 {
     if (isFullScreen())
     {
-        ui->btnFullscreen->setText("+");
+#if defined(Q_OS_SYMBIAN)
+        showMaximized();
+#else
         showNormal();
+#endif
     }
     else
     {
-        ui->btnFullscreen->setText("-");
         showFullScreen();
     }
+}
+
+void MainWindow::pause()
+{
+    _isPaused = true;
+    timer->stop();
+    board->disable();
+    ui->btnPause->setIcon(QIcon(QPixmap(":/unpause.png")));
+
+    // Stopping accelerometer
+    if (SettingsDialog::useAccelerometer())
+        board->disableAccelerometer();
+}
+
+void MainWindow::unpause()
+{
+    _isPaused = false;
+    timer->start();
+    board->enable();
+    ui->btnPause->setIcon(QIcon(QPixmap(":/pause.png")));
+
+    // Starting accelerometer
+    if (SettingsDialog::useAccelerometer())
+        board->enableAccelerometer();
+}
+
+void MainWindow::togglePause()
+{
+    if (_isPlaying)
+    {
+        if (!_isPaused)
+        {
+            pause();
+#if defined(Q_WS_MAEMO_5)
+            QMaemo5InformationBox::information(this, "<b>Game paused!</b><br />You now can't move the pieces.", 2000);
+#else
+#endif
+        }
+        else
+        {
+            unpause();
+#if defined(Q_WS_MAEMO_5)
+            QMaemo5InformationBox::information(this, "<b>Game resumed!</b><br />Now you can move the pieces again.", 2000);
+#else
+#endif
+        }
+    }
+}
+
+void MainWindow::on_btnPause_clicked()
+{
+    togglePause();
 }

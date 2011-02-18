@@ -45,6 +45,8 @@ public slots:
     void disableDropshadow();
     void enableAccelerometer();
     void disableAccelerometer();
+    virtual void disable() = 0;
+    virtual void enable() = 0;
 
 };
 

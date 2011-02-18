@@ -7,5 +7,14 @@
         <file alias="image4.jpg">data/West_Wittering_-_All_along_the_Beach_Huts.jpg</file>
         <file alias="image5.jpg">data/Squirrel.jpg</file>
         <file alias="about.txt">data/about.txt</file>
+        <file alias="about.png">data/icons/about.png</file>
+        <file alias="fullscreen.png">data/icons/fullscreen.png</file>
+        <file alias="help.png">data/icons/help.png</file>
+        <file alias="pause.png">data/icons/pause.png</file>
+        <file alias="play.png">data/icons/play.png</file>
+        <file alias="settings.png">data/icons/settings.png</file>
+        <file alias="surrender.png">data/icons/surrender.png</file>
+        <file alias="unpause.png">data/icons/unpause.png</file>
+        <file alias="boardcolor.png">data/icons/boardcolor.png</file>
     </qresource>
 </RCC>

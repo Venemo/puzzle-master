@@ -24,6 +24,8 @@ class MainWindow : public QMainWindow
     PuzzleBoard *board;
     QPointer<QGraphicsTextItem> intro;
     bool _isPlaying;
+    bool _isPaused;
+    bool _wasPaused;
     int _secsElapsed;
     qreal _currentScaleRatio;
 
@@ -37,14 +39,18 @@ public:
 
 private slots:
     void on_actionHigh_scores_triggered();
-    void on_actionSettings_triggered();
+    void showSettings();
     void on_btnOpenImage_clicked();
     void onWon();
     void about();
+    void pause();
+    void unpause();
+    void togglePause();
     void updateElapsedTimeLabel();
     void initializeGame();
     void endGame();
     void on_btnFullscreen_clicked();
+    void on_btnPause_clicked();
 };
 
 #endif // MAINWINDOW_H

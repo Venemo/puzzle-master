@@ -141,3 +141,21 @@ void JigsawPuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)
         }
     }
 }
+
+void JigsawPuzzleBoard::enable()
+{
+    foreach (QGraphicsItem *item, items())
+    {
+        JigsawPuzzleItem *widget = (JigsawPuzzleItem*) item;
+        widget->enableMerge();
+    }
+}
+
+void JigsawPuzzleBoard::disable()
+{
+    foreach (QGraphicsItem *item, items())
+    {
+        JigsawPuzzleItem *widget = (JigsawPuzzleItem*) item;
+        widget->disableMerge();
+    }
+}
