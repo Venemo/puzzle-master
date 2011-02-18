@@ -9,7 +9,7 @@ QT += core gui opengl
 TARGET = puzzle-master
 TEMPLATE = app
 
-VERSION = 1.1.1
+VERSION = 1.2.0
 DEFINES += HAVE_OPENGL
 
 OBJECTS_DIR = build
