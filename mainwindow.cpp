@@ -104,7 +104,10 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     // Setting scene rect and scale
     QSizeF oldscenesize = board->sceneRect().size();
     board->setSceneRect(0, 0, ui->graphicsView->width() / _currentScaleRatio, ui->graphicsView->height() / _currentScaleRatio);
-    ui->graphicsView->scale(_currentScaleRatio / oldScaleRatio, _currentScaleRatio / oldScaleRatio);
+    if (0.98 < _currentScaleRatio && 1.02 > _currentScaleRatio)
+        ui->graphicsView->resetTransform();
+    else
+        ui->graphicsView->scale(_currentScaleRatio / oldScaleRatio, _currentScaleRatio / oldScaleRatio);
 
     // Making sure every piece is visible and has a nice position
     QSizeF p = (board->sceneRect().size() - oldscenesize) / 2;
@@ -120,6 +123,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
         }
     }
     event->accept();
+    //qDebug() << "current scale ratio is" << _currentScaleRatio;
 }
 
 void MainWindow::on_actionHigh_scores_triggered()
@@ -220,15 +224,15 @@ void MainWindow::initializeGame()
     timer->start();
     _secsElapsed = 0;
     updateElapsedTimeLabel();
-    ui->btnPause->show();
+
+    unpause(); // This is also to set the correct icon on the button
+
+    if (!isFullScreen())
+        ui->btnPause->show();
 
     // Snap tolerance
     if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
         jpb->setTolerance(SettingsDialog::tolerance());
-
-    // Accelerometer
-    if (SettingsDialog::useAccelerometer())
-        board->enableAccelerometer();
 }
 
 void MainWindow::endGame()
@@ -329,6 +333,15 @@ void MainWindow::on_btnFullscreen_clicked()
 {
     if (isFullScreen())
     {
+        ui->btnAbout->show();
+        //ui->btnHelp->show();
+        ui->btnOpenImage->show();
+        ui->btnPause->show();
+        ui->btnSettings->show();
+
+        ui->horizontalLayout->addWidget(ui->btnFullscreen);
+        ui->btnFullscreen->show();
+
 #if defined(Q_OS_SYMBIAN)
         showMaximized();
 #else
@@ -338,6 +351,17 @@ void MainWindow::on_btnFullscreen_clicked()
     else
     {
         showFullScreen();
+
+        ui->btnAbout->hide();
+        ui->btnFullscreen->hide();
+        //ui->btnHelp->hide();
+        ui->btnOpenImage->hide();
+        ui->btnPause->hide();
+        ui->btnSettings->hide();
+
+        ui->horizontalLayout->removeWidget(ui->btnFullscreen);
+        ui->btnFullscreen->move(QApplication::desktop()->width() - ui->btnFullscreen->width(), QApplication::desktop()->height() - ui->btnFullscreen->height());
+        ui->btnFullscreen->show();
     }
 }
 
