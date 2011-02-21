@@ -3,14 +3,12 @@
 #include "jigsawpuzzleboard.h"
 #include "util.h"
 
-JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, const QSize &unitSize, QGraphicsItem *parent, QGraphicsScene *scene) :
+JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent, QGraphicsScene *scene) :
     QObject(scene),
     PuzzleItem(pixmap, parent, scene),
-    _unit(unitSize),
     _dragging(false),
     _canMerge(false),
-    _tolerance(5),
-    _weight(randomInt(50, 950) / 1000.0)
+    _weight(randomInt(100, 950) / 1000.0)
 {
 }
 
@@ -39,32 +37,17 @@ double JigsawPuzzleItem::weight()
     return _weight;
 }
 
-void JigsawPuzzleItem::setTolerance(int t)
-{
-    _tolerance = t;
-}
-
-int JigsawPuzzleItem::tolerance()
-{
-    return _tolerance;
-}
-
-const QSize &JigsawPuzzleItem::unit()
-{
-    return _unit;
-}
-
 bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
 {
     if (isNeighbourOf(item))
     {
+        item->_canMerge = _canMerge = false;
+
         foreach (PuzzleItem *n, item->neighbours())
         {
             item->removeNeighbour(n);
             this->addNeighbour(n);
         }
-
-        item->_canMerge = _canMerge = false;
 
         QPoint vector = item->puzzleCoordinates() - puzzleCoordinates();
         int x1, x2, y1, y2, u1, v1;
@@ -72,11 +55,11 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
         {
             x1 = 0;
             u1 = 0;
-            x2 = vector.x() * _unit.width();
+            x2 = vector.x() * unit().width();
         }
         else
         {
-            x1 = - vector.x() * _unit.width();
+            x1 = - vector.x() * unit().width();
             u1 = - vector.x();
             x2 = 0;
         }
@@ -84,11 +67,11 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
         {
             y1 = 0;
             v1 = 0;
-            y2 = vector.y() * _unit.height();
+            y2 = vector.y() * unit().height();
         }
         else
         {
-            y1 = - vector.y() * _unit.height();
+            y1 = - vector.y() * unit().height();
             v1 = - vector.y();
             y2 = 0;
         }
@@ -99,17 +82,15 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
 
         QPainter p;
         p.begin(&pix);
-        p.setClipping(false);
-
         p.drawPixmap(x1, y1, pixmap());
         p.drawPixmap(x2, y2, item->pixmap());
-
         p.end();
+
         setPixmap(pix);
         setPuzzleCoordinates(puzzleCoordinates() - QPoint(u1, v1));
         setPos(pos().x() - x1, pos().y() - y1);
-        _dragStart = _dragStart + QPointF(x1, y1);
-        item->hide();
+
+        _dragStart += QPointF(x1, y1);
         delete item;
         _canMerge = true;
 
@@ -167,10 +148,10 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             {
                 JigsawPuzzleItem *w = (JigsawPuzzleItem*) p;
                 QPointF posDiff1 = pos() - w->pos();
-                QPointF posDiff2 = (puzzleCoordinates() * _unit - w->puzzleCoordinates() * _unit);
+                QPointF posDiff2 = (puzzleCoordinates() * unit() - w->puzzleCoordinates() * unit());
                 QPointF relative = posDiff1 - posDiff2;
 
-                if (abs((int)relative.x()) < _tolerance && abs((int)relative.y()) < _tolerance)
+                if (abs((int)relative.x()) < tolerance() && abs((int)relative.y()) < tolerance())
                 {
                     merge(w);
                 }
@@ -184,17 +165,17 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void JigsawPuzzleItem::verifyPosition()
 {
     int x = (int)pos().x();
-    int maxX = (int)scene()->width() - _unit.width() / 3;
-    int minX = - pixmap().width() + _unit.width() / 3;
+    int maxX = (int)scene()->width() - unit().width() / 3;
+    int minX = - pixmap().width() + unit().width() / 3;
 
     int y = (int)pos().y();
-    int maxY = (int)scene()->height() - _unit.height() / 3;
-    int minY = - pixmap().height() + _unit.height() / 3;
+    int maxY = (int)scene()->height() - unit().height() / 3;
+    int minY = - pixmap().height() + unit().height() / 3;
 
     if (!(x < maxX && x > (minX) && y < maxY && y > (minY)))
     {
-        int pX = CLAMP(x, minX + _unit.width() / 2, maxX - _unit.width() / 2);
-        int pY = CLAMP(y, minY + _unit.height() / 2, maxY - _unit.height() / 2);
+        int pX = CLAMP(x, minX + unit().width() / 2, maxX - unit().width() / 2);
+        int pY = CLAMP(y, minY + unit().height() / 2, maxY - unit().height() / 2);
         _dragging = false;
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
         QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", this);

@@ -220,7 +220,7 @@ void MainWindow::initializeGame()
 
     // Snap tolerance
     if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
-        jpb->setToleranceForPieces(SettingsDialog::tolerance());
+        jpb->setTolerance(SettingsDialog::tolerance());
 
     // Accelerometer
     if (SettingsDialog::useAccelerometer())
@@ -260,7 +260,7 @@ void MainWindow::showSettings()
     // Snap tolerance
     if (_isPlaying)
         if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
-            jpb->setToleranceForPieces(SettingsDialog::tolerance());
+            jpb->setTolerance(SettingsDialog::tolerance());
 
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     // Drop shadows

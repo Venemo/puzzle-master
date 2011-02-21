@@ -8,12 +8,16 @@ class JigsawPuzzleItem;
 class JigsawPuzzleBoard : public PuzzleBoard
 {
     Q_OBJECT
+    QSize _unit;
+    int _tolerance;
 
 public:
     explicit JigsawPuzzleBoard(QObject *parent = 0);
     void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols);
-    void setToleranceForPieces(int tolerance);
+    inline int tolerance();
+    inline void setTolerance(int tolerance);
     void assemble();
+    inline const QSize &unit();
 
 protected:
     void accelerometerMovement(qreal x, qreal y, qreal z);
@@ -33,5 +37,20 @@ public slots:
     void enable();
 
 };
+
+inline const QSize &JigsawPuzzleBoard::unit()
+{
+    return _unit;
+}
+
+inline int JigsawPuzzleBoard::tolerance()
+{
+    return _tolerance;
+}
+
+inline void JigsawPuzzleBoard::setTolerance(int tolerance)
+{
+    _tolerance = tolerance;
+}
 
 #endif // JIGSAWPUZZLEBOARD_H

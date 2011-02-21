@@ -4,7 +4,8 @@
 #include "util.h"
 
 JigsawPuzzleBoard::JigsawPuzzleBoard(QObject *parent) :
-    PuzzleBoard(parent)
+    PuzzleBoard(parent),
+    _tolerance(5)
 {
 }
 
@@ -16,8 +17,9 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
     QPixmap pixmap = image.scaled(w, h, Qt::KeepAspectRatio);
     setOriginalPixmapSize(pixmap.size());
     setOriginalScaleRatio(min(width() / (qreal)pixmap.width(), height() / (qreal)pixmap.height()));
-    QSize unit(pixmap.width() / cols, pixmap.height() / rows);
+    _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
+    p.setRenderHint(QPainter::HighQualityAntialiasing);
 
     qreal w0 = (width() - pixmap.width()) / 2;
     qreal h0 = (height() - pixmap.height()) / 2;
@@ -27,23 +29,20 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
         for (unsigned j = 0; j < rows; j++)
         {
             // creating the pixmap for the piece
-            QPixmap px(unit.width(), unit.height());
+            QPixmap px(_unit.width(), _unit.height());
             px.fill(Qt::transparent);
             p.begin(&px);
-            p.setRenderHint(QPainter::Antialiasing);
-
-            p.drawPixmap(0, 0, pixmap, i * unit.width(), j * unit.height(), unit.width(), unit.height());
+            p.drawPixmap(0, 0, pixmap, i * _unit.width(), j * _unit.height(), _unit.width(), _unit.height());
             p.end();
 
             // creating the piece
-            JigsawPuzzleItem *item = new JigsawPuzzleItem(px, unit, 0, 0);
+            JigsawPuzzleItem *item = new JigsawPuzzleItem(px, 0, this);
             item->setPuzzleCoordinates(QPoint(i, j));
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
-            addItem(item);
             item->setZValue(i * rows + j + 1);
 
-            QPointF oldPos(w0 + (item->puzzleCoordinates().x() * unit.width()),
-                           h0 + (item->puzzleCoordinates().y() * unit.height()));
+            QPointF oldPos(w0 + (i * _unit.width()),
+                           h0 + (j * _unit.height()));
             item->setPos(oldPos);
             item->show();
 
@@ -64,7 +63,7 @@ void JigsawPuzzleBoard::shuffle()
     foreach (QGraphicsItem *gi, items())
     {
         JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
-        QPointF newPos(randomInt(0, originalPixmapSize().width() - item->unit().width()), randomInt(0, originalPixmapSize().height() - item->unit().width()));
+        QPointF newPos(randomInt(0, originalPixmapSize().width() - _unit.width()), randomInt(0, originalPixmapSize().height() - _unit.width()));
 
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
         connect(group, SIGNAL(finished()), item, SLOT(enableMerge()));
@@ -99,8 +98,8 @@ void JigsawPuzzleBoard::assemble()
     {
         JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
         item->disableMerge();
-        QPointF newPos((item->scene()->width() - originalPixmapSize().width()) / 2 + (item->puzzleCoordinates().x() * item->unit().width()),
-                       (item->scene()->height() - originalPixmapSize().height()) / 2 + (item->puzzleCoordinates().y() * item->unit().height()));
+        QPointF newPos((item->scene()->width() - originalPixmapSize().width()) / 2 + (item->puzzleCoordinates().x() * _unit.width()),
+                       (item->scene()->height() - originalPixmapSize().height()) / 2 + (item->puzzleCoordinates().y() * _unit.height()));
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
         anim->setEndValue(newPos);
@@ -115,15 +114,6 @@ void JigsawPuzzleBoard::assemble()
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     group->start(QAbstractAnimation::DeleteWhenStopped);
 #endif
-}
-
-void JigsawPuzzleBoard::setToleranceForPieces(int tolerance)
-{
-    foreach (QGraphicsItem *gi, items())
-    {
-        JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
-        item->setTolerance(tolerance);
-    }
 }
 
 void JigsawPuzzleBoard::surrenderGame()
