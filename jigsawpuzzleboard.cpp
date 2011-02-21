@@ -10,9 +10,6 @@ JigsawPuzzleBoard::JigsawPuzzleBoard(QObject *parent) :
 
 void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned cols)
 {
-    QList<PuzzleItem*> list1;
-    QList<JigsawPuzzleItem*> list2;
-
     int w = min<int>(QApplication::desktop()->width(), image.width());
     int h = min<int>(QApplication::desktop()->height(), image.height());
 
@@ -21,6 +18,9 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
     setOriginalScaleRatio(min(width() / (qreal)pixmap.width(), height() / (qreal)pixmap.height()));
     QSize unit(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
+
+    qreal w0 = (width() - pixmap.width()) / 2;
+    qreal h0 = (height() - pixmap.height()) / 2;
 
     for (unsigned i = 0; i < cols; i++)
     {
@@ -38,14 +38,12 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
             // creating the piece
             JigsawPuzzleItem *item = new JigsawPuzzleItem(px, unit, 0, 0);
             item->setPuzzleCoordinates(QPoint(i, j));
-            list1.append(item);
-            list2.append(item);
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
             addItem(item);
             item->setZValue(i * rows + j + 1);
 
-            QPointF oldPos((width() - pixmap.width()) / 2 + (item->puzzleCoordinates().x() * unit.width()),
-                           (height() - pixmap.height()) / 2 + (item->puzzleCoordinates().y() * unit.height()));
+            QPointF oldPos(w0 + (item->puzzleCoordinates().x() * unit.width()),
+                           h0 + (item->puzzleCoordinates().y() * unit.height()));
             item->setPos(oldPos);
             item->show();
 
@@ -53,7 +51,6 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
         }
     }
     setNeighbours(cols, rows);
-    connect(this, SIGNAL(shuffleComplete()), this, SIGNAL(gameStarted()));
     emit loaded();
 
     QTimer::singleShot(1000, this, SLOT(shuffle()));
@@ -84,11 +81,11 @@ void JigsawPuzzleBoard::shuffle()
             item->raise();
     }
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-    connect(group, SIGNAL(finished()), this, SIGNAL(shuffleComplete()));
+    connect(group, SIGNAL(finished()), this, SIGNAL(gameStarted()));
     connect(group, SIGNAL(finished()), group, SLOT(deleteLater()));
     group->start();
 #else
-    emit shuffleComplete();
+    emit gameStarted();
 #endif
 }
 
@@ -96,7 +93,7 @@ void JigsawPuzzleBoard::assemble()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
-    connect(group, SIGNAL(finished()), this, SIGNAL(assembleComplete()));
+    connect(group, SIGNAL(finished()), this, SIGNAL(gameEnded()));
 #endif
     foreach (QGraphicsItem *gi, items())
     {
@@ -112,7 +109,7 @@ void JigsawPuzzleBoard::assemble()
         group->addAnimation(anim);
 #else
         item->setPos(newPos);
-        emit assembleComplete();
+        emit gameEnded();
 #endif
     }
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
@@ -131,7 +128,6 @@ void JigsawPuzzleBoard::setToleranceForPieces(int tolerance)
 
 void JigsawPuzzleBoard::surrenderGame()
 {
-    connect(this, SIGNAL(assembleComplete()), this, SIGNAL(gameEnded()));
     assemble();
 }
 
