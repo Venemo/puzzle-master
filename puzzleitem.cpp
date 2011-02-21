@@ -3,6 +3,7 @@
 PuzzleItem::PuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsPixmapItem(pixmap, parent, scene)
 {
+    setCacheMode(QGraphicsItem::DeviceCoordinateCache);
 }
 
 const QPoint &PuzzleItem::puzzleCoordinates() const
