@@ -79,16 +79,13 @@ void PuzzleBoard::enableDropshadow()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QColor c(0, 0, 0, 200);
-    foreach (QGraphicsItem *gi, items())
+    foreach (QGraphicsItem *item, items())
     {
-        if (PuzzleItem *item = dynamic_cast<PuzzleItem*>(gi))
-        {
-            QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect();
-            effect->setBlurRadius(20);
-            effect->setOffset(0);
-            effect->setColor(c);
-            item->setGraphicsEffect(effect);
-        }
+        QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect();
+        effect->setBlurRadius(20);
+        effect->setOffset(0);
+        effect->setColor(c);
+        item->setGraphicsEffect(effect);
     }
 #endif
 }
@@ -96,12 +93,9 @@ void PuzzleBoard::enableDropshadow()
 void PuzzleBoard::disableDropshadow()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-    foreach (QGraphicsItem *gi, items())
+    foreach (QGraphicsItem *item, items())
     {
-        if (PuzzleItem *item = dynamic_cast<PuzzleItem*>(gi))
-        {
-            item->setGraphicsEffect(0);
-        }
+        item->setGraphicsEffect(0);
     }
 #endif
 }

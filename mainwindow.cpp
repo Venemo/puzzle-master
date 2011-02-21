@@ -29,6 +29,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->graphicsView->setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing);
+    ui->graphicsView->setOptimizationFlag(QGraphicsView::DontSavePainterState);
+    ui->graphicsView->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+
     ui->btnPause->hide();
     ui->btnHelp->hide();
     timer->setInterval(1000);
@@ -264,7 +268,7 @@ void MainWindow::showSettings()
 
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     // Drop shadows
-    if (SettingsDialog::useDropShadow() && !board->isDropshadowActive())
+    if (SettingsDialog::useDropShadow() && !board->isDropshadowActive() && intro.isNull())
         board->enableDropshadow();
     else if (!SettingsDialog::useDropShadow() && board->isDropshadowActive())
         board->disableDropshadow();
