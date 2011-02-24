@@ -131,8 +131,9 @@ void JigsawPuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
     {
-        verifyCoveredSiblings();
         _dragging = false;
+        verifyPosition();
+        verifyCoveredSiblings();
     }
 }
 
@@ -156,8 +157,6 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                     merge(w);
                 }
             }
-
-            verifyPosition();
         }
     }
 }
@@ -165,12 +164,15 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void JigsawPuzzleItem::verifyPosition()
 {
     int x = (int)pos().x();
-    int maxX = (int)scene()->width() - unit().width() / 3;
-    int minX = - pixmap().width() + unit().width() / 3;
+    int maxX = (int)scene()->width() - (boundingRect().width() - unit().width() / 2);
+    int minX = - pixmap().width() + (pixmap().width() - unit().width() / 2);
 
     int y = (int)pos().y();
-    int maxY = (int)scene()->height() - unit().height() / 3;
-    int minY = - pixmap().height() + unit().height() / 3;
+    int maxY = (int)scene()->height() - (pixmap().height() - unit().height() / 2);
+    int minY = - pixmap().height() + (pixmap().height() - unit().height() / 2);
+
+    qDebug() << x << maxX << minX;
+    qDebug() << "scene width" << scene()->width() << "pixmap width" << pixmap().width();
 
     if (!(x < maxX && x > (minX) && y < maxY && y > (minY)))
     {
