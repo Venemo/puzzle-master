@@ -39,20 +39,22 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private slots:
-    void on_actionHigh_scores_triggered();
+public slots:
+    void showHighScores();
     void showSettings();
-    void on_btnOpenImage_clicked();
+    void newGame();
+    void surrender();
+    void togglePause();
+    void toggleFullscreen();
+
+private slots:
     void onWon();
     void about();
     void pause();
     void unpause();
-    void togglePause();
     void updateElapsedTimeLabel();
     void initializeGame();
     void endGame();
-    void on_btnFullscreen_clicked();
-    void on_btnPause_clicked();
 };
 
 #endif // MAINWINDOW_H

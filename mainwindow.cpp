@@ -29,14 +29,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->graphicsView->setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing);
-    ui->graphicsView->setOptimizationFlag(QGraphicsView::DontSavePainterState);
-    ui->graphicsView->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
-
     ui->btnPause->hide();
+    ui->actionPause->setVisible(false);
+    ui->btnSurrender->hide();
+    ui->actionSurrender->setVisible(false);
     ui->btnHelp->hide();
+
     timer->setInterval(1000);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateElapsedTimeLabel()));
+    ui->graphicsView->setResizeAnchor(QGraphicsView::AnchorViewCenter);
     setFocus();
 
     QColor bg = SettingsDialog::boardBackground();
@@ -47,11 +48,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->graphicsView->setScene(board);
 #if defined(HAVE_OPENGL)
-    ui->graphicsView->setViewport(new QGLWidget(this));
+    ui->graphicsView->setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer), this));
 #endif
 
 #if defined(MOBILE)
+    ui->graphicsView->setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing);
+    ui->graphicsView->setOptimizationFlag(QGraphicsView::DontSavePainterState);
+    ui->graphicsView->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+
     delete ui->lblTime;
+    ui->horizontalLayout->setContentsMargins(10, 0, 10, 0);
 #endif
 
 #if defined(Q_WS_MAEMO_5)
@@ -86,6 +92,15 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 {
     if (event)
         QMainWindow::resizeEvent(event);
+
+#if defined(MOBILE)
+    if (isFullScreen())
+    {
+        ui->horizontalLayout->removeWidget(ui->btnFullscreen);
+        ui->btnFullscreen->move(width() - ui->btnFullscreen->width(), height() - ui->btnFullscreen->height());
+        ui->btnFullscreen->show();
+    }
+#endif
 
     if (intro != 0)
         return;
@@ -122,16 +137,18 @@ void MainWindow::resizeEvent(QResizeEvent *event)
                 jpi->verifyPosition();
         }
     }
-    event->accept();
+
+    if (event)
+        event->accept();
     //qDebug() << "current scale ratio is" << _currentScaleRatio;
 }
 
-void MainWindow::on_actionHigh_scores_triggered()
+void MainWindow::showHighScores()
 {
     highscores->exec();
 }
 
-void MainWindow::on_btnOpenImage_clicked()
+void MainWindow::newGame()
 {
     if (!_isPlaying)
     {
@@ -146,8 +163,11 @@ void MainWindow::on_btnOpenImage_clicked()
         QPixmap pixmap;
         if (pixmap.load(chooser->getPictureFile()) && !pixmap.isNull())
         {
-            ui->btnOpenImage->setIcon(QIcon(QPixmap(":/surrender.png")));
-            ui->btnOpenImage->setText("Surrender");
+            ui->btnOpenImage->hide();
+            ui->actionNew_game->setVisible(false);
+            ui->btnSurrender->show();
+            ui->actionSurrender->setVisible(true);
+
             if (SettingsDialog::useAccelerometer())
                 fixCurrentOrientation();
             _isPaused = false;
@@ -168,8 +188,8 @@ void MainWindow::on_btnOpenImage_clicked()
             ui->graphicsView->resetTransform();
             board = new JigsawPuzzleBoard(ui->graphicsView);
             board->setBackgroundBrush(QBrush(SettingsDialog::boardBackground()));
-            ui->graphicsView->setScene(board);
             board->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
+            ui->graphicsView->setScene(board);
 
             connect(board, SIGNAL(loadProgressChanged(int)), progress, SLOT(setValue(int)));
             connect(board, SIGNAL(gameStarted()), progress, SLOT(deleteLater()));
@@ -192,12 +212,16 @@ void MainWindow::on_btnOpenImage_clicked()
             _isPlaying = false;
         }
     }
-    else if (QMessageBox::Yes == QMessageBox::question(this, "Are you sure?", "Are you sure you want to abandon this game?", QMessageBox::Yes, QMessageBox::Cancel))
+}
+
+void MainWindow::surrender()
+{
+    if (_isPlaying && QMessageBox::Yes == QMessageBox::question(this, "Are you sure?", "Are you sure you want to abandon this game?", QMessageBox::Yes, QMessageBox::Cancel))
     {
+        endGame();
+
         _isPlaying = false;
         timer->stop();
-        ui->btnOpenImage->setIcon(QIcon(QPixmap(":/play.png")));
-        ui->btnOpenImage->setText("New game");
         board->surrenderGame();
     }
 }
@@ -227,8 +251,16 @@ void MainWindow::initializeGame()
 
     unpause(); // This is also to set the correct icon on the button
 
+#if defined (MOBILE)
     if (!isFullScreen())
+    {
         ui->btnPause->show();
+        ui->actionPause->setVisible(true);
+    }
+#else
+    ui->btnPause->show();
+    ui->actionPause->setVisible(true);
+#endif
 
     // Snap tolerance
     if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
@@ -241,9 +273,12 @@ void MainWindow::endGame()
     timer->stop();
 
     // Additional things
-    ui->btnOpenImage->setIcon(QIcon(QPixmap(":/play.png")));
-    ui->btnOpenImage->setText("New game...");
+    ui->btnOpenImage->show();
+    ui->actionNew_game->setVisible(true);
+    ui->btnSurrender->hide();
+    ui->actionSurrender->setVisible(false);
     ui->btnPause->hide();
+    ui->actionPause->setVisible(false);
 
     if (SettingsDialog::useAccelerometer())
     {
@@ -316,12 +351,19 @@ void MainWindow::updateElapsedTimeLabel()
         _secsElapsed = 0;
 #if defined(MOBILE)
 #else
+        ui->lblTime->setText("Elapsed 0 second");
         ui->lblTime->show();
 #endif
     }
+
     QString str = "Elapsed " + QString::number(_secsElapsed) + " second";
     if (_secsElapsed > 1)
         str += "s";
+#ifndef MOBILE
+    if (_isPaused)
+        str = "Game paused! " + str;
+#endif
+
 #if defined(MOBILE)
     setWindowTitle(str);
 #else
@@ -329,7 +371,7 @@ void MainWindow::updateElapsedTimeLabel()
 #endif
 }
 
-void MainWindow::on_btnFullscreen_clicked()
+void MainWindow::toggleFullscreen()
 {
     if (isFullScreen())
     {
@@ -338,9 +380,11 @@ void MainWindow::on_btnFullscreen_clicked()
         ui->btnOpenImage->show();
         ui->btnPause->show();
         ui->btnSettings->show();
-
+        ui->menuBar->show();
+#if defined(MOBILE)
         ui->horizontalLayout->addWidget(ui->btnFullscreen);
         ui->btnFullscreen->show();
+#endif
 
 #if defined(Q_OS_SYMBIAN)
         showMaximized();
@@ -351,17 +395,15 @@ void MainWindow::on_btnFullscreen_clicked()
     else
     {
         showFullScreen();
-
+#if defined(MOBILE)
         ui->btnAbout->hide();
         ui->btnFullscreen->hide();
         //ui->btnHelp->hide();
         ui->btnOpenImage->hide();
         ui->btnPause->hide();
         ui->btnSettings->hide();
-
-        ui->horizontalLayout->removeWidget(ui->btnFullscreen);
-        ui->btnFullscreen->move(QApplication::desktop()->width() - ui->btnFullscreen->width(), QApplication::desktop()->height() - ui->btnFullscreen->height());
-        ui->btnFullscreen->show();
+#endif
+        ui->menuBar->hide();
     }
 }
 
@@ -371,6 +413,7 @@ void MainWindow::pause()
     timer->stop();
     board->disable();
     ui->btnPause->setIcon(QIcon(QPixmap(":/unpause.png")));
+    ui->actionPause->setText("Resume");
 
     // Stopping accelerometer
     if (SettingsDialog::useAccelerometer())
@@ -383,6 +426,7 @@ void MainWindow::unpause()
     timer->start();
     board->enable();
     ui->btnPause->setIcon(QIcon(QPixmap(":/pause.png")));
+    ui->actionPause->setText("Pause");
 
     // Starting accelerometer
     if (SettingsDialog::useAccelerometer())
@@ -410,11 +454,6 @@ void MainWindow::togglePause()
 #endif
         }
     }
-}
-
-void MainWindow::on_btnPause_clicked()
-{
-    togglePause();
 }
 
 void MainWindow::fixCurrentOrientation()

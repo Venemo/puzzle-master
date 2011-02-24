@@ -164,15 +164,12 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void JigsawPuzzleItem::verifyPosition()
 {
     int x = (int)pos().x();
-    int maxX = (int)scene()->width() - (boundingRect().width() - unit().width() / 2);
-    int minX = - pixmap().width() + (pixmap().width() - unit().width() / 2);
+    int maxX = (int)scene()->width() - (pixmap().width() / 2);
+    int minX = - pixmap().width() + (pixmap().width() / 2);
 
     int y = (int)pos().y();
-    int maxY = (int)scene()->height() - (pixmap().height() - unit().height() / 2);
-    int minY = - pixmap().height() + (pixmap().height() - unit().height() / 2);
-
-    qDebug() << x << maxX << minX;
-    qDebug() << "scene width" << scene()->width() << "pixmap width" << pixmap().width();
+    int maxY = (int)scene()->height() - (pixmap().height()  / 2);
+    int minY = - pixmap().height() + (pixmap().height() / 2);
 
     if (!(x < maxX && x > (minX) && y < maxY && y > (minY)))
     {

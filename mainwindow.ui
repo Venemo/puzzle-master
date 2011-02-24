@@ -56,10 +56,13 @@
        <number>10</number>
       </property>
       <property name="topMargin">
-       <number>0</number>
+       <number>4</number>
       </property>
       <property name="rightMargin">
        <number>10</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
       </property>
       <item>
        <widget class="QLabel" name="lblTime">
@@ -76,6 +79,23 @@
         <property name="icon">
          <iconset resource="resources.qrc">
           <normaloff>:/play.png</normaloff>:/play.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="btnSurrender">
+        <property name="text">
+         <string>Surrender</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/surrender.png</normaloff>:/surrender.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -191,13 +211,28 @@
    </property>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
+     <string>Game</string>
+    </property>
+    <addaction name="actionNew_game"/>
+    <addaction name="actionSurrender"/>
+    <addaction name="actionHigh_scores"/>
+    <addaction name="actionPause"/>
+   </widget>
+   <widget class="QMenu" name="menuOptions_2">
+    <property name="title">
      <string>Options</string>
     </property>
     <addaction name="actionSettings"/>
-    <addaction name="actionHigh_scores"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuOptions"/>
+   <addaction name="menuOptions_2"/>
+   <addaction name="menuHelp"/>
   </widget>
   <action name="actionSettings">
    <property name="text">
@@ -212,6 +247,21 @@
   <action name="actionHigh_scores">
    <property name="text">
     <string>High scores</string>
+   </property>
+  </action>
+  <action name="actionNew_game">
+   <property name="text">
+    <string>New game</string>
+   </property>
+  </action>
+  <action name="actionSurrender">
+   <property name="text">
+    <string>Surrender</string>
+   </property>
+  </action>
+  <action name="actionPause">
+   <property name="text">
+    <string>Pause</string>
    </property>
   </action>
  </widget>
@@ -284,9 +334,126 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnOpenImage</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>newGame()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>408</x>
+     <y>447</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnSurrender</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>surrender()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>467</x>
+     <y>447</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionHigh_scores</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showHighScores()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionNew_game</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>newGame()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSurrender</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>surrender()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnFullscreen</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>toggleFullscreen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>762</x>
+     <y>447</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnPause</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>togglePause()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>526</x>
+     <y>447</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>about()</slot>
   <slot>showSettings()</slot>
+  <slot>showHighScores()</slot>
+  <slot>newGame()</slot>
+  <slot>surrender()</slot>
+  <slot>toggleFullscreen()</slot>
+  <slot>togglePause()</slot>
  </slots>
 </ui>
