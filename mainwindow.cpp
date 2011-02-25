@@ -275,8 +275,9 @@ void MainWindow::endGame()
     // Additional things
 #if defined(MOBILE)
     if (!isFullScreen())
-        ui->btnOpenImage->show();
 #endif
+        ui->btnOpenImage->show();
+
     ui->actionNew_game->setVisible(true);
     ui->btnSurrender->hide();
     ui->actionSurrender->setVisible(false);
