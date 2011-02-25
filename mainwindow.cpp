@@ -273,7 +273,10 @@ void MainWindow::endGame()
     timer->stop();
 
     // Additional things
-    ui->btnOpenImage->show();
+#if defined(MOBILE)
+    if (!isFullScreen())
+        ui->btnOpenImage->show();
+#endif
     ui->actionNew_game->setVisible(true);
     ui->btnSurrender->hide();
     ui->actionSurrender->setVisible(false);
@@ -349,8 +352,7 @@ void MainWindow::updateElapsedTimeLabel()
     else if (_isPlaying)
     {
         _secsElapsed = 0;
-#if defined(MOBILE)
-#else
+#ifndef MOBILE
         ui->lblTime->setText("Elapsed 0 second");
         ui->lblTime->show();
 #endif
@@ -375,26 +377,31 @@ void MainWindow::toggleFullscreen()
 {
     if (isFullScreen())
     {
-        ui->btnAbout->show();
-        //ui->btnHelp->show();
-        ui->btnOpenImage->show();
-        ui->btnPause->show();
-        ui->btnSettings->show();
-        ui->menuBar->show();
-#if defined(MOBILE)
-        ui->horizontalLayout->addWidget(ui->btnFullscreen);
-        ui->btnFullscreen->show();
-#endif
-
 #if defined(Q_OS_SYMBIAN)
         showMaximized();
 #else
         showNormal();
 #endif
+
+#if defined(MOBILE)
+        ui->horizontalLayout->addWidget(ui->btnFullscreen);
+        ui->btnAbout->show();
+        ui->btnFullscreen->show();
+        //ui->btnHelp->show();
+        if (!_isPlaying)
+            ui->btnOpenImage->show();
+        ui->btnPause->show();
+        ui->btnSettings->show();
+        if (_isPlaying)
+            ui->btnSurrender->show();
+#else
+        ui->menuBar->show();
+#endif
     }
     else
     {
         showFullScreen();
+
 #if defined(MOBILE)
         ui->btnAbout->hide();
         ui->btnFullscreen->hide();
@@ -402,8 +409,10 @@ void MainWindow::toggleFullscreen()
         ui->btnOpenImage->hide();
         ui->btnPause->hide();
         ui->btnSettings->hide();
-#endif
+        ui->btnSurrender->hide();
+#else
         ui->menuBar->hide();
+#endif
     }
 }
 
@@ -442,7 +451,8 @@ void MainWindow::togglePause()
             pause();
 #if defined(Q_WS_MAEMO_5)
             QMaemo5InformationBox::information(this, "<b>Game paused!</b><br />You now can't move the pieces.", 2000);
-#else
+#elif defined (MOBILE)
+            QMessageBox::information(this, "Game paused!\nYou now can't move the pieces.");
 #endif
         }
         else
@@ -450,7 +460,8 @@ void MainWindow::togglePause()
             unpause();
 #if defined(Q_WS_MAEMO_5)
             QMaemo5InformationBox::information(this, "<b>Game resumed!</b><br />Now you can move the pieces again.", 2000);
-#else
+#elif defined (MOBILE)
+            QMessageBox::information(this, "Game resumed!\nNow you can move the pieces again.");
 #endif
         }
     }
