@@ -452,17 +452,17 @@ void MainWindow::togglePause()
 #if defined(Q_WS_MAEMO_5)
             QMaemo5InformationBox::information(this, "<b>Game paused!</b><br />You now can't move the pieces.", 2000);
 #elif defined (MOBILE)
-            QMessageBox::information(this, "Game paused!\nYou now can't move the pieces.");
+            QMessageBox::information(this, "Game paused!", "You now can't move the pieces.", QMessageBox::Ok);
 #endif
         }
         else
         {
-            unpause();
 #if defined(Q_WS_MAEMO_5)
             QMaemo5InformationBox::information(this, "<b>Game resumed!</b><br />Now you can move the pieces again.", 2000);
 #elif defined (MOBILE)
-            QMessageBox::information(this, "Game resumed!\nNow you can move the pieces again.");
+            QMessageBox::information(this, "Game resumed!", "Now you can move the pieces again.", QMessageBox::Ok);
 #endif
+            unpause();
         }
     }
 }
