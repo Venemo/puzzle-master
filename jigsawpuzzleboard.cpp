@@ -11,8 +11,8 @@ JigsawPuzzleBoard::JigsawPuzzleBoard(QObject *parent) :
 
 void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned cols)
 {
-    int w = min<int>(QApplication::desktop()->width(), image.width());
-    int h = min<int>(QApplication::desktop()->height(), image.height());
+    int w = min<int>(width(), image.width());
+    int h = min<int>(height(), image.height());
 
     QPixmap pixmap = image.scaled(w, h, Qt::KeepAspectRatio);
     setOriginalPixmapSize(pixmap.size());
