@@ -25,6 +25,7 @@ public:
 #endif
     static QColor boardBackground();
     static int tolerance();
+    static bool enableScaling();
 
 protected:
     void showEvent(QShowEvent *e);

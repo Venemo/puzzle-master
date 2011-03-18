@@ -9,6 +9,7 @@
 
 #define SETTING_USE_ACCELEROMETER "UseAccelerometer"
 #define SETTING_USE_DROPSHADOW "UseDropshadow"
+#define SETTING_ENABLE_SCALING "EnableScaling"
 #define SETTING_BOARDBACKGROUND "BoardBackground"
 #define SETTING_TOLERANCE "Tolerance"
 #define SETTING_ROWS "Rows"
@@ -39,8 +40,11 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 #if defined(HAVE_QACCELEROMETER)
 #else
     // Deleting the relevant UI if we don't have an accelerometer
-    setFixedHeight(height() - ui->chkAccelerometer->height());
     ui->chkAccelerometer->deleteLater();
+#endif
+
+#if defined(MOBILE)
+    ui->chkEnableScaling->hide();
 #endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
@@ -49,6 +53,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     setFixedHeight(height() - ui->chkUseDropshadow->height());
     ui->chkUseDropshadow->deleteLater();
 #endif
+
+    layout()->setSizeConstraint(QLayout::SetFixedSize);
 
     connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
     connect(this, SIGNAL(rejected()), this, SLOT(saveSettings()));
@@ -73,6 +79,7 @@ void SettingsDialog::saveSettings()
 #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
     s.setValue(SETTING_USE_ACCELEROMETER, ui->chkAccelerometer->isChecked());
 #endif
+    s.setValue(SETTING_ENABLE_SCALING, ui->chkEnableScaling->isChecked());
 }
 
 void SettingsDialog::on_btnClose_clicked()
@@ -161,4 +168,14 @@ int SettingsDialog::tolerance()
 {
     QSettings s;
     return s.value(SETTING_TOLERANCE, DEFAULT_TOLERANCE).toInt();
+}
+
+bool SettingsDialog::enableScaling()
+{
+    QSettings s;
+#if defined (MOBILE)
+    return s.value(SETTING_ENABLE_SCALING, true).toBool();
+#else
+    return s.value(SETTING_ENABLE_SCALING, false).toBool();
+#endif
 }

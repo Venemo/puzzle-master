@@ -107,22 +107,31 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
     // Scaling the graphics view's content
 
-    // Calculating scale ratio
-    qreal oldScaleRatio = _currentScaleRatio;
-    QSize scaledPixmapSize = board->originalPixmapSize();
-    scaledPixmapSize.scale(ui->graphicsView->size(), Qt::KeepAspectRatio);
-    _currentScaleRatio = min<qreal>((qreal)scaledPixmapSize.width() / (qreal)board->originalPixmapSize().width(),
-                                    (qreal)scaledPixmapSize.height() / (qreal)board->originalPixmapSize().height());
-
-    //qDebug() << "new size" << ui->graphicsView->size() << "ratio" << _currentScaleRatio;
-
-    // Setting scene rect and scale
     QSizeF oldscenesize = board->sceneRect().size();
-    board->setSceneRect(0, 0, ui->graphicsView->width() / _currentScaleRatio, ui->graphicsView->height() / _currentScaleRatio);
-    if (0.98 < _currentScaleRatio && 1.02 > _currentScaleRatio)
-        ui->graphicsView->resetTransform();
+
+    if (SettingsDialog::enableScaling())
+    {
+        // Calculating scale ratio
+        qreal oldScaleRatio = _currentScaleRatio;
+        QSize scaledPixmapSize = board->originalPixmapSize();
+        scaledPixmapSize.scale(ui->graphicsView->size(), Qt::KeepAspectRatio);
+        _currentScaleRatio = min<qreal>((qreal)scaledPixmapSize.width() / (qreal)board->originalPixmapSize().width(),
+                                        (qreal)scaledPixmapSize.height() / (qreal)board->originalPixmapSize().height());
+
+        //qDebug() << "new size" << ui->graphicsView->size() << "ratio" << _currentScaleRatio;
+
+        // Setting scene rect and scale
+        board->setSceneRect(0, 0, ui->graphicsView->width() / _currentScaleRatio, ui->graphicsView->height() / _currentScaleRatio);
+        if (0.98 < _currentScaleRatio && 1.02 > _currentScaleRatio)
+            ui->graphicsView->resetTransform();
+        else
+            ui->graphicsView->scale(_currentScaleRatio / oldScaleRatio, _currentScaleRatio / oldScaleRatio);
+    }
     else
-        ui->graphicsView->scale(_currentScaleRatio / oldScaleRatio, _currentScaleRatio / oldScaleRatio);
+    {
+        ui->graphicsView->resetTransform();
+        board->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
+    }
 
     // Making sure every piece is visible and has a nice position
     QSizeF p = (board->sceneRect().size() - oldscenesize) / 2;
