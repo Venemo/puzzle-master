@@ -12,7 +12,6 @@ class SettingsDialog : public QDialog
     Q_OBJECT
     Ui::SettingsDialog *ui;
     QColor _boardBackground;
-    QSettings settings;
 
 public:
     explicit SettingsDialog(QWidget *parent = 0);
@@ -24,6 +23,8 @@ public:
     static void setColumns(int value);
     static bool useAccelerometer();
     static void setUseAccelerometer(bool value);
+    static bool useOpenGl();
+    static void setUseOpenGl(bool value);
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     static bool useDropShadow();
     static void setUseDropShadow(bool value);
@@ -34,13 +35,15 @@ public:
     static void setTolerance(int value);
     static bool enableScaling();
     static void setEnableScaling(bool value);
+    static QString lastImage();
+    static void setLastImage(const QString &value);
 
 protected:
     void showEvent(QShowEvent *e);
+    void hideEvent(QCloseEvent *e);
 
 private slots:
     void saveSettings();
-    void on_btnClose_clicked();
     void on_btnBoardColor_clicked();
 };
 
