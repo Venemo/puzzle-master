@@ -171,6 +171,9 @@ void MainWindow::newGame()
         _isPlaying = true;
         _canPause = false;
 
+        if ((SettingsDialog::startInFullscreen() && !isFullScreen()) || !SettingsDialog::startInFullscreen() && isFullScreen())
+            toggleFullscreen();
+
 #if defined(HAVE_OPENGL)
         if (SettingsDialog::useOpenGl())
         {
@@ -188,8 +191,11 @@ void MainWindow::newGame()
         {
             ui->btnOpenImage->hide();
             ui->actionNew_game->setVisible(false);
-            ui->btnSurrender->show();
-            ui->actionSurrender->setVisible(true);
+            if (!isFullScreen())
+            {
+                ui->btnSurrender->show();
+                ui->actionSurrender->setVisible(true);
+            }
 
             if (SettingsDialog::useAccelerometer())
                 fixCurrentOrientation();
@@ -439,6 +445,14 @@ void MainWindow::toggleFullscreen()
         ui->menuBar->hide();
 #endif
     }
+
+    // This is what it takes to fully update the appearance
+    QApplication *app = (QApplication*) QApplication::instance();
+    app->processEvents();
+    update();
+    app->processEvents();
+    layout()->update();
+    app->processEvents();
 }
 
 void MainWindow::pause()
