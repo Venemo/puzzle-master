@@ -11,6 +11,15 @@ NewGameDialog::NewGameDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+#if defined(Q_WS_MAEMO_5)
+    // This ensures the correct look on Maemo 5 too
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Vertical, this);
+    ui->startButton->setDefault(true);
+    buttonBox->addButton(ui->startButton, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(ui->cancelButton, QDialogButtonBox::ActionRole);
+    ui->verticalLayout->addWidget(buttonBox);
+#endif
+
 #if defined(HAVE_QACCELEROMETER)
 #else
     // Hiding the relevant UI if we don't have an accelerometer

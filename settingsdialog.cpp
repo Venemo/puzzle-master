@@ -32,16 +32,6 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-#if defined(Q_WS_MAEMO_5)
-    // This ensures the correct look on Maemo 5 too
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Vertical, this);
-    ui->btnClose->setDefault(true);
-    buttonBox->addButton(ui->btnClose, QDialogButtonBox::ActionRole);
-    layout()->addWidget(buttonBox);
-#else
-    setFixedWidth(450);
-#endif
-
 #if defined(MOBILE)
     ui->chkEnableScaling->hide();
 #endif
