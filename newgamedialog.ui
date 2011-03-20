@@ -209,6 +209,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="startInFullscreenBox">
+       <property name="text">
+        <string>Start in fullscreen</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="selectImageButton">
        <property name="text">
         <string>Select image</string>

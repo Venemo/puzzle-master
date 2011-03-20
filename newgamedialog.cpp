@@ -15,8 +15,8 @@ NewGameDialog::NewGameDialog(QWidget *parent) :
     // This ensures the correct look on Maemo 5 too
     QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Vertical, this);
     ui->startButton->setDefault(true);
-    buttonBox->addButton(ui->startButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(ui->cancelButton, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(ui->startButton, QDialogButtonBox::ActionRole);
     ui->verticalLayout->addWidget(buttonBox);
 #endif
 
@@ -44,6 +44,7 @@ void NewGameDialog::showEvent(QShowEvent *event)
 
     ui->accelerometerBox->setChecked(SettingsDialog::useAccelerometer());
     ui->useOpenGlBox->setChecked(SettingsDialog::useOpenGl());
+    ui->startInFullscreenBox->setChecked(SettingsDialog::startInFullscreen());
 
     int r = CLAMP(SettingsDialog::rows(), 2, 15), c = CLAMP(SettingsDialog::columns(), 2, 15);
     ui->cbRows->setCurrentIndex(r - 2);
@@ -58,6 +59,7 @@ void NewGameDialog::saveSettings()
     SettingsDialog::setRows(ui->cbRows->currentIndex() + 2);
     SettingsDialog::setUseAccelerometer(ui->accelerometerBox->isChecked());
     SettingsDialog::setUseOpenGl(ui->useOpenGlBox->isChecked());
+    SettingsDialog::setStartInFullscreen(ui->startInFullscreenBox->isChecked());
     SettingsDialog::setLastImage(chooser->getPictureFile());
 }
 
