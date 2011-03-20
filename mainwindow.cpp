@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _isPlaying(false),
     _isPaused(false),
     _wasPaused(false),
+    _canPause(false),
     _currentScaleRatio(1)
 {
     ui->setupUi(this);
@@ -75,11 +76,11 @@ MainWindow::~MainWindow()
 bool MainWindow::event(QEvent *event)
 {
     bool result = QMainWindow::event(event);
-    if (_isPlaying && !_wasPaused && _isPaused && event->type() == QEvent::WindowActivate)
+    if (_canPause && _isPlaying && !_wasPaused && _isPaused && event->type() == QEvent::WindowActivate)
     {
         unpause();
     }
-    else if (_isPlaying && event->type() == QEvent::WindowDeactivate)
+    else if (_canPause && _isPlaying && event->type() == QEvent::WindowDeactivate)
     {
         // If the game was paused before deactivating, it will be paused after activating.
         _wasPaused = _isPaused;
@@ -168,6 +169,7 @@ void MainWindow::newGame()
             return;
 
         _isPlaying = true;
+        _canPause = false;
 
 #if defined(HAVE_OPENGL)
         if (SettingsDialog::useOpenGl())
@@ -266,11 +268,12 @@ void MainWindow::onWon()
 
 void MainWindow::initializeGame()
 {
-    timer->start();
     _secsElapsed = 0;
     updateElapsedTimeLabel();
+    _canPause = true;
 
-    unpause(); // This is also to set the correct icon on the button
+    // This is to set the correct icon on the button and to start the timer
+    unpause();
 
 #if defined (MOBILE)
     if (!isFullScreen())

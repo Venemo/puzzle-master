@@ -26,6 +26,7 @@ class MainWindow : public QMainWindow
     bool _isPlaying;
     bool _isPaused;
     bool _wasPaused;
+    bool _canPause;
     int _secsElapsed;
     qreal _currentScaleRatio;
     void fixCurrentOrientation();
