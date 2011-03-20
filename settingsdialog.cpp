@@ -16,6 +16,7 @@
 #define SETTING_LAST_IMAGE "LastImage"
 #define SETTING_ROWS "Rows"
 #define SETTING_COLS "Columns"
+#define SETTING_START_IN_FULLSCREEN "StartInFullscreen"
 
 #if defined(MOBILE)
 #define DEFAULT_TOLERANCE 10
@@ -193,4 +194,20 @@ QString SettingsDialog::lastImage()
 void SettingsDialog::setLastImage(const QString &value)
 {
     settings->setValue(SETTING_LAST_IMAGE, value);
+}
+
+bool SettingsDialog::startInFullscreen()
+{
+    return settings->value(SETTING_START_IN_FULLSCREEN,
+                       #if defined(MOBILE)
+                           true
+                       #else
+                           false
+                       #endif
+                           ).toBool();
+}
+
+void SettingsDialog::setStartInFullscreen(bool value)
+{
+    settings->setValue(SETTING_START_IN_FULLSCREEN, value);
 }

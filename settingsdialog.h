@@ -25,6 +25,8 @@ public:
     static void setUseAccelerometer(bool value);
     static bool useOpenGl();
     static void setUseOpenGl(bool value);
+    static bool startInFullscreen();
+    static void setStartInFullscreen(bool value);
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     static bool useDropShadow();
     static void setUseDropShadow(bool value);
