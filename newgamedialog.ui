@@ -202,13 +202,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="useOpenGlBox">
-       <property name="text">
-        <string>Enable OpenGL</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QCheckBox" name="startInFullscreenBox">
        <property name="text">
         <string>Start in fullscreen</string>

@@ -27,9 +27,6 @@ NewGameDialog::NewGameDialog(QWidget *parent) :
 #endif
 
     layout()->setSizeConstraint(QLayout::SetFixedSize);
-
-    connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
-    connect(this, SIGNAL(rejected()), this, SLOT(saveSettings()));
 }
 
 NewGameDialog::~NewGameDialog()
@@ -43,7 +40,6 @@ void NewGameDialog::showEvent(QShowEvent *event)
     ui->selectImageButton->setIcon(chooser->getIconForCurrentPicture());
 
     ui->accelerometerBox->setChecked(SettingsDialog::useAccelerometer());
-    ui->useOpenGlBox->setChecked(SettingsDialog::useOpenGl());
     ui->startInFullscreenBox->setChecked(SettingsDialog::startInFullscreen());
 
     int r = CLAMP(SettingsDialog::rows(), 2, 15), c = CLAMP(SettingsDialog::columns(), 2, 15);
@@ -53,12 +49,17 @@ void NewGameDialog::showEvent(QShowEvent *event)
     QDialog::showEvent(event);
 }
 
+void NewGameDialog::hideEvent(QHideEvent *event)
+{
+    saveSettings();
+    QDialog::hideEvent(event);
+}
+
 void NewGameDialog::saveSettings()
 {
     SettingsDialog::setColumns(ui->cbColumns->currentIndex() + 2);
     SettingsDialog::setRows(ui->cbRows->currentIndex() + 2);
     SettingsDialog::setUseAccelerometer(ui->accelerometerBox->isChecked());
-    SettingsDialog::setUseOpenGl(ui->useOpenGlBox->isChecked());
     SettingsDialog::setStartInFullscreen(ui->startInFullscreenBox->isChecked());
     SettingsDialog::setLastImage(chooser->getPictureFile());
 }
