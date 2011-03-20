@@ -2,6 +2,8 @@
 #include "mainwindow.h"
 #include "util.h"
 
+QSettings *settings;
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -12,6 +14,7 @@ int main(int argc, char *argv[])
     QApplication::setApplicationVersion(QString(APP_VERSION));
 
     qsrand((uint)QTime::currentTime().msec());
+    settings = new QSettings();
 
     MainWindow w;
 #if defined(MOBILE)
