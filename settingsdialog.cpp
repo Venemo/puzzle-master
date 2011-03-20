@@ -39,8 +39,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
 #if defined(HAVE_QACCELEROMETER)
 #else
-    // Deleting the relevant UI if we don't have an accelerometer
-    ui->chkAccelerometer->deleteLater();
+    // Hiding the relevant UI if we don't have an accelerometer
+    ui->chkAccelerometer->hide();
 #endif
 
 #if defined(MOBILE)
@@ -49,9 +49,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
 #else
-    // Deleting the relevant UI if we don't have Qt 4.6 at least
-    setFixedHeight(height() - ui->chkUseDropshadow->height());
-    ui->chkUseDropshadow->deleteLater();
+    // Hiding the relevant UI if we don't have Qt 4.6 at least
+    ui->chkUseDropshadow->hide();
 #endif
 
     layout()->setSizeConstraint(QLayout::SetFixedSize);
@@ -68,18 +67,13 @@ SettingsDialog::~SettingsDialog()
 void SettingsDialog::saveSettings()
 {
     // Saving settings
-    QSettings s;
-    s.setValue(SETTING_COLS, ui->cbColumns->currentIndex() + 2);
-    s.setValue(SETTING_ROWS, ui->cbRows->currentIndex() + 2);
-    s.setValue(SETTING_BOARDBACKGROUND, _boardBackground);
-    s.setValue(SETTING_TOLERANCE, (ui->cbTolerance->currentIndex() + 1) * 5);
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-    s.setValue(SETTING_USE_DROPSHADOW, ui->chkUseDropshadow->isChecked());
-#endif
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-    s.setValue(SETTING_USE_ACCELEROMETER, ui->chkAccelerometer->isChecked());
-#endif
-    s.setValue(SETTING_ENABLE_SCALING, ui->chkEnableScaling->isChecked());
+    setColumns(ui->cbColumns->currentIndex() + 2);
+    setRows(ui->cbRows->currentIndex() + 2);
+    setBoardBackground(_boardBackground);
+    setTolerance((ui->cbTolerance->currentIndex() + 1) * 5);
+    setUseDropShadow(ui->chkUseDropshadow->isChecked());
+    setUseAccelerometer(ui->chkAccelerometer->isChecked());
+    setEnableScaling(ui->chkEnableScaling->isChecked());
 }
 
 void SettingsDialog::on_btnClose_clicked()
@@ -96,6 +90,7 @@ void SettingsDialog::showEvent(QShowEvent *e)
 #if defined(HAVE_QACCELEROMETER)
     ui->chkAccelerometer->setChecked(useAccelerometer());
 #endif
+    ui->chkEnableScaling->setChecked(enableScaling());
     int r = CLAMP(rows(), 2, 15), c = CLAMP(columns(), 2, 15);
     ui->cbRows->setCurrentIndex(r - 2);
     ui->cbColumns->setCurrentIndex(c - 2);
@@ -128,54 +123,71 @@ void SettingsDialog::on_btnBoardColor_clicked()
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
 bool SettingsDialog::useDropShadow()
 {
-    QSettings s;
-    return s.value(SETTING_USE_DROPSHADOW, true).toBool();
+    return settings.value(SETTING_USE_DROPSHADOW, true).toBool();
+}
+
+void SettingsDialog::setUseDropShadow(bool value)
+{
+    settings.setValue(SETTING_USE_DROPSHADOW, value);
 }
 #endif
 
 bool SettingsDialog::useAccelerometer()
 {
-    QSettings s;
-    return s.value(SETTING_USE_ACCELEROMETER,
-               #if defined(Q_WS_MAEMO_5) || defined(Q_WS_S60)
-                   true
-               #else
-                   false
-               #endif
-                   ).toBool();
+    return settings.value(SETTING_USE_ACCELEROMETER, false).toBool();
+}
+
+void SettingsDialog::setUseAccelerometer(bool value)
+{
+    settings.setValue(SETTING_USE_ACCELEROMETER, value);
 }
 
 int SettingsDialog::rows()
 {
-    QSettings s;
-    return s.value(SETTING_ROWS, 4).toInt();
+    return settings.value(SETTING_ROWS, 4).toInt();
 }
 
+void SettingsDialog::setRows(int value)
+{
+    settings.setValue(SETTING_ROWS, value);
+}
 
 int SettingsDialog::columns()
 {
-    QSettings s;
-    return s.value(SETTING_COLS, 3).toInt();
+    return settings.value(SETTING_COLS, 3).toInt();
+}
+
+void SettingsDialog::setColumns(int value)
+{
+    settings.setValue(SETTING_COLS, value);
 }
 
 QColor SettingsDialog::boardBackground()
 {
-    QSettings s;
-    return s.value(SETTING_BOARDBACKGROUND, QColor(Qt::white)).value<QColor>();
+    return settings.value(SETTING_BOARDBACKGROUND, QColor(Qt::white)).value<QColor>();
+}
+
+void SettingsDialog::setBoardBackground(QColor value)
+{
+    settings.setValue(SETTING_BOARDBACKGROUND, value);
 }
 
 int SettingsDialog::tolerance()
 {
-    QSettings s;
-    return s.value(SETTING_TOLERANCE, DEFAULT_TOLERANCE).toInt();
+    return settings.value(SETTING_TOLERANCE, DEFAULT_TOLERANCE).toInt();
+}
+
+void SettingsDialog::setTolerance(int value)
+{
+    settings.setValue(SETTING_TOLERANCE, value);
 }
 
 bool SettingsDialog::enableScaling()
 {
-    QSettings s;
-#if defined (MOBILE)
-    return s.value(SETTING_ENABLE_SCALING, true).toBool();
-#else
-    return s.value(SETTING_ENABLE_SCALING, false).toBool();
-#endif
+    return settings.value(SETTING_ENABLE_SCALING, true).toBool();
+}
+
+void SettingsDialog::setEnableScaling(bool value)
+{
+    settings.setValue(SETTING_ENABLE_SCALING, value);
 }
