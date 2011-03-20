@@ -31,8 +31,10 @@ public:
     ~ImageChooser();
 
     QString getPictureFile();
+    const QIcon &getIconForCurrentPicture();
     void addItem(const QString &path, const QString &caption, bool select = true, bool save = true);
     void addItem(const ImageItem &item, bool select = true, bool save = true);
+    const QList<ImageItem> &imageItems();
 
 public slots:
     void saveItems();

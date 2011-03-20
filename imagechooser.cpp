@@ -57,6 +57,16 @@ QString ImageChooser::getPictureFile()
     return ":/image1.jpg";
 }
 
+const QIcon &ImageChooser::getIconForCurrentPicture()
+{
+    foreach (ImageItem &item, items)
+    {
+        if (item.path == getPictureFile())
+            return item.icon;
+    }
+    return QIcon();
+}
+
 void ImageChooser::on_btnOther_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this);
@@ -143,6 +153,11 @@ void ImageChooser::recoverItems()
         addItem(":/image4.jpg", "The beach huts by Greg Roberts", false);
         addItem(":/image5.jpg", QString::fromUtf8("Squirrel by Gábor Bányász"), false);
     }
+}
+
+const QList<ImageItem> &ImageChooser::imageItems()
+{
+    return items;
 }
 
 void ImageChooser::on_btnOk_clicked()
