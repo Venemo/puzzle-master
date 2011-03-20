@@ -57,14 +57,24 @@ QString ImageChooser::getPictureFile()
     return ":/image1.jpg";
 }
 
+void ImageChooser::setCurrentPictureFile(const QString &name)
+{
+    for (int i = 0; i < items.count(); i++)
+    {
+        const ImageItem &item = items[i];
+        if (item.path == name)
+            ui->listWidget->setCurrentRow(i);
+    }
+}
+
 const QIcon &ImageChooser::getIconForCurrentPicture()
 {
-    foreach (ImageItem &item, items)
+    foreach (const ImageItem &item, items)
     {
         if (item.path == getPictureFile())
             return item.icon;
     }
-    return QIcon();
+    return items.first().icon;
 }
 
 void ImageChooser::on_btnOther_clicked()
