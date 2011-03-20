@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "settingsdialog.h"
-#include "imagechooser.h"
+#include "newgamedialog.h"
 #include "highscoresdialog.h"
 #include "puzzleboard.h"
 
@@ -19,7 +19,7 @@ class MainWindow : public QMainWindow
     Ui::MainWindow *ui;
     QTimer *timer;
     SettingsDialog *settings;
-    ImageChooser *chooser;
+    NewGameDialog *newgame;
     HighScoresDialog *highscores;
     PuzzleBoard *board;
     QPointer<QGraphicsTextItem> intro;

@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     timer(new QTimer(this)),
     settings(new SettingsDialog(this)),
-    chooser(new ImageChooser(this)),
+    newgame(new NewGameDialog(this)),
     highscores(new HighScoresDialog(this)),
     board(new JigsawPuzzleBoard(this)),
     _isPlaying(false),
@@ -164,13 +164,25 @@ void MainWindow::newGame()
         int rows = SettingsDialog::rows();
         int cols = SettingsDialog::columns();
 
-        if (!QDialog::Accepted == chooser->exec())
+        if (!QDialog::Accepted == newgame->exec())
             return;
 
         _isPlaying = true;
 
+#if defined(HAVE_OPENGL)
+        if (SettingsDialog::useOpenGl())
+        {
+            ui->graphicsView->setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer), this));
+        }
+        else
+        {
+            ui->graphicsView->viewport()->deleteLater();
+            ui->graphicsView->setViewport(new QWidget(this));
+        }
+#endif
+
         QPixmap pixmap;
-        if (pixmap.load(chooser->getPictureFile()) && !pixmap.isNull())
+        if (pixmap.load(newgame->getPictureFile()) && !pixmap.isNull())
         {
             ui->btnOpenImage->hide();
             ui->actionNew_game->setVisible(false);
@@ -428,6 +440,7 @@ void MainWindow::toggleFullscreen()
 
 void MainWindow::pause()
 {
+    qDebug() << "game paused";
     _isPaused = true;
     timer->stop();
     board->disable();
@@ -441,6 +454,7 @@ void MainWindow::pause()
 
 void MainWindow::unpause()
 {
+    qDebug() << "game resumed";
     _isPaused = false;
     timer->start();
     board->enable();

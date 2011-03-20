@@ -27,7 +27,8 @@ SOURCES += \
     imagechooser.cpp \
     highscoresdialog.cpp \
     jigsawpuzzleboard.cpp \
-    puzzleboard.cpp
+    puzzleboard.cpp \
+    newgamedialog.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -38,13 +39,15 @@ HEADERS += \
     highscoresdialog.h \
     jigsawpuzzleboard.h \
     puzzleboard.h \
-    util.h
+    util.h \
+    newgamedialog.h
 
 FORMS += \
     mainwindow.ui \
     settingsdialog.ui \
     imagechooser.ui \
-    highscoresdialog.ui
+    highscoresdialog.ui \
+    newgamedialog.ui
 
 RESOURCES += \
     resources.qrc
