@@ -480,6 +480,8 @@ void MainWindow::togglePause()
             QMaemo5InformationBox::information(this, "<b>Game paused!</b><br />You now can't move the pieces.", 2000);
 #elif defined (MOBILE)
             QMessageBox::information(this, "Game paused!", "You now can't move the pieces.", QMessageBox::Ok);
+#else
+            ui->lblTime->setText("Game paused!");
 #endif
         }
         else
@@ -488,6 +490,8 @@ void MainWindow::togglePause()
             QMaemo5InformationBox::information(this, "<b>Game resumed!</b><br />Now you can move the pieces again.", 2000);
 #elif defined (MOBILE)
             QMessageBox::information(this, "Game resumed!", "Now you can move the pieces again.", QMessageBox::Ok);
+#else
+            updateElapsedTimeLabel();
 #endif
             unpause();
         }
