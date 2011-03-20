@@ -162,29 +162,17 @@ void MainWindow::newGame()
 {
     if (!_isPlaying)
     {
-        int rows = SettingsDialog::rows();
-        int cols = SettingsDialog::columns();
-
         if (!QDialog::Accepted == newgame->exec())
             return;
 
+        int rows = SettingsDialog::rows(), cols = SettingsDialog::columns();
         _isPlaying = true;
         _canPause = false;
 
         if ((SettingsDialog::startInFullscreen() && !isFullScreen()) || !SettingsDialog::startInFullscreen() && isFullScreen())
             toggleFullscreen();
 
-#if defined(HAVE_OPENGL)
-        if (SettingsDialog::useOpenGl())
-        {
-            ui->graphicsView->setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer), this));
-        }
-        else
-        {
-            ui->graphicsView->viewport()->deleteLater();
-            ui->graphicsView->setViewport(new QWidget(this));
-        }
-#endif
+        applyViewportSettings();
 
         QPixmap pixmap;
         if (pixmap.load(newgame->getPictureFile()) && !pixmap.isNull())
@@ -255,6 +243,21 @@ void MainWindow::surrender()
     }
 }
 
+void MainWindow::applyViewportSettings()
+{
+#if defined(HAVE_OPENGL)
+        if (SettingsDialog::useOpenGl() && !ui->graphicsView->viewport()->inherits("QGLWidget"))
+        {
+            ui->graphicsView->viewport()->deleteLater();
+            ui->graphicsView->setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer), this));
+        }
+        else if (!SettingsDialog::useOpenGl() && ui->graphicsView->viewport()->inherits("QGLWidget"))
+        {
+            ui->graphicsView->viewport()->deleteLater();
+            ui->graphicsView->setViewport(new QWidget(this));
+        }
+#endif
+}
 
 void MainWindow::onWon()
 {
@@ -357,6 +360,9 @@ void MainWindow::showSettings()
         board->disableAccelerometer();
         unfixCurrentOrientation();
     }
+
+    //Viewport
+    applyViewportSettings();
 }
 
 void MainWindow::about()

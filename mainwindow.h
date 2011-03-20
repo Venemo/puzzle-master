@@ -31,6 +31,7 @@ class MainWindow : public QMainWindow
     qreal _currentScaleRatio;
     void fixCurrentOrientation();
     void unfixCurrentOrientation();
+    void applyViewportSettings();
 
 protected:
     bool event(QEvent *event);
