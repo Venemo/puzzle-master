@@ -34,7 +34,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui->setupUi(this);
 
 #if defined(MOBILE)
-    ui->chkEnableScaling->hide();
+    ui->enableScalingBox->hide();
 #endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
@@ -43,10 +43,19 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui->chkUseDropshadow->hide();
 #endif
 
-    layout()->setSizeConstraint(QLayout::SetFixedSize);
+#if defined(HAVE_QACCELEROMETER)
+#else
+    // Hiding the relevant UI if we don't have an accelerometer
+    ui->accelerometerBox->hide();
+#endif
 
-    connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
-    connect(this, SIGNAL(rejected()), this, SLOT(saveSettings()));
+#if defined(HAVE_OPENGL)
+#else
+    // Hiding the relevant UI if we don't have an accelerometer
+    ui->useOpenGlBox->hide();
+#endif
+
+    layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 SettingsDialog::~SettingsDialog()
@@ -58,37 +67,39 @@ void SettingsDialog::saveSettings()
 {
     // Saving settings
     setBoardBackground(_boardBackground);
-    setTolerance((ui->cbTolerance->currentIndex() + 1) * 5);
-    setUseDropShadow(ui->chkUseDropshadow->isChecked());
-    setEnableScaling(ui->chkEnableScaling->isChecked());
+    setTolerance((ui->toleranceBox->currentIndex() + 1) * 5);
+    setUseDropShadow(ui->useDropshadowBox->isChecked());
+    setEnableScaling(ui->enableScalingBox->isChecked());
+    setUseAccelerometer(ui->accelerometerBox->isChecked());
+    setUseOpenGl(ui->useOpenGlBox->isChecked());
 }
 
 void SettingsDialog::showEvent(QShowEvent *e)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-    ui->chkUseDropshadow->setChecked(useDropShadow());
+    ui->useDropshadowBox->setChecked(useDropShadow());
 #endif
 
-    ui->chkEnableScaling->setChecked(enableScaling());
+    ui->enableScalingBox->setChecked(enableScaling());
+    ui->useOpenGlBox->setChecked(useOpenGl());
 
 
     QPixmap pm(80, 30);
     pm.fill(_boardBackground);
-    ui->btnBoardColor->setIcon(QIcon(pm));
+    ui->boardColorButton->setIcon(QIcon(pm));
     int t = CLAMP(tolerance(), 5, 15);
-    ui->cbTolerance->setCurrentIndex(t / 5 - 1);
+    ui->toleranceBox->setCurrentIndex(t / 5 - 1);
 
     QDialog::showEvent(e);
 }
 
-void SettingsDialog::hideEvent(QCloseEvent *e)
+void SettingsDialog::hideEvent(QHideEvent *e)
 {
     saveSettings();
-
-    QDialog::closeEvent(e);
+    QDialog::hideEvent(e);
 }
 
-void SettingsDialog::on_btnBoardColor_clicked()
+void SettingsDialog::on_boardColorButton_clicked()
 {
 #if defined(Q_WS_MAEMO_5)
     QColor newColor = QtHeWrapper::showHeSimpleColorDialog(this, _boardBackground, true);
@@ -100,7 +111,7 @@ void SettingsDialog::on_btnBoardColor_clicked()
         _boardBackground = newColor;
         QPixmap pm(80, 30);
         pm.fill(_boardBackground);
-        ui->btnBoardColor->setIcon(QIcon(pm));
+        ui->boardColorButton->setIcon(QIcon(pm));
     }
 }
 

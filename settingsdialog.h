@@ -42,11 +42,11 @@ public:
 
 protected:
     void showEvent(QShowEvent *e);
-    void hideEvent(QCloseEvent *e);
+    void hideEvent(QHideEvent *e);
 
 private slots:
     void saveSettings();
-    void on_btnBoardColor_clicked();
+    void on_boardColorButton_clicked();
 };
 
 #endif // SETTINGSDIALOG_H
