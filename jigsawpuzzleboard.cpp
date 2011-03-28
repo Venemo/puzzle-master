@@ -16,7 +16,8 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
 
     QPixmap pixmap = image.scaled(w, h, Qt::KeepAspectRatio);
     setOriginalPixmapSize(pixmap.size());
-    setOriginalScaleRatio(min(width() / (qreal)pixmap.width(), height() / (qreal)pixmap.height()));
+    //setOriginalScaleRatio(min(width() / (qreal)pixmap.width(), height() / (qreal)pixmap.height()));
+    setOriginalScaleRatio(1);
     setSceneRect(0, 0, width() / originalScaleRatio(), height() / originalScaleRatio());
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;

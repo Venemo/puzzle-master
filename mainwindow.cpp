@@ -169,7 +169,7 @@ void MainWindow::newGame()
         _isPlaying = true;
         _canPause = false;
 
-        if ((SettingsDialog::startInFullscreen() && !isFullScreen()) || !SettingsDialog::startInFullscreen() && isFullScreen())
+        if ((SettingsDialog::startInFullscreen() && !isFullScreen()))// || !SettingsDialog::startInFullscreen() && isFullScreen())
             toggleFullscreen();
 
         applyViewportSettings();

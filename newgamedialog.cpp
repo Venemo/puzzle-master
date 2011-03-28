@@ -32,6 +32,7 @@ NewGameDialog::NewGameDialog(QWidget *parent) :
 NewGameDialog::~NewGameDialog()
 {
     delete ui;
+    delete chooser;
 }
 
 void NewGameDialog::showEvent(QShowEvent *event)
