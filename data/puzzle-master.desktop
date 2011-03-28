@@ -4,5 +4,6 @@ Version=1.0
 Type=Application
 Name=Puzzle Master
 Icon=puzzle-master
-Exec=/opt/puzzle-master/puzzle-master
+Exec=puzzle-master
+Categories=Qt;Game;LogicGame;
 X-Osso-Type=application/x-executable

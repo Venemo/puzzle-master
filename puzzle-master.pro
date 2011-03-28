@@ -52,23 +52,37 @@ FORMS += \
 RESOURCES += \
     resources.qrc
 
-maemo5 {
-    target.path = /opt/puzzle-master
-    INSTALLS += target
+unix {
+    INSTALLS += target iconfile desktopfile
 
+    target.path = /usr/bin
+    iconfile.path = /usr/share/pixmaps
+    iconfile.files = data/puzzle-master.png
+    desktopfile.path = /usr/share/applications
+    desktopfile.files = data/puzzle-master.desktop
+}
+contains(QT_CONFIG, hildon) {
+    # Maemo 4 Diablo
+
+    QT -= opengl
+    DEFINES -= HAVE_OPENGL
+    DEFINES += MOBILE
+    
+    target.path = /opt/puzzle-master
+    desktopfile.path = /usr/share/applications/hildon
+}
+maemo5 {
     # Maemo 5 Fremantle
+    
     QT += maemo5
     DEFINES += MOBILE HAVE_QACCELEROMETER
 
     CONFIG += mobility link_pkgconfig
     MOBILITY += sensors
     PKGCONFIG += hildon-extras-1
-}
-contains(QT_CONFIG, hildon): {
-    # Maemo 4 Diablo
-    QT -= opengl
-    DEFINES -= HAVE_OPENGL
-    DEFINES += MOBILE
+    
+    target.path = /opt/puzzle-master
+    desktopfile.path = /usr/share/applications/hildon
 }
 symbian {
     # Symbian
