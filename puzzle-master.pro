@@ -80,6 +80,7 @@ maemo5 {
     CONFIG += mobility link_pkgconfig
     MOBILITY += sensors
     PKGCONFIG += hildon-extras-1
+    LIBS += -lglib-2.0 -lgobject-2.0 -lgmodule-2.0 -lgdk_pixbuf-2.0 -lpango-1.0 -lcairo -lpangocairo-1.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lfreetype -lfontconfig -lpangoft2-1.0 -lgtk-x11-2.0 -lhildon-1 -lhildon-extras-1
     
     target.path = /opt/puzzle-master
     desktopfile.path = /usr/share/applications/hildon
@@ -92,6 +93,8 @@ symbian {
 
     CONFIG += mobility
     MOBILITY += sensors
+
+    LIBS += -lcommondialogs -lplatformenv -leikcoctl -lavkon -lcone -leikcore
 
     TARGET.UID3 = 0xe5b4435f
     # TARGET.CAPABILITY +=
