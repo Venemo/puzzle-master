@@ -117,6 +117,10 @@ void PuzzleBoard::accelerometerReadingChanged()
     if (views().at(0)->width() < views().at(0)->height())
         accelerometerMovement(reading->y(), - reading->x(), reading->z());
     else
+#elif defined(Q_OS_SYMBIAN)
+    if (views().at(0)->width() > views().at(0)->height())
+        accelerometerMovement(- reading->y(), reading->x(), reading->z());
+    else
 #endif
         accelerometerMovement(reading->x(), reading->y(), reading->z());
 #endif
