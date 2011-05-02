@@ -50,6 +50,7 @@ ImageChooser::ImageChooser(QWidget *parent) :
 
 #if defined(Q_OS_SYMBIAN)
     setWindowState(windowState() | Qt::WindowMaximized);
+    move(0, 0);
 #endif
 }
 
