@@ -2,6 +2,11 @@
 #include "imagechooser.h"
 #include "ui_imagechooser.h"
 
+#if defined(Q_OS_SYMBIAN)
+#include <caknfileselectiondialog.h>
+#include <pathinfo.h>
+#endif
+
 #define SETTING_IMAGE_LIST "AdditionalImageList"
 
 QDataStream &operator<<(QDataStream &out, const ImageItem &item)
@@ -42,6 +47,10 @@ ImageChooser::ImageChooser(QWidget *parent) :
     buttonBox->addButton(ui->btnOk, QDialogButtonBox::ActionRole);
     layout()->addWidget(buttonBox);
 #endif
+
+#if defined(Q_OS_SYMBIAN)
+    setWindowState(windowState() | Qt::WindowMaximized);
+#endif
 }
 
 ImageChooser::~ImageChooser()
@@ -79,7 +88,24 @@ const QIcon &ImageChooser::getIconForCurrentPicture()
 
 void ImageChooser::on_btnOther_clicked()
 {
+#if defined(Q_OS_SYMBIAN)
+    TFileName nativeFileName;
+    nativeFileName.Append(PathInfo::PhoneMemoryRootPath()); //Use MemoryCardRootPath() for MMC
+
+    _LIT(KDialogTitle, "Browse files");
+    TBool ret = CAknFileSelectionDialog::RunDlgLD(
+                nativeFileName, // on return, contains the selected file's name
+                PathInfo::PhoneMemoryRootPath(), // default root path for browsing
+                KDialogTitle, // Dialog's title
+                0); // Pointer to class implementing MAknFileSelectionObserver.
+
+    if (!ret)
+        return;
+
+    QString fileName((QChar*)nativeFileName.Ptr(), nativeFileName.Length());
+#else
     QString fileName = QFileDialog::getOpenFileName(this);
+#endif
 
     if (fileName.isEmpty())
         return;
@@ -107,6 +133,7 @@ void ImageChooser::addItem(const QString &path, const QString &caption, bool sel
     }
     else
     {
+        qDebug() << "error with image:" << path;
         QMessageBox::warning(this, "Error", "This file is not a valid image file or not supported by your Qt installation.");
     }
 }
