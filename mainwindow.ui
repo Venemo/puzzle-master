@@ -196,6 +196,29 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QToolButton" name="btnExit">
+        <property name="text">
+         <string>Exit game</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/application_exit.png</normaloff>:/application_exit.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonIconOnly</enum>
+        </property>
+        <property name="autoRaise">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
@@ -206,7 +229,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>24</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOptions">
@@ -217,6 +240,7 @@
     <addaction name="actionSurrender"/>
     <addaction name="actionHigh_scores"/>
     <addaction name="actionPause"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuOptions_2">
     <property name="title">
@@ -262,6 +286,11 @@
   <action name="actionPause">
    <property name="text">
     <string>Pause</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>
@@ -446,6 +475,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exitTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnExit</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exitTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>762</x>
+     <y>447</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>about()</slot>
@@ -455,5 +516,6 @@
   <slot>surrender()</slot>
   <slot>toggleFullscreen()</slot>
   <slot>togglePause()</slot>
+  <slot>exitTriggered()</slot>
  </slots>
 </ui>

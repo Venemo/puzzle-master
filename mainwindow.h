@@ -57,6 +57,7 @@ private slots:
     void updateElapsedTimeLabel();
     void initializeGame();
     void endGame();
+    void exitTriggered();
 };
 
 #endif // MAINWINDOW_H

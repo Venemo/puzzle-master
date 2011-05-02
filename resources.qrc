@@ -16,5 +16,6 @@
         <file alias="surrender.png">data/icons/surrender.png</file>
         <file alias="unpause.png">data/icons/unpause.png</file>
         <file alias="boardcolor.png">data/icons/boardcolor.png</file>
+        <file alias="application_exit.png">data/icons/application_exit.png</file>
     </qresource>
 </RCC>
