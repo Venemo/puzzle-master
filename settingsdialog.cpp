@@ -55,6 +55,13 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui->useOpenGlBox->hide();
 #endif
 
+#if defined(Q_OS_SYMBIAN)
+    QAction *closeAction = new QAction("Close", this);
+    closeAction->setSoftKeyRole(QAction::NegativeSoftKey);
+    connect(closeAction, SIGNAL(triggered()), this, SLOT(close()));
+    addAction(closeAction);
+#endif
+
     layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
