@@ -26,6 +26,21 @@ NewGameDialog::NewGameDialog(QWidget *parent) :
     ui->accelerometerBox->hide();
 #endif
 
+#if defined(Q_OS_SYMBIAN)
+    QAction *closeAction = new QAction("Cancel", this);
+    closeAction->setSoftKeyRole(QAction::NegativeSoftKey);
+    connect(closeAction, SIGNAL(triggered()), this, SLOT(reject()));
+    addAction(closeAction);
+
+    QAction *okAction = new QAction("Start", this);
+    okAction->setSoftKeyRole(QAction::PositiveSoftKey);
+    connect(okAction, SIGNAL(triggered()), this, SLOT(accept()));
+    addAction(okAction);
+
+    ui->cancelButton->hide();
+    ui->startButton->hide();
+#endif
+
     layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
