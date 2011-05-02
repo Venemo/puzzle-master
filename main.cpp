@@ -17,7 +17,9 @@ int main(int argc, char *argv[])
     settings = new QSettings();
 
     MainWindow w;
-#if defined(MOBILE)
+#if defined(Q_OS_SYMBIAN)
+    w.showFullScreen();
+#elif defined(MOBILE)
     w.showMaximized();
 #else
     w.show();
