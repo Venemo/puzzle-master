@@ -14,6 +14,13 @@
 #include <QGLWidget>
 #endif
 
+#if defined(Q_OS_SYMBIAN)
+#include <eikenv.h>
+#include <eikappui.h>
+#include <aknenv.h>
+#include <aknappui.h>
+#endif
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -35,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->btnSurrender->hide();
     ui->actionSurrender->setVisible(false);
     ui->btnHelp->hide();
+    ui->btnExit->hide();
 
     timer->setInterval(1000);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateElapsedTimeLabel()));
@@ -57,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setOptimizationFlag(QGraphicsView::DontSavePainterState);
     ui->graphicsView->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 
-    delete ui->lblTime;
+    ui->lblTime->hide();
     ui->horizontalLayout->setContentsMargins(10, 0, 10, 0);
 #endif
 
@@ -65,6 +73,12 @@ MainWindow::MainWindow(QWidget *parent) :
     setFixedHeight(424);
     setAttribute(Qt::WA_Maemo5AutoOrientation);
     ui->btnFullscreen->setIcon(QIcon::fromTheme("general_fullsize"));
+#endif
+
+#if defined(Q_OS_SYMBIAN)
+    ui->btnFullscreen->hide();
+    ui->lblTime->show();
+    ui->btnExit->show();
 #endif
 }
 
@@ -94,12 +108,25 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     if (event)
         QMainWindow::resizeEvent(event);
 
-#if defined(MOBILE)
+#if defined(MOBILE) && !defined(Q_OS_SYMBIAN)
     if (isFullScreen())
     {
         ui->horizontalLayout->removeWidget(ui->btnFullscreen);
         ui->btnFullscreen->move(width() - ui->btnFullscreen->width(), height() - ui->btnFullscreen->height());
         ui->btnFullscreen->show();
+    }
+#endif
+
+#if defined(Q_OS_SYMBIAN)
+    if (height() > width())
+    {
+        ui->verticalLayout->insertWidget(0, ui->lblTime);
+        ui->btnAbout->hide();
+    }
+    else
+    {
+        ui->horizontalLayout->insertWidget(0, ui->lblTime);
+        ui->btnAbout->show();
     }
 #endif
 
@@ -246,16 +273,16 @@ void MainWindow::surrender()
 void MainWindow::applyViewportSettings()
 {
 #if defined(HAVE_OPENGL)
-        if (SettingsDialog::useOpenGl() && !ui->graphicsView->viewport()->inherits("QGLWidget"))
-        {
-            ui->graphicsView->viewport()->deleteLater();
-            ui->graphicsView->setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer), this));
-        }
-        else if (!SettingsDialog::useOpenGl() && ui->graphicsView->viewport()->inherits("QGLWidget"))
-        {
-            ui->graphicsView->viewport()->deleteLater();
-            ui->graphicsView->setViewport(new QWidget(this));
-        }
+    if (SettingsDialog::useOpenGl() && !ui->graphicsView->viewport()->inherits("QGLWidget"))
+    {
+        ui->graphicsView->viewport()->deleteLater();
+        ui->graphicsView->setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer), this));
+    }
+    else if (!SettingsDialog::useOpenGl() && ui->graphicsView->viewport()->inherits("QGLWidget"))
+    {
+        ui->graphicsView->viewport()->deleteLater();
+        ui->graphicsView->setViewport(new QWidget(this));
+    }
 #endif
 }
 
@@ -284,14 +311,16 @@ void MainWindow::initializeGame()
     // This is to set the correct icon on the button and to start the timer
     unpause();
 
-#if defined (MOBILE)
+#if defined (MOBILE) && !defined(Q_OS_SYMBIAN)
     if (!isFullScreen())
     {
         ui->btnPause->show();
+        ui->btnSurrender->show();
         ui->actionPause->setVisible(true);
     }
 #else
     ui->btnPause->show();
+    ui->btnSurrender->show();
     ui->actionPause->setVisible(true);
 #endif
 
@@ -306,7 +335,7 @@ void MainWindow::endGame()
     timer->stop();
 
     // Additional things
-#if defined(MOBILE)
+#if defined(MOBILE) && !defined(Q_OS_SYMBIAN)
     if (!isFullScreen())
 #endif
         ui->btnOpenImage->show();
@@ -389,8 +418,8 @@ void MainWindow::updateElapsedTimeLabel()
     else if (_isPlaying)
     {
         _secsElapsed = 0;
-#ifndef MOBILE
         ui->lblTime->setText("Elapsed 0 second");
+#if defined(Q_OS_SYMBIAN) || !defined(MOBILE)
         ui->lblTime->show();
 #endif
     }
@@ -398,12 +427,12 @@ void MainWindow::updateElapsedTimeLabel()
     QString str = "Elapsed " + QString::number(_secsElapsed) + " second";
     if (_secsElapsed > 1)
         str += "s";
-#ifndef MOBILE
+#if defined(Q_OS_SYMBIAN) || !defined(MOBILE)
     if (_isPaused)
         str = "Game paused! " + str;
 #endif
 
-#if defined(MOBILE)
+#if defined(MOBILE) && !defined(Q_OS_SYMBIAN)
     setWindowTitle(str);
 #else
     ui->lblTime->setText(str);
@@ -500,9 +529,8 @@ void MainWindow::togglePause()
             QMaemo5InformationBox::information(this, "<b>Game paused!</b><br />You now can't move the pieces.", 2000);
 #elif defined (MOBILE)
             QMessageBox::information(this, "Game paused!", "You now can't move the pieces.", QMessageBox::Ok);
-#else
-            ui->lblTime->setText("Game paused!");
 #endif
+            ui->lblTime->setText("Game paused!");
         }
         else
         {
@@ -510,9 +538,8 @@ void MainWindow::togglePause()
             QMaemo5InformationBox::information(this, "<b>Game resumed!</b><br />Now you can move the pieces again.", 2000);
 #elif defined (MOBILE)
             QMessageBox::information(this, "Game resumed!", "Now you can move the pieces again.", QMessageBox::Ok);
-#else
-            updateElapsedTimeLabel();
 #endif
+            updateElapsedTimeLabel();
             unpause();
         }
     }
@@ -525,6 +552,12 @@ void MainWindow::fixCurrentOrientation()
         setAttribute(Qt::WA_Maemo5LandscapeOrientation);
     else
         setAttribute(Qt::WA_Maemo5PortraitOrientation);
+#elif defined(Q_OS_SYMBIAN)
+    CAknAppUi* appUi = dynamic_cast<CAknAppUi*> (CEikonEnv::Static()->AppUi());
+    if (width() > height())
+        appUi->SetOrientationL(CAknAppUi::EAppUiOrientationLandscape);
+    else
+        appUi->SetOrientationL(CAknAppUi::EAppUiOrientationPortrait);
 #endif
 }
 
@@ -532,5 +565,14 @@ void MainWindow::unfixCurrentOrientation()
 {
 #if defined(Q_WS_MAEMO_5)
     setAttribute(Qt::WA_Maemo5AutoOrientation);
+#elif defined(Q_OS_SYMBIAN)
+    CAknAppUi* appUi = dynamic_cast<CAknAppUi*> (CEikonEnv::Static()->AppUi());
+    appUi->SetOrientationL(CAknAppUi::EAppUiOrientationAutomatic);
 #endif
+}
+
+void MainWindow::exitTriggered()
+{
+    if (QMessageBox::Yes == QMessageBox::question(this, "Are you sure?", "Do you want to exit the game?", QMessageBox::Yes, QMessageBox::No))
+        QApplication::instance()->quit();
 }
