@@ -52,6 +52,11 @@ FORMS += \
 RESOURCES += \
     resources.qrc
 
+OTHER_FILES += \
+    data/about.txt \
+    data/puzzle-master.desktop \
+    puzzle-master.rc
+
 unix {
     INSTALLS += target iconfile desktopfile
 
@@ -93,6 +98,8 @@ symbian {
 
     CONFIG += mobility
     MOBILITY += sensors
+
+    ICON = data/puzzle-master-44x44.svg
 
     LIBS += -lcommondialogs -lplatformenv -leikcoctl -lavkon -lcone -leikcore
 
