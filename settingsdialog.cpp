@@ -217,7 +217,7 @@ void SettingsDialog::setLastImage(const QString &value)
 bool SettingsDialog::startInFullscreen()
 {
     return settings->value(SETTING_START_IN_FULLSCREEN,
-                       #if defined(MOBILE)
+                       #if defined(MOBILE) && !defined(Q_OS_SYMBIAN)
                            true
                        #else
                            false

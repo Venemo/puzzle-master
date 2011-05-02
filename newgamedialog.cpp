@@ -39,6 +39,7 @@ NewGameDialog::NewGameDialog(QWidget *parent) :
 
     ui->cancelButton->hide();
     ui->startButton->hide();
+    ui->startInFullscreenBox->hide();
 #endif
 
     layout()->setSizeConstraint(QLayout::SetFixedSize);
