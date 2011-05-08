@@ -36,9 +36,9 @@ signals:
     void noNeighbours();
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *ev);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *ev);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *ev);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *ev);
 
 };
 

@@ -119,6 +119,8 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
 
 void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    PuzzleItem::mousePressEvent(event);
+
     if (event->button() == Qt::LeftButton && _canMerge)
     {
         _dragging = true;
@@ -129,6 +131,8 @@ void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void JigsawPuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+    PuzzleItem::mouseReleaseEvent(event);
+
     if (event->button() == Qt::LeftButton)
     {
         _dragging = false;
@@ -139,6 +143,8 @@ void JigsawPuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    PuzzleItem::mouseMoveEvent(event);
+
     if (_dragging)
     {
         setPos(pos() + event->pos() - _dragStart);

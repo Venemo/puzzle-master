@@ -50,3 +50,27 @@ bool PuzzleItem::isNeighbourOf(const PuzzleItem *piece) const
         return true;
     return false;
 }
+
+void PuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_UNUSED(event);
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    if (QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect*>(this->graphicsEffect()))
+    {
+        effect->setColor(DROPSHADOW_COLOR_SELECTED);
+        effect->setBlurRadius(DROPSHADOW_RADIUS_SELECTED);
+    }
+#endif
+}
+
+void PuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_UNUSED(event);
+#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    if (QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect*>(this->graphicsEffect()))
+    {
+        effect->setColor(DROPSHADOW_COLOR_DEFAULT);
+        effect->setBlurRadius(DROPSHADOW_RADIUS_DEFAULT);
+    }
+#endif
+}

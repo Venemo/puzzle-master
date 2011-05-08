@@ -78,11 +78,11 @@ bool PuzzleBoard::isDropshadowActive()
 void PuzzleBoard::enableDropshadow()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-    QColor c(0, 0, 0, 200);
+    QColor c = DROPSHADOW_COLOR_DEFAULT;
     foreach (QGraphicsItem *item, items())
     {
         QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect();
-        effect->setBlurRadius(20);
+        effect->setBlurRadius(DROPSHADOW_RADIUS_DEFAULT);
         effect->setOffset(0);
         effect->setColor(c);
         item->setGraphicsEffect(effect);
