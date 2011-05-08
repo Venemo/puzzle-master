@@ -492,7 +492,7 @@ void MainWindow::toggleFullscreen()
 
 void MainWindow::pause()
 {
-    qDebug() << "game paused";
+    //qDebug() << "game paused";
     _isPaused = true;
     timer->stop();
     board->disable();
@@ -506,7 +506,7 @@ void MainWindow::pause()
 
 void MainWindow::unpause()
 {
-    qDebug() << "game resumed";
+    //qDebug() << "game resumed";
     _isPaused = false;
     timer->start();
     board->enable();
