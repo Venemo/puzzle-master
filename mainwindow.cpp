@@ -187,6 +187,9 @@ void MainWindow::showHighScores()
 
 void MainWindow::newGame()
 {
+    if (!intro.isNull())
+        intro->hide();
+
     if (!_isPlaying)
     {
         if (!QDialog::Accepted == newgame->exec())
