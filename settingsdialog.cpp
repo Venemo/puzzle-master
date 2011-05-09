@@ -143,10 +143,10 @@ void SettingsDialog::setUseOpenGl(bool value)
 bool SettingsDialog::useDropShadow()
 {
     return settings->value(SETTING_USE_DROPSHADOW,
-                       #if !defined(Q_OS_SYMBIAN)
-                           true
+                       #if defined(Q_OS_SYMBIAN)
+                           QSysInfo::symbianVersion() >= QSysInfo::SV_SF_3
                        #else
-                           false
+                           true
                        #endif
                            ).toBool();
 }
