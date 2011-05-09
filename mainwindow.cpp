@@ -338,7 +338,10 @@ void MainWindow::endGame()
 #if defined(MOBILE) && !defined(Q_OS_SYMBIAN)
     if (!isFullScreen())
 #endif
+    {
         ui->btnOpenImage->show();
+    }
+    ui->btnPause->hide();
 
     ui->actionNew_game->setVisible(true);
     ui->btnSurrender->hide();
