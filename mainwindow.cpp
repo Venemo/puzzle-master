@@ -437,6 +437,8 @@ void MainWindow::updateElapsedTimeLabel()
 
 void MainWindow::toggleFullscreen()
 {
+#if defined(Q_OS_SYMBIAN)
+#else
     if (isFullScreen())
     {
 #if defined(MOBILE)
@@ -478,6 +480,7 @@ void MainWindow::toggleFullscreen()
     app->processEvents();
     layout()->update();
     app->processEvents();
+#endif
 }
 
 void MainWindow::pause()
