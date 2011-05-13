@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QColor bg = SettingsDialog::boardBackground();
     board->setBackgroundBrush(QBrush(bg));
-    intro = new QGraphicsTextItem("Please press the new game button!");
+    intro = new QGraphicsTextItem(tr("Please press the new game button!"));
     intro->setDefaultTextColor(QColor(0xFFFFFF - bg.rgb()));
     board->addItem(intro);
 
@@ -219,8 +219,8 @@ void MainWindow::newGame()
                 fixCurrentOrientation();
             _isPaused = false;
 
-            QProgressDialog *progress = new QProgressDialog("Generating puzzle...", "Cancel", 0, rows * cols, this);
-            progress->setWindowTitle("Generating puzzle...");
+            QProgressDialog *progress = new QProgressDialog(tr("Generating puzzle..."), tr("Cancel"), 0, rows * cols, this);
+            progress->setWindowTitle(tr("Generating puzzle..."));
 #ifndef MOBILE
             if (rows * cols < 20)
 #endif
@@ -255,7 +255,7 @@ void MainWindow::newGame()
         }
         else
         {
-            QMessageBox::warning(this, "Error", "Could not load the selected image.");
+            QMessageBox::warning(this, tr("Error"), tr("Could not load the selected image."));
             _isPlaying = false;
         }
     }
@@ -263,7 +263,7 @@ void MainWindow::newGame()
 
 void MainWindow::surrender()
 {
-    if (_isPlaying && QMessageBox::Yes == QMessageBox::question(this, "Are you sure?", "Are you sure you want to abandon this game?", QMessageBox::Yes, QMessageBox::Cancel))
+    if (_isPlaying && QMessageBox::Yes == QMessageBox::question(this, tr("Are you sure?"), tr("Are you sure you want to abandon this game?"), QMessageBox::Yes, QMessageBox::Cancel))
     {
         endGame();
 
@@ -295,9 +295,9 @@ void MainWindow::onWon()
 
     // Showing congratulations
 #if defined(Q_WS_MAEMO_5)
-    QMaemo5InformationBox::information(0, "<b>You rock!</b><br />Congratulations!<br />You've successfully solved the given puzzle!", 5000);
+    QMaemo5InformationBox::information(0, "<b>" + tr("You rock!") + "</b><br />" + tr("Congratulations!") + "<br />" + tr("You've successfully solved the given puzzle!"), 5000);
 #else
-    QMessageBox::information(this, "You rock!", "Congratulations!\nYou've successfully solved the given puzzle!");
+    QMessageBox::information(this, tr("You rock!"), tr("Congratulations!") + "\n" + tr("You've successfully solved the given puzzle!"));
 #endif
 
     // Adding to high scores
@@ -404,57 +404,41 @@ void MainWindow::about()
 {
 #if defined(Q_WS_MAEMO_5)
     QtHeWrapper::showHeAboutDialog(this,
-                                   "Fun and addictive jigsaw puzzle game\nfor your mobile computer",
-                                   "Licensed under the terms of EUPL 1.1 - 2011, Timur Kristóf",
+                                   tr("Fun and addictive jigsaw puzzle game"),
+                                   tr("Licensed under the terms of EUPL 1.1 - 2011, Timur Kristóf"),
                                    "http://gitorious.org/colorful-apps/pages/PuzzleMaster",
                                    "http://talk.maemo.org/showthread.php?t=67139",
                                    "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=venemo%40msn%2ecom&lc=US&item_name=to%20Timur%20Kristof%2c%20for%20Puzzle%20Master%20development&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted",
                                    "puzzle-master");
 #else
-    QMessageBox::information(this, "About", fetchAboutString(), QMessageBox::Ok);
+    QMessageBox::information(this, tr("About"), fetchAboutString(), QMessageBox::Ok);
 #endif
 }
 
 void MainWindow::updateElapsedTimeLabel()
 {
     if (_isPlaying)
-    {
         _secsElapsed++;
-    }
-    else if (_isPlaying)
-    {
-        _secsElapsed = 0;
-        ui->lblTime->setText("Elapsed 0 second");
-#if defined(Q_OS_SYMBIAN) || !defined(MOBILE)
-        ui->lblTime->show();
-#endif
-    }
 
-    QString str = "Elapsed " + QString::number(_secsElapsed) + " second";
-    if (_secsElapsed > 1)
-        str += "s";
-#if defined(Q_OS_SYMBIAN) || !defined(MOBILE)
+    QString str;
+
     if (_isPaused)
-        str = "Game paused! " + str;
-#endif
+        str = tr("Game paused!");
+    else if (_secsElapsed == 1)
+        str = tr("Elapsed %1 second").arg(QString::number(_secsElapsed));
+    else
+        str = tr("Elapsed %1 seconds").arg(QString::number(_secsElapsed));
 
-#if defined(MOBILE) && !defined(Q_OS_SYMBIAN)
+#if defined(MOBILE)
     setWindowTitle(str);
-#else
-    ui->lblTime->setText(str);
 #endif
+    ui->lblTime->setText(str);
 }
 
 void MainWindow::toggleFullscreen()
 {
     if (isFullScreen())
     {
-#if defined(Q_OS_SYMBIAN)
-        showMaximized();
-#else
-        showNormal();
-#endif
-
 #if defined(MOBILE)
         ui->horizontalLayout->addWidget(ui->btnFullscreen);
         ui->btnAbout->show();
@@ -503,7 +487,7 @@ void MainWindow::pause()
     timer->stop();
     board->disable();
     ui->btnPause->setIcon(QIcon(QPixmap(":/unpause.png")));
-    ui->actionPause->setText("Resume");
+    ui->actionPause->setText(tr("Resume"));
 
     // Stopping accelerometer
     if (SettingsDialog::useAccelerometer())
@@ -517,7 +501,7 @@ void MainWindow::unpause()
     timer->start();
     board->enable();
     ui->btnPause->setIcon(QIcon(QPixmap(":/pause.png")));
-    ui->actionPause->setText("Pause");
+    ui->actionPause->setText(tr("Pause"));
 
     // Starting accelerometer
     if (SettingsDialog::useAccelerometer())
@@ -532,18 +516,18 @@ void MainWindow::togglePause()
         {
             pause();
 #if defined(Q_WS_MAEMO_5)
-            QMaemo5InformationBox::information(this, "<b>Game paused!</b><br />You now can't move the pieces.", 2000);
+            QMaemo5InformationBox::information(this, "<b>" + tr("Game paused!") + "</b><br />" + tr("You now can't move the pieces."), 2000);
 #elif defined (MOBILE)
-            QMessageBox::information(this, "Game paused!", "You now can't move the pieces.", QMessageBox::Ok);
+            QMessageBox::information(this, tr("Game paused!"), tr("You now can't move the pieces."), QMessageBox::Ok);
 #endif
-            ui->lblTime->setText("Game paused!");
+            updateElapsedTimeLabel();
         }
         else
         {
 #if defined(Q_WS_MAEMO_5)
-            QMaemo5InformationBox::information(this, "<b>Game resumed!</b><br />Now you can move the pieces again.", 2000);
+            QMaemo5InformationBox::information(this, "<b>" + tr("Game resumed!") + "</b><br />" + tr("Now you can move the pieces again."), 2000);
 #elif defined (MOBILE)
-            QMessageBox::information(this, "Game resumed!", "Now you can move the pieces again.", QMessageBox::Ok);
+            QMessageBox::information(this, tr("Game resumed!"), tr("Now you can move the pieces again."), QMessageBox::Ok);
 #endif
             updateElapsedTimeLabel();
             unpause();
@@ -579,6 +563,6 @@ void MainWindow::unfixCurrentOrientation()
 
 void MainWindow::exitTriggered()
 {
-    if (QMessageBox::Yes == QMessageBox::question(this, "Are you sure?", "Do you want to exit the game?", QMessageBox::Yes, QMessageBox::No))
+    if (QMessageBox::Yes == QMessageBox::question(this, tr("Are you sure?"), tr("Do you want to exit the game?"), QMessageBox::Yes, QMessageBox::No))
         QApplication::instance()->quit();
 }
