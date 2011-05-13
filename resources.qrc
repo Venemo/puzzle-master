@@ -17,5 +17,6 @@
         <file alias="unpause.png">data/icons/unpause.png</file>
         <file alias="boardcolor.png">data/icons/boardcolor.png</file>
         <file alias="application_exit.png">data/icons/application_exit.png</file>
+        <file>translations/puzzle-master_hu_HU.qm</file>
     </qresource>
 </RCC>
