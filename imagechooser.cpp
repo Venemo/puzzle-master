@@ -34,9 +34,6 @@ ImageChooser::ImageChooser(QWidget *parent) :
     recoverItems();
 
 #if defined(Q_WS_MAEMO_5)
-    setFixedHeight(420);
-    setFixedWidth(parentWidget()->width());
-
     // This ensures the correct look on Maemo 5 too
     QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Vertical, this);
     ui->btnOk->setDefault(true);
@@ -52,6 +49,8 @@ ImageChooser::ImageChooser(QWidget *parent) :
     setWindowState(windowState() | Qt::WindowMaximized);
     move(0, 0);
 #endif
+
+    layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 ImageChooser::~ImageChooser()

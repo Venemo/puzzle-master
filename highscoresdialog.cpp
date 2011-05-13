@@ -22,6 +22,8 @@ HighScoresDialog::HighScoresDialog(QWidget *parent) :
     buttonBox->addButton(ui->btnClose, QDialogButtonBox::ActionRole);
     layout()->addWidget(buttonBox);
 #endif
+
+    layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 HighScoresDialog::~HighScoresDialog()
