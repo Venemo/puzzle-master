@@ -27,12 +27,12 @@ NewGameDialog::NewGameDialog(QWidget *parent) :
 #endif
 
 #if defined(Q_OS_SYMBIAN)
-    QAction *closeAction = new QAction("Cancel", this);
+    QAction *closeAction = new QAction(tr("Cancel"), this);
     closeAction->setSoftKeyRole(QAction::NegativeSoftKey);
     connect(closeAction, SIGNAL(triggered()), this, SLOT(reject()));
     addAction(closeAction);
 
-    QAction *okAction = new QAction("Start", this);
+    QAction *okAction = new QAction(tr("Start"), this);
     okAction->setSoftKeyRole(QAction::PositiveSoftKey);
     connect(okAction, SIGNAL(triggered()), this, SLOT(accept()));
     addAction(okAction);
