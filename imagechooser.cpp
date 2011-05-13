@@ -89,11 +89,12 @@ const QIcon &ImageChooser::getIconForCurrentPicture()
 
 void ImageChooser::on_btnOther_clicked()
 {
+    QString title = tr("Select an image");
 #if defined(Q_OS_SYMBIAN)
     TFileName nativeFileName;
     nativeFileName.Append(PathInfo::PhoneMemoryRootPath()); //Use MemoryCardRootPath() for MMC
 
-    _LIT(KDialogTitle, "Browse files");
+    _LIT(KDialogTitle, title.data()->toLatin1());
     TBool ret = CAknFileSelectionDialog::RunDlgLD(
                 nativeFileName, // on return, contains the selected file's name
                 PathInfo::PhoneMemoryRootPath(), // default root path for browsing
@@ -105,13 +106,13 @@ void ImageChooser::on_btnOther_clicked()
 
     QString fileName((QChar*)nativeFileName.Ptr(), nativeFileName.Length());
 #else
-    QString fileName = QFileDialog::getOpenFileName(this);
+    QString fileName = QFileDialog::getOpenFileName(this, title);
 #endif
 
     if (fileName.isEmpty())
         return;
 
-    QString caption = QInputDialog::getText(this, "Name the image", "Please give a name to this image.");
+    QString caption = QInputDialog::getText(this, tr("Name the image"), tr("Please give a name to this image."));
 
     if (caption.isEmpty() || caption.length() == 0)
         return;
@@ -135,7 +136,7 @@ void ImageChooser::addItem(const QString &path, const QString &caption, bool sel
     else
     {
         qDebug() << "error with image:" << path;
-        QMessageBox::warning(this, "Error", "This file is not a valid image file or not supported by your Qt installation.");
+        QMessageBox::warning(this, tr("Error"), tr("This file is either not a valid image file or not supported by your Qt installation, or you don't have enough memory to open it."));
     }
 }
 
@@ -205,17 +206,17 @@ void ImageChooser::on_btnOk_clicked()
         if (QFile::exists(map[ui->listWidget->selectedItems().at(0)]))
             accept();
         else
-            QMessageBox::warning(this, "Error", "This file doesn't exist. Please select a file that exists.");
+            QMessageBox::warning(this, tr("Error"), tr("This file doesn't exist. Please select a file that exists."));
     }
     else
     {
-        QMessageBox::warning(this, "Error", "Please select an image.");
+        QMessageBox::warning(this, tr("Please select an image"), tr("You should select an image before you can start a game."));
     }
 }
 
 void ImageChooser::on_btnClear_clicked()
 {
-    if (QMessageBox::Yes == QMessageBox::question(this, "Are you sure?", "Clear all custom images?", QMessageBox::Yes, QMessageBox::Cancel))
+    if (QMessageBox::Yes == QMessageBox::question(this, tr("Are you sure?"), tr("Do you wish to clear all custom images?"), QMessageBox::Yes, QMessageBox::Cancel))
     {
         ui->listWidget->clear();
         items.clear();
@@ -230,7 +231,7 @@ void ImageChooser::on_btnRemove_clicked()
 {
     if (ui->listWidget->selectedItems().count() > 0)
     {
-        if (QMessageBox::Yes == QMessageBox::question(this, "Are you sure?", "Remove selected image?", QMessageBox::Yes, QMessageBox::Cancel))
+        if (QMessageBox::Yes == QMessageBox::question(this, tr("Are you sure?"), tr("Remove selected image?"), QMessageBox::Yes, QMessageBox::Cancel))
         {
             QListWidgetItem *lwi = ui->listWidget->selectedItems().at(0);
             ui->listWidget->removeItemWidget(lwi);
@@ -251,6 +252,6 @@ void ImageChooser::on_btnRemove_clicked()
     }
     else
     {
-        QMessageBox::information(this, "Error", "Select an image if you want to remove it.");
+        QMessageBox::information(this, tr("Error"), tr("Select an image if you want to remove it."));
     }
 }
