@@ -44,7 +44,7 @@ void HighScoresDialog::showEvent(QShowEvent *ev)
     }
     else
     {
-        QMessageBox::information(this, "No high scores", "There are no high scores yet.");
+        QMessageBox::information(this, tr("No high scores"), tr("There are no high scores yet."));
     }
 }
 
@@ -72,7 +72,7 @@ void HighScoresDialog::clearScores()
     ui->cbScoreType->clear();
     ui->listWidget->clear();
 
-    QMessageBox::information(this, "No high scores", "There are no scores left.");
+    QMessageBox::information(this, tr("Clear successful!"), tr("High scores successfully deleted."));
     reject();
 }
 
