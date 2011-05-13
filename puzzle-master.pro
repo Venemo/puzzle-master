@@ -52,6 +52,9 @@ FORMS += \
 RESOURCES += \
     resources.qrc
 
+TRANSLATIONS += \
+    translations/puzzle-master_hu_HU.ts
+
 OTHER_FILES += \
     data/about.txt \
     data/puzzle-master.desktop \
