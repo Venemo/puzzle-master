@@ -187,9 +187,6 @@ void MainWindow::showHighScores()
 
 void MainWindow::newGame()
 {
-    if (!intro.isNull())
-        intro->hide();
-
     if (!_isPlaying)
     {
         if (!QDialog::Accepted == newgame->exec())
@@ -226,6 +223,8 @@ void MainWindow::newGame()
 #endif
                 progress->show();
 
+            if (!intro.isNull())
+                intro->hide();
 
             if (board != 0)
             {
@@ -441,6 +440,8 @@ void MainWindow::toggleFullscreen()
 #else
     if (isFullScreen())
     {
+        showNormal();
+
 #if defined(MOBILE)
         ui->horizontalLayout->addWidget(ui->btnFullscreen);
         ui->btnAbout->show();

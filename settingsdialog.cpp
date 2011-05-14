@@ -60,11 +60,11 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     closeAction->setSoftKeyRole(QAction::NegativeSoftKey);
     connect(closeAction, SIGNAL(triggered()), this, SLOT(close()));
     addAction(closeAction);
-    closeButton->hide();
+    ui->closeButton->hide();
 #endif
 
 #if defined(Q_WS_MAEMO_5)
-    closeButton->hide();
+    ui->closeButton->hide();
 #endif
 
     layout()->setSizeConstraint(QLayout::SetFixedSize);
