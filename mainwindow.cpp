@@ -87,6 +87,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (QMessageBox::Yes == QMessageBox::question(this, tr("Are you sure?"), tr("Do you want to exit the game?"), QMessageBox::Yes, QMessageBox::No))
+    {
+        event->accept();
+        QApplication::instance()->quit();
+    }
+    event->ignore();
+}
+
 bool MainWindow::event(QEvent *event)
 {
     bool result = QMainWindow::event(event);
@@ -567,6 +577,5 @@ void MainWindow::unfixCurrentOrientation()
 
 void MainWindow::exitTriggered()
 {
-    if (QMessageBox::Yes == QMessageBox::question(this, tr("Are you sure?"), tr("Do you want to exit the game?"), QMessageBox::Yes, QMessageBox::No))
-        QApplication::instance()->quit();
+    this->close();
 }

@@ -19,22 +19,22 @@
         <translation>Bezárás</translation>
     </message>
     <message>
-        <location filename="../highscoresdialog.cpp" line="47"/>
+        <location filename="../highscoresdialog.cpp" line="49"/>
         <source>No high scores</source>
         <translation>Nincs pontszám</translation>
     </message>
     <message>
-        <location filename="../highscoresdialog.cpp" line="47"/>
+        <location filename="../highscoresdialog.cpp" line="49"/>
         <source>There are no high scores yet.</source>
         <translation>Még nincs egyetlen pontszám sem.</translation>
     </message>
     <message>
-        <location filename="../highscoresdialog.cpp" line="75"/>
+        <location filename="../highscoresdialog.cpp" line="77"/>
         <source>Clear successful!</source>
         <translation>Törlés sikeres!</translation>
     </message>
     <message>
-        <location filename="../highscoresdialog.cpp" line="75"/>
+        <location filename="../highscoresdialog.cpp" line="77"/>
         <source>High scores successfully deleted.</source>
         <translation>A pontszámokat sikeresen kitöröltük!</translation>
     </message>
@@ -43,7 +43,7 @@
     <name>ImageChooser</name>
     <message>
         <location filename="../imagechooser.ui" line="17"/>
-        <location filename="../imagechooser.cpp" line="92"/>
+        <location filename="../imagechooser.cpp" line="91"/>
         <source>Select an image</source>
         <translation>Válassz egy képet</translation>
     </message>
@@ -73,60 +73,60 @@
         <translation>Oké</translation>
     </message>
     <message>
-        <location filename="../imagechooser.cpp" line="115"/>
+        <location filename="../imagechooser.cpp" line="114"/>
         <source>Name the image</source>
         <translation>Nevezze el a képet</translation>
     </message>
     <message>
-        <location filename="../imagechooser.cpp" line="115"/>
+        <location filename="../imagechooser.cpp" line="114"/>
         <source>Please give a name to this image.</source>
         <translation>Kérem, adjon egy nevet ennek a képnek!</translation>
     </message>
     <message>
-        <location filename="../imagechooser.cpp" line="139"/>
-        <location filename="../imagechooser.cpp" line="209"/>
-        <location filename="../imagechooser.cpp" line="255"/>
+        <location filename="../imagechooser.cpp" line="138"/>
+        <location filename="../imagechooser.cpp" line="208"/>
+        <location filename="../imagechooser.cpp" line="254"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../imagechooser.cpp" line="139"/>
+        <location filename="../imagechooser.cpp" line="138"/>
         <source>This file is either not a valid image file or not supported by your Qt installation, or you don&apos;t have enough memory to open it.</source>
         <translation>Ez a fájl érvénytelen képfájl, vagy nem támogatott az Ön Qt verzióján, vagy nincs elég memória a megnyitásához.</translation>
     </message>
     <message>
-        <location filename="../imagechooser.cpp" line="209"/>
+        <location filename="../imagechooser.cpp" line="208"/>
         <source>This file doesn&apos;t exist. Please select a file that exists.</source>
         <translation>Ez a fájl nem létezik. Kérem, válasszon egy olyan fájlt, amelyik létezik!</translation>
     </message>
     <message>
-        <location filename="../imagechooser.cpp" line="213"/>
+        <location filename="../imagechooser.cpp" line="212"/>
         <source>Please select an image</source>
         <translation>Kérem, válasszon egy képet!</translation>
     </message>
     <message>
-        <location filename="../imagechooser.cpp" line="213"/>
+        <location filename="../imagechooser.cpp" line="212"/>
         <source>You should select an image before you can start a game.</source>
         <translation>Válasszon egy képet, mielőtt elkezdené a játékot!</translation>
     </message>
     <message>
-        <location filename="../imagechooser.cpp" line="219"/>
-        <location filename="../imagechooser.cpp" line="234"/>
+        <location filename="../imagechooser.cpp" line="218"/>
+        <location filename="../imagechooser.cpp" line="233"/>
         <source>Are you sure?</source>
         <translation>Biztos?</translation>
     </message>
     <message>
-        <location filename="../imagechooser.cpp" line="219"/>
+        <location filename="../imagechooser.cpp" line="218"/>
         <source>Do you wish to clear all custom images?</source>
         <translation>Szeretné letörölni az összes egyéni képet?</translation>
     </message>
     <message>
-        <location filename="../imagechooser.cpp" line="234"/>
+        <location filename="../imagechooser.cpp" line="233"/>
         <source>Remove selected image?</source>
         <translation>Törli a kijelölt képet?</translation>
     </message>
     <message>
-        <location filename="../imagechooser.cpp" line="255"/>
+        <location filename="../imagechooser.cpp" line="254"/>
         <source>Select an image if you want to remove it.</source>
         <translation>Válasszon egy képet, ha szeretné törölni azt!</translation>
     </message>
@@ -168,7 +168,7 @@
     <message>
         <location filename="../mainwindow.ui" line="145"/>
         <location filename="../mainwindow.ui" line="268"/>
-        <location filename="../mainwindow.cpp" line="414"/>
+        <location filename="../mainwindow.cpp" line="423"/>
         <source>About</source>
         <translation>Névjegy</translation>
     </message>
@@ -210,7 +210,7 @@
     </message>
     <message>
         <location filename="../mainwindow.ui" line="288"/>
-        <location filename="../mainwindow.cpp" line="504"/>
+        <location filename="../mainwindow.cpp" line="518"/>
         <source>Pause</source>
         <translation>Szünet</translation>
     </message>
@@ -225,107 +225,107 @@
         <translation>Nyomja meg az új játék gombot!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="222"/>
-        <location filename="../mainwindow.cpp" line="223"/>
+        <location filename="../mainwindow.cpp" line="229"/>
+        <location filename="../mainwindow.cpp" line="230"/>
         <source>Generating puzzle...</source>
         <translation>Kirakó elkészítése...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="222"/>
+        <location filename="../mainwindow.cpp" line="229"/>
         <source>Cancel</source>
         <translation>Mégsem</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="258"/>
+        <location filename="../mainwindow.cpp" line="267"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="258"/>
+        <location filename="../mainwindow.cpp" line="267"/>
         <source>Could not load the selected image.</source>
         <translation>Nem tudtuk betölteni a kiválasztott képet.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="266"/>
-        <location filename="../mainwindow.cpp" line="566"/>
+        <location filename="../mainwindow.cpp" line="92"/>
+        <location filename="../mainwindow.cpp" line="275"/>
         <source>Are you sure?</source>
         <translation>Biztos?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="266"/>
+        <location filename="../mainwindow.cpp" line="275"/>
         <source>Are you sure you want to abandon this game?</source>
         <translation>Biztosan elhagyja ezt a játékot?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="298"/>
-        <location filename="../mainwindow.cpp" line="300"/>
+        <location filename="../mainwindow.cpp" line="307"/>
+        <location filename="../mainwindow.cpp" line="309"/>
         <source>You rock!</source>
         <translation>Ön nagymenő!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="298"/>
-        <location filename="../mainwindow.cpp" line="300"/>
+        <location filename="../mainwindow.cpp" line="307"/>
+        <location filename="../mainwindow.cpp" line="309"/>
         <source>Congratulations!</source>
         <translation>Gratulálunk!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="298"/>
-        <location filename="../mainwindow.cpp" line="300"/>
+        <location filename="../mainwindow.cpp" line="307"/>
+        <location filename="../mainwindow.cpp" line="309"/>
         <source>You&apos;ve successfully solved the given puzzle!</source>
         <translation>Sikeresen megoldotta ezt a kirakóst.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="407"/>
+        <location filename="../mainwindow.cpp" line="416"/>
         <source>Fun and addictive jigsaw puzzle game</source>
         <translation>Szórakoztató és addiktív kirakósjáték</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="408"/>
+        <location filename="../mainwindow.cpp" line="417"/>
         <source>Licensed under the terms of EUPL 1.1 - 2011, Timur KristÃ³f</source>
         <translation>Licenszelve az EUPL 1.1 feltételei szerint, 2011, Kristóf Timur</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="426"/>
-        <location filename="../mainwindow.cpp" line="519"/>
-        <location filename="../mainwindow.cpp" line="521"/>
+        <location filename="../mainwindow.cpp" line="435"/>
+        <location filename="../mainwindow.cpp" line="533"/>
+        <location filename="../mainwindow.cpp" line="535"/>
         <source>Game paused!</source>
         <translation>Játék szünetel!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="428"/>
+        <location filename="../mainwindow.cpp" line="437"/>
         <source>Elapsed %1 second</source>
         <translation>Eltelt: %1 másodperc</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="430"/>
+        <location filename="../mainwindow.cpp" line="439"/>
         <source>Elapsed %1 seconds</source>
         <translation>Eltelt: %1 másodperc</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="490"/>
+        <location filename="../mainwindow.cpp" line="504"/>
         <source>Resume</source>
         <translation>Folytatás</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="519"/>
-        <location filename="../mainwindow.cpp" line="521"/>
+        <location filename="../mainwindow.cpp" line="533"/>
+        <location filename="../mainwindow.cpp" line="535"/>
         <source>You now can&apos;t move the pieces.</source>
         <translation>Most nem fogja tudni mozgatni a darabokat.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="528"/>
-        <location filename="../mainwindow.cpp" line="530"/>
+        <location filename="../mainwindow.cpp" line="542"/>
+        <location filename="../mainwindow.cpp" line="544"/>
         <source>Game resumed!</source>
         <translation>Játék folytatódik!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="528"/>
-        <location filename="../mainwindow.cpp" line="530"/>
+        <location filename="../mainwindow.cpp" line="542"/>
+        <location filename="../mainwindow.cpp" line="544"/>
         <source>Now you can move the pieces again.</source>
         <translation>Most már újból lehet mozgatni a darabokat.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="566"/>
+        <location filename="../mainwindow.cpp" line="92"/>
         <source>Do you want to exit the game?</source>
         <translation>Szeretne kilépni a játékból?</translation>
     </message>
