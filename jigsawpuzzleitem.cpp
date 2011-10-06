@@ -10,6 +10,7 @@ JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent,
     _canMerge(false),
     _weight(randomInt(100, 950) / 1000.0)
 {
+    setAcceptTouchEvents(true);
 }
 
 bool JigsawPuzzleItem::canMerge() const
@@ -165,6 +166,40 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             }
         }
     }
+}
+
+bool JigsawPuzzleItem::sceneEvent(QEvent *event)
+{
+    if (PuzzleItem::sceneEvent(event))
+        return true;
+
+    qDebug() << "scene event..." << event->type();
+
+    if (event->type() == QEvent::TouchBegin)
+    {
+        QTouchEvent *touchEvent = (QTouchEvent*) event;
+        qDebug() << "touch begin received";
+
+        foreach (const QTouchEvent::TouchPoint &tp, touchEvent->touchPoints())
+        {
+            qDebug() << tp.pos() << tp.isPrimary();
+        }
+
+        event->accept();
+        return true;
+    }
+    else if (event->type() == QEvent::TouchEnd)
+    {
+        event->accept();
+        return true;
+    }
+    else if (event->type() == QEvent::TouchUpdate)
+    {
+        event->accept();
+        return true;
+    }
+
+    return false;
 }
 
 void JigsawPuzzleItem::verifyPosition()

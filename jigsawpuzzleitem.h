@@ -39,6 +39,7 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *ev);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *ev);
+    virtual bool sceneEvent(QEvent *event);
 
 };
 
