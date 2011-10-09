@@ -163,7 +163,9 @@ void JigsawPuzzleItem::doDrag(QPointF position)
 
 void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    qDebug() << "mouse pressed for" << puzzleCoordinates();
     PuzzleItem::mousePressEvent(event);
+    event->accept();
 
     if (event->button() == Qt::LeftButton)
         startDrag(event->pos());
@@ -172,6 +174,7 @@ void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void JigsawPuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     PuzzleItem::mouseReleaseEvent(event);
+    event->accept();
 
     if (event->button() == Qt::LeftButton)
         stopDrag();
@@ -180,6 +183,7 @@ void JigsawPuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     PuzzleItem::mouseMoveEvent(event);
+    event->accept();
     doDrag(event->pos());
 }
 
@@ -188,19 +192,11 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
     if (PuzzleItem::sceneEvent(event))
         return true;
 
-    //qDebug() << "scene event..." << event->type();
+    QTouchEvent *touchEvent = (QTouchEvent*) event;
 
     if (event->type() == QEvent::TouchBegin)
     {
-        QTouchEvent *touchEvent = (QTouchEvent*) event;
         qDebug() << "touch begin received at" << puzzleCoordinates();
-
-//        // We don't handle more than one touch point per piece yet
-//        if (touchEvent->touchPoints().count() > 1)// || touchEvent->touchPoints().at(0).isPrimary())
-//        {
-//            event->ignore();
-//            return false;
-//        }
 
         startDrag(touchEvent->touchPoints().at(0).pos());
 
@@ -209,8 +205,6 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
     }
     else if (event->type() == QEvent::TouchEnd)
     {
-        QTouchEvent *touchEvent = (QTouchEvent*) event;
-
         // If there are no more points, we stop dragging
         if (touchEvent->touchPoints().count() == 0)
         {
@@ -222,8 +216,6 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
     }
     else if (event->type() == QEvent::TouchUpdate)
     {
-        QTouchEvent *touchEvent = (QTouchEvent*) event;
-
         // We don't handle more than one touch point per piece yet
         if (touchEvent->touchPoints().count() > 1)// || touchEvent->touchPoints().at(0).isPrimary())
         {
