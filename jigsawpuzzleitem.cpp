@@ -205,24 +205,13 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
     }
     else if (event->type() == QEvent::TouchEnd)
     {
-        // If there are no more points, we stop dragging
-        if (touchEvent->touchPoints().count() == 0)
-        {
-            stopDrag();
-        }
+        stopDrag();
 
         event->accept();
         return true;
     }
     else if (event->type() == QEvent::TouchUpdate)
     {
-        // We don't handle more than one touch point per piece yet
-        if (touchEvent->touchPoints().count() > 1)// || touchEvent->touchPoints().at(0).isPrimary())
-        {
-            event->ignore();
-            return false;
-        }
-
         doDrag(touchEvent->touchPoints().at(0).pos());
 
         event->accept();
