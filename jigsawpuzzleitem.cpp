@@ -40,8 +40,9 @@ double JigsawPuzzleItem::weight()
 
 bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
 {
-    if (isNeighbourOf(item))
+    if (isNeighbourOf(item) && _canMerge && item->_canMerge)
     {
+        qDebug() << "merging" << puzzleCoordinates() << "and" << item->puzzleCoordinates();
         item->_canMerge = _canMerge = false;
 
         foreach (PuzzleItem *n, item->neighbours())
@@ -92,7 +93,8 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
         setPos(pos().x() - x1, pos().y() - y1);
 
         _dragStart += QPointF(x1, y1);
-        delete item;
+        item->hide();
+        item->deleteLater();
         _canMerge = true;
 
         if (neighbours().count() == 0)
@@ -118,37 +120,28 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
     return false;
 }
 
-void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void JigsawPuzzleItem::startDrag(QPointF pos)
 {
-    PuzzleItem::mousePressEvent(event);
-
-    if (event->button() == Qt::LeftButton && _canMerge)
+    if (_canMerge && !_dragging)
     {
         _dragging = true;
-        _dragStart = event->pos();
+        _dragStart = pos;
         raise();
     }
 }
 
-void JigsawPuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void JigsawPuzzleItem::stopDrag()
 {
-    PuzzleItem::mouseReleaseEvent(event);
-
-    if (event->button() == Qt::LeftButton)
-    {
-        _dragging = false;
-        verifyPosition();
-        verifyCoveredSiblings();
-    }
+    _dragging = false;
+    verifyPosition();
+    verifyCoveredSiblings();
 }
 
-void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void JigsawPuzzleItem::doDrag(QPointF position)
 {
-    PuzzleItem::mouseMoveEvent(event);
-
     if (_dragging)
     {
-        setPos(pos() + event->pos() - _dragStart);
+        setPos(pos() + position - _dragStart);
 
         if (_canMerge)
         {
@@ -168,33 +161,78 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
+void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    PuzzleItem::mousePressEvent(event);
+
+    if (event->button() == Qt::LeftButton)
+        startDrag(event->pos());
+}
+
+void JigsawPuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    PuzzleItem::mouseReleaseEvent(event);
+
+    if (event->button() == Qt::LeftButton)
+        stopDrag();
+}
+
+void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    PuzzleItem::mouseMoveEvent(event);
+    doDrag(event->pos());
+}
+
 bool JigsawPuzzleItem::sceneEvent(QEvent *event)
 {
     if (PuzzleItem::sceneEvent(event))
         return true;
 
-    qDebug() << "scene event..." << event->type();
+    //qDebug() << "scene event..." << event->type();
 
     if (event->type() == QEvent::TouchBegin)
     {
         QTouchEvent *touchEvent = (QTouchEvent*) event;
-        qDebug() << "touch begin received";
+        qDebug() << "touch begin received at" << puzzleCoordinates();
 
-        foreach (const QTouchEvent::TouchPoint &tp, touchEvent->touchPoints())
-        {
-            qDebug() << tp.pos() << tp.isPrimary();
-        }
+//        // We don't handle more than one touch point per piece yet
+//        if (touchEvent->touchPoints().count() > 1)// || touchEvent->touchPoints().at(0).isPrimary())
+//        {
+//            event->ignore();
+//            return false;
+//        }
+
+        startDrag(touchEvent->touchPoints().at(0).pos());
 
         event->accept();
         return true;
     }
     else if (event->type() == QEvent::TouchEnd)
     {
+        QTouchEvent *touchEvent = (QTouchEvent*) event;
+
+        // If there are no more points, we stop dragging
+        if (touchEvent->touchPoints().count() == 0)
+        {
+            stopDrag();
+        }
+
         event->accept();
         return true;
     }
     else if (event->type() == QEvent::TouchUpdate)
     {
+        QTouchEvent *touchEvent = (QTouchEvent*) event;
+
+        // We don't handle more than one touch point per piece yet
+        if (touchEvent->touchPoints().count() > 1)// || touchEvent->touchPoints().at(0).isPrimary())
+        {
+            event->ignore();
+            return false;
+        }
+
+        doDrag(touchEvent->touchPoints().at(0).pos());
+
         event->accept();
         return true;
     }

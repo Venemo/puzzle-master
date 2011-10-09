@@ -36,6 +36,9 @@ signals:
     void noNeighbours();
 
 protected:
+    void startDrag(QPointF pos);
+    void stopDrag();
+    void doDrag(QPointF pos);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *ev);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *ev);
