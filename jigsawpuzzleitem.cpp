@@ -108,12 +108,22 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
             _canMerge = false;
             QPointF newPos((scene()->width() - pixmap().width()) / 2, (scene()->height() - pixmap().height()) / 2);
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-            QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", this);
+            QParallelAnimationGroup *group = new QParallelAnimationGroup(this);
+            QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", group);
             anim->setEndValue(newPos);
             anim->setDuration(1000);
             anim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
-            connect(anim, SIGNAL(finished()), this, SIGNAL(noNeighbours()));
-            anim->start(QAbstractAnimation::DeleteWhenStopped);
+
+            QPropertyAnimation *rotateAnimation = new QPropertyAnimation(this, "rotation", group);
+            rotateAnimation->setEndValue(0);
+            rotateAnimation->setDuration(1000);
+            rotateAnimation->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+
+            connect(group, SIGNAL(finished()), this, SIGNAL(noNeighbours()));
+
+            group->addAnimation(anim);
+            group->addAnimation(rotateAnimation);
+            group->start(QAbstractAnimation::DeleteWhenStopped);
 #else
             setPos(newPos);
             emit noNeighbours();
