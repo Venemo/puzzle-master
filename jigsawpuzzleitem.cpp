@@ -292,20 +292,21 @@ void JigsawPuzzleItem::verifyPosition()
     {
         int pX = CLAMP(x, minX + unit().width() / 2, maxX - unit().width() / 2);
         int pY = CLAMP(y, minY + unit().height() / 2, maxY - unit().height() / 2);
+
         _dragging = false;
+        _isDraggingWithTouch = false;
+        _canMerge = false;
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
         QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", this);
+        connect(anim, SIGNAL(finished()), this, SLOT(enableMerge()));
+
         anim->setEndValue(QPointF(pX, pY));
-        anim->setDuration(200);
+        anim->setDuration(150);
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutBounce));
-        if (canMerge())
-        {
-            disableMerge();
-            connect(anim, SIGNAL(finished()), this, SLOT(enableMerge()));
-        }
         anim->start(QAbstractAnimation::DeleteWhenStopped);
 #else
         setPos(pX, pY);
+        enableMerge();
 #endif
     }
 }
