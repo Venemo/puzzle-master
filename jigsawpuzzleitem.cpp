@@ -164,11 +164,11 @@ void JigsawPuzzleItem::doDrag(QPointF position)
             foreach (PuzzleItem *p, neighbours())
             {
                 JigsawPuzzleItem *w = (JigsawPuzzleItem*) p;
-                QPointF posDiff1 = mapFromScene(pos()) - w->mapToItem(this, w->mapFromScene(w->pos()));
-                QPointF posDiff2 = (puzzleCoordinates() * unit() - w->puzzleCoordinates() * unit());
-                QPointF relative = posDiff1 - posDiff2;
+                QPointF positionDifference = mapFromScene(pos()) - mapFromScene(w->pos());
+                QPointF supposedPositionDifference = QPointF((puzzleCoordinates() * unit() - w->puzzleCoordinates() * unit()));
+                QPointF diff = positionDifference - supposedPositionDifference;
 
-                if (abs((int)relative.x()) < tolerance() && abs((int)relative.y()) < tolerance() && abs(w->rotation() - rotation()) < 10)
+                if (abs((int)diff.x()) < tolerance() && abs((int)diff.y()) < tolerance() && abs(w->rotation() - rotation()) < 10)
                 {
                     merge(w);
                 }
@@ -183,7 +183,7 @@ void JigsawPuzzleItem::handleRotation(QPointF v)
 
     if (!isnan(a))
     {
-        setRotation(_previousRotationValue + a);
+        setRotation((_previousRotationValue + a) % 360);
     }
 }
 
