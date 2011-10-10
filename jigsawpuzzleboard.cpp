@@ -5,14 +5,17 @@
 
 JigsawPuzzleBoard::JigsawPuzzleBoard(QObject *parent) :
     PuzzleBoard(parent),
-    _tolerance(5)
+    _tolerance(5),
+    _allowMultitouch(false)
 {
 }
 
-void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned cols)
+void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned cols, bool allowMultitouch)
 {
     int w = min<int>(width(), image.width());
     int h = min<int>(height(), image.height());
+
+    _allowMultitouch = allowMultitouch;
 
     QPixmap pixmap = image.scaled(w, h, Qt::KeepAspectRatio);
     setOriginalPixmapSize(pixmap.size());
@@ -74,6 +77,15 @@ void JigsawPuzzleBoard::shuffle()
         anim->setDuration(2000);
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
         group->addAnimation(anim);
+
+        if (_allowMultitouch)
+        {
+            QPropertyAnimation *rotateAnimation = new QPropertyAnimation(item, "rotation", group);
+            rotateAnimation->setEndValue(randomInt(0, 359));
+            rotateAnimation->setDuration(2000);
+            rotateAnimation->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+            group->addAnimation(rotateAnimation);
+        }
 #else
         item->setPos(newPos);
         item->enableMerge();

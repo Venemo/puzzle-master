@@ -20,7 +20,7 @@ class PuzzleBoard : public QGraphicsScene
 
 public:
     explicit PuzzleBoard(QObject *parent = 0);
-    virtual void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols) = 0;
+    virtual void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols, bool allowMultitouch) = 0;
     const QSize &originalPixmapSize();
     void setNeighbours(int x, int y);
     void setOriginalPixmapSize(const QSize &size);

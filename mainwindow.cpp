@@ -258,7 +258,7 @@ void MainWindow::newGame()
                 connect(board, SIGNAL(loaded()), board, SLOT(enableDropshadow()));
 #endif
 
-            board->startGame(pixmap, rows, cols);
+            board->startGame(pixmap, rows, cols, true);
             _currentScaleRatio = board->originalScaleRatio();
             ui->graphicsView->scale(_currentScaleRatio, _currentScaleRatio);
         }

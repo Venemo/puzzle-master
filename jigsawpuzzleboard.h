@@ -10,10 +10,11 @@ class JigsawPuzzleBoard : public PuzzleBoard
     Q_OBJECT
     QSize _unit;
     int _tolerance;
+    bool _allowMultitouch;
 
 public:
     explicit JigsawPuzzleBoard(QObject *parent = 0);
-    void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols);
+    void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols, bool allowMultitouch);
     inline int tolerance();
     inline void setTolerance(int tolerance);
     void assemble();

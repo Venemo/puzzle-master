@@ -183,7 +183,7 @@ void JigsawPuzzleItem::handleRotation(QPointF v)
 
     if (!isnan(a))
     {
-        setRotation((_previousRotationValue + a) % 360);
+        setRotation((int)(_previousRotationValue + a) % 360);
     }
 }
 
