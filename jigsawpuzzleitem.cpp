@@ -183,7 +183,14 @@ void JigsawPuzzleItem::handleRotation(QPointF v)
 
     if (!isnan(a))
     {
-        setRotation((int)(_previousRotationValue + a) % 360);
+        a += _previousRotationValue;
+
+        while (a >= 360)
+            a -= 360;
+        while (a <= 360)
+            a += 360;
+
+        setRotation(a);
     }
 }
 
@@ -268,6 +275,7 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
         {
             doDrag(averagePos);
         }
+
         if (_previousTouchPointCount != 2 && touchEvent->touchPoints().count() == 2)
         {
             _previousRotationValue = rotation();
