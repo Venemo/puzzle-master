@@ -8,6 +8,7 @@ JigsawPuzzleBoard::JigsawPuzzleBoard(QObject *parent) :
     _tolerance(5),
     _allowMultitouch(false)
 {
+    setItemIndexMethod(NoIndex);
 }
 
 void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned cols, bool allowMultitouch)
@@ -120,8 +121,18 @@ void JigsawPuzzleBoard::assemble()
         anim->setDuration(2000);
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
         group->addAnimation(anim);
+
+        if (_allowMultitouch)
+        {
+            QPropertyAnimation *rotateAnimation = new QPropertyAnimation(item, "rotation", group);
+            rotateAnimation->setEndValue(0);
+            rotateAnimation->setDuration(2000);
+            rotateAnimation->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+            group->addAnimation(rotateAnimation);
+        }
 #else
         item->setPos(newPos);
+        item->setRotation(0);
         emit gameEnded();
 #endif
     }
