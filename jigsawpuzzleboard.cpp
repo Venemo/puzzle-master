@@ -96,9 +96,10 @@ void JigsawPuzzleBoard::shuffle()
             item->raise();
     }
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    connect(group, SIGNAL(finished()), this, SLOT(disableFixedFPS()));
     connect(group, SIGNAL(finished()), this, SIGNAL(gameStarted()));
-    connect(group, SIGNAL(finished()), group, SLOT(deleteLater()));
-    group->start();
+    enableFixedFPS();
+    group->start(QAbstractAnimation::DeleteWhenStopped);
 #else
     emit gameStarted();
 #endif
@@ -108,7 +109,6 @@ void JigsawPuzzleBoard::assemble()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
-    connect(group, SIGNAL(finished()), this, SIGNAL(gameEnded()));
     QEasingCurve easingCurve(QEasingCurve::OutExpo);
 #endif
     foreach (QGraphicsItem *gi, items())
@@ -139,6 +139,9 @@ void JigsawPuzzleBoard::assemble()
 #endif
     }
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    connect(group, SIGNAL(finished()), this, SLOT(disableFixedFPS()));
+    connect(group, SIGNAL(finished()), this, SIGNAL(gameEnded()));
+    enableFixedFPS();
     group->start(QAbstractAnimation::DeleteWhenStopped);
 #endif
 }

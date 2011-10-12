@@ -2,6 +2,7 @@
 #define PUZZLEBOARD_H
 
 #include <QGraphicsScene>
+#include <QTimer>
 
 #if defined(HAVE_QACCELEROMETER)
 #include <QAccelerometer>
@@ -12,8 +13,10 @@ class PuzzleItem;
 class PuzzleBoard : public QGraphicsScene
 {
     Q_OBJECT
+
     QSize _originalPixmapSize;
     qreal _originalScaleRatio;
+    QTimer *_fixedFPSTimer;
 #if defined(HAVE_QACCELEROMETER)
     QtMobility::QAccelerometer *accelerometer;
 #endif
@@ -51,6 +54,8 @@ public slots:
     void disableAccelerometer();
     virtual void disable() = 0;
     virtual void enable() = 0;
+    void enableFixedFPS();
+    void disableFixedFPS();
 
 };
 

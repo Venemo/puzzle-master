@@ -3,7 +3,8 @@
 
 PuzzleBoard::PuzzleBoard(QObject *parent) :
     QGraphicsScene(parent),
-    _originalScaleRatio(1)
+    _originalScaleRatio(1),
+    _fixedFPSTimer(0)
 {
 #if defined(HAVE_QACCELEROMETER)
     accelerometer = new QtMobility::QAccelerometer(this);
@@ -139,4 +140,39 @@ void PuzzleBoard::disableAccelerometer()
 #if defined(HAVE_QACCELEROMETER)
     accelerometer->stop();
 #endif
+}
+
+void PuzzleBoard::enableFixedFPS()
+{
+    if (_fixedFPSTimer)
+    {
+        _fixedFPSTimer->stop();
+        _fixedFPSTimer->deleteLater();
+    }
+
+    _fixedFPSTimer = new QTimer(this);
+    _fixedFPSTimer->setInterval(20);
+
+    foreach (QGraphicsView *view, views())
+    {
+        view->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
+        connect(_fixedFPSTimer, SIGNAL(timeout()), view->viewport(), SLOT(update()));
+    }
+
+    _fixedFPSTimer->start();
+}
+
+void PuzzleBoard::disableFixedFPS()
+{
+    if (_fixedFPSTimer)
+    {
+        _fixedFPSTimer->stop();
+        _fixedFPSTimer->deleteLater();
+        _fixedFPSTimer = 0;
+    }
+
+    foreach (QGraphicsView *view, views())
+    {
+        view->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+    }
 }
