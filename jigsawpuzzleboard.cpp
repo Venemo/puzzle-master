@@ -65,6 +65,7 @@ void JigsawPuzzleBoard::shuffle()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
+    QEasingCurve easingCurve(QEasingCurve::InExpo);
 #endif
     foreach (QGraphicsItem *gi, items())
     {
@@ -76,7 +77,7 @@ void JigsawPuzzleBoard::shuffle()
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
         anim->setEndValue(newPos);
         anim->setDuration(2000);
-        anim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+        anim->setEasingCurve(easingCurve);
         group->addAnimation(anim);
 
         if (_allowMultitouch)
@@ -84,7 +85,7 @@ void JigsawPuzzleBoard::shuffle()
             QPropertyAnimation *rotateAnimation = new QPropertyAnimation(item, "rotation", group);
             rotateAnimation->setEndValue(randomInt(0, 359));
             rotateAnimation->setDuration(2000);
-            rotateAnimation->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+            rotateAnimation->setEasingCurve(easingCurve);
             group->addAnimation(rotateAnimation);
         }
 #else
@@ -108,6 +109,7 @@ void JigsawPuzzleBoard::assemble()
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
     connect(group, SIGNAL(finished()), this, SIGNAL(gameEnded()));
+    QEasingCurve easingCurve(QEasingCurve::OutExpo);
 #endif
     foreach (QGraphicsItem *gi, items())
     {
@@ -119,7 +121,7 @@ void JigsawPuzzleBoard::assemble()
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
         anim->setEndValue(newPos);
         anim->setDuration(2000);
-        anim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+        anim->setEasingCurve(easingCurve);
         group->addAnimation(anim);
 
         if (_allowMultitouch)
@@ -127,7 +129,7 @@ void JigsawPuzzleBoard::assemble()
             QPropertyAnimation *rotateAnimation = new QPropertyAnimation(item, "rotation", group);
             rotateAnimation->setEndValue(0);
             rotateAnimation->setDuration(2000);
-            rotateAnimation->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+            rotateAnimation->setEasingCurve(easingCurve);
             group->addAnimation(rotateAnimation);
         }
 #else
