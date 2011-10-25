@@ -53,7 +53,7 @@ bool PuzzleItem::isNeighbourOf(const PuzzleItem *piece) const
 
 void PuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    Q_UNUSED(event);
+    QGraphicsPixmapItem::mousePressEvent(event);
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     if (QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect*>(this->graphicsEffect()))
     {
@@ -65,7 +65,7 @@ void PuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void PuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    Q_UNUSED(event);
+    QGraphicsPixmapItem::mouseReleaseEvent(event);
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     if (QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect*>(this->graphicsEffect()))
     {

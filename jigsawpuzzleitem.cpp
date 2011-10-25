@@ -164,7 +164,7 @@ void JigsawPuzzleItem::doDrag(QPointF position)
             foreach (PuzzleItem *p, neighbours())
             {
                 JigsawPuzzleItem *w = (JigsawPuzzleItem*) p;
-                QPointF positionDifference = mapFromScene(pos()) - mapFromScene(w->pos());
+                QPointF positionDifference = - mapFromScene(w->pos());
                 QPointF supposedPositionDifference = QPointF((puzzleCoordinates() * unit() - w->puzzleCoordinates() * unit()));
                 QPointF diff = positionDifference - supposedPositionDifference;
 
@@ -196,8 +196,11 @@ void JigsawPuzzleItem::handleRotation(QPointF v)
 
 void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    qDebug() << "mouse pressed for" << puzzleCoordinates();
-    PuzzleItem::mousePressEvent(event);
+    if (_canMerge)
+        PuzzleItem::mousePressEvent(event);
+    else
+        QGraphicsPixmapItem::mousePressEvent(event);
+
     event->accept();
 
     if (event->button() == Qt::LeftButton)
@@ -206,7 +209,11 @@ void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void JigsawPuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    PuzzleItem::mouseReleaseEvent(event);
+    if (_canMerge)
+        PuzzleItem::mouseReleaseEvent(event);
+    else
+        QGraphicsPixmapItem::mouseReleaseEvent(event);
+
     event->accept();
 
     if (event->button() == Qt::LeftButton)
@@ -226,11 +233,14 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
     if (PuzzleItem::sceneEvent(event))
         return true;
 
+    if (!_canMerge)
+        return false;
+
     QTouchEvent *touchEvent = (QTouchEvent*) event;
 
     if (event->type() == QEvent::TouchBegin)
     {
-        qDebug() << "touch begin received at" << puzzleCoordinates();
+        //qDebug() << "touch begin received at" << puzzleCoordinates();
         _isDraggingWithTouch = true;
 
         const QTouchEvent::TouchPoint *relevantTouchPoint = 0;
