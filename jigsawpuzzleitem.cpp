@@ -97,7 +97,7 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
         setPos(pos().x() - x1, pos().y() - y1);
 
         _dragStart += QPointF(x1, y1);
-        setTransformOriginPoint(pixmap().width() / 2, pixmap().height() / 2);
+        setCompensatedTransformOriginPoint(QPointF(pixmap().width() / 2, pixmap().height() / 2));
         item->hide();
         item->deleteLater();
         _canMerge = true;
@@ -194,6 +194,15 @@ void JigsawPuzzleItem::handleRotation(QPointF v)
     }
 }
 
+void JigsawPuzzleItem::setCompensatedTransformOriginPoint(const QPointF &point)
+{
+    QPointF compensation = mapToScene(0, 0);
+    setTransformOriginPoint(point);
+    compensation -= mapToScene(0, 0);
+    setPos(pos() + compensation);
+    _dragStart -= compensation;
+}
+
 void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (_canMerge)
@@ -267,23 +276,24 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
     }
     else if (event->type() == QEvent::TouchUpdate)
     {
-        QPointF averagePos(0, 0);
+        QPointF midpoint(0, 0);
 
         // Finding the midpoint
         foreach (const QTouchEvent::TouchPoint &touchPoint, touchEvent->touchPoints())
-            averagePos += touchPoint.pos();
+            midpoint += touchPoint.pos();
 
-        averagePos /= touchEvent->touchPoints().count();
+        midpoint /= touchEvent->touchPoints().count();
+        setCompensatedTransformOriginPoint(midpoint);
 
         if (touchEvent->touchPoints().count() != _previousTouchPointCount)
         {
             stopDrag();
             _isDraggingWithTouch = true;
-            startDrag(averagePos);
+            startDrag(midpoint);
         }
         else
         {
-            doDrag(averagePos);
+            doDrag(midpoint);
         }
 
         if (_previousTouchPointCount != 2 && touchEvent->touchPoints().count() == 2)
