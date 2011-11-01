@@ -46,7 +46,6 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
 {
     if (isNeighbourOf(item) && _canMerge && item->_canMerge)
     {
-        qDebug() << "merging" << puzzleCoordinates() << "and" << item->puzzleCoordinates();
         item->_canMerge = _canMerge = false;
 
         foreach (PuzzleItem *n, item->neighbours())
@@ -95,7 +94,6 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
         setPixmap(pix);
         setPuzzleCoordinates(puzzleCoordinates() - QPoint(u1, v1));
         setPos(pos().x() - x1, pos().y() - y1);
-
         _dragStart += QPointF(x1, y1);
         setCompensatedTransformOriginPoint(QPointF(pixmap().width() / 2, pixmap().height() / 2));
         item->hide();
@@ -287,6 +285,7 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
 
         if (touchEvent->touchPoints().count() != _previousTouchPointCount)
         {
+            // If you put one more finger onto an item, this prevents it from jumping
             stopDrag();
             _isDraggingWithTouch = true;
             startDrag(midpoint);
@@ -296,8 +295,9 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
             doDrag(midpoint);
         }
 
-        if (_previousTouchPointCount != 2 && touchEvent->touchPoints().count() == 2)
+        if (_previousTouchPointCount < 2 && touchEvent->touchPoints().count() == 2)
         {
+            // Starting rotation
             _previousRotationValue = rotation();
             _rotationStartVector = mapToScene(touchEvent->touchPoints().at(0).pos()) - mapToScene(touchEvent->touchPoints().at(1).pos());
         }
