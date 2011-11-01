@@ -4,80 +4,66 @@
 #
 #-------------------------------------------------
 
-QT += core gui opengl
+QT += core gui declarative
 
 TARGET = puzzle-master
 TEMPLATE = app
 
 VERSION = 1.2.3
-DEFINES += HAVE_OPENGL
-
-OBJECTS_DIR = build
-MOC_DIR = build
-UI_DIR = build
-RCC_DIR = build
-DESTDIR = build
 
 SOURCES += \
     main.cpp\
-    mainwindow.cpp \
     puzzleitem.cpp \
-    jigsawpuzzleitem.cpp \
-    settingsdialog.cpp \
-    imagechooser.cpp \
-    highscoresdialog.cpp \
-    jigsawpuzzleboard.cpp \
     puzzleboard.cpp \
-    newgamedialog.cpp
+    jigsawpuzzleitem.cpp \
+    jigsawpuzzleboard.cpp
+#    mainwindow.cpp \
+#    settingsdialog.cpp \
+#    imagechooser.cpp \
+#    highscoresdialog.cpp \
+#    newgamedialog.cpp
 
 HEADERS += \
-    mainwindow.h \
-    puzzleitem.h \
-    jigsawpuzzleitem.h \
-    settingsdialog.h \
-    imagechooser.h \
-    highscoresdialog.h \
-    jigsawpuzzleboard.h \
-    puzzleboard.h \
     util.h \
-    newgamedialog.h
+    puzzleitem.h \
+    puzzleboard.h \
+    jigsawpuzzleitem.h \
+    jigsawpuzzleboard.h
+#    mainwindow.h \
+#    newgamedialog.h \
+#    settingsdialog.h \
+#    imagechooser.h \
+#    highscoresdialog.h
 
-FORMS += \
-    mainwindow.ui \
-    settingsdialog.ui \
-    imagechooser.ui \
-    highscoresdialog.ui \
-    newgamedialog.ui
+#FORMS += \
+#    mainwindow.ui \
+#    settingsdialog.ui \
+#    imagechooser.ui \
+#    highscoresdialog.ui \
+#    newgamedialog.ui
 
 RESOURCES += \
-    resources.qrc
+    resources.qrc \
+    meegoGui.qrc
 
 TRANSLATIONS += \
     translations/puzzle-master_hu_HU.ts
 
 OTHER_FILES += \
     data/about.txt \
-    data/puzzle-master.desktop \
-    puzzle-master.rc
+    qml/meego/AppWindow.qml \
+    qml/meego/NewGamePage.qml \
+    qml/meego/GamePage.qml
 
 unix {
     INSTALLS += target iconfile desktopfile
+    OTHER_FILES += data/puzzle-master.desktop
 
     target.path = /usr/bin
     iconfile.path = /usr/share/pixmaps
     iconfile.files = data/puzzle-master.png
     desktopfile.path = /usr/share/applications
     desktopfile.files = data/puzzle-master.desktop
-}
-contains(QT_CONFIG, hildon) {
-    # Maemo 4 Diablo
-
-    QT -= opengl
-    DEFINES -= HAVE_OPENGL
-    DEFINES += MOBILE
-    
-    target.path = /opt/puzzle-master
-    desktopfile.path = /usr/share/applications/hildon
 }
 maemo5 {
     # Maemo 5 Fremantle
@@ -115,11 +101,6 @@ symbian {
 win32 {
     # Windows desktop
     RC_FILE = puzzle-master.rc
+    OTHER_FILES += puzzle-master.rc
 }
-wince {
-    # Windows Mobile
-    QT -= opengl
-    DEFINES -= HAVE_OPENGL
-    DEFINES += MOBILE
-    RC_FILE = puzzle-master.rc
-}
+
