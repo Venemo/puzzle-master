@@ -164,7 +164,7 @@ void JigsawPuzzleItem::doDrag(QPointF position)
             foreach (PuzzleItem *p, neighbours())
             {
                 JigsawPuzzleItem *w = (JigsawPuzzleItem*) p;
-                QPointF positionDifference = - mapFromScene(w->pos());
+                QPointF positionDifference = - mapFromScene(w->mapToScene(0, 0));
                 QPointF supposedPositionDifference = QPointF((puzzleCoordinates() * unit() - w->puzzleCoordinates() * unit()));
                 QPointF diff = positionDifference - supposedPositionDifference;
 
