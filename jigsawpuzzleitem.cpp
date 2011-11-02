@@ -162,7 +162,7 @@ void JigsawPuzzleItem::doDrag(QPointF position)
             foreach (PuzzleItem *p, neighbours())
             {
                 JigsawPuzzleItem *w = (JigsawPuzzleItem*) p;
-                QPointF positionDifference = - mapFromScene(w->mapToScene(0, 0));
+                QPointF positionDifference = - w->mapToItem(this, 0, 0);
                 QPointF supposedPositionDifference = QPointF((puzzleCoordinates() * unit() - w->puzzleCoordinates() * unit()));
                 QPointF diff = positionDifference - supposedPositionDifference;
 
@@ -403,7 +403,7 @@ void JigsawPuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 {
 #if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
     // Hack against the rendering artifacts when an L-shaped item is rotated.
-    painter->setClipPath(this->shape());
+    painter->setClipPath(shape());
     painter->setClipping(true);
     PuzzleItem::paint(painter, option, widget);
     painter->setClipping(false);
