@@ -398,3 +398,16 @@ void JigsawPuzzleItem::verifyCoveredSiblings()
         }
     }
 }
+
+void JigsawPuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+#if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
+    // Hack against the rendering artifacts when an L-shaped item is rotated.
+    painter->setClipPath(this->shape());
+    painter->setClipping(true);
+    PuzzleItem::paint(painter, option, widget);
+    painter->setClipping(false);
+#else
+    PuzzleItem::paint(painter, option, widget);
+#endif
+}
