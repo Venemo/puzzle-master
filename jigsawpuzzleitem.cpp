@@ -55,16 +55,17 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
         }
 
         QPoint vector = item->puzzleCoordinates() - puzzleCoordinates();
+        QPointF positionVector = item->supposedPosition() - supposedPosition();
         int x1, x2, y1, y2, u1, v1;
         if (vector.x() >= 0)
         {
             x1 = 0;
             u1 = 0;
-            x2 = vector.x() * unit().width();
+            x2 = positionVector.x();
         }
         else
         {
-            x1 = - vector.x() * unit().width();
+            x1 = - positionVector.x();
             u1 = - vector.x();
             x2 = 0;
         }
@@ -72,11 +73,11 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
         {
             y1 = 0;
             v1 = 0;
-            y2 = vector.y() * unit().height();
+            y2 = positionVector.y();
         }
         else
         {
-            y1 = - vector.y() * unit().height();
+            y1 = - positionVector.y();
             v1 = - vector.y();
             y2 = 0;
         }
@@ -246,7 +247,6 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
 
     if (event->type() == QEvent::TouchBegin)
     {
-        //qDebug() << "touch begin received at" << puzzleCoordinates();
         _isDraggingWithTouch = true;
 
         const QTouchEvent::TouchPoint *relevantTouchPoint = 0;
