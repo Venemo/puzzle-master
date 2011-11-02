@@ -11,6 +11,11 @@ const QPoint &PuzzleItem::puzzleCoordinates() const
     return _puzzleCoordinates;
 }
 
+const QPointF &PuzzleItem::supposedPosition() const
+{
+    return _supposedPosition;
+}
+
 const QList<PuzzleItem*> &PuzzleItem::neighbours() const
 {
     return _neighbours;
@@ -19,6 +24,11 @@ const QList<PuzzleItem*> &PuzzleItem::neighbours() const
 void PuzzleItem::setPuzzleCoordinates(const QPoint &p)
 {
     _puzzleCoordinates = p;
+}
+
+void PuzzleItem::setSupposedPosition(const QPointF &p)
+{
+    _supposedPosition = p;
 }
 
 void PuzzleItem::addNeighbour(PuzzleItem *piece)

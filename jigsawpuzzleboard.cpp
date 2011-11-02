@@ -44,6 +44,7 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
             // creating the piece
             JigsawPuzzleItem *item = new JigsawPuzzleItem(px, 0, this);
             item->setPuzzleCoordinates(QPoint(i, j));
+            item->setSupposedPosition(item->puzzleCoordinates() * _unit);
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
             item->setZValue(i * rows + j + 1);
 

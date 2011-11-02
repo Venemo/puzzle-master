@@ -93,6 +93,7 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
 
         setPixmap(pix);
         setPuzzleCoordinates(puzzleCoordinates() - QPoint(u1, v1));
+        setSupposedPosition(puzzleCoordinates() * unit());
         setPos(pos().x() - x1, pos().y() - y1);
         _dragStart += QPointF(x1, y1);
         setCompensatedTransformOriginPoint(QPointF(pixmap().width() / 2, pixmap().height() / 2));
@@ -162,9 +163,7 @@ void JigsawPuzzleItem::doDrag(QPointF position)
             foreach (PuzzleItem *p, neighbours())
             {
                 JigsawPuzzleItem *w = (JigsawPuzzleItem*) p;
-                QPointF positionDifference = - w->mapToItem(this, 0, 0);
-                QPointF supposedPositionDifference = QPointF((puzzleCoordinates() * unit() - w->puzzleCoordinates() * unit()));
-                QPointF diff = positionDifference - supposedPositionDifference;
+                QPointF diff = - supposedPosition() + w->supposedPosition() - w->mapToItem(this, 0, 0);
 
                 if (abs((int)diff.x()) < tolerance() && abs((int)diff.y()) < tolerance() && abs(w->rotation() - rotation()) < 10)
                 {
