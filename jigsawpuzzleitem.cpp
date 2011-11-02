@@ -37,7 +37,7 @@ void JigsawPuzzleItem::disableMerge()
     setMerge(false);
 }
 
-double JigsawPuzzleItem::weight()
+qreal JigsawPuzzleItem::weight() const
 {
     return _weight;
 }
@@ -135,7 +135,7 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
     return false;
 }
 
-void JigsawPuzzleItem::startDrag(QPointF p)
+void JigsawPuzzleItem::startDrag(const QPointF &p)
 {
     if (_canMerge && !_dragging)
     {
@@ -153,7 +153,7 @@ void JigsawPuzzleItem::stopDrag()
     verifyCoveredSiblings();
 }
 
-void JigsawPuzzleItem::doDrag(QPointF position)
+void JigsawPuzzleItem::doDrag(const QPointF &position)
 {
     if (_dragging)
     {
@@ -166,7 +166,7 @@ void JigsawPuzzleItem::doDrag(QPointF position)
                 JigsawPuzzleItem *w = (JigsawPuzzleItem*) p;
                 QPointF diff = - supposedPosition() + w->supposedPosition() - w->mapToItem(this, 0, 0);
 
-                if (abs((int)diff.x()) < tolerance() && abs((int)diff.y()) < tolerance() && abs(w->rotation() - rotation()) < 10)
+                if (abs((int)diff.x()) < tolerance() && abs((int)diff.y()) < tolerance() && abs(w->rotation() - rotation()) < rotationTolerance())
                 {
                     merge(w);
                 }
@@ -175,7 +175,7 @@ void JigsawPuzzleItem::doDrag(QPointF position)
     }
 }
 
-void JigsawPuzzleItem::handleRotation(QPointF v)
+void JigsawPuzzleItem::handleRotation(const QPointF &v)
 {
     qreal a = angle(_rotationStartVector, v) * 180 / M_PI;
 

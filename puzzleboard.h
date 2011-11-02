@@ -24,13 +24,13 @@ class PuzzleBoard : public QGraphicsScene
 public:
     explicit PuzzleBoard(QObject *parent = 0);
     virtual void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols, bool allowMultitouch) = 0;
-    const QSize &originalPixmapSize();
+    const QSize &originalPixmapSize() const;
     void setNeighbours(int x, int y);
     void setOriginalPixmapSize(const QSize &size);
-    PuzzleItem *find(QPoint puzzleCoordinates);
-    bool isDropshadowActive();
-    bool isAccelerometerActive();
-    qreal originalScaleRatio();
+    PuzzleItem *find(const QPoint &puzzleCoordinates);
+    bool isDropshadowActive() const;
+    bool isAccelerometerActive() const;
+    qreal originalScaleRatio() const;
     void setOriginalScaleRatio(qreal value);
 
 protected:

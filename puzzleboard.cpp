@@ -12,7 +12,7 @@ PuzzleBoard::PuzzleBoard(QObject *parent) :
 #endif
 }
 
-const QSize &PuzzleBoard::originalPixmapSize()
+const QSize &PuzzleBoard::originalPixmapSize() const
 {
     return _originalPixmapSize;
 }
@@ -22,7 +22,7 @@ void PuzzleBoard::setOriginalPixmapSize(const QSize &size)
     _originalPixmapSize = size;
 }
 
-qreal PuzzleBoard::originalScaleRatio()
+qreal PuzzleBoard::originalScaleRatio() const
 {
     return _originalScaleRatio;
 }
@@ -51,7 +51,7 @@ void PuzzleBoard::setNeighbours(int x, int y)
     }
 }
 
-PuzzleItem *PuzzleBoard::find(QPoint puzzleCoordinates)
+PuzzleItem *PuzzleBoard::find(const QPoint &puzzleCoordinates)
 {
     foreach(QGraphicsItem *gi, items())
     {
@@ -62,7 +62,7 @@ PuzzleItem *PuzzleBoard::find(QPoint puzzleCoordinates)
     return 0;
 }
 
-bool PuzzleBoard::isDropshadowActive()
+bool PuzzleBoard::isDropshadowActive() const
 {
 #if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     foreach (QGraphicsItem *item, items())
@@ -101,7 +101,7 @@ void PuzzleBoard::disableDropshadow()
 #endif
 }
 
-bool PuzzleBoard::isAccelerometerActive()
+bool PuzzleBoard::isAccelerometerActive() const
 {
 #if defined(HAVE_QACCELEROMETER)
     return accelerometer->isActive();

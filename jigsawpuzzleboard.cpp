@@ -6,6 +6,7 @@
 JigsawPuzzleBoard::JigsawPuzzleBoard(QObject *parent) :
     PuzzleBoard(parent),
     _tolerance(5),
+    _rotationTolerance(10),
     _allowMultitouch(false)
 {
     setItemIndexMethod(NoIndex);

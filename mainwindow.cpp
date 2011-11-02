@@ -338,7 +338,10 @@ void MainWindow::initializeGame()
 
     // Snap tolerance
     if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
+    {
         jpb->setTolerance(SettingsDialog::tolerance());
+        jpb->setRotationTolerance(SettingsDialog::tolerance() * 1.5);
+    }
 }
 
 void MainWindow::endGame()

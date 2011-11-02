@@ -27,9 +27,10 @@ public:
     virtual bool merge(JigsawPuzzleItem *item);
     bool canMerge() const;
     void setMerge(bool canMerge);
-    double weight();
-    inline int tolerance();
-    inline const QSize &unit();
+    qreal weight() const;
+    inline int tolerance() const;
+    inline qreal rotationTolerance() const;
+    inline const QSize &unit() const;
     void raise();
     void verifyPosition();
     void verifyCoveredSiblings();
@@ -42,10 +43,10 @@ signals:
     void noNeighbours();
 
 protected:
-    void startDrag(QPointF pos);
+    void startDrag(const QPointF &pos);
     void stopDrag();
-    void doDrag(QPointF pos);
-    void handleRotation(QPointF vector);
+    void doDrag(const QPointF &pos);
+    void handleRotation(const QPointF &vector);
     void setCompensatedTransformOriginPoint(const QPointF &point);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *ev);
@@ -55,14 +56,19 @@ protected:
 
 };
 
-inline const QSize &JigsawPuzzleItem::unit()
+inline const QSize &JigsawPuzzleItem::unit() const
 {
     return ((JigsawPuzzleBoard*)scene())->unit();
 }
 
-inline int JigsawPuzzleItem::tolerance()
+inline int JigsawPuzzleItem::tolerance() const
 {
     return ((JigsawPuzzleBoard*)scene())->tolerance();
+}
+
+inline qreal JigsawPuzzleItem::rotationTolerance() const
+{
+    return ((JigsawPuzzleBoard*)scene())->rotationTolerance();
 }
 
 #endif // JIGSAWPUZZLEITEM_H
