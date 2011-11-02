@@ -253,10 +253,8 @@ void MainWindow::newGame()
             connect(board, SIGNAL(gameWon()), this, SLOT(onWon()));
             connect(board, SIGNAL(gameEnded()), this, SLOT(endGame()));
 
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
             if (SettingsDialog::useDropShadow())
                 connect(board, SIGNAL(loaded()), board, SLOT(enableDropshadow()));
-#endif
 
             board->startGame(pixmap, rows, cols, true);
             _currentScaleRatio = board->originalScaleRatio();
@@ -389,13 +387,12 @@ void MainWindow::showSettings()
         if (JigsawPuzzleBoard *jpb = qobject_cast<JigsawPuzzleBoard*>(board))
             jpb->setTolerance(SettingsDialog::tolerance());
 
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     // Drop shadows
     if (SettingsDialog::useDropShadow() && !board->isDropshadowActive() && intro.isNull())
         board->enableDropshadow();
     else if (!SettingsDialog::useDropShadow() && board->isDropshadowActive())
         board->disableDropshadow();
-#endif
+
     // Accelerometer
     if (_isPlaying && SettingsDialog::useAccelerometer())
     {

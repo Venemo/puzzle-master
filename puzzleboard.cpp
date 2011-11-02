@@ -64,7 +64,6 @@ PuzzleItem *PuzzleBoard::find(const QPoint &puzzleCoordinates)
 
 bool PuzzleBoard::isDropshadowActive() const
 {
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     foreach (QGraphicsItem *item, items())
     {
         if (dynamic_cast<QGraphicsDropShadowEffect*>(item->graphicsEffect()))
@@ -72,13 +71,11 @@ bool PuzzleBoard::isDropshadowActive() const
             return true;
         }
     }
-#endif
     return false;
 }
 
 void PuzzleBoard::enableDropshadow()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QColor c = DROPSHADOW_COLOR_DEFAULT;
     foreach (QGraphicsItem *item, items())
     {
@@ -88,17 +85,14 @@ void PuzzleBoard::enableDropshadow()
         effect->setColor(c);
         item->setGraphicsEffect(effect);
     }
-#endif
 }
 
 void PuzzleBoard::disableDropshadow()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     foreach (QGraphicsItem *item, items())
     {
         item->setGraphicsEffect(0);
     }
-#endif
 }
 
 bool PuzzleBoard::isAccelerometerActive() const

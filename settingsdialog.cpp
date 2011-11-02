@@ -37,12 +37,6 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui->enableScalingBox->hide();
 #endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-#else
-    // Hiding the relevant UI if we don't have Qt 4.6 at least
-    ui->useDropshadowBox->hide();
-#endif
-
 #if defined(HAVE_QACCELEROMETER)
 #else
     // Hiding the relevant UI if we don't have an accelerometer
@@ -80,9 +74,7 @@ void SettingsDialog::saveSettings()
     // Saving settings
     setBoardBackground(_boardBackground);
     setTolerance((ui->toleranceBox->currentIndex() + 1) * 5);
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     setUseDropShadow(ui->useDropshadowBox->isChecked());
-#endif
     setEnableScaling(ui->enableScalingBox->isChecked());
     setUseAccelerometer(ui->accelerometerBox->isChecked());
     setUseOpenGl(ui->useOpenGlBox->isChecked());
@@ -90,13 +82,9 @@ void SettingsDialog::saveSettings()
 
 void SettingsDialog::showEvent(QShowEvent *e)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     ui->useDropshadowBox->setChecked(useDropShadow());
-#endif
-
     ui->enableScalingBox->setChecked(enableScaling());
     ui->useOpenGlBox->setChecked(useOpenGl());
-
 
     QPixmap pm(80, 30);
     pm.fill(_boardBackground);
@@ -139,7 +127,6 @@ void SettingsDialog::setUseOpenGl(bool value)
     settings->setValue(SETTING_USE_OPENGL, value);
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
 bool SettingsDialog::useDropShadow()
 {
     return settings->value(SETTING_USE_DROPSHADOW,
@@ -155,7 +142,6 @@ void SettingsDialog::setUseDropShadow(bool value)
 {
     settings->setValue(SETTING_USE_DROPSHADOW, value);
 }
-#endif
 
 bool SettingsDialog::useAccelerometer()
 {

@@ -107,7 +107,7 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
             _dragging = false;
             _canMerge = false;
             QPointF newPos((scene()->width() - pixmap().width()) / 2, (scene()->height() - pixmap().height()) / 2);
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+
             QParallelAnimationGroup *group = new QParallelAnimationGroup(this);
             QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", group);
             anim->setEndValue(newPos);
@@ -124,10 +124,6 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
             group->addAnimation(anim);
             group->addAnimation(rotateAnimation);
             group->start(QAbstractAnimation::DeleteWhenStopped);
-#else
-            setPos(newPos);
-            emit noNeighbours();
-#endif
         }
 
         return true;
@@ -333,7 +329,7 @@ void JigsawPuzzleItem::verifyPosition()
         _dragging = false;
         _isDraggingWithTouch = false;
         _canMerge = false;
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+
         QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", this);
         connect(anim, SIGNAL(finished()), this, SLOT(enableMerge()));
 
@@ -341,10 +337,6 @@ void JigsawPuzzleItem::verifyPosition()
         anim->setDuration(150);
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutBounce));
         anim->start(QAbstractAnimation::DeleteWhenStopped);
-#else
-        setPos(pX, pY);
-        enableMerge();
-#endif
     }
 }
 
@@ -367,12 +359,10 @@ void JigsawPuzzleItem::raise()
             {
                 item->setZValue(item->zValue() - 1);
             }
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
             else if (item != this && item->zValue() == this->zValue())
             {
                 item->stackBefore(this);
             }
-#endif
         }
         setZValue(max);
     }

@@ -65,16 +65,14 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
 
 void JigsawPuzzleBoard::shuffle()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
     QEasingCurve easingCurve(QEasingCurve::InExpo);
-#endif
+
     foreach (QGraphicsItem *gi, items())
     {
         JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
         QPointF newPos(randomInt(0, originalPixmapSize().width() - _unit.width()), randomInt(0, originalPixmapSize().height() - _unit.width()));
 
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
         connect(group, SIGNAL(finished()), item, SLOT(enableMerge()));
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
         anim->setEndValue(newPos);
@@ -90,36 +88,28 @@ void JigsawPuzzleBoard::shuffle()
             rotateAnimation->setEasingCurve(easingCurve);
             group->addAnimation(rotateAnimation);
         }
-#else
-        item->setPos(newPos);
-        item->enableMerge();
-#endif
         if (randomInt(0, 10) > 5)
             item->raise();
     }
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+
     connect(group, SIGNAL(finished()), this, SLOT(disableFixedFPS()));
     connect(group, SIGNAL(finished()), this, SIGNAL(gameStarted()));
     enableFixedFPS();
     group->start(QAbstractAnimation::DeleteWhenStopped);
-#else
-    emit gameStarted();
-#endif
 }
 
 void JigsawPuzzleBoard::assemble()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
     QEasingCurve easingCurve(QEasingCurve::OutExpo);
-#endif
+
     foreach (QGraphicsItem *gi, items())
     {
         JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
         item->disableMerge();
         QPointF newPos((item->scene()->width() - originalPixmapSize().width()) / 2 + (item->puzzleCoordinates().x() * _unit.width()),
                        (item->scene()->height() - originalPixmapSize().height()) / 2 + (item->puzzleCoordinates().y() * _unit.height()));
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
         anim->setEndValue(newPos);
         anim->setDuration(2000);
@@ -134,18 +124,12 @@ void JigsawPuzzleBoard::assemble()
             rotateAnimation->setEasingCurve(easingCurve);
             group->addAnimation(rotateAnimation);
         }
-#else
-        item->setPos(newPos);
-        item->setRotation(0);
-        emit gameEnded();
-#endif
     }
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+
     connect(group, SIGNAL(finished()), this, SLOT(disableFixedFPS()));
     connect(group, SIGNAL(finished()), this, SIGNAL(gameEnded()));
     enableFixedFPS();
     group->start(QAbstractAnimation::DeleteWhenStopped);
-#endif
 }
 
 void JigsawPuzzleBoard::surrenderGame()
