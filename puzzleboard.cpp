@@ -12,26 +12,6 @@ PuzzleBoard::PuzzleBoard(QObject *parent) :
 #endif
 }
 
-const QSize &PuzzleBoard::originalPixmapSize() const
-{
-    return _originalPixmapSize;
-}
-
-void PuzzleBoard::setOriginalPixmapSize(const QSize &size)
-{
-    _originalPixmapSize = size;
-}
-
-qreal PuzzleBoard::originalScaleRatio() const
-{
-    return _originalScaleRatio;
-}
-
-void PuzzleBoard::setOriginalScaleRatio(qreal value)
-{
-    _originalScaleRatio = value;
-}
-
 void PuzzleBoard::setNeighbours(int x, int y)
 {
     if (items().count() != x * y)

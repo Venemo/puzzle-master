@@ -2,8 +2,10 @@
 #include <QtDeclarative>
 #include <QSettings>
 #include <QLibraryInfo>
-//#include "mainwindow.h"
+
 #include "util.h"
+#include "jigsawpuzzleboard.h"
+#include "jigsawpuzzleitem.h"
 
 QSettings *settings;
 
@@ -21,8 +23,6 @@ int main(int argc, char *argv[])
     if (langCode.isEmpty() || langCode == "C")
         langCode = QLocale::system().name();
 
-    //    qDebug() << langCode;
-
     QTranslator tQt, tApp;
     tQt.load("qt_" + langCode, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     tApp.load("puzzle-master_" + langCode, ":/translations");
@@ -32,19 +32,13 @@ int main(int argc, char *argv[])
     qsrand((uint)QTime::currentTime().msec());
     settings = new QSettings();
 
+    qmlRegisterType<JigsawPuzzleBoard>("net.venemo.puzzlemaster", 2, 0, "JigsawPuzzleBoard");
+    qmlRegisterUncreatableType<JigsawPuzzleItem>("net.venemo.puzzlemaster", 2, 0, "JigsawPuzzleItem", "This item will be created progmatically");
+
     QDeclarativeView view;
     QObject::connect(view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
-    view.setSource(QUrl("qrc:/qml/harmattan/main.qml"));
+    view.setSource(QUrl("qrc:/qml/meego/AppWindow.qml"));
     view.showFullScreen();
-
-//    MainWindow w;
-//#if defined(Q_OS_SYMBIAN)
-//    w.showFullScreen();
-//#elif defined(MOBILE)
-//    w.showMaximized();
-//#else
-//    w.show();
-//#endif
 
     return app.exec();
 }

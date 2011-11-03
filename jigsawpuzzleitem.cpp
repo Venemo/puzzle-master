@@ -6,10 +6,10 @@
 JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent, QGraphicsScene *scene) :
     QObject(scene),
     PuzzleItem(pixmap, parent, scene),
-    _dragging(false),
     _canMerge(false),
-    _isDraggingWithTouch(false),
     _weight(randomInt(100, 950) / 1000.0),
+    _dragging(false),
+    _isDraggingWithTouch(false),
     _previousRotationValue(0),
     _previousTouchPointCount(0)
 {
@@ -17,29 +17,14 @@ JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent,
     setTransformOriginPoint(pixmap.width() / 2, pixmap.height() / 2);
 }
 
-bool JigsawPuzzleItem::canMerge() const
-{
-    return _canMerge;
-}
-
-void JigsawPuzzleItem::setMerge(bool canMerge)
-{
-    _canMerge = canMerge;
-}
-
 void JigsawPuzzleItem::enableMerge()
 {
-    setMerge(true);
+    setCanMerge(true);
 }
 
 void JigsawPuzzleItem::disableMerge()
 {
-    setMerge(false);
-}
-
-qreal JigsawPuzzleItem::weight() const
-{
-    return _weight;
+    setCanMerge(false);
 }
 
 bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)

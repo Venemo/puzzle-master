@@ -4,6 +4,7 @@
 #include <QtGui>
 #include "puzzleitem.h"
 #include "jigsawpuzzleboard.h"
+#include "util.h"
 
 class JigsawPuzzleBoard;
 
@@ -12,22 +13,21 @@ class JigsawPuzzleItem : public QObject, public PuzzleItem
     Q_OBJECT
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
     Q_PROPERTY(qreal rotation READ rotation WRITE setRotation)
+    GENPROPERTY(bool, _canMerge, canMerge, setCanMerge, canMergeChanged)
+    Q_PROPERTY(bool canMerge READ canMerge WRITE setCanMerge NOTIFY canMergeChanged)
+    GENPROPERTY(qreal, _weight, weight, setWeight, weightChanged)
+    Q_PROPERTY(qreal weight READ weight WRITE setWeight NOTIFY weightChanged)
 
     QPointF _dragStart;
     QPointF _rotationStartVector;
     bool _dragging;
-    bool _canMerge;
     bool _isDraggingWithTouch;
-    double _weight;
     double _previousRotationValue;
     int _previousTouchPointCount;
 
 public:
     explicit JigsawPuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
     virtual bool merge(JigsawPuzzleItem *item);
-    bool canMerge() const;
-    void setMerge(bool canMerge);
-    qreal weight() const;
     inline int tolerance() const;
     inline qreal rotationTolerance() const;
     inline const QSize &unit() const;
@@ -40,6 +40,9 @@ public slots:
     void disableMerge();
 
 signals:
+    void canMergeChanged();
+    void weightChanged();
+
     void noNeighbours();
 
 protected:

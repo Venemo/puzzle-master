@@ -10,12 +10,12 @@
 
 #define GENPROPERTY(type, pname, name, settername, signalname) \
     private: type pname; \
-    public: inline type name() const { return pname; } inline void settername (const type &value) { pname = value; emit signalname (); } \
+    public: inline const type &name() const { return pname; } inline void settername (const type &value) { pname = value; emit signalname (); } \
     private:
 
 #define GENPROPERTY_R(type, pname, name) \
     private: type pname; \
-    public: inline type name() const { return pname; } \
+    public: inline const type &name() const { return pname; } \
     private:
 
 #define GENPROPERTY_PTR(type, pname, name, settername, signalname) \

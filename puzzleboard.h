@@ -8,14 +8,20 @@
 #include <QAccelerometer>
 #endif
 
+#include "util.h"
+
 class PuzzleItem;
 
 class PuzzleBoard : public QGraphicsScene
 {
     Q_OBJECT
+    Q_PROPERTY(bool isDropshadowActive READ isDropshadowActive NOTIFY isDropshadowActiveChanged)
+    Q_PROPERTY(bool isAccelerometerActive READ isAccelerometerActive NOTIFY isAccelerometerActiveChanged)
+    GENPROPERTY(QSize, _originalPixmapSize, originalPixmapSize, setOriginalPixmapSize, originalPixmapSizeChanged)
+    Q_PROPERTY(QSize originalPixmapSize READ originalPixmapSize WRITE setOriginalPixmapSize NOTIFY originalPixmapSizeChanged)
+    GENPROPERTY(qreal, _originalScaleRatio, originalScaleRatio, setOriginalScaleRatio, originalScaleRatioChanged)
+    Q_PROPERTY(qreal originalScaleRatio READ originalScaleRatio WRITE setOriginalScaleRatio NOTIFY originalScaleRatioChanged)
 
-    QSize _originalPixmapSize;
-    qreal _originalScaleRatio;
     QTimer *_fixedFPSTimer;
 #if defined(HAVE_QACCELEROMETER)
     QtMobility::QAccelerometer *accelerometer;
@@ -24,19 +30,20 @@ class PuzzleBoard : public QGraphicsScene
 public:
     explicit PuzzleBoard(QObject *parent = 0);
     virtual void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols, bool allowMultitouch) = 0;
-    const QSize &originalPixmapSize() const;
     void setNeighbours(int x, int y);
-    void setOriginalPixmapSize(const QSize &size);
     PuzzleItem *find(const QPoint &puzzleCoordinates);
     bool isDropshadowActive() const;
     bool isAccelerometerActive() const;
-    qreal originalScaleRatio() const;
-    void setOriginalScaleRatio(qreal value);
 
 protected:
     virtual void accelerometerMovement(qreal x, qreal y, qreal z) = 0;
 
 signals:
+    void isDropshadowActiveChanged();
+    void isAccelerometerActiveChanged();
+    void originalPixmapSizeChanged();
+    void originalScaleRatioChanged();
+
     void gameStarted();
     void gameEnded();
     void gameWon();
@@ -47,15 +54,15 @@ private slots:
     void accelerometerReadingChanged();
 
 public slots:
-    virtual void surrenderGame() = 0;
-    void enableDropshadow();
-    void disableDropshadow();
-    void enableAccelerometer();
-    void disableAccelerometer();
-    virtual void disable() = 0;
-    virtual void enable() = 0;
-    void enableFixedFPS();
-    void disableFixedFPS();
+    Q_INVOKABLE virtual void surrenderGame() = 0;
+    Q_INVOKABLE void enableDropshadow();
+    Q_INVOKABLE void disableDropshadow();
+    Q_INVOKABLE void enableAccelerometer();
+    Q_INVOKABLE void disableAccelerometer();
+    Q_INVOKABLE virtual void disable() = 0;
+    Q_INVOKABLE virtual void enable() = 0;
+    Q_INVOKABLE void enableFixedFPS();
+    Q_INVOKABLE void disableFixedFPS();
 
 };
 
