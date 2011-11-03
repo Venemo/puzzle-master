@@ -4,8 +4,6 @@
 #include "puzzleboard.h"
 #include "util.h"
 
-class JigsawPuzzleItem;
-
 class JigsawPuzzleBoard : public PuzzleBoard
 {
     Q_OBJECT

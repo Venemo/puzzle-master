@@ -5,7 +5,7 @@
 
 #include "util.h"
 #include "jigsawpuzzleboard.h"
-#include "jigsawpuzzleitem.h"
+#include "puzzleitem.h"
 
 QSettings *settings;
 
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     settings = new QSettings();
 
     qmlRegisterType<JigsawPuzzleBoard>("net.venemo.puzzlemaster", 2, 0, "JigsawPuzzleBoard");
-    qmlRegisterUncreatableType<JigsawPuzzleItem>("net.venemo.puzzlemaster", 2, 0, "JigsawPuzzleItem", "This item will be created progmatically");
+    qmlRegisterUncreatableType<PuzzleItem>("net.venemo.puzzlemaster", 2, 0, "PuzzleItem", "This item will be created progmatically");
 
     QDeclarativeView view;
     QObject::connect(view.engine(), SIGNAL(quit()), &app, SLOT(quit()));

@@ -1,7 +1,10 @@
 #ifndef PUZZLEPIECE_H
 #define PUZZLEPIECE_H
 
-#include <QtGui>
+#include <QDeclarativeItem>
+#include <QPixmap>
+#include "jigsawpuzzleboard.h"
+#include "util.h"
 
 #define DROPSHADOW_COLOR_DEFAULT QColor(0, 0, 0, 200)
 #define DROPSHADOW_COLOR_SELECTED QColor(0, 0, 0, 255)
@@ -9,30 +12,84 @@
 #define DROPSHADOW_RADIUS_DEFAULT 20
 #define DROPSHADOW_RADIUS_SELECTED 25
 
-class PuzzleItem : public QGraphicsPixmapItem
+class PuzzleItem : public QDeclarativeItem
 {
 private:
-    QPoint _puzzleCoordinates;
-    QPointF _supposedPosition;
-    QList<PuzzleItem*> _neighbours;
+    Q_OBJECT
+    GENPROPERTY(QPoint, _puzzleCoordinates, puzzleCoordinates, setPuzzleCoordinates, puzzleCoordinatesChanged)
+    Q_PROPERTY(QPoint puzzleCoordinates READ puzzleCoordinates WRITE setPuzzleCoordinates NOTIFY puzzleCoordinatesChanged)
+    GENPROPERTY(QPointF, _supposedPosition, supposedPosition, setSupposedPosition, supposedPositionChanged)
+    Q_PROPERTY(QPointF supposedPosition READ supposedPosition WRITE setSupposedPosition NOTIFY supposedPositionChanged)
+    GENPROPERTY_R(QList<PuzzleItem*>, _neighbours, neighbours)
+    Q_PROPERTY(QList<PuzzleItem*> neighbours READ neighbours)
+    GENPROPERTY_R(QPixmap, _pixmap, pixmap)
+    Q_PROPERTY(QPixmap pixmap READ pixmap)
+    GENPROPERTY(bool, _canMerge, canMerge, setCanMerge, canMergeChanged)
+    Q_PROPERTY(bool canMerge READ canMerge WRITE setCanMerge NOTIFY canMergeChanged)
+    GENPROPERTY(qreal, _weight, weight, setWeight, weightChanged)
+    Q_PROPERTY(qreal weight READ weight WRITE setWeight NOTIFY weightChanged)
 
-protected:
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    QPointF _dragStart;
+    QPointF _rotationStartVector;
+    bool _dragging;
+    bool _isDraggingWithTouch;
+    double _previousRotationValue;
+    int _previousTouchPointCount;
 
 public:
-    explicit PuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+    explicit PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent = 0);
 
-    const QPoint &puzzleCoordinates() const;
-    const QPointF &supposedPosition() const;
-    const QList<PuzzleItem*> &neighbours() const;
+    bool merge(PuzzleItem *item);
+    inline int tolerance() const;
+    inline qreal rotationTolerance() const;
+    inline const QSize &unit() const;
+    void raise();
+    void verifyPosition();
+    void verifyCoveredSiblings();
 
-    void setPuzzleCoordinates(const QPoint &p);
-    void setSupposedPosition(const QPointF &p);
     void addNeighbour(PuzzleItem *piece);
     void removeNeighbour(PuzzleItem *piece);
+    bool isNeighbourOf(const PuzzleItem *piece) const;public slots:
+    void enableMerge();
+    void disableMerge();
 
-    bool isNeighbourOf(const PuzzleItem *piece) const;
+signals:
+    void puzzleCoordinatesChanged();
+    void supposedPositionChanged();
+    void canMergeChanged();
+    void weightChanged();
+
+    void noNeighbours();
+
+protected:
+    void startDrag(const QPointF &pos);
+    void stopDrag();
+    void doDrag(const QPointF &pos);
+    void handleRotation(const QPointF &vector);
+    void setCompensatedTransformOriginPoint(const QPointF &point);
+    void emphasise();
+    void deEmphasise();
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *ev);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *ev);
+    virtual bool sceneEvent(QEvent *event);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
 };
+
+inline const QSize &PuzzleItem::unit() const
+{
+    return ((JigsawPuzzleBoard*)scene())->unit();
+}
+
+inline int PuzzleItem::tolerance() const
+{
+    return ((JigsawPuzzleBoard*)scene())->tolerance();
+}
+
+inline qreal PuzzleItem::rotationTolerance() const
+{
+    return ((JigsawPuzzleBoard*)scene())->rotationTolerance();
+}
 
 #endif // PUZZLEPIECE_H

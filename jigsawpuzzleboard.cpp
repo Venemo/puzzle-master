@@ -1,6 +1,9 @@
 
+#include <QtGui>
+#include <QtDeclarative>
+
 #include "jigsawpuzzleboard.h"
-#include "jigsawpuzzleitem.h"
+#include "puzzleitem.h"
 #include "util.h"
 
 JigsawPuzzleBoard::JigsawPuzzleBoard(QObject *parent) :
@@ -43,7 +46,7 @@ void JigsawPuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned 
             p.end();
 
             // creating the piece
-            JigsawPuzzleItem *item = new JigsawPuzzleItem(px, 0, this);
+            PuzzleItem *item = new PuzzleItem(px);
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(item->puzzleCoordinates() * _unit);
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
@@ -70,7 +73,7 @@ void JigsawPuzzleBoard::shuffle()
 
     foreach (QGraphicsItem *gi, items())
     {
-        JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
+        PuzzleItem *item = (PuzzleItem*)gi;
         QPointF newPos(randomInt(0, originalPixmapSize().width() - _unit.width()), randomInt(0, originalPixmapSize().height() - _unit.width()));
 
         connect(group, SIGNAL(finished()), item, SLOT(enableMerge()));
@@ -105,7 +108,7 @@ void JigsawPuzzleBoard::assemble()
 
     foreach (QGraphicsItem *gi, items())
     {
-        JigsawPuzzleItem *item = (JigsawPuzzleItem*)gi;
+        PuzzleItem *item = (PuzzleItem*)gi;
         item->disableMerge();
         QPointF newPos((item->scene()->width() - originalPixmapSize().width()) / 2 + (item->puzzleCoordinates().x() * _unit.width()),
                        (item->scene()->height() - originalPixmapSize().height()) / 2 + (item->puzzleCoordinates().y() * _unit.height()));
@@ -142,7 +145,7 @@ void JigsawPuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)
     Q_UNUSED(z);
     foreach (QGraphicsItem *item, items())
     {
-        JigsawPuzzleItem *widget = (JigsawPuzzleItem*) item;
+        PuzzleItem *widget = (PuzzleItem*) item;
         if (widget->canMerge())
         {
             widget->setPos(widget->pos().x() - x * widget->weight() / 2, widget->pos().y() + y * widget->weight() / 2);
@@ -155,7 +158,7 @@ void JigsawPuzzleBoard::enable()
 {
     foreach (QGraphicsItem *item, items())
     {
-        JigsawPuzzleItem *widget = (JigsawPuzzleItem*) item;
+        PuzzleItem *widget = (PuzzleItem*) item;
         widget->enableMerge();
     }
 }
@@ -164,7 +167,7 @@ void JigsawPuzzleBoard::disable()
 {
     foreach (QGraphicsItem *item, items())
     {
-        JigsawPuzzleItem *widget = (JigsawPuzzleItem*) item;
+        PuzzleItem *widget = (PuzzleItem*) item;
         widget->disableMerge();
     }
 }

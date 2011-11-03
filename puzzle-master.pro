@@ -10,38 +10,18 @@ TARGET = puzzle-master
 TEMPLATE = app
 
 VERSION = 2.0
-DEFINES += HAVE_OPENGL
 
 SOURCES += \
     main.cpp\
     puzzleitem.cpp \
     puzzleboard.cpp \
-    jigsawpuzzleitem.cpp \
     jigsawpuzzleboard.cpp
-#    mainwindow.cpp \
-#    settingsdialog.cpp \
-#    imagechooser.cpp \
-#    highscoresdialog.cpp \
-#    newgamedialog.cpp
 
 HEADERS += \
     util.h \
     puzzleitem.h \
     puzzleboard.h \
-    jigsawpuzzleitem.h \
     jigsawpuzzleboard.h
-#    mainwindow.h \
-#    newgamedialog.h \
-#    settingsdialog.h \
-#    imagechooser.h \
-#    highscoresdialog.h
-
-#FORMS += \
-#    mainwindow.ui \
-#    settingsdialog.ui \
-#    imagechooser.ui \
-#    highscoresdialog.ui \
-#    newgamedialog.ui
 
 RESOURCES += \
     resources.qrc \
@@ -82,7 +62,6 @@ symbian {
     # Symbian
     QT -= opengl
     DEFINES += MOBILE HAVE_QACCELEROMETER
-    DEFINES -= HAVE_OPENGL
 
     CONFIG += mobility
     MOBILITY += sensors
@@ -102,4 +81,6 @@ win32 {
     RC_FILE = puzzle-master.rc
     OTHER_FILES += puzzle-master.rc
 }
+
+
 

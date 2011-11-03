@@ -1,3 +1,7 @@
+
+#include <QtGui>
+#include <QtDeclarative>
+
 #include "puzzleboard.h"
 #include "puzzleitem.h"
 
