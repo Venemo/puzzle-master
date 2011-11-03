@@ -37,7 +37,7 @@ class PuzzleBoard : public QDeclarativeItem
 
 public:
     explicit PuzzleBoard(QDeclarativeItem *parent = 0);
-    virtual void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols, bool allowMultitouch);
+    Q_INVOKABLE void startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowMultitouch);
     void setNeighbours(int x, int y);
     PuzzleItem *find(const QPoint &puzzleCoordinates);
     bool isDropshadowActive() const;

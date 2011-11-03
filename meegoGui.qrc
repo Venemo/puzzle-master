@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/qml/meego">
+    <qresource prefix="/">
         <file>qml/meego/AppWindow.qml</file>
         <file>qml/meego/GamePage.qml</file>
         <file>qml/meego/NewGamePage.qml</file>

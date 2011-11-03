@@ -152,8 +152,29 @@ void PuzzleBoard::disableFixedFPS()
     }
 }
 
-void PuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned cols, bool allowMultitouch)
+void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowMultitouch)
 {
+    qDebug() << "game started!";
+
+    if (!QFile::exists(imageUrl))
+    {
+        qDebug() << "image doesn't exist, not starting game.";
+        return;
+    }
+
+    QPixmap image("qrc:/aaa.jpg");
+
+    if (image.isNull())
+    {
+        qDebug() << "image is null, not starting game.";
+        return;
+    }
+    if (image.size().width() == 0 || image.size().height() == 0)
+    {
+        qDebug() << "image's size is 0, not starting game";
+        return;
+    }
+
     int w = min<int>(width(), image.width());
     int h = min<int>(height(), image.height());
 
