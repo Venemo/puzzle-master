@@ -5,7 +5,7 @@
 #include <QtCore>
 #include <cmath>
 
-#define APP_VERSION "1.2.3"
+#define APP_VERSION "2.0"
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 
 inline QPointF operator*(const QPoint &point, const QSize &size)

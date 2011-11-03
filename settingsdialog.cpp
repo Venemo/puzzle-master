@@ -3,10 +3,6 @@
 #include "ui_settingsdialog.h"
 #include "util.h"
 
-#if defined(Q_WS_MAEMO_5)
-#include <hildon-extras-1/hildon-extras/qt-he-wrapper.h>
-#endif
-
 #define SETTING_USE_ACCELEROMETER "UseAccelerometer"
 #define SETTING_USE_OPENGL "UseOpenGL"
 #define SETTING_USE_DROPSHADOW "UseDropshadow"
@@ -103,11 +99,8 @@ void SettingsDialog::hideEvent(QHideEvent *e)
 
 void SettingsDialog::on_boardColorButton_clicked()
 {
-#if defined(Q_WS_MAEMO_5)
-    QColor newColor = QtHeWrapper::showHeSimpleColorDialog(this, _boardBackground, true);
-#else
     QColor newColor = QColorDialog::getColor(_boardBackground, this);
-#endif
+
     if (newColor.isValid() && newColor != _boardBackground)
     {
         _boardBackground = newColor;

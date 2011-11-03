@@ -9,7 +9,8 @@ QT += core gui declarative
 TARGET = puzzle-master
 TEMPLATE = app
 
-VERSION = 1.2.3
+VERSION = 2.0
+DEFINES += HAVE_OPENGL
 
 SOURCES += \
     main.cpp\
@@ -71,11 +72,9 @@ maemo5 {
     QT += maemo5
     DEFINES += MOBILE HAVE_QACCELEROMETER
 
-    CONFIG += mobility link_pkgconfig
+    CONFIG += mobility
     MOBILITY += sensors
-    PKGCONFIG += hildon-extras-1
-    LIBS += -lglib-2.0 -lgobject-2.0 -lgmodule-2.0 -lgdk_pixbuf-2.0 -lpango-1.0 -lcairo -lpangocairo-1.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lfreetype -lfontconfig -lpangoft2-1.0 -lgtk-x11-2.0 -lhildon-1 -lhildon-extras-1
-    
+
     target.path = /opt/puzzle-master
     desktopfile.path = /usr/share/applications/hildon
 }

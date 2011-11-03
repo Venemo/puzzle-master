@@ -5,11 +5,6 @@
 #include "util.h"
 #include <QtGui>
 
-#if defined(Q_WS_MAEMO_5)
-#include <QtMaemo5>
-#include <hildon-extras-1/hildon-extras/qt-he-wrapper.h>
-#endif
-
 #if defined(HAVE_OPENGL)
 #include <QGLWidget>
 #endif
@@ -411,17 +406,7 @@ void MainWindow::showSettings()
 
 void MainWindow::about()
 {
-#if defined(Q_WS_MAEMO_5)
-    QtHeWrapper::showHeAboutDialog(this,
-                                   tr("Fun and addictive jigsaw puzzle game"),
-                                   tr("Licensed under the terms of EUPL 1.1 - 2011, Timur Kristóf"),
-                                   "http://gitorious.org/colorful-apps/pages/PuzzleMaster",
-                                   "http://talk.maemo.org/showthread.php?t=67139",
-                                   "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=venemo%40msn%2ecom&lc=US&item_name=to%20Timur%20Kristof%2c%20for%20Puzzle%20Master%20development&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted",
-                                   "puzzle-master");
-#else
     QMessageBox::information(this, tr("About"), fetchAboutString(), QMessageBox::Ok);
-#endif
 }
 
 void MainWindow::updateElapsedTimeLabel()
