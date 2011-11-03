@@ -3,7 +3,7 @@
 
 #include <QDeclarativeItem>
 #include <QPixmap>
-#include "jigsawpuzzleboard.h"
+#include "puzzleboard.h"
 #include "util.h"
 
 #define DROPSHADOW_COLOR_DEFAULT QColor(0, 0, 0, 200)
@@ -79,17 +79,17 @@ protected:
 
 inline const QSize &PuzzleItem::unit() const
 {
-    return ((JigsawPuzzleBoard*)scene())->unit();
+    return ((PuzzleBoard*)scene())->unit();
 }
 
 inline int PuzzleItem::tolerance() const
 {
-    return ((JigsawPuzzleBoard*)scene())->tolerance();
+    return ((PuzzleBoard*)scene())->tolerance();
 }
 
 inline qreal PuzzleItem::rotationTolerance() const
 {
-    return ((JigsawPuzzleBoard*)scene())->rotationTolerance();
+    return ((PuzzleBoard*)scene())->rotationTolerance();
 }
 
 #endif // PUZZLEPIECE_H

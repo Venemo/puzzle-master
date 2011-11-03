@@ -14,14 +14,12 @@ VERSION = 2.0
 SOURCES += \
     main.cpp\
     puzzleitem.cpp \
-    puzzleboard.cpp \
-    jigsawpuzzleboard.cpp
+    puzzleboard.cpp
 
 HEADERS += \
     util.h \
     puzzleitem.h \
-    puzzleboard.h \
-    jigsawpuzzleboard.h
+    puzzleboard.h
 
 RESOURCES += \
     resources.qrc \
@@ -81,6 +79,8 @@ win32 {
     RC_FILE = puzzle-master.rc
     OTHER_FILES += puzzle-master.rc
 }
+
+
 
 
 

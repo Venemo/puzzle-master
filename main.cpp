@@ -4,7 +4,7 @@
 #include <QLibraryInfo>
 
 #include "util.h"
-#include "jigsawpuzzleboard.h"
+#include "puzzleboard.h"
 #include "puzzleitem.h"
 
 QSettings *settings;
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     qsrand((uint)QTime::currentTime().msec());
     settings = new QSettings();
 
-    qmlRegisterType<JigsawPuzzleBoard>("net.venemo.puzzlemaster", 2, 0, "JigsawPuzzleBoard");
+    qmlRegisterType<PuzzleBoard>("net.venemo.puzzlemaster", 2, 0, "PuzzleBoard");
     qmlRegisterUncreatableType<PuzzleItem>("net.venemo.puzzlemaster", 2, 0, "PuzzleItem", "This item will be created progmatically");
 
     QDeclarativeView view;
