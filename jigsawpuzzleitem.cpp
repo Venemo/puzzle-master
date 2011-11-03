@@ -8,8 +8,13 @@ JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent,
     PuzzleItem(pixmap, parent, scene),
     _dragging(false),
     _canMerge(false),
-    _weight(randomInt(100, 950) / 1000.0)
+    _isDraggingWithTouch(false),
+    _weight(randomInt(100, 950) / 1000.0),
+    _previousRotationValue(0),
+    _previousTouchPointCount(0)
 {
+    setAcceptTouchEvents(true);
+    setTransformOriginPoint(pixmap.width() / 2, pixmap.height() / 2);
 }
 
 bool JigsawPuzzleItem::canMerge() const
@@ -32,14 +37,14 @@ void JigsawPuzzleItem::disableMerge()
     setMerge(false);
 }
 
-double JigsawPuzzleItem::weight()
+qreal JigsawPuzzleItem::weight() const
 {
     return _weight;
 }
 
 bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
 {
-    if (isNeighbourOf(item))
+    if (isNeighbourOf(item) && _canMerge && item->_canMerge)
     {
         item->_canMerge = _canMerge = false;
 
@@ -50,16 +55,17 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
         }
 
         QPoint vector = item->puzzleCoordinates() - puzzleCoordinates();
+        QPointF positionVector = item->supposedPosition() - supposedPosition();
         int x1, x2, y1, y2, u1, v1;
         if (vector.x() >= 0)
         {
             x1 = 0;
             u1 = 0;
-            x2 = vector.x() * unit().width();
+            x2 = positionVector.x();
         }
         else
         {
-            x1 = - vector.x() * unit().width();
+            x1 = - positionVector.x();
             u1 = - vector.x();
             x2 = 0;
         }
@@ -67,11 +73,11 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
         {
             y1 = 0;
             v1 = 0;
-            y2 = vector.y() * unit().height();
+            y2 = positionVector.y();
         }
         else
         {
-            y1 = - vector.y() * unit().height();
+            y1 = - positionVector.y();
             v1 = - vector.y();
             y2 = 0;
         }
@@ -88,10 +94,12 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
 
         setPixmap(pix);
         setPuzzleCoordinates(puzzleCoordinates() - QPoint(u1, v1));
+        setSupposedPosition(puzzleCoordinates() * unit());
         setPos(pos().x() - x1, pos().y() - y1);
-
         _dragStart += QPointF(x1, y1);
-        delete item;
+        setCompensatedTransformOriginPoint(QPointF(pixmap().width() / 2, pixmap().height() / 2));
+        item->hide();
+        item->deleteLater();
         _canMerge = true;
 
         if (neighbours().count() == 0)
@@ -99,17 +107,23 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
             _dragging = false;
             _canMerge = false;
             QPointF newPos((scene()->width() - pixmap().width()) / 2, (scene()->height() - pixmap().height()) / 2);
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
-            QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", this);
+
+            QParallelAnimationGroup *group = new QParallelAnimationGroup(this);
+            QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", group);
             anim->setEndValue(newPos);
             anim->setDuration(1000);
             anim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
-            connect(anim, SIGNAL(finished()), this, SIGNAL(noNeighbours()));
-            anim->start(QAbstractAnimation::DeleteWhenStopped);
-#else
-            setPos(newPos);
-            emit noNeighbours();
-#endif
+
+            QPropertyAnimation *rotateAnimation = new QPropertyAnimation(this, "rotation", group);
+            rotateAnimation->setEndValue(0);
+            rotateAnimation->setDuration(1000);
+            rotateAnimation->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+
+            connect(group, SIGNAL(finished()), this, SIGNAL(noNeighbours()));
+
+            group->addAnimation(anim);
+            group->addAnimation(rotateAnimation);
+            group->start(QAbstractAnimation::DeleteWhenStopped);
         }
 
         return true;
@@ -117,54 +131,184 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
     return false;
 }
 
-void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void JigsawPuzzleItem::startDrag(const QPointF &p)
 {
-    PuzzleItem::mousePressEvent(event);
-
-    if (event->button() == Qt::LeftButton && _canMerge)
+    if (_canMerge && !_dragging)
     {
         _dragging = true;
-        _dragStart = event->pos();
+        _dragStart = mapToScene(p) - pos();
         raise();
     }
 }
 
-void JigsawPuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void JigsawPuzzleItem::stopDrag()
 {
-    PuzzleItem::mouseReleaseEvent(event);
-
-    if (event->button() == Qt::LeftButton)
-    {
-        _dragging = false;
-        verifyPosition();
-        verifyCoveredSiblings();
-    }
+    _dragging = false;
+    _isDraggingWithTouch = false;
+    verifyPosition();
+    verifyCoveredSiblings();
 }
 
-void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void JigsawPuzzleItem::doDrag(const QPointF &position)
 {
-    PuzzleItem::mouseMoveEvent(event);
-
     if (_dragging)
     {
-        setPos(pos() + event->pos() - _dragStart);
+        setPos(mapToScene(position) - _dragStart);
 
         if (_canMerge)
         {
             foreach (PuzzleItem *p, neighbours())
             {
                 JigsawPuzzleItem *w = (JigsawPuzzleItem*) p;
-                QPointF posDiff1 = pos() - w->pos();
-                QPointF posDiff2 = (puzzleCoordinates() * unit() - w->puzzleCoordinates() * unit());
-                QPointF relative = posDiff1 - posDiff2;
+                QPointF diff = - supposedPosition() + w->supposedPosition() - w->mapToItem(this, 0, 0);
 
-                if (abs((int)relative.x()) < tolerance() && abs((int)relative.y()) < tolerance())
+                if (abs((int)diff.x()) < tolerance() && abs((int)diff.y()) < tolerance() && abs(w->rotation() - rotation()) < rotationTolerance())
                 {
                     merge(w);
                 }
             }
         }
     }
+}
+
+void JigsawPuzzleItem::handleRotation(const QPointF &v)
+{
+    qreal a = angle(_rotationStartVector, v) * 180 / M_PI;
+
+    if (!isnan(a))
+    {
+        a += _previousRotationValue;
+
+        while (a >= 360)
+            a -= 360;
+        while (a <= 360)
+            a += 360;
+
+        setRotation(a);
+    }
+}
+
+void JigsawPuzzleItem::setCompensatedTransformOriginPoint(const QPointF &point)
+{
+    QPointF compensation = mapToScene(0, 0);
+    setTransformOriginPoint(point);
+    compensation -= mapToScene(0, 0);
+    setPos(pos() + compensation);
+    _dragStart -= compensation;
+}
+
+void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (_canMerge)
+        PuzzleItem::mousePressEvent(event);
+    else
+        QGraphicsPixmapItem::mousePressEvent(event);
+
+    event->accept();
+
+    if (event->button() == Qt::LeftButton)
+        startDrag(event->pos());
+}
+
+void JigsawPuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (_canMerge)
+        PuzzleItem::mouseReleaseEvent(event);
+    else
+        QGraphicsPixmapItem::mouseReleaseEvent(event);
+
+    event->accept();
+
+    if (event->button() == Qt::LeftButton)
+        stopDrag();
+}
+
+void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    PuzzleItem::mouseMoveEvent(event);
+    event->accept();
+    if (!_isDraggingWithTouch)
+        doDrag(event->pos());
+}
+
+bool JigsawPuzzleItem::sceneEvent(QEvent *event)
+{
+    if (PuzzleItem::sceneEvent(event))
+        return true;
+
+    if (!_canMerge)
+        return false;
+
+    QTouchEvent *touchEvent = (QTouchEvent*) event;
+
+    if (event->type() == QEvent::TouchBegin)
+    {
+        _isDraggingWithTouch = true;
+
+        const QTouchEvent::TouchPoint *relevantTouchPoint = 0;
+
+        // Finding the new touch point - the one that is now pressed
+        foreach (const QTouchEvent::TouchPoint &touchPoint, touchEvent->touchPoints())
+            if (touchPoint.state() == Qt::TouchPointPressed)
+                relevantTouchPoint = &touchPoint;
+
+        if (relevantTouchPoint && !_dragging)
+            startDrag(relevantTouchPoint->pos());
+
+        event->accept();
+        return true;
+    }
+    else if (event->type() == QEvent::TouchEnd)
+    {
+        // There is only one touch point which is now released
+        if (touchEvent->touchPoints().count() == 1)
+            stopDrag();
+
+        event->accept();
+        return true;
+    }
+    else if (event->type() == QEvent::TouchUpdate)
+    {
+        QPointF midpoint(0, 0);
+
+        // Finding the midpoint
+        foreach (const QTouchEvent::TouchPoint &touchPoint, touchEvent->touchPoints())
+            midpoint += touchPoint.pos();
+
+        midpoint /= touchEvent->touchPoints().count();
+        setCompensatedTransformOriginPoint(midpoint);
+
+        if (touchEvent->touchPoints().count() != _previousTouchPointCount)
+        {
+            // If you put one more finger onto an item, this prevents it from jumping
+            stopDrag();
+            _isDraggingWithTouch = true;
+            startDrag(midpoint);
+        }
+        else
+        {
+            doDrag(midpoint);
+        }
+
+        if (_previousTouchPointCount < 2 && touchEvent->touchPoints().count() == 2)
+        {
+            // Starting rotation
+            _previousRotationValue = rotation();
+            _rotationStartVector = mapToScene(touchEvent->touchPoints().at(0).pos()) - mapToScene(touchEvent->touchPoints().at(1).pos());
+        }
+
+        _previousTouchPointCount = touchEvent->touchPoints().count();
+
+        if (touchEvent->touchPoints().count() >= 2)
+        {
+            handleRotation(mapToScene(touchEvent->touchPoints().at(0).pos()) - mapToScene(touchEvent->touchPoints().at(1).pos()));
+        }
+
+        event->accept();
+        return true;
+    }
+
+    return false;
 }
 
 void JigsawPuzzleItem::verifyPosition()
@@ -181,21 +325,18 @@ void JigsawPuzzleItem::verifyPosition()
     {
         int pX = CLAMP(x, minX + unit().width() / 2, maxX - unit().width() / 2);
         int pY = CLAMP(y, minY + unit().height() / 2, maxY - unit().height() / 2);
+
         _dragging = false;
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+        _isDraggingWithTouch = false;
+        _canMerge = false;
+
         QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", this);
+        connect(anim, SIGNAL(finished()), this, SLOT(enableMerge()));
+
         anim->setEndValue(QPointF(pX, pY));
-        anim->setDuration(200);
+        anim->setDuration(150);
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutBounce));
-        if (canMerge())
-        {
-            disableMerge();
-            connect(anim, SIGNAL(finished()), this, SLOT(enableMerge()));
-        }
         anim->start(QAbstractAnimation::DeleteWhenStopped);
-#else
-        setPos(pX, pY);
-#endif
     }
 }
 
@@ -218,12 +359,10 @@ void JigsawPuzzleItem::raise()
             {
                 item->setZValue(item->zValue() - 1);
             }
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
             else if (item != this && item->zValue() == this->zValue())
             {
                 item->stackBefore(this);
             }
-#endif
         }
         setZValue(max);
     }
@@ -247,4 +386,17 @@ void JigsawPuzzleItem::verifyCoveredSiblings()
             break;
         }
     }
+}
+
+void JigsawPuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+#if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
+    // Hack against the rendering artifacts when an L-shaped item is rotated.
+    painter->setClipPath(shape());
+    painter->setClipping(true);
+    PuzzleItem::paint(painter, option, widget);
+    painter->setClipping(false);
+#else
+    PuzzleItem::paint(painter, option, widget);
+#endif
 }

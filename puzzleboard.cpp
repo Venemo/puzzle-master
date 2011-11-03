@@ -3,7 +3,8 @@
 
 PuzzleBoard::PuzzleBoard(QObject *parent) :
     QGraphicsScene(parent),
-    _originalScaleRatio(1)
+    _originalScaleRatio(1),
+    _fixedFPSTimer(0)
 {
 #if defined(HAVE_QACCELEROMETER)
     accelerometer = new QtMobility::QAccelerometer(this);
@@ -11,7 +12,7 @@ PuzzleBoard::PuzzleBoard(QObject *parent) :
 #endif
 }
 
-const QSize &PuzzleBoard::originalPixmapSize()
+const QSize &PuzzleBoard::originalPixmapSize() const
 {
     return _originalPixmapSize;
 }
@@ -21,7 +22,7 @@ void PuzzleBoard::setOriginalPixmapSize(const QSize &size)
     _originalPixmapSize = size;
 }
 
-qreal PuzzleBoard::originalScaleRatio()
+qreal PuzzleBoard::originalScaleRatio() const
 {
     return _originalScaleRatio;
 }
@@ -50,7 +51,7 @@ void PuzzleBoard::setNeighbours(int x, int y)
     }
 }
 
-PuzzleItem *PuzzleBoard::find(QPoint puzzleCoordinates)
+PuzzleItem *PuzzleBoard::find(const QPoint &puzzleCoordinates)
 {
     foreach(QGraphicsItem *gi, items())
     {
@@ -61,9 +62,8 @@ PuzzleItem *PuzzleBoard::find(QPoint puzzleCoordinates)
     return 0;
 }
 
-bool PuzzleBoard::isDropshadowActive()
+bool PuzzleBoard::isDropshadowActive() const
 {
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     foreach (QGraphicsItem *item, items())
     {
         if (dynamic_cast<QGraphicsDropShadowEffect*>(item->graphicsEffect()))
@@ -71,13 +71,11 @@ bool PuzzleBoard::isDropshadowActive()
             return true;
         }
     }
-#endif
     return false;
 }
 
 void PuzzleBoard::enableDropshadow()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     QColor c = DROPSHADOW_COLOR_DEFAULT;
     foreach (QGraphicsItem *item, items())
     {
@@ -87,20 +85,17 @@ void PuzzleBoard::enableDropshadow()
         effect->setColor(c);
         item->setGraphicsEffect(effect);
     }
-#endif
 }
 
 void PuzzleBoard::disableDropshadow()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     foreach (QGraphicsItem *item, items())
     {
         item->setGraphicsEffect(0);
     }
-#endif
 }
 
-bool PuzzleBoard::isAccelerometerActive()
+bool PuzzleBoard::isAccelerometerActive() const
 {
 #if defined(HAVE_QACCELEROMETER)
     return accelerometer->isActive();
@@ -139,4 +134,39 @@ void PuzzleBoard::disableAccelerometer()
 #if defined(HAVE_QACCELEROMETER)
     accelerometer->stop();
 #endif
+}
+
+void PuzzleBoard::enableFixedFPS()
+{
+    if (_fixedFPSTimer)
+    {
+        _fixedFPSTimer->stop();
+        _fixedFPSTimer->deleteLater();
+    }
+
+    _fixedFPSTimer = new QTimer(this);
+    _fixedFPSTimer->setInterval(20);
+
+    foreach (QGraphicsView *view, views())
+    {
+        view->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
+        connect(_fixedFPSTimer, SIGNAL(timeout()), view->viewport(), SLOT(update()));
+    }
+
+    _fixedFPSTimer->start();
+}
+
+void PuzzleBoard::disableFixedFPS()
+{
+    if (_fixedFPSTimer)
+    {
+        _fixedFPSTimer->stop();
+        _fixedFPSTimer->deleteLater();
+        _fixedFPSTimer = 0;
+    }
+
+    foreach (QGraphicsView *view, views())
+    {
+        view->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+    }
 }

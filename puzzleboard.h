@@ -2,6 +2,7 @@
 #define PUZZLEBOARD_H
 
 #include <QGraphicsScene>
+#include <QTimer>
 
 #if defined(HAVE_QACCELEROMETER)
 #include <QAccelerometer>
@@ -12,22 +13,24 @@ class PuzzleItem;
 class PuzzleBoard : public QGraphicsScene
 {
     Q_OBJECT
+
     QSize _originalPixmapSize;
     qreal _originalScaleRatio;
+    QTimer *_fixedFPSTimer;
 #if defined(HAVE_QACCELEROMETER)
     QtMobility::QAccelerometer *accelerometer;
 #endif
 
 public:
     explicit PuzzleBoard(QObject *parent = 0);
-    virtual void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols) = 0;
-    const QSize &originalPixmapSize();
+    virtual void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols, bool allowMultitouch) = 0;
+    const QSize &originalPixmapSize() const;
     void setNeighbours(int x, int y);
     void setOriginalPixmapSize(const QSize &size);
-    PuzzleItem *find(QPoint puzzleCoordinates);
-    bool isDropshadowActive();
-    bool isAccelerometerActive();
-    qreal originalScaleRatio();
+    PuzzleItem *find(const QPoint &puzzleCoordinates);
+    bool isDropshadowActive() const;
+    bool isAccelerometerActive() const;
+    qreal originalScaleRatio() const;
     void setOriginalScaleRatio(qreal value);
 
 protected:
@@ -51,6 +54,8 @@ public slots:
     void disableAccelerometer();
     virtual void disable() = 0;
     virtual void enable() = 0;
+    void enableFixedFPS();
+    void disableFixedFPS();
 
 };
 

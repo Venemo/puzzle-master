@@ -11,6 +11,11 @@ const QPoint &PuzzleItem::puzzleCoordinates() const
     return _puzzleCoordinates;
 }
 
+const QPointF &PuzzleItem::supposedPosition() const
+{
+    return _supposedPosition;
+}
+
 const QList<PuzzleItem*> &PuzzleItem::neighbours() const
 {
     return _neighbours;
@@ -19,6 +24,11 @@ const QList<PuzzleItem*> &PuzzleItem::neighbours() const
 void PuzzleItem::setPuzzleCoordinates(const QPoint &p)
 {
     _puzzleCoordinates = p;
+}
+
+void PuzzleItem::setSupposedPosition(const QPointF &p)
+{
+    _supposedPosition = p;
 }
 
 void PuzzleItem::addNeighbour(PuzzleItem *piece)
@@ -53,24 +63,21 @@ bool PuzzleItem::isNeighbourOf(const PuzzleItem *piece) const
 
 void PuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    Q_UNUSED(event);
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    QGraphicsPixmapItem::mousePressEvent(event);
     if (QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect*>(this->graphicsEffect()))
     {
         effect->setColor(DROPSHADOW_COLOR_SELECTED);
         effect->setBlurRadius(DROPSHADOW_RADIUS_SELECTED);
     }
-#endif
 }
 
 void PuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    Q_UNUSED(event);
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
+    QGraphicsPixmapItem::mouseReleaseEvent(event);
+
     if (QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect*>(this->graphicsEffect()))
     {
         effect->setColor(DROPSHADOW_COLOR_DEFAULT);
         effect->setBlurRadius(DROPSHADOW_RADIUS_DEFAULT);
     }
-#endif
 }

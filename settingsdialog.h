@@ -27,10 +27,8 @@ public:
     static void setUseOpenGl(bool value);
     static bool startInFullscreen();
     static void setStartInFullscreen(bool value);
-#if QT_VERSION >= QT_VERSION_CHECK(4, 6, 0)
     static bool useDropShadow();
     static void setUseDropShadow(bool value);
-#endif
     static QColor boardBackground();
     static void setBoardBackground(QColor value);
     static int tolerance();
