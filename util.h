@@ -8,6 +8,21 @@
 #define APP_VERSION "2.0"
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 
+#define GENPROPERTY(type, pname, name, settername, signalname) \
+    private: type pname; \
+    public: inline type name() const { return pname; } inline void settername (const type &value) { pname = value; emit signalname (); } \
+    private:
+
+#define GENPROPERTY_R(type, pname, name) \
+    private: type pname; \
+    public: inline type name() const { return pname; } \
+    private:
+
+#define GENPROPERTY_PTR(type, pname, name, settername, signalname) \
+    private: type pname; \
+    public: inline type name() { return pname; } inline void settername (type value) { pname = value; emit signalname (); } \
+    private:
+
 inline QPointF operator*(const QPoint &point, const QSize &size)
 {
     return QPointF(point.x() * size.width(), point.y() * size.height());
