@@ -417,7 +417,8 @@ void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     // Hack against the rendering artifacts when an L-shaped item is rotated.
     painter->setClipPath(shape());
     painter->setClipping(true);
-    PuzzleItem::paint(painter, option, widget);
+    QDeclarativeItem::paint(painter, option, widget);
+    painter->drawPixmap(0, 0, _pixmap);
     painter->setClipping(false);
 #else
     PuzzleItem::paint(painter, option, widget);
