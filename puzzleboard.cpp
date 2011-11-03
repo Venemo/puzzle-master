@@ -5,8 +5,8 @@
 #include "puzzleboard.h"
 #include "puzzleitem.h"
 
-PuzzleBoard::PuzzleBoard(QObject *parent) :
-    QGraphicsScene(parent),
+PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
+    QDeclarativeItem(parent),
     _originalScaleRatio(1),
     _tolerance(5),
     _rotationTolerance(10),
@@ -21,13 +21,7 @@ PuzzleBoard::PuzzleBoard(QObject *parent) :
 
 void PuzzleBoard::setNeighbours(int x, int y)
 {
-    if (items().count() != x * y)
-    {
-        qDebug() << "The Puzzle piece list was inconsistent with x and y";
-        return;
-    }
-
-    foreach(QGraphicsItem *gi, items())
+    foreach(QGraphicsItem *gi, childItems())
     {
         PuzzleItem *p = (PuzzleItem*)gi;
         if (p->puzzleCoordinates().x() != x - 1)
@@ -40,7 +34,7 @@ void PuzzleBoard::setNeighbours(int x, int y)
 
 PuzzleItem *PuzzleBoard::find(const QPoint &puzzleCoordinates)
 {
-    foreach(QGraphicsItem *gi, items())
+    foreach(QGraphicsItem *gi, childItems())
     {
         PuzzleItem *p = (PuzzleItem*)gi;
         if (p->puzzleCoordinates() == puzzleCoordinates)
@@ -51,7 +45,7 @@ PuzzleItem *PuzzleBoard::find(const QPoint &puzzleCoordinates)
 
 bool PuzzleBoard::isDropshadowActive() const
 {
-    foreach (QGraphicsItem *item, items())
+    foreach (QGraphicsItem *item, childItems())
     {
         if (dynamic_cast<QGraphicsDropShadowEffect*>(item->graphicsEffect()))
         {
@@ -64,7 +58,7 @@ bool PuzzleBoard::isDropshadowActive() const
 void PuzzleBoard::enableDropshadow()
 {
     QColor c = DROPSHADOW_COLOR_DEFAULT;
-    foreach (QGraphicsItem *item, items())
+    foreach (QGraphicsItem *item, childItems())
     {
         QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect();
         effect->setBlurRadius(DROPSHADOW_RADIUS_DEFAULT);
@@ -76,7 +70,7 @@ void PuzzleBoard::enableDropshadow()
 
 void PuzzleBoard::disableDropshadow()
 {
-    foreach (QGraphicsItem *item, items())
+    foreach (QGraphicsItem *item, childItems())
     {
         item->setGraphicsEffect(0);
     }
@@ -134,7 +128,7 @@ void PuzzleBoard::enableFixedFPS()
     _fixedFPSTimer = new QTimer(this);
     _fixedFPSTimer->setInterval(20);
 
-    foreach (QGraphicsView *view, views())
+    foreach (QGraphicsView *view, scene()->views())
     {
         view->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
         connect(_fixedFPSTimer, SIGNAL(timeout()), view->viewport(), SLOT(update()));
@@ -152,7 +146,7 @@ void PuzzleBoard::disableFixedFPS()
         _fixedFPSTimer = 0;
     }
 
-    foreach (QGraphicsView *view, views())
+    foreach (QGraphicsView *view, scene()->views())
     {
         view->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
     }
@@ -167,9 +161,7 @@ void PuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned cols, 
 
     QPixmap pixmap = image.scaled(w, h, Qt::KeepAspectRatio);
     setOriginalPixmapSize(pixmap.size());
-    //setOriginalScaleRatio(min(width() / (qreal)pixmap.width(), height() / (qreal)pixmap.height()));
     setOriginalScaleRatio(1);
-    setSceneRect(0, 0, width() / originalScaleRatio(), height() / originalScaleRatio());
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
 
@@ -189,7 +181,7 @@ void PuzzleBoard::startGame(const QPixmap &image, unsigned rows, unsigned cols, 
             p.end();
 
             // creating the piece
-            PuzzleItem *item = new PuzzleItem(px);
+            PuzzleItem *item = new PuzzleItem(px, this);
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(item->puzzleCoordinates() * _unit);
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
@@ -214,7 +206,7 @@ void PuzzleBoard::shuffle()
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
     QEasingCurve easingCurve(QEasingCurve::InExpo);
 
-    foreach (QGraphicsItem *gi, items())
+    foreach (QGraphicsItem *gi, childItems())
     {
         PuzzleItem *item = (PuzzleItem*)gi;
         QPointF newPos(randomInt(0, originalPixmapSize().width() - _unit.width()), randomInt(0, originalPixmapSize().height() - _unit.width()));
@@ -249,7 +241,7 @@ void PuzzleBoard::assemble()
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
     QEasingCurve easingCurve(QEasingCurve::OutExpo);
 
-    foreach (QGraphicsItem *gi, items())
+    foreach (QGraphicsItem *gi, childItems())
     {
         PuzzleItem *item = (PuzzleItem*)gi;
         item->disableMerge();
@@ -286,7 +278,7 @@ void PuzzleBoard::surrenderGame()
 void PuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)
 {
     Q_UNUSED(z);
-    foreach (QGraphicsItem *item, items())
+    foreach (QGraphicsItem *item, childItems())
     {
         PuzzleItem *widget = (PuzzleItem*) item;
         if (widget->canMerge())
@@ -299,7 +291,7 @@ void PuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)
 
 void PuzzleBoard::enable()
 {
-    foreach (QGraphicsItem *item, items())
+    foreach (QGraphicsItem *item, childItems())
     {
         PuzzleItem *widget = (PuzzleItem*) item;
         widget->enableMerge();
@@ -308,7 +300,7 @@ void PuzzleBoard::enable()
 
 void PuzzleBoard::disable()
 {
-    foreach (QGraphicsItem *item, items())
+    foreach (QGraphicsItem *item, childItems())
     {
         PuzzleItem *widget = (PuzzleItem*) item;
         widget->disableMerge();

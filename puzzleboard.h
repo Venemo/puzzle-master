@@ -1,7 +1,7 @@
 #ifndef PUZZLEBOARD_H
 #define PUZZLEBOARD_H
 
-#include <QGraphicsScene>
+#include <QDeclarativeItem>
 #include <QTimer>
 
 #if defined(HAVE_QACCELEROMETER)
@@ -12,7 +12,7 @@
 
 class PuzzleItem;
 
-class PuzzleBoard : public QGraphicsScene
+class PuzzleBoard : public QDeclarativeItem
 {
     Q_OBJECT
     Q_PROPERTY(bool isDropshadowActive READ isDropshadowActive NOTIFY isDropshadowActiveChanged)
@@ -36,7 +36,7 @@ class PuzzleBoard : public QGraphicsScene
 #endif
 
 public:
-    explicit PuzzleBoard(QObject *parent = 0);
+    explicit PuzzleBoard(QDeclarativeItem *parent = 0);
     virtual void startGame(const QPixmap &pixmap, unsigned rows, unsigned cols, bool allowMultitouch);
     void setNeighbours(int x, int y);
     PuzzleItem *find(const QPoint &puzzleCoordinates);

@@ -79,17 +79,17 @@ protected:
 
 inline const QSize &PuzzleItem::unit() const
 {
-    return ((PuzzleBoard*)scene())->unit();
+    return ((PuzzleBoard*)parent())->unit();
 }
 
 inline int PuzzleItem::tolerance() const
 {
-    return ((PuzzleBoard*)scene())->tolerance();
+    return ((PuzzleBoard*)parent())->tolerance();
 }
 
 inline qreal PuzzleItem::rotationTolerance() const
 {
-    return ((PuzzleBoard*)scene())->rotationTolerance();
+    return ((PuzzleBoard*)parent())->rotationTolerance();
 }
 
 #endif // PUZZLEPIECE_H
