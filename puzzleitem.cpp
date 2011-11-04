@@ -313,9 +313,7 @@ bool PuzzleItem::sceneEvent(QEvent *event)
         if (touchEvent->touchPoints().count() != _previousTouchPointCount)
         {
             // If you put one more finger onto an item, this prevents it from jumping
-            stopDrag();
-            _isDraggingWithTouch = true;
-            startDrag(midpoint);
+            _dragStart = mapToScene(midpoint) - pos();
         }
         else
         {
