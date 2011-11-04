@@ -5,6 +5,7 @@ import com.meego.extras 1.0
 PageStackWindow {
     id: appWindow
     initialPage: gamePage
+    showStatusBar: false;
 
     GamePage {
         id: gamePage

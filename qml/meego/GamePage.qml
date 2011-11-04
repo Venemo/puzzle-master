@@ -6,11 +6,12 @@ import net.venemo.puzzlemaster 2.0
 Page
 {
     id: gamePage
+    lockInLandscape: true
 
     PuzzleBoard
     {
-        width: 450
-        height: 450
+        width: 854
+        height: 480
         anchors.centerIn: parent
         id: puzzleBoard
     }
