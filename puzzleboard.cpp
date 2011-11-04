@@ -154,6 +154,12 @@ void PuzzleBoard::disableFixedFPS()
 
 void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowMultitouch)
 {
+    if (height() == 0 || height() == 0)
+    {
+        qDebug() << "The size of this item is not okay, not starting game.";
+        return;
+    }
+
     QPixmap image(imageUrl);
 
     if (image.isNull())
@@ -162,18 +168,9 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
         return;
     }
 
-    int w = min<int>(width(), image.width());
-    int h = min<int>(height(), image.height());
-
-    if (w == 0 || h == 0)
-    {
-        qDebug() << "The size of the image or the size of this item is not okay, not starting game.";
-        return;
-    }
-
     _allowMultitouch = allowMultitouch;
 
-    QPixmap pixmap = image.scaled(w, h, Qt::KeepAspectRatio);
+    QPixmap pixmap = image.scaled(width(), height(), Qt::KeepAspectRatio);
     setOriginalPixmapSize(pixmap.size());
     setOriginalScaleRatio(1);
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
