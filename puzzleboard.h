@@ -45,7 +45,7 @@ public:
     void assemble();
 
 protected:
-    virtual void accelerometerMovement(qreal x, qreal y, qreal z);
+    void accelerometerMovement(qreal x, qreal y, qreal z);
 
 signals:
     void isDropshadowActiveChanged();

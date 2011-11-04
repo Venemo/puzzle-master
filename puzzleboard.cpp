@@ -154,15 +154,7 @@ void PuzzleBoard::disableFixedFPS()
 
 void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowMultitouch)
 {
-    qDebug() << "game started!";
-
-    if (!QFile::exists(imageUrl))
-    {
-        qDebug() << "image doesn't exist, not starting game.";
-        return;
-    }
-
-    QPixmap image("qrc:/aaa.jpg");
+    QPixmap image(imageUrl);
 
     if (image.isNull())
     {
@@ -203,10 +195,11 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
             // creating the piece
             PuzzleItem *item = new PuzzleItem(px, this);
+            item->setWidth(_unit.width());
+            item->setHeight(_unit.height());
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(item->puzzleCoordinates() * _unit);
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
-            item->setZValue(i * rows + j + 1);
 
             QPointF oldPos(w0 + (i * _unit.width()),
                            h0 + (j * _unit.height()));

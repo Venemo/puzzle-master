@@ -9,8 +9,11 @@ Page
 
     PuzzleBoard
     {
+        width: 450
+        height: 450
+        anchors.centerIn: parent
         id: puzzleBoard
     }
 
-    Component.onCompleted: puzzleBoard.startGame("qrc:/aaa.jpg", 3, 3, true);
+    Component.onCompleted: puzzleBoard.startGame(":/5.jpg", 3, 3, true);
 }

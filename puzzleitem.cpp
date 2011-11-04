@@ -13,7 +13,11 @@ PuzzleItem::PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent)
       _previousRotationValue(0),
       _previousTouchPointCount(0)
 {
+    setFlag(QGraphicsItem::ItemHasNoContents, false);
+    setFlag(QGraphicsItem::ItemStacksBehindParent, false);
+    setFlag(QGraphicsItem::ItemNegativeZStacksBehindParent, false);
     setAcceptTouchEvents(true);
+    setAcceptedMouseButtons(Qt::LeftButton);
     setTransformOriginPoint(pixmap.width() / 2, pixmap.height() / 2);
 }
 
@@ -127,8 +131,10 @@ bool PuzzleItem::merge(PuzzleItem *item)
         _pixmap = pix;
         _puzzleCoordinates -= QPoint(u1, v1);
         _supposedPosition = puzzleCoordinates() * unit();
-        setPos(pos().x() - x1, pos().y() - y1);
         _dragStart += QPointF(x1, y1);
+        setPos(pos().x() - x1, pos().y() - y1);
+        setWidth(_pixmap.width());
+        setHeight(_pixmap.height());
         setCompensatedTransformOriginPoint(QPointF(pixmap().width() / 2, pixmap().height() / 2));
         item->hide();
         item->deleteLater();
@@ -366,7 +372,7 @@ void PuzzleItem::verifyPosition()
 void PuzzleItem::raise()
 {
     QGraphicsItem *maxItem = this;
-    foreach (QGraphicsItem *item, scene()->items())
+    foreach (QGraphicsItem *item, ((QDeclarativeItem*)parent())->childItems())
     {
         if (item->zValue() > maxItem->zValue())
         {
@@ -376,7 +382,7 @@ void PuzzleItem::raise()
     if (maxItem != this)
     {
         qreal max = maxItem->zValue();
-        foreach (QGraphicsItem *item, scene()->items())
+        foreach (QGraphicsItem *item, ((QDeclarativeItem*)parent())->childItems())
         {
             if (item->zValue() > this->zValue())
             {
@@ -393,7 +399,7 @@ void PuzzleItem::raise()
 
 void PuzzleItem::verifyCoveredSiblings()
 {
-    foreach (QGraphicsItem *gi, scene()->items())
+    foreach (QGraphicsItem *gi, ((QDeclarativeItem*)parent())->childItems())
     {
         PuzzleItem *item = (PuzzleItem*)gi;
         if (item != this &&
@@ -415,12 +421,13 @@ void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 {
 #if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
     // Hack against the rendering artifacts when an L-shaped item is rotated.
-    painter->setClipPath(shape());
-    painter->setClipping(true);
+    //painter->setClipPath(shape());
+    //painter->setClipping(true);
     QDeclarativeItem::paint(painter, option, widget);
     painter->drawPixmap(0, 0, _pixmap);
-    painter->setClipping(false);
+    //painter->setClipping(false);
 #else
-    PuzzleItem::paint(painter, option, widget);
+    QDeclarativeItem::paint(painter, option, widget);
+    painter->drawPixmap(0, 0, _pixmap);
 #endif
 }
