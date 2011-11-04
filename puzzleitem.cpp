@@ -177,7 +177,7 @@ void PuzzleItem::startDrag(const QPointF &p)
     if (_canMerge && !_dragging)
     {
         _dragging = true;
-        _dragStart = mapToScene(p) - pos();
+        _dragStart = mapToParent(p) - pos();
         raise();
     }
 }
@@ -194,7 +194,7 @@ void PuzzleItem::doDrag(const QPointF &position)
 {
     if (_dragging)
     {
-        setPos(mapToScene(position) - _dragStart);
+        setPos(mapToParent(position) - _dragStart);
 
         if (_canMerge)
         {
@@ -230,9 +230,9 @@ void PuzzleItem::handleRotation(const QPointF &v)
 
 void PuzzleItem::setCompensatedTransformOriginPoint(const QPointF &point)
 {
-    QPointF compensation = mapToScene(0, 0);
+    QPointF compensation = mapToParent(0, 0);
     setTransformOriginPoint(point);
-    compensation -= mapToScene(0, 0);
+    compensation -= mapToParent(0, 0);
     setPos(pos() + compensation);
     _dragStart -= compensation;
 }
@@ -313,7 +313,7 @@ bool PuzzleItem::sceneEvent(QEvent *event)
         if (touchEvent->touchPoints().count() != _previousTouchPointCount)
         {
             // If you put one more finger onto an item, this prevents it from jumping
-            _dragStart = mapToScene(midpoint) - pos();
+            _dragStart = mapToParent(midpoint) - pos();
         }
         else
         {
@@ -324,14 +324,14 @@ bool PuzzleItem::sceneEvent(QEvent *event)
         {
             // Starting rotation
             _previousRotationValue = rotation();
-            _rotationStartVector = mapToScene(touchEvent->touchPoints().at(0).pos()) - mapToScene(touchEvent->touchPoints().at(1).pos());
+            _rotationStartVector = mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos());
         }
 
         _previousTouchPointCount = touchEvent->touchPoints().count();
 
         if (touchEvent->touchPoints().count() >= 2)
         {
-            handleRotation(mapToScene(touchEvent->touchPoints().at(0).pos()) - mapToScene(touchEvent->touchPoints().at(1).pos()));
+            handleRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
         }
 
         event->accept();
@@ -343,11 +343,13 @@ bool PuzzleItem::sceneEvent(QEvent *event)
 
 void PuzzleItem::verifyPosition()
 {
-    int x = (int)pos().x();
+    QPointF p = mapToParent(0, 0);
+
+    int x = (int)p.x();
     int maxX = (int)((QDeclarativeItem*)parent())->width() - (pixmap().width() / 2);
     int minX = - pixmap().width() + (pixmap().width() / 2);
 
-    int y = (int)pos().y();
+    int y = (int)p.y();
     int maxY = (int)((QDeclarativeItem*)parent())->height() - (pixmap().height()  / 2);
     int minY = - pixmap().height() + (pixmap().height() / 2);
 
