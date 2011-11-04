@@ -275,17 +275,10 @@ bool PuzzleItem::sceneEvent(QEvent *event)
 
     if (event->type() == QEvent::TouchBegin)
     {
+        // There is exactly one touch point now
+        _dragging = false;
         _isDraggingWithTouch = true;
-
-        const QTouchEvent::TouchPoint *relevantTouchPoint = 0;
-
-        // Finding the new touch point - the one that is now pressed
-        foreach (const QTouchEvent::TouchPoint &touchPoint, touchEvent->touchPoints())
-            if (touchPoint.state() == Qt::TouchPointPressed)
-                relevantTouchPoint = &touchPoint;
-
-        if (relevantTouchPoint && !_dragging)
-            startDrag(relevantTouchPoint->pos());
+        startDrag(touchEvent->touchPoints().at(0).pos());
 
         event->accept();
         return true;
