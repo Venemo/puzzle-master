@@ -14,7 +14,8 @@ VERSION = 2.0
 SOURCES += \
     main.cpp\
     puzzleitem.cpp \
-    puzzleboard.cpp
+    puzzleboard.cpp \
+    qtregiontopath.cpp
 
 HEADERS += \
     util.h \
@@ -79,6 +80,7 @@ win32 {
     RC_FILE = puzzle-master.rc
     OTHER_FILES += puzzle-master.rc
 }
+
 
 
 

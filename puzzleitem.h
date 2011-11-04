@@ -23,7 +23,7 @@ private:
     GENPROPERTY_R(QList<PuzzleItem*>, _neighbours, neighbours)
     Q_PROPERTY(QList<PuzzleItem*> neighbours READ neighbours)
     GENPROPERTY_R(QPixmap, _pixmap, pixmap)
-    Q_PROPERTY(QPixmap pixmap READ pixmap)
+    Q_PROPERTY(QPixmap pixmap READ pixmap WRITE setPixmap NOTIFY pixmapChanged)
     GENPROPERTY(bool, _canMerge, canMerge, setCanMerge, canMergeChanged)
     Q_PROPERTY(bool canMerge READ canMerge WRITE setCanMerge NOTIFY canMergeChanged)
     GENPROPERTY(qreal, _weight, weight, setWeight, weightChanged)
@@ -35,6 +35,7 @@ private:
     bool _isDraggingWithTouch;
     double _previousRotationValue;
     int _previousTouchPointCount;
+    QPainterPath _shape;
 
 public:
     explicit PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent = 0);
@@ -52,12 +53,15 @@ public:
     bool isNeighbourOf(const PuzzleItem *piece) const;public slots:
     void enableMerge();
     void disableMerge();
+    void setPixmap(const QPixmap &pixmap);
+    virtual QPainterPath shape() const;
 
 signals:
     void puzzleCoordinatesChanged();
     void supposedPositionChanged();
     void canMergeChanged();
     void weightChanged();
+    void pixmapChanged();
 
     void noNeighbours();
 

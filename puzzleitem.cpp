@@ -3,9 +3,10 @@
 #include <QtDeclarative>
 #include "puzzleitem.h"
 
+extern QPainterPath qt_regionToPath(const QRegion &region);
+
 PuzzleItem::PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent)
     : QDeclarativeItem(parent),
-      _pixmap(pixmap),
       _canMerge(false),
       _weight(randomInt(100, 950) / 1000.0),
       _dragging(false),
@@ -13,9 +14,11 @@ PuzzleItem::PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent)
       _previousRotationValue(0),
       _previousTouchPointCount(0)
 {
+    setPixmap(pixmap);
     setFlag(QGraphicsItem::ItemHasNoContents, false);
     setFlag(QGraphicsItem::ItemStacksBehindParent, false);
     setFlag(QGraphicsItem::ItemNegativeZStacksBehindParent, false);
+    setFlag(QGraphicsItem::ItemClipsToShape, true);
     setAcceptTouchEvents(true);
     setAcceptedMouseButtons(Qt::LeftButton);
     setTransformOriginPoint(pixmap.width() / 2, pixmap.height() / 2);
@@ -128,10 +131,10 @@ bool PuzzleItem::merge(PuzzleItem *item)
         p.drawPixmap(x2, y2, item->pixmap());
         p.end();
 
-        _pixmap = pix;
         _puzzleCoordinates -= QPoint(u1, v1);
         _supposedPosition = puzzleCoordinates() * unit();
         _dragStart += QPointF(x1, y1);
+        setPixmap(pix);
         setPos(pos().x() - x1, pos().y() - y1);
         setWidth(_pixmap.width());
         setHeight(_pixmap.height());
@@ -395,17 +398,26 @@ void PuzzleItem::verifyCoveredSiblings()
     }
 }
 
+void PuzzleItem::setPixmap(const QPixmap &pixmap)
+{
+    _pixmap = pixmap;
+    QBitmap mask = _pixmap.mask();
+    _shape = qt_regionToPath(QRegion(mask));
+}
+
 void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 #if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
     // Hack against the rendering artifacts when an L-shaped item is rotated.
-    //painter->setClipPath(shape());
-    //painter->setClipping(true);
     QDeclarativeItem::paint(painter, option, widget);
     painter->drawPixmap(0, 0, _pixmap);
-    //painter->setClipping(false);
 #else
     QDeclarativeItem::paint(painter, option, widget);
     painter->drawPixmap(0, 0, _pixmap);
 #endif
+}
+
+QPainterPath PuzzleItem::shape() const
+{
+    return _shape;
 }
