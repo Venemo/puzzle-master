@@ -144,7 +144,7 @@ bool PuzzleItem::merge(PuzzleItem *item)
         {
             _dragging = false;
             _canMerge = false;
-            QPointF newPos((scene()->width() - pixmap().width()) / 2, (scene()->height() - pixmap().height()) / 2);
+            QPointF newPos((((QDeclarativeItem*)parent())->width() - pixmap().width()) / 2, (((QDeclarativeItem*)parent())->height() - pixmap().height()) / 2);
 
             QParallelAnimationGroup *group = new QParallelAnimationGroup(this);
             QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", group);
@@ -343,11 +343,11 @@ bool PuzzleItem::sceneEvent(QEvent *event)
 void PuzzleItem::verifyPosition()
 {
     int x = (int)pos().x();
-    int maxX = (int)scene()->width() - (pixmap().width() / 2);
+    int maxX = (int)((QDeclarativeItem*)parent())->width() - (pixmap().width() / 2);
     int minX = - pixmap().width() + (pixmap().width() / 2);
 
     int y = (int)pos().y();
-    int maxY = (int)scene()->height() - (pixmap().height()  / 2);
+    int maxY = (int)((QDeclarativeItem*)parent())->height() - (pixmap().height()  / 2);
     int minY = - pixmap().height() + (pixmap().height() / 2);
 
     if (!(x < maxX && x > (minX) && y < maxY && y > (minY)))
@@ -371,30 +371,9 @@ void PuzzleItem::verifyPosition()
 
 void PuzzleItem::raise()
 {
-    QGraphicsItem *maxItem = this;
     foreach (QGraphicsItem *item, ((QDeclarativeItem*)parent())->childItems())
-    {
-        if (item->zValue() > maxItem->zValue())
-        {
-            maxItem = item;
-        }
-    }
-    if (maxItem != this)
-    {
-        qreal max = maxItem->zValue();
-        foreach (QGraphicsItem *item, ((QDeclarativeItem*)parent())->childItems())
-        {
-            if (item->zValue() > this->zValue())
-            {
-                item->setZValue(item->zValue() - 1);
-            }
-            else if (item != this && item->zValue() == this->zValue())
-            {
-                item->stackBefore(this);
-            }
-        }
-        setZValue(max);
-    }
+        if (item != this)
+            item->stackBefore(this);
 }
 
 void PuzzleItem::verifyCoveredSiblings()
@@ -403,7 +382,6 @@ void PuzzleItem::verifyCoveredSiblings()
     {
         PuzzleItem *item = (PuzzleItem*)gi;
         if (item != this &&
-                item->zValue() < zValue() &&
                 item->pos().x() >= pos().x() &&
                 item->pos().y() >= pos().y() &&
                 item->pos().x() + item->pixmap().width() < pos().x() + pixmap().width() &&
