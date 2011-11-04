@@ -286,9 +286,7 @@ bool PuzzleItem::sceneEvent(QEvent *event)
     else if (event->type() == QEvent::TouchEnd)
     {
         // There is only one touch point which is now released
-        if (touchEvent->touchPoints().count() == 1)
-            stopDrag();
-
+        stopDrag();
         event->accept();
         return true;
     }
