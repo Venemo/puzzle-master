@@ -161,14 +161,15 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
         qDebug() << "image is null, not starting game.";
         return;
     }
-    if (image.size().width() == 0 || image.size().height() == 0)
-    {
-        qDebug() << "image's size is 0, not starting game";
-        return;
-    }
 
     int w = min<int>(width(), image.width());
     int h = min<int>(height(), image.height());
+
+    if (w == 0 || h == 0)
+    {
+        qDebug() << "The size of the image or the size of this item is not okay, not starting game.";
+        return;
+    }
 
     _allowMultitouch = allowMultitouch;
 
