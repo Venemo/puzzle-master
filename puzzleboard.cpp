@@ -179,12 +179,17 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     qreal w0 = (width() - pixmap.width()) / 2;
     qreal h0 = (height() - pixmap.height()) / 2;
 
+    qreal thingySize = min<qreal>(_unit.width() / 6.0, _unit.height() / 6.0);
+    qreal thingyOffset = thingySize * 2.0 / 3.0;
+    int thingyTolerance = 2;
+
     for (unsigned i = 0; i < cols; i++)
     {
         for (unsigned j = 0; j < rows; j++)
         {
+
             // Creating the pixmap for the piece
-            QPixmap px(_unit.width() * (4.0 / 3.0) + 20, _unit.height() * (4.0 / 3.0) + 20);
+            QPixmap px(_unit.width() + thingySize + thingyOffset + thingyTolerance, _unit.height() + thingySize + thingyOffset + thingyTolerance);
             px.fill(Qt::transparent);
             p.begin(&px);
             p.setRenderHint(QPainter::HighQualityAntialiasing);
@@ -194,17 +199,17 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             QPainterPath clip1;
             clip1.addRect(0, 0, _unit.width(), _unit.height());
             if (i > 0)
-                clip1.addEllipse(QPointF(20, _unit.height() / 2.0), 30, 30);
+                clip1.addEllipse(QPointF(thingyOffset, _unit.height() / 2.0), thingySize, thingySize);
             if (j > 0)
-                clip1.addEllipse(QPointF(_unit.width() / 2.0, 20), 30, 30);
+                clip1.addEllipse(QPointF(_unit.width() / 2.0, thingyOffset), thingySize, thingySize);
 
             // The right side thingy
             QPainterPath clip2;
-            clip2.addEllipse(QPointF(_unit.width() + 20, _unit.height() / 2.0), 30, 30);
+            clip2.addEllipse(QPointF(_unit.width() + thingyOffset, _unit.height() / 2.0), thingySize + thingyTolerance, thingySize + thingyTolerance);
 
             // The bottom side thingy
             QPainterPath clip3;
-            clip3.addEllipse(QPointF(_unit.width() / 2.0, _unit.height() + 20), 30, 30);
+            clip3.addEllipse(QPointF(_unit.width() / 2.0, _unit.height() + thingyOffset), thingySize + thingyTolerance, thingySize + thingyTolerance);
 
             QPainterPath finalClip = clip1.united(clip2).united(clip3);
             p.setClipPath(finalClip);
