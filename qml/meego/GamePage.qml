@@ -6,7 +6,7 @@ import net.venemo.puzzlemaster 2.0
 Page
 {
     id: gamePage
-    lockInLandscape: true
+    orientationLock: PageOrientation.LockLandscape
 
     PuzzleBoard
     {
@@ -16,5 +16,10 @@ Page
         id: puzzleBoard
     }
 
-    Component.onCompleted: puzzleBoard.startGame(":/image5.jpg", 3, 3, true);
+    Component.onCompleted:
+    {
+        puzzleBoard.tolerance = 10;
+        puzzleBoard.rotationTolerance = 15;
+        puzzleBoard.startGame(":/image5.jpg", 3, 3, true);
+    }
 }
