@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/other/AppWindow.qml</file>
+    </qresource>
+</RCC>

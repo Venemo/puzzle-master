@@ -2,6 +2,7 @@
 #include <QtDeclarative>
 #include <QSettings>
 #include <QLibraryInfo>
+#include <QGLWidget>
 
 #include "util.h"
 #include "puzzleboard.h"
@@ -33,11 +34,13 @@ int main(int argc, char *argv[])
     settings = new QSettings();
 
     qmlRegisterType<PuzzleBoard>("net.venemo.puzzlemaster", 2, 0, "PuzzleBoard");
-    //qmlRegisterUncreatableType<PuzzleItem>("net.venemo.puzzlemaster", 2, 0, "PuzzleItem", "This item will be created progmatically");
 
+    QGLWidget glWidget;
     QDeclarativeView view;
     QObject::connect(view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
-    view.setSource(QUrl("qrc:/qml/meego/AppWindow.qml"));
+
+    view.setViewport(&glWidget);
+    view.setSource(QUrl("qrc:/qml/other/AppWindow.qml"));
     view.showFullScreen();
 
     return app.exec();

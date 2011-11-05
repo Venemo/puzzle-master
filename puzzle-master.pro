@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui declarative
+QT += core gui declarative opengl
 
 TARGET = puzzle-master
 TEMPLATE = app
@@ -24,7 +24,8 @@ HEADERS += \
 
 RESOURCES += \
     resources.qrc \
-    meegoGui.qrc
+    meegoGui.qrc \
+    otherGui.qrc
 
 TRANSLATIONS += \
     translations/puzzle-master_hu_HU.ts
@@ -33,7 +34,8 @@ OTHER_FILES += \
     data/about.txt \
     qml/meego/AppWindow.qml \
     qml/meego/NewGamePage.qml \
-    qml/meego/GamePage.qml
+    qml/meego/GamePage.qml \
+    qml/other/AppWindow.qml
 
 unix {
     INSTALLS += target iconfile desktopfile
@@ -80,6 +82,8 @@ win32 {
     RC_FILE = puzzle-master.rc
     OTHER_FILES += puzzle-master.rc
 }
+
+
 
 
 
