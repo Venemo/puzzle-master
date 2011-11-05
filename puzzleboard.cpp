@@ -183,12 +183,33 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     {
         for (unsigned j = 0; j < rows; j++)
         {
-            // creating the pixmap for the piece
-            QPixmap px(_unit.width(), _unit.height());
+            // Creating the pixmap for the piece
+            QPixmap px(_unit.width() * (4.0 / 3.0) + 20, _unit.height() * (4.0 / 3.0) + 20);
             px.fill(Qt::transparent);
             p.begin(&px);
             p.setRenderHint(QPainter::HighQualityAntialiasing);
-            p.drawPixmap(0, 0, pixmap, i * _unit.width(), j * _unit.height(), _unit.width(), _unit.height());
+            p.setClipping(true);
+
+            // The rectangle
+            QPainterPath clip1;
+            clip1.addRect(0, 0, _unit.width(), _unit.height());
+            if (i > 0)
+                clip1.addEllipse(QPointF(20, _unit.height() / 2.0), 30, 30);
+            if (j > 0)
+                clip1.addEllipse(QPointF(_unit.width() / 2.0, 20), 30, 30);
+
+            // The right side thingy
+            QPainterPath clip2;
+            clip2.addEllipse(QPointF(_unit.width() + 20, _unit.height() / 2.0), 30, 30);
+
+            // The bottom side thingy
+            QPainterPath clip3;
+            clip3.addEllipse(QPointF(_unit.width() / 2.0, _unit.height() + 20), 30, 30);
+
+            QPainterPath finalClip = clip1.united(clip2).united(clip3);
+            p.setClipPath(finalClip);
+
+            p.drawPixmap(0, 0, pixmap, i * _unit.width(), j * _unit.height(), _unit.width() * 2, _unit.height() * 2);
             p.end();
 
             // creating the piece
@@ -197,6 +218,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setHeight(_unit.height());
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(item->puzzleCoordinates() * _unit);
+            item->setShape(finalClip);
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
 
             QPointF oldPos(w0 + (i * _unit.width()),

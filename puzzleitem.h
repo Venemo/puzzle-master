@@ -22,12 +22,13 @@ private:
     Q_PROPERTY(QPointF supposedPosition READ supposedPosition WRITE setSupposedPosition NOTIFY supposedPositionChanged)
     GENPROPERTY_R(QList<PuzzleItem*>, _neighbours, neighbours)
     Q_PROPERTY(QList<PuzzleItem*> neighbours READ neighbours)
-    GENPROPERTY_R(QPixmap, _pixmap, pixmap)
+    GENPROPERTY(QPixmap, _pixmap, pixmap, setPixmap, pixmapChanged)
     Q_PROPERTY(QPixmap pixmap READ pixmap WRITE setPixmap NOTIFY pixmapChanged)
     GENPROPERTY(bool, _canMerge, canMerge, setCanMerge, canMergeChanged)
     Q_PROPERTY(bool canMerge READ canMerge WRITE setCanMerge NOTIFY canMergeChanged)
     GENPROPERTY(qreal, _weight, weight, setWeight, weightChanged)
     Q_PROPERTY(qreal weight READ weight WRITE setWeight NOTIFY weightChanged)
+    Q_PROPERTY(QPainterPath shape READ shape WRITE setShape NOTIFY shapeChanged)
 
     QPointF _dragStart;
     QPointF _rotationStartVector;
@@ -53,8 +54,8 @@ public:
     bool isNeighbourOf(const PuzzleItem *piece) const;public slots:
     void enableMerge();
     void disableMerge();
-    void setPixmap(const QPixmap &pixmap);
     virtual QPainterPath shape() const;
+    inline void setShape(const QPainterPath &shape) { _shape = shape; }
 
 signals:
     void puzzleCoordinatesChanged();
@@ -62,6 +63,7 @@ signals:
     void canMergeChanged();
     void weightChanged();
     void pixmapChanged();
+    void shapeChanged();
 
     void noNeighbours();
 

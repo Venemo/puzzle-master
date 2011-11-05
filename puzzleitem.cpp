@@ -135,6 +135,7 @@ bool PuzzleItem::merge(PuzzleItem *item)
         _supposedPosition = puzzleCoordinates() * unit();
         _dragStart += QPointF(x1, y1);
         setPixmap(pix);
+        setShape(_shape.united(item->shape().translated(x2, y2)));
         setPos(pos().x() - x1, pos().y() - y1);
         setWidth(_pixmap.width());
         setHeight(_pixmap.height());
@@ -179,6 +180,7 @@ void PuzzleItem::startDrag(const QPointF &p)
         _dragging = true;
         _dragStart = mapToParent(p) - pos();
         raise();
+        emphasise();
     }
 }
 
@@ -186,8 +188,9 @@ void PuzzleItem::stopDrag()
 {
     _dragging = false;
     _isDraggingWithTouch = false;
-    verifyPosition();
-    verifyCoveredSiblings();
+    //verifyPosition();
+    //verifyCoveredSiblings();
+    deEmphasise();
 }
 
 void PuzzleItem::doDrag(const QPointF &position)
@@ -387,13 +390,6 @@ void PuzzleItem::verifyCoveredSiblings()
             break;
         }
     }
-}
-
-void PuzzleItem::setPixmap(const QPixmap &pixmap)
-{
-    _pixmap = pixmap;
-    QBitmap mask = _pixmap.mask();
-    _shape = qt_regionToPath(QRegion(mask));
 }
 
 void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
