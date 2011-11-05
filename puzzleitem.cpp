@@ -135,7 +135,7 @@ bool PuzzleItem::merge(PuzzleItem *item)
         _supposedPosition = puzzleCoordinates() * unit();
         _dragStart += QPointF(x1, y1);
         setPixmap(pix);
-        setShape(_shape.united(item->shape().translated(x2, y2)));
+        setShape(_shape.translated(x1, y1).united(item->shape().translated(x2, y2)));
         setPos(pos().x() - x1, pos().y() - y1);
         setWidth(_pixmap.width());
         setHeight(_pixmap.height());
