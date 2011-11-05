@@ -1,4 +1,4 @@
-import QtQuick 1.0
+import QtQuick 1.1
 import com.nokia.meego 1.0
 import com.meego.extras 1.0
 import net.venemo.puzzlemaster 2.0
@@ -18,7 +18,6 @@ Page
             height: 480
             anchors.centerIn: parent
             id: puzzleBoard
-            z: 100
         }
 
         Component.onCompleted:

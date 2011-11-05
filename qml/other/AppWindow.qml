@@ -15,8 +15,8 @@ Rectangle {
 
     Component.onCompleted:
     {
-        puzzleBoard.tolerance = 12;
-        puzzleBoard.rotationTolerance = 17;
+        puzzleBoard.tolerance = 15;
+        puzzleBoard.rotationTolerance = 20;
         puzzleBoard.startGame(":/image5.jpg", 3, 3, true);
     }
 }
