@@ -17,12 +17,9 @@ class PuzzleBoard : public QDeclarativeItem
     Q_OBJECT
     Q_PROPERTY(bool isDropshadowActive READ isDropshadowActive NOTIFY isDropshadowActiveChanged)
     Q_PROPERTY(bool isAccelerometerActive READ isAccelerometerActive NOTIFY isAccelerometerActiveChanged)
-    GENPROPERTY_F(QSize, _originalPixmapSize, originalPixmapSize, setOriginalPixmapSize, originalPixmapSizeChanged)
-    Q_PROPERTY(QSize originalPixmapSize READ originalPixmapSize WRITE setOriginalPixmapSize NOTIFY originalPixmapSizeChanged)
-    GENPROPERTY_F(qreal, _originalScaleRatio, originalScaleRatio, setOriginalScaleRatio, originalScaleRatioChanged)
-    Q_PROPERTY(qreal originalScaleRatio READ originalScaleRatio WRITE setOriginalScaleRatio NOTIFY originalScaleRatioChanged)
+    GENPROPERTY_R(QSize, _originalPixmapSize, originalPixmapSize)
+    GENPROPERTY_R(qreal, _originalScaleRatio, originalScaleRatio)
     GENPROPERTY_R(QSize, _unit, unit)
-    Q_PROPERTY(QSize unit READ unit NOTIFY unitChanged)
     GENPROPERTY_F(int, _tolerance, tolerance, setTolerance, toleranceChanged)
     Q_PROPERTY(int tolerance READ tolerance WRITE setTolerance NOTIFY toleranceChanged)
     GENPROPERTY_F(int, _rotationTolerance, rotationTolerance, setRotationTolerance, rotationToleranceChanged)
@@ -50,9 +47,6 @@ protected:
 signals:
     void isDropshadowActiveChanged();
     void isAccelerometerActiveChanged();
-    void originalPixmapSizeChanged();
-    void originalScaleRatioChanged();
-    void unitChanged();
     void toleranceChanged();
     void rotationToleranceChanged();
     void allowMultitouchChanged();

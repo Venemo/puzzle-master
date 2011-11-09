@@ -171,8 +171,8 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     _allowMultitouch = allowMultitouch;
 
     QPixmap pixmap = image.scaled(width(), height(), Qt::KeepAspectRatio);
-    setOriginalPixmapSize(pixmap.size());
-    setOriginalScaleRatio(1);
+    _originalPixmapSize = pixmap.size();
+    _originalScaleRatio = 1;
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
 
