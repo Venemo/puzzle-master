@@ -396,14 +396,7 @@ void PuzzleItem::verifyCoveredSiblings()
 
 void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-#if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
-    // Hack against the rendering artifacts when an L-shaped item is rotated.
-    QDeclarativeItem::paint(painter, option, widget);
     painter->drawPixmap(0, 0, _pixmap);
-#else
-    QDeclarativeItem::paint(painter, option, widget);
-    painter->drawPixmap(0, 0, _pixmap);
-#endif
 }
 
 QPainterPath PuzzleItem::shape() const
