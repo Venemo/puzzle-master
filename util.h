@@ -8,16 +8,24 @@
 #define APP_VERSION "2.0"
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 
-#define GENPROPERTY(type, pname, name, settername, signalname) \
+// Simple property
+#define GENPROPERTY_S(type, pname, name, settername) \
+    private: type pname; \
+    public: inline const type &name() const { return pname; } inline void settername (const type &value) { pname = value; } \
+    private:
+// "Full" property with signal
+#define GENPROPERTY_F(type, pname, name, settername, signalname) \
     private: type pname; \
     public: inline const type &name() const { return pname; } inline void settername (const type &value) { pname = value; emit signalname (); } \
     private:
 
+// Read-only property
 #define GENPROPERTY_R(type, pname, name) \
     private: type pname; \
     public: inline const type &name() const { return pname; } \
     private:
 
+// Property which returns a pointer
 #define GENPROPERTY_PTR(type, pname, name, settername, signalname) \
     private: type pname; \
     public: inline type name() { return pname; } inline void settername (type value) { pname = value; emit signalname (); } \

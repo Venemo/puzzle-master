@@ -16,19 +16,12 @@ class PuzzleItem : public QDeclarativeItem
 {
 private:
     Q_OBJECT
-    GENPROPERTY(QPoint, _puzzleCoordinates, puzzleCoordinates, setPuzzleCoordinates, puzzleCoordinatesChanged)
-    Q_PROPERTY(QPoint puzzleCoordinates READ puzzleCoordinates WRITE setPuzzleCoordinates NOTIFY puzzleCoordinatesChanged)
-    GENPROPERTY(QPointF, _supposedPosition, supposedPosition, setSupposedPosition, supposedPositionChanged)
-    Q_PROPERTY(QPointF supposedPosition READ supposedPosition WRITE setSupposedPosition NOTIFY supposedPositionChanged)
+    GENPROPERTY_S(QPoint, _puzzleCoordinates, puzzleCoordinates, setPuzzleCoordinates)
+    GENPROPERTY_S(QPointF, _supposedPosition, supposedPosition, setSupposedPosition)
     GENPROPERTY_R(QList<PuzzleItem*>, _neighbours, neighbours)
-    Q_PROPERTY(QList<PuzzleItem*> neighbours READ neighbours)
-    GENPROPERTY(QPixmap, _pixmap, pixmap, setPixmap, pixmapChanged)
-    Q_PROPERTY(QPixmap pixmap READ pixmap WRITE setPixmap NOTIFY pixmapChanged)
-    GENPROPERTY(bool, _canMerge, canMerge, setCanMerge, canMergeChanged)
-    Q_PROPERTY(bool canMerge READ canMerge WRITE setCanMerge NOTIFY canMergeChanged)
-    GENPROPERTY(qreal, _weight, weight, setWeight, weightChanged)
-    Q_PROPERTY(qreal weight READ weight WRITE setWeight NOTIFY weightChanged)
-    Q_PROPERTY(QPainterPath shape READ shape WRITE setShape NOTIFY shapeChanged)
+    GENPROPERTY_S(QPixmap, _pixmap, pixmap, setPixmap)
+    GENPROPERTY_S(bool, _canMerge, canMerge, setCanMerge)
+    GENPROPERTY_S(qreal, _weight, weight, setWeight)
 
     QPointF _dragStart;
     QPointF _rotationStartVector;
@@ -40,31 +33,24 @@ private:
 
 public:
     explicit PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent = 0);
-
-    bool merge(PuzzleItem *item);
     inline int tolerance() const;
     inline qreal rotationTolerance() const;
     inline const QSize &unit() const;
+    virtual QPainterPath shape() const;
+    inline void setShape(const QPainterPath &shape) { _shape = shape; }
+    bool merge(PuzzleItem *item);
     void raise();
     void verifyPosition();
     void verifyCoveredSiblings();
-
     void addNeighbour(PuzzleItem *piece);
     void removeNeighbour(PuzzleItem *piece);
-    bool isNeighbourOf(const PuzzleItem *piece) const;public slots:
+    bool isNeighbourOf(const PuzzleItem *piece) const;
+
+public slots:
     void enableMerge();
     void disableMerge();
-    virtual QPainterPath shape() const;
-    inline void setShape(const QPainterPath &shape) { _shape = shape; }
 
 signals:
-    void puzzleCoordinatesChanged();
-    void supposedPositionChanged();
-    void canMergeChanged();
-    void weightChanged();
-    void pixmapChanged();
-    void shapeChanged();
-
     void noNeighbours();
 
 protected:
