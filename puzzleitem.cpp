@@ -201,7 +201,6 @@ void PuzzleItem::stopDrag()
     _dragging = false;
     _isDraggingWithTouch = false;
     //verifyPosition();
-    //verifyCoveredSiblings();
     deEmphasise();
 }
 
@@ -383,25 +382,6 @@ void PuzzleItem::raise()
     foreach (QGraphicsItem *item, ((QDeclarativeItem*)parent())->childItems())
         if (item != this)
             item->stackBefore(this);
-}
-
-void PuzzleItem::verifyCoveredSiblings()
-{
-    foreach (QGraphicsItem *gi, ((QDeclarativeItem*)parent())->childItems())
-    {
-        PuzzleItem *item = (PuzzleItem*)gi;
-        if (item != this &&
-                item->pos().x() >= pos().x() &&
-                item->pos().y() >= pos().y() &&
-                item->pos().x() + item->pixmap().width() < pos().x() + pixmap().width() &&
-                item->pos().y() + item->pixmap().height() < pos().y() + pixmap().height() &&
-                item->pixmap().width() < pixmap().width() &&
-                item->pixmap().height() < pixmap().height())
-        {
-            item->raise();
-            break;
-        }
-    }
 }
 
 void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

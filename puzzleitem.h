@@ -42,7 +42,6 @@ public:
     bool merge(PuzzleItem *item, const QPointF &dragPosition);
     void raise();
     void verifyPosition();
-    void verifyCoveredSiblings();
     void addNeighbour(PuzzleItem *piece);
     void removeNeighbour(PuzzleItem *piece);
     bool isNeighbourOf(const PuzzleItem *piece) const;
