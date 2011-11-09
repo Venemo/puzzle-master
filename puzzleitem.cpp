@@ -53,24 +53,6 @@ bool PuzzleItem::isNeighbourOf(const PuzzleItem *piece) const
     return false;
 }
 
-void PuzzleItem::emphasise()
-{
-    if (QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect*>(this->graphicsEffect()))
-    {
-        effect->setColor(DROPSHADOW_COLOR_SELECTED);
-        effect->setBlurRadius(DROPSHADOW_RADIUS_SELECTED);
-    }
-}
-
-void PuzzleItem::deEmphasise()
-{
-    if (QGraphicsDropShadowEffect *effect = qobject_cast<QGraphicsDropShadowEffect*>(this->graphicsEffect()))
-    {
-        effect->setColor(DROPSHADOW_COLOR_DEFAULT);
-        effect->setBlurRadius(DROPSHADOW_RADIUS_DEFAULT);
-    }
-}
-
 void PuzzleItem::enableMerge()
 {
     setCanMerge(true);
@@ -192,7 +174,6 @@ void PuzzleItem::startDrag(const QPointF &p)
         _dragging = true;
         _dragStart = mapToParent(p) - pos();
         raise();
-        emphasise();
     }
 }
 
@@ -201,7 +182,6 @@ void PuzzleItem::stopDrag()
     _dragging = false;
     _isDraggingWithTouch = false;
     //verifyPosition();
-    deEmphasise();
 }
 
 void PuzzleItem::doDrag(const QPointF &position)

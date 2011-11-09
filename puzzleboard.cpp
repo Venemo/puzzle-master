@@ -43,39 +43,6 @@ PuzzleItem *PuzzleBoard::find(const QPoint &puzzleCoordinates)
     return 0;
 }
 
-bool PuzzleBoard::isDropshadowActive() const
-{
-    foreach (QGraphicsItem *item, childItems())
-    {
-        if (dynamic_cast<QGraphicsDropShadowEffect*>(item->graphicsEffect()))
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-void PuzzleBoard::enableDropshadow()
-{
-    QColor c = DROPSHADOW_COLOR_DEFAULT;
-    foreach (QGraphicsItem *item, childItems())
-    {
-        QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect();
-        effect->setBlurRadius(DROPSHADOW_RADIUS_DEFAULT);
-        effect->setOffset(0);
-        effect->setColor(c);
-        item->setGraphicsEffect(effect);
-    }
-}
-
-void PuzzleBoard::disableDropshadow()
-{
-    foreach (QGraphicsItem *item, childItems())
-    {
-        item->setGraphicsEffect(0);
-    }
-}
-
 bool PuzzleBoard::isAccelerometerActive() const
 {
 #if defined(HAVE_QACCELEROMETER)

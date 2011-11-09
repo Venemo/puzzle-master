@@ -59,8 +59,6 @@ protected:
     void doDrag(const QPointF &pos);
     void handleRotation(const QPointF &vector);
     void setCompensatedTransformOriginPoint(const QPointF &point);
-    void emphasise();
-    void deEmphasise();
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *ev);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *ev);

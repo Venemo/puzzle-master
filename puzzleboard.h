@@ -15,7 +15,6 @@ class PuzzleItem;
 class PuzzleBoard : public QDeclarativeItem
 {
     Q_OBJECT
-    Q_PROPERTY(bool isDropshadowActive READ isDropshadowActive NOTIFY isDropshadowActiveChanged)
     Q_PROPERTY(bool isAccelerometerActive READ isAccelerometerActive NOTIFY isAccelerometerActiveChanged)
     GENPROPERTY_R(QSize, _originalPixmapSize, originalPixmapSize)
     GENPROPERTY_R(qreal, _originalScaleRatio, originalScaleRatio)
@@ -37,7 +36,6 @@ public:
     Q_INVOKABLE void startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowMultitouch);
     void setNeighbours(int x, int y);
     PuzzleItem *find(const QPoint &puzzleCoordinates);
-    bool isDropshadowActive() const;
     bool isAccelerometerActive() const;
     void assemble();
 
@@ -45,7 +43,6 @@ protected:
     void accelerometerMovement(qreal x, qreal y, qreal z);
 
 signals:
-    void isDropshadowActiveChanged();
     void isAccelerometerActiveChanged();
     void toleranceChanged();
     void rotationToleranceChanged();
@@ -64,8 +61,6 @@ private slots:
 
 public slots:
     Q_INVOKABLE void surrenderGame();
-    Q_INVOKABLE void enableDropshadow();
-    Q_INVOKABLE void disableDropshadow();
     Q_INVOKABLE void enableAccelerometer();
     Q_INVOKABLE void disableAccelerometer();
     Q_INVOKABLE void disable();
