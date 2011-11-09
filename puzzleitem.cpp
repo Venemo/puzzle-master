@@ -136,7 +136,7 @@ bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
         _puzzleCoordinates -= QPoint(u1, v1);
         _supposedPosition = QPointF(min<qreal>(item->supposedPosition().x(), supposedPosition().x()), min<qreal>(item->supposedPosition().y(), supposedPosition().y()));
         setPixmap(pix);
-        setShape(_shape.translated(x1, y1).united(item->shape().translated(x2, y2)));
+        setShape(_shape.translated(x1, y1).united(item->shape().translated(x2, y2)).simplified());
         setWidth(_pixmap.width());
         setHeight(_pixmap.height());
         setPos(pos() + old00 - mapToParent(x1, y1));
@@ -396,6 +396,9 @@ void PuzzleItem::verifyCoveredSiblings()
 
 void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
+
     painter->drawPixmap(0, 0, _pixmap);
 }
 
