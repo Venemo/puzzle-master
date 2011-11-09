@@ -195,7 +195,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setWidth(_unit.width());
             item->setHeight(_unit.height());
             item->setPuzzleCoordinates(QPoint(i, j));
-            item->setSupposedPosition(item->puzzleCoordinates() * _unit);
+            item->setSupposedPosition(QPointF(item->puzzleCoordinates().x() * _unit.width(), item->puzzleCoordinates().y() * _unit.height()));
             item->setShape(finalClip);
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
 

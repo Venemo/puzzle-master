@@ -31,11 +31,6 @@
     public: inline type name() { return pname; } inline void settername (type value) { pname = value; emit signalname (); } \
     private:
 
-inline QPointF operator*(const QPoint &point, const QSize &size)
-{
-    return QPointF(point.x() * size.width(), point.y() * size.height());
-}
-
 inline qreal angle(const QPointF &v)
 {
     if (v.x() >= 0)
