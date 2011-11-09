@@ -81,7 +81,7 @@ void PuzzleItem::disableMerge()
     setCanMerge(false);
 }
 
-bool PuzzleItem::merge(PuzzleItem *item)
+bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
 {
     if (isNeighbourOf(item) && _canMerge && item->_canMerge)
     {
@@ -95,6 +95,8 @@ bool PuzzleItem::merge(PuzzleItem *item)
 
         QPoint vector = item->puzzleCoordinates() - puzzleCoordinates();
         QPointF positionVector = item->supposedPosition() - supposedPosition();
+        QPointF old00 = mapToParent(0, 0), oldPos = pos();
+
         int x1, x2, y1, y2, u1, v1;
         if (vector.x() >= 0)
         {
@@ -132,18 +134,13 @@ bool PuzzleItem::merge(PuzzleItem *item)
         p.end();
 
         _puzzleCoordinates -= QPoint(u1, v1);
-        _supposedPosition = puzzleCoordinates() * unit();
+        _supposedPosition = QPointF(min<qreal>(item->supposedPosition().x(), supposedPosition().x()), min<qreal>(item->supposedPosition().y(), supposedPosition().y()));
         setPixmap(pix);
-
-        QPointF temp = mapToParent(0, 0);
-
         setShape(_shape.translated(x1, y1).united(item->shape().translated(x2, y2)));
         setWidth(_pixmap.width());
         setHeight(_pixmap.height());
-        setPos(pos() - (mapToParent(0, 0) - temp) - (mapToParent(x1, y1) - mapToParent(0, 0)));
-        setCompensatedTransformOriginPoint(QPointF(pixmap().width() / 2.0, pixmap().height() / 2.0));
-
-        _dragStart = mapToParent(mapFromParent(_dragStart) + QPointF(x1, y1));
+        setPos(pos() + old00 - mapToParent(x1, y1));
+        _dragStart = mapToParent(dragPosition + QPointF(x1, y1)) - pos();
 
         item->hide();
         item->deleteLater();
@@ -212,7 +209,7 @@ void PuzzleItem::doDrag(const QPointF &position)
 
                 if (abs((int)diff.x()) < tolerance() && abs((int)diff.y()) < tolerance() && abs(p->rotation() - rotation()) < rotationTolerance())
                 {
-                    merge(p);
+                    merge(p, position);
                 }
             }
         }

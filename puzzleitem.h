@@ -38,7 +38,7 @@ public:
     inline const QSize &unit() const;
     virtual QPainterPath shape() const;
     inline void setShape(const QPainterPath &shape) { _shape = shape; }
-    bool merge(PuzzleItem *item);
+    bool merge(PuzzleItem *item, const QPointF &dragPosition);
     void raise();
     void verifyPosition();
     void verifyCoveredSiblings();
