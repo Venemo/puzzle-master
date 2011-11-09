@@ -133,13 +133,18 @@ bool PuzzleItem::merge(PuzzleItem *item)
 
         _puzzleCoordinates -= QPoint(u1, v1);
         _supposedPosition = puzzleCoordinates() * unit();
-        _dragStart += QPointF(x1, y1);
         setPixmap(pix);
+
+        QPointF temp = mapToParent(0, 0);
+
         setShape(_shape.translated(x1, y1).united(item->shape().translated(x2, y2)));
-        setPos(pos().x() - x1, pos().y() - y1);
         setWidth(_pixmap.width());
         setHeight(_pixmap.height());
-        setCompensatedTransformOriginPoint(QPointF(pixmap().width() / 2, pixmap().height() / 2));
+        setPos(pos() - (mapToParent(0, 0) - temp) - (mapToParent(x1, y1) - mapToParent(0, 0)));
+        setCompensatedTransformOriginPoint(QPointF(pixmap().width() / 2.0, pixmap().height() / 2.0));
+
+        _dragStart = mapToParent(mapFromParent(_dragStart) + QPointF(x1, y1));
+
         item->hide();
         item->deleteLater();
         _canMerge = true;
