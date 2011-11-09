@@ -142,22 +142,22 @@ bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
         {
             _dragging = false;
             _canMerge = false;
-            QPointF newPos((((QDeclarativeItem*)parent())->width() - pixmap().width()) / 2, (((QDeclarativeItem*)parent())->height() - pixmap().height()) / 2);
 
             QParallelAnimationGroup *group = new QParallelAnimationGroup(this);
-            QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", group);
-            anim->setEndValue(newPos);
-            anim->setDuration(1000);
-            anim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+            QPropertyAnimation *posAnim = new QPropertyAnimation(this, "pos", group),
+                    *rotateAnimation = new QPropertyAnimation(this, "rotation", group);
 
-            QPropertyAnimation *rotateAnimation = new QPropertyAnimation(this, "rotation", group);
+            posAnim->setEndValue(((PuzzleBoard*)parent())->initial00PiecePosition());
+            posAnim->setDuration(1000);
+            posAnim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+
             rotateAnimation->setEndValue(0);
             rotateAnimation->setDuration(1000);
             rotateAnimation->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
 
             connect(group, SIGNAL(finished()), this, SIGNAL(noNeighbours()));
 
-            group->addAnimation(anim);
+            group->addAnimation(posAnim);
             group->addAnimation(rotateAnimation);
             group->start(QAbstractAnimation::DeleteWhenStopped);
         }

@@ -204,6 +204,9 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setPos(oldPos);
             item->show();
 
+            if (i == 0 && j == 0)
+                _initial00PiecePosition = oldPos;
+
             emit loadProgressChanged(i * rows + j + 1);
         }
     }

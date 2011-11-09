@@ -19,6 +19,7 @@ class PuzzleBoard : public QDeclarativeItem
     GENPROPERTY_R(QSize, _originalPixmapSize, originalPixmapSize)
     GENPROPERTY_R(qreal, _originalScaleRatio, originalScaleRatio)
     GENPROPERTY_R(QSize, _unit, unit)
+    GENPROPERTY_R(QPointF, _initial00PiecePosition, initial00PiecePosition)
     GENPROPERTY_F(int, _tolerance, tolerance, setTolerance, toleranceChanged)
     Q_PROPERTY(int tolerance READ tolerance WRITE setTolerance NOTIFY toleranceChanged)
     GENPROPERTY_F(int, _rotationTolerance, rotationTolerance, setRotationTolerance, rotationToleranceChanged)
