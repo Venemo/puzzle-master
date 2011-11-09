@@ -196,22 +196,28 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             p.setClipping(true);
 
             // The rectangle
-            QPainterPath clip1;
-            clip1.addRect(0, 0, _unit.width(), _unit.height());
+            QPainterPath mainRect;
+            mainRect.addRect(0, 0, _unit.width(), _unit.height());
+
+            QPainterPath leftBlank;
             if (i > 0)
-                clip1.addEllipse(QPointF(thingyOffset, _unit.height() / 2.0), thingySize, thingySize);
+                leftBlank.addEllipse(QPointF(thingyOffset, _unit.height() / 2.0), thingySize, thingySize);
+
+            QPainterPath topBlank;
             if (j > 0)
-                clip1.addEllipse(QPointF(_unit.width() / 2.0, thingyOffset), thingySize, thingySize);
+                topBlank.addEllipse(QPointF(_unit.width() / 2.0, thingyOffset), thingySize, thingySize);
 
             // The right side thingy
-            QPainterPath clip2;
-            clip2.addEllipse(QPointF(_unit.width() + thingyOffset, _unit.height() / 2.0), thingySize + thingyTolerance, thingySize + thingyTolerance);
+            QPainterPath rightTab;
+            if (i < cols - 1)
+                rightTab.addEllipse(QPointF(_unit.width() + thingyOffset, _unit.height() / 2.0), thingySize + thingyTolerance, thingySize + thingyTolerance);
 
             // The bottom side thingy
-            QPainterPath clip3;
-            clip3.addEllipse(QPointF(_unit.width() / 2.0, _unit.height() + thingyOffset), thingySize + thingyTolerance, thingySize + thingyTolerance);
+            QPainterPath bottomTab;
+            if (j < rows - 1)
+                bottomTab.addEllipse(QPointF(_unit.width() / 2.0, _unit.height() + thingyOffset), thingySize + thingyTolerance, thingySize + thingyTolerance);
 
-            QPainterPath finalClip = clip1.united(clip2).united(clip3);
+            QPainterPath finalClip = mainRect.united(rightTab).united(bottomTab).subtracted(leftBlank).subtracted(topBlank);
             p.setClipPath(finalClip);
 
             p.drawPixmap(0, 0, pixmap, i * _unit.width(), j * _unit.height(), _unit.width() * 2, _unit.height() * 2);
