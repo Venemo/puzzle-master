@@ -30,6 +30,7 @@ private:
     double _previousRotationValue;
     int _previousTouchPointCount;
     QPainterPath _shape;
+    QPainterPath _stroke;
 
 public:
     explicit PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent = 0);
@@ -37,7 +38,7 @@ public:
     inline qreal rotationTolerance() const;
     inline const QSize &unit() const;
     virtual QPainterPath shape() const;
-    inline void setShape(const QPainterPath &shape) { _shape = shape; }
+    void setShape(const QPainterPath &shape);
     bool merge(PuzzleItem *item, const QPointF &dragPosition);
     void raise();
     void verifyPosition();
