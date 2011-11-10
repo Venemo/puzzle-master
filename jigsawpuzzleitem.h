@@ -11,7 +11,10 @@ class JigsawPuzzleItem : public QObject, public PuzzleItem
 {
     Q_OBJECT
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
+    Q_PROPERTY(qreal rotation READ rotation WRITE setRotation)
+
     QPointF _dragStart;
+    QPointF _rotationStartVector;
     bool _dragging;
     bool _canMerge;
     double _weight;
@@ -39,6 +42,7 @@ protected:
     void startDrag(QPointF pos);
     void stopDrag();
     void doDrag(QPointF pos);
+    void handleRotation(QPointF inputPoint1, QPointF inputPoint2);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *ev);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *ev);

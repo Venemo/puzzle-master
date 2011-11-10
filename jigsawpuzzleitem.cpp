@@ -11,6 +11,7 @@ JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent,
     _weight(randomInt(100, 950) / 1000.0)
 {
     setAcceptTouchEvents(true);
+    setTransformOriginPoint(pixmap.width() / 2, pixmap.height() / 2);
 }
 
 bool JigsawPuzzleItem::canMerge() const
@@ -161,6 +162,11 @@ void JigsawPuzzleItem::doDrag(QPointF position)
     }
 }
 
+void JigsawPuzzleItem::handleRotation(QPointF inputPoint1, QPointF inputPoint2)
+{
+
+}
+
 void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     qDebug() << "mouse pressed for" << puzzleCoordinates();
@@ -207,6 +213,11 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
 
         if (relevantTouchPoint && !_dragging && !relevantTouchPoint->isPrimary())
             startDrag(relevantTouchPoint->pos());
+        else if (touchEvent->touchPoints().count() == 2)
+        {
+            qDebug() << "starting rotation for" << puzzleCoordinates();
+            _rotationStartVector = mapToScene(touchEvent->touchPoints().at(0).pos() - touchEvent->touchPoints().at(1).pos());
+        }
 
         event->accept();
         return true;
@@ -230,6 +241,11 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
 
         averagePos /= touchEvent->touchPoints().count();
         doDrag(averagePos);
+
+        if (touchEvent->touchPoints().count() >= 2)
+        {
+            handleRotation(touchEvent->touchPoints().at(0).pos(), touchEvent->touchPoints().at(1).pos());
+        }
 
         event->accept();
         return true;

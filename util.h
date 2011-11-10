@@ -1,13 +1,30 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#define APP_VERSION "1.2.3"
+#include <QtCore>
+#include <cmath>
 
+#define APP_VERSION "1.2.3"
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 
 inline QPointF operator*(const QPoint &point, const QSize &size)
 {
     return QPointF(point.x() * size.width(), point.y() * size.height());
+}
+
+inline qreal operator*(const QPointF &p1, const QPointF &p2)
+{
+    return p1.x() * p2.x() + p1.y() * p2.y();
+}
+
+inline qreal abs(const QPointF &p)
+{
+    return sqrt(p.x() * p.x() + p.y() * p.y());
+}
+
+inline qreal angle(const QPointF &v1, const QPointF &v2)
+{
+    return acos((v1 * v2) / (abs(v1) * abs(v2)));
 }
 
 inline int randomInt(int low, int high)
