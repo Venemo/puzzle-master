@@ -167,7 +167,13 @@ void JigsawPuzzleItem::doDrag(QPointF position)
 
 void JigsawPuzzleItem::handleRotation(QPointF inputPoint1, QPointF inputPoint2)
 {
+    QPointF v = inputPoint1 - inputPoint2;
 
+    qreal a = angle(_rotationStartVector, v) * 180 / M_PI;
+    qDebug() << "rotation angle is" << a;
+
+//    if (!isnan(a) && a >= 8)
+//        setRotation(a);
 }
 
 void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -218,11 +224,6 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
 
         if (relevantTouchPoint && !_dragging)
             startDrag(relevantTouchPoint->pos());
-        else if (touchEvent->touchPoints().count() == 2)
-        {
-            qDebug() << "starting rotation for" << puzzleCoordinates();
-            _rotationStartVector = mapToScene(touchEvent->touchPoints().at(0).pos() - touchEvent->touchPoints().at(1).pos());
-        }
 
         event->accept();
         return true;
@@ -246,10 +247,8 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
 
         averagePos /= touchEvent->touchPoints().count();
 
-
         if (touchEvent->touchPoints().count() != _previousTouchPointCount)
         {
-            _previousTouchPointCount = touchEvent->touchPoints().count();
             stopDrag();
             _isDraggingWithTouch = true;
             startDrag(averagePos);
@@ -258,6 +257,12 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
         {
             doDrag(averagePos);
         }
+        if (_previousTouchPointCount != 2 && touchEvent->touchPoints().count() == 2)
+        {
+            _rotationStartVector = touchEvent->touchPoints().at(0).pos() - touchEvent->touchPoints().at(1).pos();
+        }
+
+        _previousTouchPointCount = touchEvent->touchPoints().count();
 
         if (touchEvent->touchPoints().count() >= 2)
         {
