@@ -9,7 +9,8 @@ JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent,
     _dragging(false),
     _canMerge(false),
     _isDraggingWithTouch(false),
-    _weight(randomInt(100, 950) / 1000.0)
+    _weight(randomInt(100, 950) / 1000.0),
+    _previousTouchPointCount(0)
 {
     setAcceptTouchEvents(true);
     setTransformOriginPoint(pixmap.width() / 2, pixmap.height() / 2);
@@ -215,7 +216,7 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
             if (touchPoint.state() == Qt::TouchPointPressed)
                 relevantTouchPoint = &touchPoint;
 
-        if (relevantTouchPoint && !_dragging && !relevantTouchPoint->isPrimary())
+        if (relevantTouchPoint && !_dragging)
             startDrag(relevantTouchPoint->pos());
         else if (touchEvent->touchPoints().count() == 2)
         {
@@ -244,7 +245,19 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
             averagePos += touchPoint.pos();
 
         averagePos /= touchEvent->touchPoints().count();
-        doDrag(averagePos);
+
+
+        if (touchEvent->touchPoints().count() != _previousTouchPointCount)
+        {
+            _previousTouchPointCount = touchEvent->touchPoints().count();
+            stopDrag();
+            _isDraggingWithTouch = true;
+            startDrag(averagePos);
+        }
+        else
+        {
+            doDrag(averagePos);
+        }
 
         if (touchEvent->touchPoints().count() >= 2)
         {

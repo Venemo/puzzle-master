@@ -19,6 +19,7 @@ class JigsawPuzzleItem : public QObject, public PuzzleItem
     bool _canMerge;
     bool _isDraggingWithTouch;
     double _weight;
+    int _previousTouchPointCount;
 
 public:
     explicit JigsawPuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
