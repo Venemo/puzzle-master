@@ -141,7 +141,7 @@ void JigsawPuzzleItem::doDrag(QPointF position)
 {
     if (_dragging)
     {
-        setPos(pos() + position - _dragStart);
+        setPos(mapToScene(position) - _dragStart);
 
         if (_canMerge)
         {
@@ -222,15 +222,14 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
     }
     else if (event->type() == QEvent::TouchUpdate)
     {
-        const QTouchEvent::TouchPoint *relevantTouchPoint = 0;
+        QPointF averagePos(0, 0);
 
-        // Finding the touch point that has moved
+        // Finding the midpoint
         foreach (const QTouchEvent::TouchPoint &touchPoint, touchEvent->touchPoints())
-            if (touchPoint.state() == Qt::TouchPointMoved)
-                relevantTouchPoint = &touchPoint;
+            averagePos += touchPoint.pos();
 
-        if (relevantTouchPoint)
-            doDrag(relevantTouchPoint->pos());
+        averagePos /= touchEvent->touchPoints().count();
+        doDrag(averagePos);
 
         event->accept();
         return true;
