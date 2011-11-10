@@ -154,11 +154,11 @@ void JigsawPuzzleItem::doDrag(QPointF position)
             foreach (PuzzleItem *p, neighbours())
             {
                 JigsawPuzzleItem *w = (JigsawPuzzleItem*) p;
-                QPointF posDiff1 = pos() - w->pos();
+                QPointF posDiff1 = mapFromScene(pos()) - w->mapToItem(this, w->mapFromScene(w->pos()));
                 QPointF posDiff2 = (puzzleCoordinates() * unit() - w->puzzleCoordinates() * unit());
                 QPointF relative = posDiff1 - posDiff2;
 
-                if (abs((int)relative.x()) < tolerance() && abs((int)relative.y()) < tolerance())
+                if (abs((int)relative.x()) < tolerance() && abs((int)relative.y()) < tolerance() && abs(w->rotation() - rotation()) < 10)
                 {
                     merge(w);
                 }
