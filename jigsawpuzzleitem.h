@@ -19,6 +19,7 @@ class JigsawPuzzleItem : public QObject, public PuzzleItem
     bool _canMerge;
     bool _isDraggingWithTouch;
     double _weight;
+    double _previousRotationValue;
     int _previousTouchPointCount;
 
 public:
@@ -44,7 +45,7 @@ protected:
     void startDrag(QPointF pos);
     void stopDrag();
     void doDrag(QPointF pos);
-    void handleRotation(QPointF inputPoint1, QPointF inputPoint2);
+    void handleRotation(QPointF vector);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *ev);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *ev);
