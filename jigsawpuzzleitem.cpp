@@ -10,8 +10,8 @@ JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent,
     _canMerge(false),
     _isDraggingWithTouch(false),
     _weight(randomInt(100, 950) / 1000.0),
-    _previousTouchPointCount(0),
-    _previousRotationValue(0)
+    _previousRotationValue(0),
+    _previousTouchPointCount(0)
 {
     setAcceptTouchEvents(true);
     setTransformOriginPoint(pixmap.width() / 2, pixmap.height() / 2);
@@ -97,6 +97,7 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
         setPos(pos().x() - x1, pos().y() - y1);
 
         _dragStart += QPointF(x1, y1);
+        setTransformOriginPoint(pixmap().width() / 2, pixmap().height() / 2);
         item->hide();
         item->deleteLater();
         _canMerge = true;
@@ -169,10 +170,11 @@ void JigsawPuzzleItem::doDrag(QPointF position)
 void JigsawPuzzleItem::handleRotation(QPointF v)
 {
     qreal a = angle(_rotationStartVector, v) * 180 / M_PI;
-    qDebug() << "------ rotation angle is" << a;
 
     if (!isnan(a))
+    {
         setRotation(_previousRotationValue + a);
+    }
 }
 
 void JigsawPuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
