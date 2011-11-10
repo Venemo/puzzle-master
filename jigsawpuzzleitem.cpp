@@ -198,21 +198,39 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
     {
         qDebug() << "touch begin received at" << puzzleCoordinates();
 
-        startDrag(touchEvent->touchPoints().at(0).pos());
+        const QTouchEvent::TouchPoint *relevantTouchPoint = 0;
+
+        // Finding the new touch point - the one that is now pressed
+        foreach (const QTouchEvent::TouchPoint &touchPoint, touchEvent->touchPoints())
+            if (touchPoint.state() == Qt::TouchPointPressed)
+                relevantTouchPoint = &touchPoint;
+
+        if (relevantTouchPoint && !_dragging && !relevantTouchPoint->isPrimary())
+            startDrag(relevantTouchPoint->pos());
 
         event->accept();
         return true;
     }
     else if (event->type() == QEvent::TouchEnd)
     {
-        stopDrag();
+        // There is only one touch point which is now released
+        if (touchEvent->touchPoints().count() == 1)
+            stopDrag();
 
         event->accept();
         return true;
     }
     else if (event->type() == QEvent::TouchUpdate)
     {
-        doDrag(touchEvent->touchPoints().at(0).pos());
+        const QTouchEvent::TouchPoint *relevantTouchPoint = 0;
+
+        // Finding the touch point that has moved
+        foreach (const QTouchEvent::TouchPoint &touchPoint, touchEvent->touchPoints())
+            if (touchPoint.state() == Qt::TouchPointMoved)
+                relevantTouchPoint = &touchPoint;
+
+        if (relevantTouchPoint)
+            doDrag(relevantTouchPoint->pos());
 
         event->accept();
         return true;
