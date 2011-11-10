@@ -123,12 +123,12 @@ bool JigsawPuzzleItem::merge(JigsawPuzzleItem *item)
     return false;
 }
 
-void JigsawPuzzleItem::startDrag(QPointF pos)
+void JigsawPuzzleItem::startDrag(QPointF p)
 {
     if (_canMerge && !_dragging)
     {
         _dragging = true;
-        _dragStart = pos;
+        _dragStart = mapToScene(p) - pos();
         raise();
     }
 }
