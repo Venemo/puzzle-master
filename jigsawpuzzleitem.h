@@ -17,6 +17,7 @@ class JigsawPuzzleItem : public QObject, public PuzzleItem
     QPointF _rotationStartVector;
     bool _dragging;
     bool _canMerge;
+    bool _isDraggingWithTouch;
     double _weight;
 
 public:

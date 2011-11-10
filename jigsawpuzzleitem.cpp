@@ -8,6 +8,7 @@ JigsawPuzzleItem::JigsawPuzzleItem(const QPixmap &pixmap, QGraphicsItem *parent,
     PuzzleItem(pixmap, parent, scene),
     _dragging(false),
     _canMerge(false),
+    _isDraggingWithTouch(false),
     _weight(randomInt(100, 950) / 1000.0)
 {
     setAcceptTouchEvents(true);
@@ -134,6 +135,7 @@ void JigsawPuzzleItem::startDrag(QPointF pos)
 void JigsawPuzzleItem::stopDrag()
 {
     _dragging = false;
+    _isDraggingWithTouch = false;
     verifyPosition();
     verifyCoveredSiblings();
 }
@@ -190,7 +192,8 @@ void JigsawPuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     PuzzleItem::mouseMoveEvent(event);
     event->accept();
-    doDrag(event->pos());
+    if (!_isDraggingWithTouch)
+        doDrag(event->pos());
 }
 
 bool JigsawPuzzleItem::sceneEvent(QEvent *event)
@@ -203,6 +206,7 @@ bool JigsawPuzzleItem::sceneEvent(QEvent *event)
     if (event->type() == QEvent::TouchBegin)
     {
         qDebug() << "touch begin received at" << puzzleCoordinates();
+        _isDraggingWithTouch = true;
 
         const QTouchEvent::TouchPoint *relevantTouchPoint = 0;
 
