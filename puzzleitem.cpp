@@ -195,8 +195,9 @@ void PuzzleItem::doDrag(const QPointF &position)
             foreach (PuzzleItem *p, neighbours())
             {
                 QPointF diff = - _supposedPosition + p->_supposedPosition - ((QGraphicsItem*)p)->mapToItem(this, 0, 0);
+                qreal rotationDiff = p->rotation() - rotation();
 
-                if (abs((int)diff.x()) < tolerance() && abs((int)diff.y()) < tolerance() && abs(p->rotation() - rotation()) < rotationTolerance())
+                if (abs((int)diff.x()) < tolerance() && abs((int)diff.y()) < tolerance() && abs(rotationDiff) < rotationTolerance())
                 {
                     merge(p, position);
                 }
@@ -215,7 +216,7 @@ void PuzzleItem::handleRotation(const QPointF &v)
 
         while (a >= 360)
             a -= 360;
-        while (a <= 360)
+        while (a <= -360)
             a += 360;
 
         setRotation(a);

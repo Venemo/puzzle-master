@@ -226,7 +226,6 @@ void PuzzleBoard::shuffle()
         PuzzleItem *item = (PuzzleItem*)gi;
         QPointF newPos(randomInt(0, originalPixmapSize().width() - _unit.width()), randomInt(0, originalPixmapSize().height() - _unit.width()));
 
-        connect(group, SIGNAL(finished()), item, SLOT(enableMerge()));
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
         anim->setEndValue(newPos);
         anim->setDuration(2000);
@@ -245,6 +244,7 @@ void PuzzleBoard::shuffle()
             item->raise();
     }
 
+    connect(group, SIGNAL(finished()), this, SLOT(enable()));
     connect(group, SIGNAL(finished()), this, SLOT(disableFixedFPS()));
     connect(group, SIGNAL(finished()), this, SIGNAL(gameStarted()));
     enableFixedFPS();
