@@ -146,14 +146,15 @@ bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
             QParallelAnimationGroup *group = new QParallelAnimationGroup(this);
             QPropertyAnimation *posAnim = new QPropertyAnimation(this, "pos", group),
                     *rotateAnimation = new QPropertyAnimation(this, "rotation", group);
+            QEasingCurve easingCurve(QEasingCurve::OutExpo);
 
             posAnim->setEndValue(((PuzzleBoard*)parent())->initial00PiecePosition());
             posAnim->setDuration(1000);
-            posAnim->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+            posAnim->setEasingCurve(easingCurve);
 
             rotateAnimation->setEndValue(0);
             rotateAnimation->setDuration(1000);
-            rotateAnimation->setEasingCurve(QEasingCurve(QEasingCurve::OutElastic));
+            rotateAnimation->setEasingCurve(easingCurve);
 
             connect(group, SIGNAL(finished()), this, SIGNAL(noNeighbours()));
 
