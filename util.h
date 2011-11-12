@@ -60,6 +60,16 @@ inline T min(T i, T j)
     return i < j? i : j;
 }
 
+inline qreal simplifyAngle(qreal a)
+{
+    while (a >= 360)
+        a -= 360;
+    while (a <= -360)
+        a += 360;
+
+    return a;
+}
+
 inline const QString &fetchAboutString()
 {
     static QString *aboutString = 0;
