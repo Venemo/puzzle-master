@@ -5,37 +5,24 @@ Rectangle {
     width: 854
     height: 480
 
-    PuzzleBoard
-    {
-        anchors.fill: parent
+    PuzzleBoard {
         id: puzzleBoard
-        tolerance: 15
+        tolerance: 10
         rotationTolerance: 20
-
+        anchors.fill: parent
         onGameWon: {
-            playButton.visible = true;
+            puzzleBoard.visible = false;
+            imageChooser.visible = true;
         }
     }
 
-    Rectangle {
-        id: playButton
-        color: "white"
-        radius: 10
-        width: 200
-        height: 75
-        border.color: "gray"
-        anchors.centerIn: parent
-
-        Text {
-            text: qsTr("Click here to play")
-            anchors.centerIn: parent
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                playButton.visible = false;
-                puzzleBoard.startGame(":/image5.jpg", 3, 4, true);
-            }
+    ImageChooser {
+        id: imageChooser
+        anchors.fill: parent
+        onAccepted: {
+            puzzleBoard.visible = true;
+            imageChooser.visible = false;
+            puzzleBoard.startGame(imageChooser.selectedImageUrl, 3, 4, true);
         }
     }
 }
