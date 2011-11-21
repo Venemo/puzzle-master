@@ -21,6 +21,7 @@ Rectangle {
         Text {
             text: "Please select an image"
             anchors.centerIn: parent
+            font.pixelSize: 40
         }
         Rectangle {
             color: "black"
