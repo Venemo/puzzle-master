@@ -28,7 +28,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     if (langCode.isEmpty() || langCode == "C")
         langCode = QLocale::system().name();
 
-    qDebug() << "current language code is" << langCode;
+    qDebug() << "Puzzle Master's current language code is" << langCode;
 
     QTranslator tQt, tApp;
     tQt.load("qt_" + langCode, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
@@ -42,6 +42,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QDeclarativeView *view;
 
 #if defined(HAVE_APPLAUNCHERD)
+    qDebug() << "Puzzle Master is using MDeclarativeCache";
     app = MDeclarativeCache::qApplication(argc, argv);
     view = MDeclarativeCache::qDeclarativeView();
 #else
@@ -54,6 +55,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
 
 #if defined(HAVE_OPENGL)
+    qDebug() << "Puzzle Master is using QGLWidget viewport";
     QGLWidget *glWidget = new QGLWidget();
     view->setViewport(glWidget);
 #endif
@@ -67,7 +69,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->showFullScreen();
 
     int result = app->exec();
+#if defined(HAVE_OPENGL)
     delete glWidget;
+#endif
     delete view;
     delete app;
     return result;
