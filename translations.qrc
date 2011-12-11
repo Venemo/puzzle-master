@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>translations/puzzle-master_hu_HU.qm</file>
+    </qresource>
+</RCC>

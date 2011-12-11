@@ -35,8 +35,9 @@ HEADERS += \
     puzzleboard.h
 
 RESOURCES += \
-    resources.qrc \
-    otherGui.qrc
+    translations.qrc \
+    pics-hd.qrc \
+    ui-other.qrc
 
 TRANSLATIONS += \
     translations/puzzle-master_hu_HU.ts
@@ -56,10 +57,10 @@ unix {
     OTHER_FILES += data/puzzle-master.desktop
 
     target.path = /usr/bin
-    iconfile.path = /usr/share/pixmaps
-    iconfile.files = data/puzzle-master.png
+    iconfile.path = /usr/share/icons/hicolor/scalable/apps
+    iconfile.files = installables/puzzle-master.svg
     desktopfile.path = /usr/share/applications
-    desktopfile.files = data/puzzle-master.desktop
+    desktopfile.files = installables/puzzle-master.desktop
 }
 contains(MEEGO_EDITION, harmattan) {
     # We want to use applauncherd here, and it has an accelerometer
@@ -79,17 +80,12 @@ symbian {
     DEFINES += HAVE_QACCELEROMETER
     DEFINES -= HAVE_OPENGL
     # Symbian icon
-    ICON = data/puzzle-master-44x44.svg
+    ICON = installables/puzzle-master.svg
     # Some weird Symbian stuff...
     TARGET.UID3 = 0xe5b4435f
     TARGET.EPOCSTACKSIZE = 0x28000
     # Max. heap size is 20 MiB
     TARGET.EPOCHEAPSIZE = 0x020000 0x20971520
-}
-win32 {
-    # Icon on Windows
-    RC_FILE = puzzle-master.rc
-    OTHER_FILES += puzzle-master.rc
 }
 
 contains(DEFINES, HAVE_APPLAUNCHERD) {

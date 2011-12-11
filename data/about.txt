@@ -1,5 +1,0 @@
-Created by Timur Kristóf
-Licensed under the terms of the EUPL 1.1.
-
-The authors of the images distributed with this application are noted where appropriate.
-The button icons are from the Oxygen icon set.

@@ -5,5 +5,5 @@ Type=Application
 Name=Puzzle Master
 Icon=puzzle-master
 Exec=puzzle-master
-Categories=Qt;Game;LogicGame;
+Categories=Game;LogicGame;
 X-Osso-Type=application/x-executable
