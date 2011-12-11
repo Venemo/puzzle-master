@@ -340,11 +340,9 @@ void PuzzleBoard::assemble()
     foreach (PuzzleItem *item, puzzleItems())
     {
         item->disableMerge();
-        QPointF newPos((item->scene()->width() - originalPixmapSize().width()) / 2 + (item->puzzleCoordinates().x() * _unit.width()),
-                       (item->scene()->height() - originalPixmapSize().height()) / 2 + (item->puzzleCoordinates().y() * _unit.height()));
 
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
-        anim->setEndValue(newPos);
+        anim->setEndValue(initial00PiecePosition() + item->supposedPosition());
         anim->setDuration(2000);
         anim->setEasingCurve(easingCurve);
         group->addAnimation(anim);
