@@ -1,0 +1,12 @@
+moc_*
+qrc_*
+ui_*
+*.pro.user
+*.o
+*.core
+*~
+.goutputstream*
+Makefile
+debian/puzzle-master
+qtc_packaging
+MANIFEST
