@@ -25,6 +25,9 @@ Rectangle {
     property string text: ""
     property string acceptButtonText: ""
     property string rejectButtonText: ""
+    property alias content: contentField.children
+    property int contentHeight: 0
+    property int contentWidth: 500
 
     signal rejected
     signal accepted
@@ -33,14 +36,15 @@ Rectangle {
         dialog.visible = false;
         dialog.rejected();
     }
-
     function accept() {
         dialog.visible = false;
         dialog.accepted();
     }
-
     function open() {
         dialog.visible = true;
+    }
+    function close() {
+        dialog.visible = false;
     }
 
     id: dialog
@@ -54,59 +58,85 @@ Rectangle {
     }
 
     MouseArea {
-        anchors.fill: dialogColumn
+        anchors.left: separatorRect.left
+        anchors.right: separatorRect.right
+        anchors.top: titleText.top
+        anchors.bottom: buttonRow.bottom
     }
 
-    Column {
-        id: dialogColumn
-        spacing: 10
+    Text {
+        id: titleText
+        color: dialog.fontColor
+        text: dialog.title
+        font.pixelSize: 35
+        visible: dialog.title != ""
+
+        anchors.left: separatorRect.left
+        anchors.bottom: separatorRect.top
+        anchors.bottomMargin: 10
+    }
+    Rectangle {
+        id: separatorRect
+        color: dialog.fontColor
+        height: 2
+        width: dialog.contentWidth
+        visible: dialog.title != ""
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: textText.visible ? textText.top : contentField.top
+        anchors.bottomMargin: 10
+    }
+    Text {
+        id: textText
+        color: dialog.fontColor
+        text: dialog.text
+        font.pixelSize: 25
+        visible: dialog.text != ""
+        width: dialog.contentWidth
+        wrapMode: Text.Wrap
+
+        anchors.left: separatorRect.left
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: contentField.top
+        anchors.bottomMargin: 10
+    }
+    Item {
+        id: contentField
+        width: dialog.contentWidth
+        height: dialog.contentHeight
+
         anchors.centerIn: parent
+    }
+    Row {
+        id: buttonRow
+        spacing: 10
+        anchors.horizontalCenter: parent.horizontalCenter
 
-        Text {
-            color: dialog.fontColor
-            text: dialog.title
-            font.pixelSize: 35
-            visible: dialog.title != ""
-        }
-        Rectangle {
-            color: dialog.fontColor
-            height: 2
-            width: parent.width
-            visible: dialog.title != ""
-        }
-        Text {
-            color: dialog.fontColor
-            text: dialog.text
-            font.pixelSize: 25
-        }
-        Row {
-            spacing: 10
-            anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: contentField.bottom
+        anchors.topMargin: 10
 
-            Button {
-                id: acceptButton
-                text: acceptButtonText
-                width: 170
-                onClicked: dialog.accept();
-                visible: acceptButtonText != ""
+        Button {
+            id: acceptButton
+            text: acceptButtonText
+            width: 170
+            onClicked: dialog.accept();
+            visible: acceptButtonText != ""
+        }
+        Button {
+            id: rejectButton
+            text: rejectButtonText
+            width: 170
+            onClicked: dialog.reject();
+            normalGradient: Gradient {
+                GradientStop { position: 0; color: "#ED1C24"; }
+                GradientStop { position: 1; color: "#AA1317"; }
             }
-            Button {
-                id: rejectButton
-                text: rejectButtonText
-                width: 170
-                onClicked: dialog.reject();
-                normalGradient: Gradient {
-                    GradientStop { position: 0; color: "#ED1C24"; }
-                    GradientStop { position: 1; color: "#AA1317"; }
-                }
-                pressedGradient: Gradient {
-                    GradientStop { position: 0; color: "#AA1317"; }
-                    GradientStop { position: 1; color: "#AA1317"; }
-                }
-                borderColor: "#980C10"
-                visible: rejectButtonText != ""
+            pressedGradient: Gradient {
+                GradientStop { position: 0; color: "#AA1317"; }
+                GradientStop { position: 1; color: "#AA1317"; }
             }
+            borderColor: "#980C10"
+            visible: rejectButtonText != ""
         }
     }
-
 }
