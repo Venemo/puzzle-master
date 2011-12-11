@@ -50,43 +50,32 @@ unix {
     desktopfile.files = data/puzzle-master.desktop
 }
 contains(MEEGO_EDITION, harmattan) {
-    # We want to use applauncherd here
-    DEFINES += HAVE_APPLAUNCHERD
+    # We want to use applauncherd here, and it has an accelerometer
+    DEFINES += HAVE_APPLAUNCHERD HAVE_QACCELEROMETER
     # The MeeGo graphics system is better than using QGLWidget
     DEFINES -= HAVE_OPENGL
 }
 maemo5 {
-    # Maemo 5 Fremantle
-    
-    QT += maemo5
-    DEFINES += MOBILE HAVE_QACCELEROMETER
-
-    CONFIG += mobility
-    MOBILITY += sensors
-
+    # We want the accelerometer
+    DEFINES += HAVE_QACCELEROMETER
+    # And the weird Maemo5 paths
     target.path = /opt/puzzle-master
     desktopfile.path = /usr/share/applications/hildon
 }
 symbian {
-    # Symbian
-    DEFINES += MOBILE HAVE_QACCELEROMETER
+    # We want the accelerometer, but not OpenGL
+    DEFINES += HAVE_QACCELEROMETER
     DEFINES -= HAVE_OPENGL
-
-    CONFIG += mobility
-    MOBILITY += sensors
-
+    # Symbian icon
     ICON = data/puzzle-master-44x44.svg
-
-    LIBS += -lcommondialogs -lplatformenv -leikcoctl -lavkon -lcone -leikcore
-
+    # Some weird Symbian stuff...
     TARGET.UID3 = 0xe5b4435f
-    # TARGET.CAPABILITY +=
     TARGET.EPOCSTACKSIZE = 0x28000
     # Max. heap size is 20 MiB
     TARGET.EPOCHEAPSIZE = 0x020000 0x20971520
 }
 win32 {
-    # Windows desktop
+    # Icon on Windows
     RC_FILE = puzzle-master.rc
     OTHER_FILES += puzzle-master.rc
 }
@@ -100,14 +89,7 @@ contains(DEFINES, HAVE_APPLAUNCHERD) {
 contains(DEFINES, HAVE_OPENGL) {
     QT += opengl
 }
-
-
-
-
-
-
-
-
-
-
-
+contains(DEFINES, HAVE_QACCELEROMETER) {
+    CONFIG += mobility
+    MOBILITY += sensors
+}
