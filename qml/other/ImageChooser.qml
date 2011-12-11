@@ -19,7 +19,6 @@
 import QtQuick 1.0
 
 Rectangle {
-    property string selectionColor: "blue"
     property string selectedImageUrl: ""
     property int columnNumber: 3
 
@@ -35,7 +34,6 @@ Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        z: 1
         radius: 15
 
         Rectangle {
@@ -59,7 +57,6 @@ Rectangle {
 
         id: imageChooserMiddle
         color: "white"
-        z: 0
         anchors.top: imageChooserTop.bottom
         anchors.bottom: imageChooserBottom.top
         anchors.left: parent.left
@@ -67,6 +64,7 @@ Rectangle {
 
         Flickable {
             enabled: true
+            clip: true
             contentHeight: imageSelectorGrid.height
             anchors.fill: parent
             anchors.topMargin: 5
@@ -91,7 +89,7 @@ Rectangle {
                         id: imageBorder
                         width: imageItem.width + 10
                         height: imageItem.height + 10
-                        color: imageBorder === imageChooserMiddle.selectedItemBorder ? imageChooser.selectionColor : "white"
+                        color: imageBorder === imageChooserMiddle.selectedItemBorder ? "#538312" : "white"
 
                         Image {
                             id: imageItem
@@ -120,7 +118,6 @@ Rectangle {
         id: imageChooserBottom
         height: 70
         color: "#7DB72F"
-        z: 1
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -152,7 +149,6 @@ Rectangle {
 
     Dialog {
         id: youMustChooseDialog
-        z: 2
         title: qsTr("Please choose")
         text: qsTr("You must choose an image before continuing.")
         acceptButtonText: qsTr("Ok")
