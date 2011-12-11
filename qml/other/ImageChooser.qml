@@ -80,17 +80,11 @@ Rectangle {
 
                 Repeater {
                     model: ListModel {
-                        ListElement { imageUrl: ":/image1.jpg" }
-                        ListElement { imageUrl: ":/image2.jpg" }
-                        ListElement { imageUrl: ":/image3.jpg" }
-                        ListElement { imageUrl: ":/image4.jpg" }
-                        ListElement { imageUrl: ":/image5.jpg" }
-
-                        ListElement { imageUrl: ":/image1.jpg" }
-                        ListElement { imageUrl: ":/image2.jpg" }
-                        ListElement { imageUrl: ":/image3.jpg" }
-                        ListElement { imageUrl: ":/image4.jpg" }
-                        ListElement { imageUrl: ":/image5.jpg" }
+                        ListElement { imageUrl: ":/pics/image1.jpg" }
+                        ListElement { imageUrl: ":/pics/image2.jpg" }
+                        ListElement { imageUrl: ":/pics/image3.jpg" }
+                        ListElement { imageUrl: ":/pics/image4.jpg" }
+                        ListElement { imageUrl: ":/pics/image5.jpg" }
                     }
 
                     delegate: Rectangle {
