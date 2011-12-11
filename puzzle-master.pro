@@ -24,7 +24,6 @@ HEADERS += \
 
 RESOURCES += \
     resources.qrc \
-    meegoGui.qrc \
     otherGui.qrc
 
 TRANSLATIONS += \
@@ -32,9 +31,6 @@ TRANSLATIONS += \
 
 OTHER_FILES += \
     data/about.txt \
-    qml/meego/AppWindow.qml \
-    qml/meego/NewGamePage.qml \
-    qml/meego/GamePage.qml \
     qml/other/AppWindow.qml \
     qml/other/Button.qml \
     qml/other/ImageChooser.qml \
@@ -104,6 +100,10 @@ contains(DEFINES, HAVE_APPLAUNCHERD) {
 contains(DEFINES, HAVE_OPENGL) {
     QT += opengl
 }
+
+
+
+
 
 
 
