@@ -43,7 +43,6 @@ TRANSLATIONS += \
     translations/puzzle-master_hu_HU.ts
 
 OTHER_FILES += \
-    data/about.txt \
     qml/other/AppWindow.qml \
     qml/other/Button.qml \
     qml/other/ImageChooser.qml \
@@ -54,7 +53,6 @@ unix {
     QMAKE_LFLAGS += -pie -rdynamic
     DEFINES += HAVE_OPENGL
     INSTALLS += target iconfile desktopfile
-    OTHER_FILES += data/puzzle-master.desktop
 
     target.path = /usr/bin
     iconfile.path = /usr/share/icons/hicolor/scalable/apps
