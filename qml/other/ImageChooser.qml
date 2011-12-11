@@ -38,7 +38,6 @@ Rectangle {
 
     Rectangle {
         property Rectangle selectedItemBorder: null
-        property Image selectedItemImage: null
 
         id: imageChooserMiddle
         color: "white"
@@ -80,7 +79,7 @@ Rectangle {
                         id: imageBorder
                         width: imageItem.width + 10
                         height: imageItem.height + 10
-                        color: "white"
+                        color: imageBorder === imageChooserMiddle.selectedItemBorder ? imageChooser.selectionColor : "white"
 
                         Image {
                             id: imageItem
@@ -93,13 +92,7 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    if (imageChooserMiddle.selectedItemBorder !== null)
-                                    {
-                                        imageChooserMiddle.selectedItemBorder.color = "white";
-                                        imageBorder.color = imageChooser.selectionColor;
-                                    }
                                     imageChooserMiddle.selectedItemBorder = imageBorder;
-                                    imageChooserMiddle.selectedItemImage = imageItem;
                                     imageChooser.selectedImageUrl = imageUrl;
                                 }
                             }
