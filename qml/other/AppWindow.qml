@@ -23,10 +23,8 @@ Rectangle {
     width: 854
     height: 480
 
-    PuzzleBoard {
-        id: puzzleBoard
-        tolerance: 10
-        rotationTolerance: 20
+    GameBoard {
+        id: gameBoard
         anchors.fill: parent
         onGameWon: {
             gameWonDialog.open();
@@ -37,9 +35,9 @@ Rectangle {
         id: imageChooser
         anchors.fill: parent
         onAccepted: {
-            puzzleBoard.visible = true;
+            gameBoard.visible = true;
             imageChooser.visible = false;
-            puzzleBoard.startGame(imageChooser.selectedImageUrl, 3, 4, true);
+            gameBoard.startGame(imageChooser.selectedImageUrl, 3, 4, true);
         }
     }
 
@@ -50,11 +48,27 @@ Rectangle {
         acceptButtonText: qsTr("Play again")
         rejectButtonText: qsTr("Choose other")
         onAccepted: {
-            puzzleBoard.startGame(imageChooser.selectedImageUrl, 3, 4, true);
+            gameBoard.startGame(imageChooser.selectedImageUrl, 3, 4, true);
         }
         onRejected: {
-            puzzleBoard.visible = false;
+            gameBoard.visible = false;
             imageChooser.visible = true;
         }
+    }
+
+    Dialog {
+        id: areYouSureToQuitDialog
+        title: qsTr("Are you sure?")
+        text: qsTr("Do you wish to quit the game?")
+        acceptButtonText: qsTr("Yes")
+        rejectButtonText: qsTr("No")
+        onAccepted: Qt.quit()
+    }
+
+    Dialog {
+        id: aboutDialog
+        title: qsTr("About Puzzle Master")
+        text: qsTr("Brought to you by Timur Kristóf.\nPuzzle Master is a fun and addictive jigsaw puzzle game.\nUsing Qt.")
+        acceptButtonText: "Ok"
     }
 }

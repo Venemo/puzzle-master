@@ -46,7 +46,8 @@ OTHER_FILES += \
     qml/other/AppWindow.qml \
     qml/other/Button.qml \
     qml/other/ImageChooser.qml \
-    qml/other/Dialog.qml
+    qml/other/Dialog.qml \
+    qml/other/GameBoard.qml
 
 unix {
     QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
@@ -99,3 +100,4 @@ contains(DEFINES, HAVE_QACCELEROMETER) {
     CONFIG += mobility
     MOBILITY += sensors
 }
+

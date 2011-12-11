@@ -143,6 +143,7 @@ Rectangle {
             width: 70
             text: "..."
             onClicked: {
+                menuDialog.open();
             }
         }
     }
@@ -152,5 +153,43 @@ Rectangle {
         title: qsTr("Please choose")
         text: qsTr("You must choose an image before continuing.")
         acceptButtonText: qsTr("Ok")
+    }
+
+    Dialog {
+        id: menuDialog
+        title: "Puzzle Master"
+        contentHeight: menuDialogColumn.height
+        contentWidth: menuDialogColumn.width
+
+        content: Column {
+            id: menuDialogColumn
+            spacing: 10
+
+            Button {
+                width: 500
+                text: qsTr("About")
+                onClicked: {
+                    menuDialog.close();
+                    aboutDialog.open();
+                }
+            }
+            Button {
+                width: 500
+                text: qsTr("Quit")
+                normalGradient: Gradient {
+                    GradientStop { position: 0; color: "#ED1C24"; }
+                    GradientStop { position: 1; color: "#AA1317"; }
+                }
+                pressedGradient: Gradient {
+                    GradientStop { position: 0; color: "#AA1317"; }
+                    GradientStop { position: 1; color: "#AA1317"; }
+                }
+                borderColor: "#980C10"
+                onClicked: {
+                    menuDialog.close();
+                    areYouSureToQuitDialog.open();
+                }
+            }
+        }
     }
 }

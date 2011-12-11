@@ -4,5 +4,6 @@
         <file>qml/other/Button.qml</file>
         <file>qml/other/ImageChooser.qml</file>
         <file>qml/other/Dialog.qml</file>
+        <file>qml/other/GameBoard.qml</file>
     </qresource>
 </RCC>
