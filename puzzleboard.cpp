@@ -21,9 +21,8 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
 
 void PuzzleBoard::setNeighbours(int x, int y)
 {
-    foreach(QGraphicsItem *gi, childItems())
+    foreach (PuzzleItem *p, puzzleItems())
     {
-        PuzzleItem *p = (PuzzleItem*)gi;
         if (p->puzzleCoordinates().x() != x - 1)
             p->addNeighbour(find(p->puzzleCoordinates() + QPoint(1, 0)));
 
@@ -34,9 +33,8 @@ void PuzzleBoard::setNeighbours(int x, int y)
 
 PuzzleItem *PuzzleBoard::find(const QPoint &puzzleCoordinates)
 {
-    foreach(QGraphicsItem *gi, childItems())
+    foreach (PuzzleItem *p, puzzleItems())
     {
-        PuzzleItem *p = (PuzzleItem*)gi;
         if (p->puzzleCoordinates() == puzzleCoordinates)
             return p;
     }
@@ -135,7 +133,8 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
         return;
     }
 
-    qDeleteAll(childItems());
+    qDeleteAll(puzzleItems());
+    _puzzleItems.clear();
 
     _allowMultitouch = allowMultitouch;
 
@@ -268,6 +267,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                            h0 + (j * _unit.height()) - tabFull);
             item->setPos(oldPos);
             item->show();
+            _puzzleItems.append(item);
 
             if (i == 0 && j == 0)
                 _initial00PiecePosition = oldPos;
@@ -287,9 +287,8 @@ void PuzzleBoard::shuffle()
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
     QEasingCurve easingCurve(QEasingCurve::InExpo);
 
-    foreach (QGraphicsItem *gi, childItems())
+    foreach (PuzzleItem *item, puzzleItems())
     {
-        PuzzleItem *item = (PuzzleItem*)gi;
         QPointF newPos(randomInt(0, originalPixmapSize().width() - _unit.width()), randomInt(0, originalPixmapSize().height() - _unit.width()));
 
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
@@ -322,9 +321,8 @@ void PuzzleBoard::assemble()
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
     QEasingCurve easingCurve(QEasingCurve::OutExpo);
 
-    foreach (QGraphicsItem *gi, childItems())
+    foreach (PuzzleItem *item, puzzleItems())
     {
-        PuzzleItem *item = (PuzzleItem*)gi;
         item->disableMerge();
         QPointF newPos((item->scene()->width() - originalPixmapSize().width()) / 2 + (item->puzzleCoordinates().x() * _unit.width()),
                        (item->scene()->height() - originalPixmapSize().height()) / 2 + (item->puzzleCoordinates().y() * _unit.height()));
@@ -359,31 +357,41 @@ void PuzzleBoard::surrenderGame()
 void PuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)
 {
     Q_UNUSED(z);
-    foreach (QGraphicsItem *item, childItems())
+    foreach (PuzzleItem *item, puzzleItems())
     {
-        PuzzleItem *widget = (PuzzleItem*) item;
-        if (widget->canMerge())
+        if (item->canMerge())
         {
-            widget->setPos(widget->pos().x() - x * widget->weight() / 2, widget->pos().y() + y * widget->weight() / 2);
-            widget->verifyPosition();
+            item->setPos(item->pos().x() - x * item->weight() / 2, item->pos().y() + y * item->weight() / 2);
+            item->verifyPosition();
         }
     }
 }
 
 void PuzzleBoard::enable()
 {
-    foreach (QGraphicsItem *item, childItems())
+    foreach (PuzzleItem *item, puzzleItems())
     {
-        PuzzleItem *widget = (PuzzleItem*) item;
-        widget->enableMerge();
+        item->enableMerge();
     }
 }
 
 void PuzzleBoard::disable()
 {
-    foreach (QGraphicsItem *item, childItems())
+    foreach (PuzzleItem *item, puzzleItems())
     {
-        PuzzleItem *widget = (PuzzleItem*) item;
-        widget->disableMerge();
+        item->disableMerge();
     }
+}
+
+QList<PuzzleItem*> PuzzleBoard::puzzleItems()
+{
+    QList<PuzzleItem*> result;
+    foreach (const QPointer<PuzzleItem> &ptr, _puzzleItems)
+    {
+        if (ptr.isNull())
+            _puzzleItems.removeAll(ptr);
+        else
+            result.append(ptr.data());
+    }
+    return result;
 }

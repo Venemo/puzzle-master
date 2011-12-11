@@ -4,20 +4,21 @@
 #
 #-------------------------------------------------
 
-QT += core gui declarative opengl
+QT += core gui declarative
 
 TARGET = puzzle-master
 TEMPLATE = app
-
 VERSION = 2.0
 
 SOURCES += \
-    main.cpp\
+    main.cpp \
+    appsettings.cpp \
     puzzleitem.cpp \
     puzzleboard.cpp
 
 HEADERS += \
     util.h \
+    appsettings.h \
     puzzleitem.h \
     puzzleboard.h
 
@@ -36,9 +37,13 @@ OTHER_FILES += \
     qml/meego/GamePage.qml \
     qml/other/AppWindow.qml \
     qml/other/Button.qml \
-    qml/other/ImageChooser.qml
+    qml/other/ImageChooser.qml \
+    qml/other/Dialog.qml
 
 unix {
+    QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
+    QMAKE_LFLAGS += -pie -rdynamic
+    DEFINES += HAVE_OPENGL
     INSTALLS += target iconfile desktopfile
     OTHER_FILES += data/puzzle-master.desktop
 
@@ -47,6 +52,12 @@ unix {
     iconfile.files = data/puzzle-master.png
     desktopfile.path = /usr/share/applications
     desktopfile.files = data/puzzle-master.desktop
+}
+contains(MEEGO_EDITION, harmattan) {
+    # We want to use applauncherd here
+    DEFINES += HAVE_APPLAUNCHERD
+    # The MeeGo graphics system is better than using QGLWidget
+    DEFINES -= HAVE_OPENGL
 }
 maemo5 {
     # Maemo 5 Fremantle
@@ -62,8 +73,8 @@ maemo5 {
 }
 symbian {
     # Symbian
-    QT -= opengl
     DEFINES += MOBILE HAVE_QACCELEROMETER
+    DEFINES -= HAVE_OPENGL
 
     CONFIG += mobility
     MOBILITY += sensors
@@ -84,9 +95,15 @@ win32 {
     OTHER_FILES += puzzle-master.rc
 }
 
-
-
-
+contains(DEFINES, HAVE_APPLAUNCHERD) {
+    # If we want to use applauncherd from MeeGo/Harmattan
+    CONFIG += qdeclarative-boostable link_pkgconfig
+    PKGCONFIG += qdeclarative-boostable
+    INCLUDEPATH += /usr/include/applauncherd
+}
+contains(DEFINES, HAVE_OPENGL) {
+    QT += opengl
+}
 
 
 

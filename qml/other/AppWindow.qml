@@ -11,8 +11,7 @@ Rectangle {
         rotationTolerance: 20
         anchors.fill: parent
         onGameWon: {
-            puzzleBoard.visible = false;
-            imageChooser.visible = true;
+            gameWonDialog.open();
         }
     }
 
@@ -23,6 +22,21 @@ Rectangle {
             puzzleBoard.visible = true;
             imageChooser.visible = false;
             puzzleBoard.startGame(imageChooser.selectedImageUrl, 3, 4, true);
+        }
+    }
+
+    Dialog {
+        id: gameWonDialog
+        title: qsTr("You rock!")
+        text: qsTr("Congratulations, you have successfully solved the given puzzle.")
+        acceptButtonText: qsTr("Play again")
+        rejectButtonText: qsTr("Choose other")
+        onAccepted: {
+            puzzleBoard.startGame(imageChooser.selectedImageUrl, 3, 4, true);
+        }
+        onRejected: {
+            puzzleBoard.visible = false;
+            imageChooser.visible = true;
         }
     }
 }

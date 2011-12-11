@@ -3,6 +3,7 @@
 
 #include <QDeclarativeItem>
 #include <QTimer>
+#include <QPointer>
 
 #if defined(HAVE_QACCELEROMETER)
 #include <QAccelerometer>
@@ -28,6 +29,7 @@ class PuzzleBoard : public QDeclarativeItem
     Q_PROPERTY(bool allowMultitouch READ allowMultitouch NOTIFY allowMultitouchChanged)
 
     QTimer *_fixedFPSTimer;
+    QList<QPointer<PuzzleItem> > _puzzleItems;
 #if defined(HAVE_QACCELEROMETER)
     QtMobility::QAccelerometer *accelerometer;
 #endif
@@ -42,6 +44,7 @@ public:
 
 protected:
     void accelerometerMovement(qreal x, qreal y, qreal z);
+    QList<PuzzleItem*> puzzleItems();
 
 signals:
     void isAccelerometerActiveChanged();

@@ -3,5 +3,6 @@
         <file>qml/other/AppWindow.qml</file>
         <file>qml/other/Button.qml</file>
         <file>qml/other/ImageChooser.qml</file>
+        <file>qml/other/Dialog.qml</file>
     </qresource>
 </RCC>
