@@ -11,13 +11,15 @@
 // Simple property
 #define GENPROPERTY_S(type, pname, name, settername) \
     private: type pname; \
-    public: inline const type &name() const { return pname; } inline void settername (const type &value) { pname = value; } \
+    public: inline const type &name() const { return pname; } \
+            inline void settername (const type &value) { pname = value; } \
     private:
 
 // "Full" property with signal
 #define GENPROPERTY_F(type, pname, name, settername, signalname) \
     private: type pname; \
-    public: inline const type &name() const { return pname; } inline void settername (const type &value) { pname = value; emit signalname (); } \
+    public: inline const type &name() const { return pname; } \
+            inline void settername (const type &value) { pname = value; emit signalname (); } \
     private:
 
 // Read-only property
@@ -29,7 +31,8 @@
 // Property which returns a pointer
 #define GENPROPERTY_PTR(type, pname, name, settername, signalname) \
     private: type pname; \
-    public: inline type name() { return pname; } inline void settername (type value) { pname = value; emit signalname (); } \
+    public: inline type name() { return pname; } \
+            inline void settername (type value) { pname = value; emit signalname (); } \
     private:
 
 inline qreal angle(const QPointF &v)
@@ -50,7 +53,8 @@ inline int randomInt(int low, int high)
     return qrand() % ((high + 1) - low) + low;
 }
 
-inline int max(int i, int j)
+template<class T>
+inline T max(T i, T j)
 {
     return i > j? i : j;
 }
@@ -69,19 +73,6 @@ inline qreal simplifyAngle(qreal a)
         a += 360;
 
     return a;
-}
-
-inline const QString &fetchAboutString()
-{
-    static QString *aboutString = 0;
-    if (aboutString == 0)
-    {
-        QFile file(":/about.txt");
-        file.open(QIODevice::ReadOnly);
-        aboutString = new QString(QString::fromUtf8(file.readAll().constData()));
-        file.close();
-    }
-    return *aboutString;
 }
 
 #endif // UTIL_H

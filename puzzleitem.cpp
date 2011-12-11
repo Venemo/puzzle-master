@@ -115,8 +115,8 @@ bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
             y2 = 0;
         }
 
-        QPixmap pix(max(x1 + pixmap().width(), x2 + item->pixmap().width()),
-                    max(y1 + pixmap().height(), y2 + item->pixmap().height()));
+        QPixmap pix(max<int>(x1 + pixmap().width(), x2 + item->pixmap().width()),
+                    max<int>(y1 + pixmap().height(), y2 + item->pixmap().height()));
         pix.fill(Qt::transparent);
 
         QPainter p;
