@@ -3,6 +3,7 @@ import QtQuick 1.0
 Rectangle {
     property string selectionColor: "blue"
     property string selectedImageUrl: ""
+    property int columnNumber: 3
 
     signal accepted
 
@@ -57,6 +58,8 @@ Rectangle {
             Grid {
                 id: imageSelectorGrid
                 spacing: 5
+                columns: imageChooser.columnNumber
+                anchors.horizontalCenter: parent.horizontalCenter
 
                 Repeater {
                     model: ListModel {
@@ -83,7 +86,7 @@ Rectangle {
                             id: imageItem
                             asynchronous: true
                             fillMode: Image.PreserveAspectFit
-                            width: 200
+                            width: imageChooser.width / imageChooser.columnNumber - 20
                             anchors.centerIn: parent
                             source: imageUrl
 
