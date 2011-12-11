@@ -35,9 +35,9 @@ Rectangle {
         id: imageChooser
         anchors.fill: parent
         onAccepted: {
-            gameBoard.visible = true;
             imageChooser.visible = false;
-            gameBoard.startGame(imageChooser.selectedImageUrl, 3, 4, true);
+            gameBoard.visible = true;
+            gameBoard.play();
         }
     }
 
@@ -48,7 +48,7 @@ Rectangle {
         acceptButtonText: qsTr("Play again")
         rejectButtonText: qsTr("Choose other")
         onAccepted: {
-            gameBoard.startGame(imageChooser.selectedImageUrl, 3, 4, true);
+            gameBoard.play();
         }
         onRejected: {
             gameBoard.visible = false;

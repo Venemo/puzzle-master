@@ -20,6 +20,10 @@ import QtQuick 1.0
 import net.venemo.puzzlemaster 2.0
 
 PuzzleBoard {
+    function play() {
+        gameBoard.startGame(imageChooser.selectedImageUrl, 3, 4, true);
+    }
+
     id: gameBoard
     tolerance: 10
     rotationTolerance: 20
@@ -62,8 +66,25 @@ PuzzleBoard {
                 width: 500
                 text: qsTr("Solve game")
                 onClicked: {
-                    gameBoard.assemble();
                     menuDialog.close();
+                    gameBoard.assemble();
+                }
+            }
+            Button {
+                width: 500
+                text: qsTr("Restart game")
+                onClicked: {
+                    menuDialog.close();
+                    play();
+                }
+            }
+            Button {
+                width: 500
+                text: qsTr("Abandon game")
+                onClicked: {
+                    menuDialog.close();
+                    gameBoard.visible = false;
+                    imageChooser.visible = true;
                 }
             }
             Button {
