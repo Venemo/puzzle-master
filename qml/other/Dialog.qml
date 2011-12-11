@@ -62,14 +62,16 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
 
             Button {
+                id: acceptButton
                 text: acceptButtonText
-                width: 150
+                width: 170
                 onClicked: dialog.accept();
                 visible: acceptButtonText != ""
             }
             Button {
+                id: rejectButton
                 text: rejectButtonText
-                width: 150
+                width: 170
                 onClicked: dialog.reject();
                 normalGradient: Gradient {
                     GradientStop { position: 0; color: "#ED1C24"; }
