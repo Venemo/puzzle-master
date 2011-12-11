@@ -58,7 +58,6 @@ public:
     void setNeighbours(int x, int y);
     PuzzleItem *find(const QPoint &puzzleCoordinates);
     bool isAccelerometerActive() const;
-    void assemble();
 
 protected:
     void accelerometerMovement(qreal x, qreal y, qreal z);
@@ -90,6 +89,7 @@ public slots:
     Q_INVOKABLE void enableFixedFPS();
     Q_INVOKABLE void disableFixedFPS();
     Q_INVOKABLE void shuffle();
+    Q_INVOKABLE void assemble();
 
 private:
     enum TabStatus {
