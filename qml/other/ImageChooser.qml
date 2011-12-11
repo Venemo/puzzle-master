@@ -28,7 +28,7 @@ Rectangle {
         }
 
         Text {
-            text: "Please select an image"
+            text: qsTr("Welcome! Select an image.")
             anchors.centerIn: parent
             font.pixelSize: 30
             color: "#ffffff"
@@ -144,8 +144,8 @@ Rectangle {
     Dialog {
         id: youMustChooseDialog
         z: 2
-        title: "Hey"
-        text: "You must choose an image before continuing."
-        acceptButtonText: "Ok"
+        title: qsTr("Please choose")
+        text: qsTr("You must choose an image before continuing.")
+        acceptButtonText: qsTr("Ok")
     }
 }
