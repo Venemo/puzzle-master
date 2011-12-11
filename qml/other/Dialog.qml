@@ -35,6 +35,10 @@ Rectangle {
         onClicked: dialog.reject();
     }
 
+    MouseArea {
+        anchors.fill: dialogColumn
+    }
+
     Column {
         id: dialogColumn
         spacing: 10
