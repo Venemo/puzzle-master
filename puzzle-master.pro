@@ -12,12 +12,14 @@ TEMPLATE = app
 VERSION = 2.0
 
 SOURCES += \
-    main.cpp\
+    main.cpp \
+    appsettings.cpp \
     puzzleitem.cpp \
     puzzleboard.cpp
 
 HEADERS += \
     util.h \
+    appsettings.h \
     puzzleitem.h \
     puzzleboard.h
 
