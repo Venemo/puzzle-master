@@ -2,7 +2,7 @@ import QtQuick 1.0
 
 Rectangle {
     property string selectionColor: "blue"
-    property string selectedImageUrl: null
+    property string selectedImageUrl: ""
 
     signal accepted
 
@@ -120,7 +120,7 @@ Rectangle {
             text: "Start game"
             anchors.centerIn: parent
             onClicked: {
-                if (imageChooser.selectedImageUrl !== null && imageChooser.selectedImageUrl != "")
+                if (imageChooser.selectedImageUrl != "")
                 {
                     imageChooser.accepted();
                 }
