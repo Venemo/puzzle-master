@@ -36,7 +36,8 @@ OTHER_FILES += \
     qml/meego/GamePage.qml \
     qml/other/AppWindow.qml \
     qml/other/Button.qml \
-    qml/other/ImageChooser.qml
+    qml/other/ImageChooser.qml \
+    qml/other/Dialog.qml
 
 unix {
     INSTALLS += target iconfile desktopfile
@@ -83,6 +84,7 @@ win32 {
     RC_FILE = puzzle-master.rc
     OTHER_FILES += puzzle-master.rc
 }
+
 
 
 

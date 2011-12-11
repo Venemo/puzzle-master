@@ -3,32 +3,35 @@ import QtQuick 1.0
 Rectangle {
     property string selectionColor: "blue"
     property string selectedImageUrl: null
-    property int deselectedImageHeight: 300
-    property int selectedImageHeight: 350
 
     signal accepted
 
     id: imageChooser
+    color: "black"
 
     Rectangle {
         id: imageChooserTop
         height: 70
-        color: "white"
+        color: "#7DB72F"
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        z: 1
+        radius: 15
+
+        Rectangle {
+            color: "#7DB72F"
+            height: 40
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+        }
 
         Text {
             text: "Please select an image"
             anchors.centerIn: parent
-            font.pixelSize: 40
-        }
-        Rectangle {
-            color: "black"
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 3
+            font.pixelSize: 30
+            color: "#ffffff"
         }
     }
 
@@ -38,25 +41,31 @@ Rectangle {
 
         id: imageChooserMiddle
         color: "white"
+        z: 0
         anchors.top: imageChooserTop.bottom
         anchors.bottom: imageChooserBottom.top
         anchors.left: parent.left
         anchors.right: parent.right
 
         Flickable {
-            anchors.fill: parent
             enabled: true
-            contentWidth: imageSelectorRow.width
+            contentHeight: imageSelectorGrid.height
+            anchors.fill: parent
+            anchors.topMargin: 5
+            anchors.bottomMargin: 5
 
-            Row {
-                id: imageSelectorRow
+            Grid {
+                id: imageSelectorGrid
                 spacing: 5
-                anchors.leftMargin: 20
-                anchors.rightMargin: 20
-                anchors.verticalCenter: parent.verticalCenter
 
                 Repeater {
                     model: ListModel {
+                        ListElement { imageUrl: ":/image1.jpg" }
+                        ListElement { imageUrl: ":/image2.jpg" }
+                        ListElement { imageUrl: ":/image3.jpg" }
+                        ListElement { imageUrl: ":/image4.jpg" }
+                        ListElement { imageUrl: ":/image5.jpg" }
+
                         ListElement { imageUrl: ":/image1.jpg" }
                         ListElement { imageUrl: ":/image2.jpg" }
                         ListElement { imageUrl: ":/image3.jpg" }
@@ -69,13 +78,12 @@ Rectangle {
                         width: imageItem.width + 10
                         height: imageItem.height + 10
                         color: "white"
-                        anchors.verticalCenter: parent.verticalCenter
 
                         Image {
                             id: imageItem
                             asynchronous: true
                             fillMode: Image.PreserveAspectFit
-                            height: 300
+                            width: 200
                             anchors.centerIn: parent
                             source: imageUrl
 
@@ -84,11 +92,8 @@ Rectangle {
                                 onClicked: {
                                     if (imageChooserMiddle.selectedItemBorder !== null)
                                         imageChooserMiddle.selectedItemBorder.color = "white";
-                                    if (imageChooserMiddle.selectedItemImage !== null)
-                                        imageChooserMiddle.selectedItemImage.height = imageChooser.deselectedImageHeight;
 
                                     imageBorder.color = imageChooser.selectionColor;
-                                    imageItem.height = imageChooser.selectedImageHeight;
                                     imageChooserMiddle.selectedItemBorder = imageBorder;
                                     imageChooserMiddle.selectedItemImage = imageItem;
                                     imageChooser.selectedImageUrl = imageUrl;
@@ -105,20 +110,42 @@ Rectangle {
     Rectangle {
         id: imageChooserBottom
         height: 70
-        color: "white"
+        color: "#7DB72F"
+        z: 1
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
 
         Button {
-            anchors.centerIn: parent
             text: "Start game"
+            anchors.centerIn: parent
             onClicked: {
                 if (imageChooser.selectedImageUrl !== null && imageChooser.selectedImageUrl != "")
                 {
                     imageChooser.accepted();
                 }
+                else
+                {
+                    youMustChooseDialog.open();
+                }
             }
         }
+        Button {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: 10
+            width: 70
+            text: "..."
+            onClicked: {
+            }
+        }
+    }
+
+    Dialog {
+        id: youMustChooseDialog
+        z: 2
+        title: "Hey"
+        text: "You must choose an image before continuing."
+        acceptButtonText: "Ok"
     }
 }
