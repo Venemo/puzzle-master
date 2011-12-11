@@ -72,15 +72,14 @@ void PuzzleBoard::accelerometerReadingChanged()
 #if defined(HAVE_QACCELEROMETER)
     QtMobility::QAccelerometerReading *reading = accelerometer->reading();
 #if defined(Q_WS_MAEMO_5)
-    if (views().at(0)->width() < views().at(0)->height())
-        accelerometerMovement(reading->y(), - reading->x(), reading->z());
-    else
+    accelerometerMovement(reading->y(), - reading->x(), reading->z());
 #elif defined(Q_OS_SYMBIAN)
-    if (views().at(0)->width() > views().at(0)->height())
-        accelerometerMovement(- reading->y(), reading->x(), reading->z());
-    else
+    accelerometerMovement(- reading->y(), reading->x(), reading->z());
+#elif defined(MEEGO_EDITION_HARMATTAN)
+    accelerometerMovement(- reading->y(), reading->x(), reading->z());
+#else
+    accelerometerMovement(reading->x(), reading->y(), reading->z());
 #endif
-        accelerometerMovement(reading->x(), reading->y(), reading->z());
 #endif
 }
 

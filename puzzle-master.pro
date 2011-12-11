@@ -63,7 +63,7 @@ unix {
 }
 contains(MEEGO_EDITION, harmattan) {
     # We want to use applauncherd here, and it has an accelerometer
-    DEFINES += HAVE_APPLAUNCHERD HAVE_QACCELEROMETER
+    DEFINES += HAVE_APPLAUNCHERD HAVE_QACCELEROMETER MEEGO_EDITION_HARMATTAN
     # The MeeGo graphics system is better than using QGLWidget
     DEFINES -= HAVE_OPENGL
 }
