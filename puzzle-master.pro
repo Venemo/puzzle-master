@@ -42,6 +42,9 @@ OTHER_FILES += \
     qml/other/Dialog.qml
 
 unix {
+    QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
+    QMAKE_LFLAGS += -pie -rdynamic
+
     INSTALLS += target iconfile desktopfile
     OTHER_FILES += data/puzzle-master.desktop
 
@@ -50,6 +53,10 @@ unix {
     iconfile.files = data/puzzle-master.png
     desktopfile.path = /usr/share/applications
     desktopfile.files = data/puzzle-master.desktop
+}
+contains(MEEGO_EDITION, harmattan) {
+    # We want to use applauncherd here
+    DEFINES += HAVE_APPLAUNCHERD
 }
 maemo5 {
     # Maemo 5 Fremantle
@@ -87,9 +94,12 @@ win32 {
     OTHER_FILES += puzzle-master.rc
 }
 
-
-
-
+contains(DEFINES, HAVE_APPLAUNCHERD) {
+    # If we want to use applauncherd from MeeGo/Harmattan
+    CONFIG += qdeclarative-boostable link_pkgconfig
+    PKGCONFIG += qdeclarative-boostable
+    INCLUDEPATH += /usr/include/applauncherd
+}
 
 
 

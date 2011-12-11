@@ -1,5 +1,6 @@
 #include <QApplication>
-#include <QtDeclarative>
+#include <QDeclarativeView>
+#include <QDeclarativeEngine>
 #include <QSettings>
 #include <QLibraryInfo>
 #include <QGLWidget>
@@ -8,7 +9,11 @@
 #include "puzzleboard.h"
 #include "appsettings.h"
 
-int main(int argc, char *argv[])
+#if defined(HAVE_APPLAUNCHERD)
+#include <MDeclarativeCache>
+#endif
+
+Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QApplication::addLibraryPath("./plugins");
     QApplication::setApplicationName("Puzzle Master");
@@ -30,17 +35,26 @@ int main(int argc, char *argv[])
     qmlRegisterType<PuzzleBoard>("net.venemo.puzzlemaster", 2, 0, "PuzzleBoard");
     qmlRegisterType<AppSettings>("net.venemo.puzzlemaster", 2, 0, "AppSettings");
 
-    QApplication *app = new QApplication(argc, argv);
+    QApplication *app;
+    QDeclarativeView *view;
+
+#if defined(HAVE_APPLAUNCHERD)
+    app = MDeclarativeCache::qApplication(argc, argv);
+    view = MDeclarativeCache::qDeclarativeView();
+#else
+    app = new QApplication(argc, argv);
+    view = new QDeclarativeView();
+#endif
 
     QApplication::installTranslator(&tQt);
     QApplication::installTranslator(&tApp);
+    QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
 
     QGLWidget *glWidget = new QGLWidget();
-    QDeclarativeView *view = new QDeclarativeView(QUrl("qrc:/qml/other/AppWindow.qml"));
-    QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
 
     view->setViewport(glWidget);
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    view->setSource(QUrl("qrc:/qml/other/AppWindow.qml"));
     view->showFullScreen();
 
     int result = app->exec();
