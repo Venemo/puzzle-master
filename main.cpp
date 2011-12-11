@@ -3,15 +3,18 @@
 #include <QDeclarativeEngine>
 #include <QSettings>
 #include <QLibraryInfo>
-#include <QGLWidget>
 
-#include "util.h"
-#include "puzzleboard.h"
-#include "appsettings.h"
+#if defined(HAVE_OPENGL)
+#include <QGLWidget>
+#endif
 
 #if defined(HAVE_APPLAUNCHERD)
 #include <MDeclarativeCache>
 #endif
+
+#include "util.h"
+#include "puzzleboard.h"
+#include "appsettings.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -50,9 +53,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QApplication::installTranslator(&tApp);
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
 
+#if defined(HAVE_OPENGL)
     QGLWidget *glWidget = new QGLWidget();
-
     view->setViewport(glWidget);
+#endif
+
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     view->setSource(QUrl("qrc:/qml/other/AppWindow.qml"));
     view->showFullScreen();
