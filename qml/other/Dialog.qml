@@ -105,7 +105,9 @@ Rectangle {
         width: dialog.contentWidth
         height: dialog.contentHeight
 
-        anchors.centerIn: parent
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: (titleText.height + separatorRect.height + (dialog.text != "" ? textText.height : 0)) / 2
     }
     Row {
         id: buttonRow
