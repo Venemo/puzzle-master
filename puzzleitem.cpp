@@ -37,8 +37,12 @@ PuzzleItem::PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent)
     setFlag(QGraphicsItem::ItemNegativeZStacksBehindParent, false);
     setFlag(QGraphicsItem::ItemClipsToShape, true);
     setAcceptTouchEvents(true);
-    setAcceptedMouseButtons(Qt::LeftButton);
-    setTransformOriginPoint(pixmap.width() / 2, pixmap.height() / 2);
+    setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
+}
+
+QPointF PuzzleItem::centerPoint() const
+{
+    return QPointF(width() / 2.0, height() / 2.0);
 }
 
 void PuzzleItem::addNeighbour(PuzzleItem *piece)
@@ -231,18 +235,20 @@ void PuzzleItem::handleRotation(const QPointF &v)
     if (!isnan(a))
     {
         a += _previousRotationValue;
-        simplifyAngle(a);
-        setRotation(a);
+        setRotation(simplifyAngle(a));
     }
 }
 
 void PuzzleItem::setCompensatedTransformOriginPoint(const QPointF &point)
 {
-    QPointF compensation = mapToParent(0, 0);
-    setTransformOriginPoint(point);
-    compensation -= mapToParent(0, 0);
-    setPos(pos() + compensation);
-    _dragStart -= compensation;
+    if (transformOriginPoint() != point)
+    {
+        QPointF compensation = mapToParent(0, 0);
+        setTransformOriginPoint(point);
+        compensation -= mapToParent(0, 0);
+        setPos(pos() + compensation);
+        _dragStart -= compensation;
+    }
 }
 
 void PuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -251,7 +257,18 @@ void PuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     event->accept();
 
     if (event->button() == Qt::LeftButton)
+    {
+        _isLeftButtonPressed = true;
         startDrag(event->pos());
+    }
+    else if (event->button() == Qt::RightButton)
+    {
+        _isRightButtonPressed = true;
+        stopDrag();
+        setCompensatedTransformOriginPoint(centerPoint());
+        _previousRotationValue = rotation();
+        _rotationStartVector = mapToParent(event->pos()) - mapToParent(centerPoint());
+    }
 }
 
 void PuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -260,14 +277,27 @@ void PuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     event->accept();
 
     if (event->button() == Qt::LeftButton)
+    {
+        _isLeftButtonPressed = false;
         stopDrag();
+    }
+    else if (event->button() == Qt::RightButton)
+    {
+        _isRightButtonPressed = false;
+
+        if (_isLeftButtonPressed)
+            startDrag(event->pos());
+    }
 }
 
 void PuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QDeclarativeItem::mouseMoveEvent(event);
     event->accept();
-    if (!_isDraggingWithTouch)
+
+    if (_isRightButtonPressed)
+        handleRotation(mapToParent(event->pos()) - mapToParent(centerPoint()));
+    else if (!_isDraggingWithTouch)
         doDrag(event->pos());
 }
 

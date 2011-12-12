@@ -41,10 +41,8 @@ private:
     GENPROPERTY_S(bool, _canMerge, canMerge, setCanMerge)
     GENPROPERTY_S(qreal, _weight, weight, setWeight)
 
-    QPointF _dragStart;
-    QPointF _rotationStartVector;
-    bool _dragging;
-    bool _isDraggingWithTouch;
+    QPointF _dragStart, _rotationStartVector;
+    bool _dragging, _isDraggingWithTouch, _isLeftButtonPressed, _isRightButtonPressed;
     double _previousRotationValue;
     int _previousTouchPointCount;
     QPainterPath _shape;
@@ -63,6 +61,7 @@ public:
     void addNeighbour(PuzzleItem *piece);
     void removeNeighbour(PuzzleItem *piece);
     bool isNeighbourOf(const PuzzleItem *piece) const;
+    QPointF centerPoint() const;
 
 public slots:
     void enableMerge();
