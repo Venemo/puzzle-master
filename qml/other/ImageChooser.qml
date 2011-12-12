@@ -29,7 +29,7 @@ Rectangle {
 
     Rectangle {
         id: imageChooserTop
-        height: 70
+        height: 60
         color: "#7DB72F"
         anchors.top: parent.top
         anchors.left: parent.left
@@ -38,7 +38,7 @@ Rectangle {
 
         Rectangle {
             color: "#7DB72F"
-            height: 40
+            height: imageChooserTop.radius + 1
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -123,11 +123,20 @@ Rectangle {
 
     Rectangle {
         id: imageChooserBottom
-        height: 70
+        height: imageChooserTop.height
         color: "#7DB72F"
+        radius: 15
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
+
+        Rectangle {
+            color: "#7DB72F"
+            height: imageChooserBottom.radius + 1
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+        }
 
         Button {
             text: "Start game"

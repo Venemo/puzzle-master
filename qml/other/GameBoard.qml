@@ -34,7 +34,7 @@ PuzzleBoard {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         width: 92
-        height: 70
+        height: 60
         color: "#997DB72F"
 
         Button {
