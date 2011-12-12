@@ -92,6 +92,11 @@ Rectangle {
                         color: imageBorder === imageChooserMiddle.selectedItemBorder ? "#538312" : "white"
 
                         Image {
+                            function selectItem() {
+                                imageChooserMiddle.selectedItemBorder = imageBorder;
+                                imageChooser.selectedImageUrl = imageUrl;
+                            }
+
                             id: imageItem
                             asynchronous: true
                             fillMode: Image.PreserveAspectFit
@@ -102,8 +107,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    imageChooserMiddle.selectedItemBorder = imageBorder;
-                                    imageChooser.selectedImageUrl = imageUrl;
+                                    if (imageBorder === imageChooserMiddle.selectedItemBorder)
+                                        imageChooser.accepted();
+                                    else
+                                        imageItem.selectItem();
                                 }
                             }
                         }
