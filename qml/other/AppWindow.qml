@@ -23,6 +23,10 @@ Rectangle {
     width: 854
     height: 480
 
+    AppSettings {
+        id: appSettings
+    }
+
     GameBoard {
         id: gameBoard
         anchors.fill: parent
@@ -35,9 +39,7 @@ Rectangle {
         id: imageChooser
         anchors.fill: parent
         onAccepted: {
-            imageChooser.visible = false;
-            gameBoard.visible = true;
-            gameBoard.play();
+            optionsDialog.open();
         }
     }
 
@@ -70,5 +72,18 @@ Rectangle {
         title: qsTr("About Puzzle Master")
         text: qsTr("Brought to you by Timur Kristóf.\nPuzzle Master is a fun and addictive jigsaw puzzle game.\nUsing Qt.")
         acceptButtonText: "Ok"
+    }
+
+    OptionsDialog {
+        id: optionsDialog
+        onAccepted: {
+            imageChooser.visible = false;
+            gameBoard.visible = true;
+            gameBoard.play();
+        }
+        onVisibleChanged: {
+            optionsDialog.rows = appSettings.rows;
+            optionsDialog.columns = appSettings.columns;
+        }
     }
 }

@@ -5,5 +5,7 @@
         <file>qml/other/ImageChooser.qml</file>
         <file>qml/other/Dialog.qml</file>
         <file>qml/other/GameBoard.qml</file>
+        <file>qml/other/OptionsDialog.qml</file>
+        <file>qml/other/Slider.qml</file>
     </qresource>
 </RCC>
