@@ -54,7 +54,7 @@ Rectangle {
         x: 0
         width: slider.height - 4
         height: slider.height - 4
-        radius: width / 2
+        radius: width / 2 - 1
         anchors.verticalCenter: parent.verticalCenter
     }
 
