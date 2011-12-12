@@ -104,7 +104,7 @@ bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
 
         QPoint vector = item->puzzleCoordinates() - puzzleCoordinates();
         QPointF positionVector = item->supposedPosition() - supposedPosition();
-        QPointF old00 = mapToParent(0, 0), oldPos = pos();
+        QPointF old00 = mapToParent(0, 0);
 
         int x1, x2, y1, y2, u1, v1;
         if (vector.x() >= 0)
