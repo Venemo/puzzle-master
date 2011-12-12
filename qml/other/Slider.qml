@@ -23,10 +23,17 @@ Rectangle {
     property int maxValue: 10
     property int value: minValue
 
+    function adjustHandleX() {
+        handle.x = picker.width * (value - minValue) / (maxValue - minValue);
+    }
+
     id: slider
     height: 40
     width: 100
     color: "transparent"
+
+    onValueChanged: adjustHandleX()
+    onVisibleChanged: adjustHandleX()
 
     Rectangle {
         id: picker
@@ -56,8 +63,7 @@ Rectangle {
         onMouseXChanged: handle.x = (mouseX < 0 ? 0 : (mouseX > picker.width ? picker.width : mouseX))
         onReleased: {
             value = Math.round((maxValue - minValue) * handle.x / picker.width) + minValue;
-            handle.x = picker.width * (value - minValue) / (maxValue - minValue);
-            console.log(value);
+            adjustHandleX();
         }
     }
 }
