@@ -23,7 +23,7 @@ Dialog {
     property int rows: 4
 
     id: optionsDialog
-    title: qsTr("Game options")
+    title: qsTr("Game difficulty")
     acceptButtonText: qsTr("Play")
     rejectButtonText: qsTr("Cancel")
     enableBackgroundClicking: false
