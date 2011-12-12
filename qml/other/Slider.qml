@@ -69,10 +69,18 @@ Rectangle {
         id: sliderDragArea
         anchors.fill: parent
         onMouseXChanged: {
-            handle.x = (mouseX < 0 ? 0 : (mouseX > picker.width ? picker.width : mouseX))
-            calculateValue();
+            if (pressed)
+            {
+                var xx = mouseX - handle.width / 2;
+                handle.x = (xx < 0 ? 0 : (xx > picker.width ? picker.width : xx))
+                calculateValue();
+
+                if (mouseX >= handle.x && mouseX <= handle.x + handle.width)
+                    handle.gradient = handle.pressedGradient;
+            }
         }
         onReleased: {
+            handle.gradient = handle.normalGradient;
             calculateValue();
             adjustHandleX();
         }
