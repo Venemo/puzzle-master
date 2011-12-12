@@ -141,6 +141,7 @@ Rectangle {
 
         Button {
             text: "Start game"
+            height: 48
             anchors.centerIn: parent
             onClicked: {
                 if (imageChooser.selectedImageUrl != "")
@@ -158,6 +159,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.rightMargin: 10
             width: 70
+            height: 48
             text: "..."
             onClicked: {
                 menuDialog.open();

@@ -42,6 +42,7 @@ PuzzleBoard {
             anchors.right: parent.right
             anchors.rightMargin: 10
             width: 70
+            height: 48
             text: "..."
             onClicked: {
                 menuDialog.open();
