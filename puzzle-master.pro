@@ -94,6 +94,7 @@ contains(DEFINES, HAVE_APPLAUNCHERD) {
     CONFIG += qdeclarative-boostable link_pkgconfig
     PKGCONFIG += qdeclarative-boostable
     INCLUDEPATH += /usr/include/applauncherd
+    desktopfile.files = installables/puzzle-master-applauncherd.desktop
 }
 contains(DEFINES, HAVE_OPENGL) {
     QT += opengl
