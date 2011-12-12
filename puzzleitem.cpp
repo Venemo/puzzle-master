@@ -28,6 +28,7 @@ PuzzleItem::PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent)
       _weight(randomInt(100, 950) / 1000.0),
       _dragging(false),
       _isDraggingWithTouch(false),
+      _isRightButtonPressed(false),
       _previousRotationValue(0),
       _previousTouchPointCount(0)
 {
