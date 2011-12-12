@@ -49,6 +49,7 @@ Rectangle {
         text: qsTr("Congratulations, you have successfully solved the given puzzle.")
         acceptButtonText: qsTr("Play again")
         rejectButtonText: qsTr("Choose other")
+        backgroundColor: "#99101010"
         onAccepted: {
             gameBoard.play();
         }
