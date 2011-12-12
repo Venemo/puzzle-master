@@ -21,7 +21,7 @@ import net.venemo.puzzlemaster 2.0
 
 PuzzleBoard {
     function play() {
-        gameBoard.startGame(imageChooser.selectedImageUrl, 3, 4, true);
+        gameBoard.startGame(imageChooser.selectedImageUrl, optionsDialog.rows, optionsDialog.columns, true);
     }
 
     id: gameBoard
