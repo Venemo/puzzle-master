@@ -38,14 +38,14 @@ Rectangle {
     height: buttonText.height * 1.75
     border.color: button.borderColor
     border.width: 2
-    smooth: true
     gradient: normalGradient
 
-    Text {
+    TextEdit {
         id: buttonText
         anchors.centerIn: parent
         font.pixelSize: 25
         color: button.fontColor
+        activeFocusOnPress: false
     }
     MouseArea {
         id: buttonMouseArea

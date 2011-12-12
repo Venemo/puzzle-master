@@ -34,10 +34,11 @@ Dialog {
         spacing: 10
         width: 500
 
-        Text {
+        TextEdit {
             color: "white"
             font.pixelSize: 25
             text: qsTr("Columns")
+            activeFocusOnPress: false
         }
         Row {
             width: parent.width
@@ -51,17 +52,19 @@ Dialog {
                 value: optionsDialog.columns
                 onValueChanged: optionsDialog.columns = value
             }
-            Text {
+            TextEdit {
                 color: "white"
                 font.pixelSize: 25
                 text: columnsSlider.value
+                activeFocusOnPress: false
                 anchors.verticalCenter: columnsSlider.verticalCenter
             }
         }
-        Text {
+        TextEdit {
             color: "white"
             font.pixelSize: 25
             text: qsTr("Rows")
+            activeFocusOnPress: false
         }
         Row {
             width: parent.width
@@ -75,10 +78,11 @@ Dialog {
                 value: optionsDialog.rows
                 onValueChanged: optionsDialog.rows = value
             }
-            Text {
+            TextEdit {
                 color: "white"
                 font.pixelSize: 25
                 text: rowsSlider.value
+                activeFocusOnPress: false
                 anchors.verticalCenter: rowsSlider.verticalCenter
             }
         }

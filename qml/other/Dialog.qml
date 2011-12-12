@@ -68,12 +68,13 @@ Rectangle {
         anchors.bottom: buttonRow.bottom
     }
 
-    Text {
+    TextEdit {
         id: titleText
         color: dialog.fontColor
         text: dialog.title
         font.pixelSize: 35
         visible: dialog.title != ""
+        activeFocusOnPress: false
 
         anchors.left: separatorRect.left
         anchors.bottom: separatorRect.top
@@ -90,7 +91,7 @@ Rectangle {
         anchors.bottom: textText.visible ? textText.top : contentField.top
         anchors.bottomMargin: 10
     }
-    Text {
+    TextEdit {
         id: textText
         color: dialog.fontColor
         text: dialog.text
@@ -98,6 +99,7 @@ Rectangle {
         visible: dialog.text != ""
         width: dialog.contentWidth
         wrapMode: Text.Wrap
+        activeFocusOnPress: false
 
         anchors.left: separatorRect.left
         anchors.horizontalCenter: parent.horizontalCenter

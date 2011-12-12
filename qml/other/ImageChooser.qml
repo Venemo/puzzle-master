@@ -44,11 +44,12 @@ Rectangle {
             anchors.bottom: parent.bottom
         }
 
-        Text {
+        TextEdit {
             text: qsTr("Welcome! Select an image.")
             anchors.centerIn: parent
             font.pixelSize: 30
             color: "#ffffff"
+            activeFocusOnPress: false
         }
     }
 
