@@ -39,6 +39,8 @@ class AppSettings : public QObject
     Q_OBJECT
     GENPROPERTY_R(bool, _areSettingsDeleted, areSettingsDeleted)
     Q_PROPERTY(bool areSettingsDeleted READ areSettingsDeleted NOTIFY areSettingsDeletedChanged)
+    Q_PROPERTY(int rows READ rows WRITE setRows NOTIFY rowsChanged)
+    Q_PROPERTY(int columns READ columns WRITE setColumns NOTIFY columnsChanged)
 
     QSettings _backend;
 
