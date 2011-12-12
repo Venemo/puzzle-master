@@ -191,11 +191,15 @@ bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
 
 void PuzzleItem::startDrag(const QPointF &p)
 {
-    if (_canMerge && !_dragging)
+    if (_canMerge)
     {
         _dragging = true;
         _dragStart = mapToParent(p) - pos();
         raise();
+    }
+    else
+    {
+        stopDrag();
     }
 }
 
@@ -228,15 +232,18 @@ void PuzzleItem::doDrag(const QPointF &position)
     }
 }
 
+void PuzzleItem::startRotation(const QPointF &vector)
+{
+    _previousRotationValue = rotation();
+    _rotationStartVector = vector;
+}
+
 void PuzzleItem::handleRotation(const QPointF &v)
 {
     qreal a = angle(_rotationStartVector, v) * 180 / M_PI;
 
     if (!isnan(a))
-    {
-        a += _previousRotationValue;
-        setRotation(simplifyAngle(a));
-    }
+        setRotation(simplifyAngle(a + _previousRotationValue));
 }
 
 void PuzzleItem::setCompensatedTransformOriginPoint(const QPointF &point)
@@ -258,16 +265,13 @@ void PuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     if (event->button() == Qt::LeftButton)
     {
-        _isLeftButtonPressed = true;
         startDrag(event->pos());
     }
     else if (event->button() == Qt::RightButton)
     {
         _isRightButtonPressed = true;
-        stopDrag();
         setCompensatedTransformOriginPoint(centerPoint());
-        _previousRotationValue = rotation();
-        _rotationStartVector = mapToParent(event->pos()) - mapToParent(centerPoint());
+        startRotation(mapToParent(event->pos()) - mapToParent(centerPoint()));
     }
 }
 
@@ -278,15 +282,14 @@ void PuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     if (event->button() == Qt::LeftButton)
     {
-        _isLeftButtonPressed = false;
         stopDrag();
     }
     else if (event->button() == Qt::RightButton)
     {
         _isRightButtonPressed = false;
 
-        if (_isLeftButtonPressed)
-            startDrag(event->pos());
+        if (_dragging)
+            _dragStart = mapToParent(event->pos()) - pos();
     }
 }
 
@@ -352,8 +355,7 @@ bool PuzzleItem::sceneEvent(QEvent *event)
         if (_previousTouchPointCount < 2 && touchEvent->touchPoints().count() == 2)
         {
             // Starting rotation
-            _previousRotationValue = rotation();
-            _rotationStartVector = mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos());
+            startRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
         }
 
         _previousTouchPointCount = touchEvent->touchPoints().count();

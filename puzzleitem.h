@@ -42,11 +42,10 @@ private:
     GENPROPERTY_S(qreal, _weight, weight, setWeight)
 
     QPointF _dragStart, _rotationStartVector;
-    bool _dragging, _isDraggingWithTouch, _isLeftButtonPressed, _isRightButtonPressed;
+    bool _dragging, _isDraggingWithTouch, _isRightButtonPressed;
     double _previousRotationValue;
     int _previousTouchPointCount;
-    QPainterPath _shape;
-    QPainterPath _stroke;
+    QPainterPath _shape, _stroke;
 
 public:
     explicit PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent = 0);
@@ -74,6 +73,7 @@ protected:
     void startDrag(const QPointF &pos);
     void stopDrag();
     void doDrag(const QPointF &pos);
+    void startRotation(const QPointF &vector);
     void handleRotation(const QPointF &vector);
     void setCompensatedTransformOriginPoint(const QPointF &point);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
