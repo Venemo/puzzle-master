@@ -51,6 +51,8 @@ OTHER_FILES += \
     qml/other/OptionsDialog.qml \
     qml/other/Slider.qml
 
+# Platforms
+
 unix {
     QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
     QMAKE_LFLAGS += -pie -rdynamic
@@ -89,6 +91,8 @@ symbian {
     TARGET.EPOCHEAPSIZE = 0x020000 0x20971520
 }
 
+# Features
+
 contains(DEFINES, HAVE_APPLAUNCHERD) {
     # If we want to use applauncherd from MeeGo/Harmattan
     CONFIG += qdeclarative-boostable link_pkgconfig
@@ -97,9 +101,11 @@ contains(DEFINES, HAVE_APPLAUNCHERD) {
     desktopfile.files = installables/puzzle-master-applauncherd.desktop
 }
 contains(DEFINES, HAVE_OPENGL) {
+    # If we want QGLWidget as viewport
     QT += opengl
 }
 contains(DEFINES, HAVE_QACCELEROMETER) {
+    # Ability to enable accelerometer
     CONFIG += mobility
     MOBILITY += sensors
 }
