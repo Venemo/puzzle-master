@@ -34,24 +34,58 @@ Rectangle {
     signal accepted
 
     function reject() {
-        dialog.visible = false;
-        dialog.rejected();
+        hideAnimation.shouldAccept = false;
+        hideAnimation.start();
     }
     function accept() {
-        dialog.visible = false;
-        dialog.accepted();
+        hideAnimation.shouldAccept = true;
+        hideAnimation.start();
     }
     function open() {
-        dialog.visible = true;
+        showAnimation.start();
     }
     function close() {
-        dialog.visible = false;
+        hideAnimation.start();
     }
 
     id: dialog
     color: dialog.backgroundColor
     visible: false
     anchors.fill: parent
+
+    NumberAnimation {
+        id: showAnimation
+        target: dialog
+        property: "opacity"
+        from: 0
+        to: 1
+        duration: 120
+        onStarted: {
+            dialog.visible = true;
+            disableAllTheThings.enabled = false;
+        }
+    }
+
+    NumberAnimation {
+        property bool shouldAccept: false
+
+        id: hideAnimation
+        target: dialog
+        property: "opacity"
+        from: 1
+        to: 0
+        duration: 120
+        onStarted: {
+            disableAllTheThings.enabled = true;
+        }
+        onCompleted: {
+            dialog.visible = false;
+            if (shouldAccept)
+                dialog.accepted();
+            else
+                dialog.rejected();
+        }
+    }
 
     MouseArea {
         anchors.fill: parent
@@ -146,5 +180,10 @@ Rectangle {
             borderColor: "#980C10"
             visible: rejectButtonText != ""
         }
+    }
+    MouseArea {
+        id: disableAllTheThings
+        anchors.fill: parent
+        enabled: false
     }
 }
