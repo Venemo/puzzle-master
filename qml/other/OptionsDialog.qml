@@ -19,8 +19,8 @@
 import QtQuick 1.0
 
 Dialog {
-    property alias rows: rowsSlider.value
-    property alias columns: columnsSlider.value
+    property int columns: 4
+    property int rows: 4
 
     id: optionsDialog
     title: qsTr("Game options")
@@ -48,6 +48,8 @@ Dialog {
                 width: parent.width - 20
                 minValue: 2
                 maxValue: 5
+                value: optionsDialog.columns
+                onValueChanged: optionsDialog.columns = value
             }
             Text {
                 color: "white"
@@ -70,6 +72,8 @@ Dialog {
                 width: parent.width - 20
                 minValue: 2
                 maxValue: 5
+                value: optionsDialog.rows
+                onValueChanged: optionsDialog.rows = value
             }
             Text {
                 color: "white"
@@ -78,7 +82,5 @@ Dialog {
                 anchors.verticalCenter: rowsSlider.verticalCenter
             }
         }
-
     }
-
 }

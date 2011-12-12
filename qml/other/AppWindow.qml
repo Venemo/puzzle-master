@@ -82,8 +82,10 @@ Rectangle {
             gameBoard.play();
         }
         onVisibleChanged: {
-            optionsDialog.rows = appSettings.rows;
             optionsDialog.columns = appSettings.columns;
+            optionsDialog.rows = appSettings.rows;
         }
+        onColumnsChanged: appSettings.columns = columns
+        onRowsChanged: appSettings.rows = rows
     }
 }
