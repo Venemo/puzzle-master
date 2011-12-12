@@ -46,7 +46,7 @@ Rectangle {
     Dialog {
         id: gameWonDialog
         title: qsTr("You rock!")
-        text: qsTr("Congratulations, you have successfully solved the given puzzle.\nDo you wish to play it again?")
+        text: qsTr("Congratulations, you have successfully solved the given puzzle.")
         acceptButtonText: qsTr("Play again")
         rejectButtonText: qsTr("Choose other")
         onAccepted: {
