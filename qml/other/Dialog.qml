@@ -28,6 +28,7 @@ Rectangle {
     property alias content: contentField.children
     property int contentHeight: 0
     property int contentWidth: 500
+    property bool enableBackgroundClicking: true
 
     signal rejected
     signal accepted
@@ -54,7 +55,10 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: dialog.reject();
+        onClicked: {
+            if (enableBackgroundClicking)
+                dialog.reject();
+        }
     }
 
     MouseArea {
