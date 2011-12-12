@@ -29,25 +29,23 @@ PuzzleBoard {
     rotationTolerance: 20
     z: 0
 
-    Button {
+    Rectangle {
         z: 1
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.rightMargin: 5
-        anchors.bottomMargin: 5
-        width: 70
-        text: "..."
-        normalGradient: Gradient {
-            GradientStop { position: 0; color: "#888888"; }
-            GradientStop { position: 1; color: "#575757"; }
-        }
-        pressedGradient: Gradient {
-            GradientStop { position: 0; color: "#575757"; }
-            GradientStop { position: 1; color: "#575757"; }
-        }
-        borderColor: "#555555"
-        onClicked: {
-            menuDialog.open();
+        width: 92
+        height: 70
+        color: "#997DB72F"
+
+        Button {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: 10
+            width: 70
+            text: "..."
+            onClicked: {
+                menuDialog.open();
+            }
         }
     }
 
