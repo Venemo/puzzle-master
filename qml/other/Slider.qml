@@ -27,12 +27,19 @@ Rectangle {
         handle.x = picker.width * (value - minValue) / (maxValue - minValue);
     }
 
+    function calculateValue() {
+        value = Math.round((maxValue - minValue) * handle.x / picker.width) + minValue;
+    }
+
     id: slider
     height: 40
     width: 100
     color: "transparent"
 
-    onValueChanged: adjustHandleX()
+    onValueChanged: {
+        if (!sliderDragArea.pressed)
+            adjustHandleX()
+    }
     onVisibleChanged: adjustHandleX()
 
     Rectangle {
@@ -59,10 +66,14 @@ Rectangle {
     }
 
     MouseArea {
+        id: sliderDragArea
         anchors.fill: parent
-        onMouseXChanged: handle.x = (mouseX < 0 ? 0 : (mouseX > picker.width ? picker.width : mouseX))
+        onMouseXChanged: {
+            handle.x = (mouseX < 0 ? 0 : (mouseX > picker.width ? picker.width : mouseX))
+            calculateValue();
+        }
         onReleased: {
-            value = Math.round((maxValue - minValue) * handle.x / picker.width) + minValue;
+            calculateValue();
             adjustHandleX();
         }
     }
