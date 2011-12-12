@@ -30,6 +30,7 @@ Rectangle {
     }
     property string borderColor: "#538312"
     property string fontColor: "#ffffff"
+
     signal clicked
 
     id: button

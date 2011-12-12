@@ -26,7 +26,6 @@ Rectangle {
     AppSettings {
         id: appSettings
     }
-
     GameBoard {
         id: gameBoard
         anchors.fill: parent
@@ -34,7 +33,6 @@ Rectangle {
             gameWonDialog.open();
         }
     }
-
     ImageChooser {
         id: imageChooser
         anchors.fill: parent
@@ -42,11 +40,11 @@ Rectangle {
             optionsDialog.open();
         }
     }
-
     Dialog {
         id: gameWonDialog
         title: qsTr("You rock!")
         text: qsTr("Congratulations, you have successfully solved the given puzzle.")
+        enableBackgroundClicking: false
         acceptButtonText: qsTr("Play again")
         rejectButtonText: qsTr("Choose other")
         backgroundColor: "#99101010"
@@ -58,7 +56,6 @@ Rectangle {
             imageChooser.visible = true;
         }
     }
-
     Dialog {
         id: areYouSureToQuitDialog
         title: qsTr("Are you sure?")
@@ -67,14 +64,12 @@ Rectangle {
         rejectButtonText: qsTr("No")
         onAccepted: Qt.quit()
     }
-
     Dialog {
         id: aboutDialog
         title: qsTr("About Puzzle Master")
         text: qsTr("Brought to you by Timur Kristóf.\nPuzzle Master is a fun and addictive jigsaw puzzle game.\nUsing Qt.")
         acceptButtonText: "Ok"
     }
-
     OptionsDialog {
         id: optionsDialog
         onAccepted: {

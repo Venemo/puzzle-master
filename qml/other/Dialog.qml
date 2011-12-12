@@ -65,7 +65,6 @@ Rectangle {
             disableAllTheThings.enabled = false;
         }
     }
-
     NumberAnimation {
         property bool shouldAccept: false
 
@@ -80,13 +79,13 @@ Rectangle {
         }
         onCompleted: {
             dialog.visible = false;
+
             if (shouldAccept)
                 dialog.accepted();
             else
                 dialog.rejected();
         }
     }
-
     MouseArea {
         anchors.fill: parent
         onClicked: {
@@ -94,14 +93,12 @@ Rectangle {
                 dialog.reject();
         }
     }
-
     MouseArea {
         anchors.left: separatorRect.left
         anchors.right: separatorRect.right
         anchors.top: titleText.top
         anchors.bottom: buttonRow.bottom
     }
-
     TextEdit {
         id: titleText
         color: dialog.fontColor
@@ -152,8 +149,8 @@ Rectangle {
     Row {
         id: buttonRow
         spacing: 10
-        anchors.horizontalCenter: parent.horizontalCenter
 
+        anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: contentField.bottom
         anchors.topMargin: 10
 

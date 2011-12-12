@@ -33,14 +33,14 @@ PuzzleBoard {
         z: 1
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        width: 92
+        width: 82
         height: 60
         color: "#997DB72F"
 
         Button {
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
-            anchors.rightMargin: 10
+            anchors.rightMargin: 6
             width: 70
             height: 48
             text: "..."
@@ -49,14 +49,12 @@ PuzzleBoard {
             }
         }
     }
-
     Dialog {
         z: 1
         id: menuDialog
         title: "Puzzle Master"
         contentHeight: menuDialogColumn.height
         contentWidth: menuDialogColumn.width
-
         content: Column {
             id: menuDialogColumn
             spacing: 10

@@ -52,7 +52,6 @@ Rectangle {
             activeFocusOnPress: false
         }
     }
-
     Rectangle {
         property Rectangle selectedItemBorder: null
 
@@ -85,7 +84,6 @@ Rectangle {
                         ListElement { imageUrl: ":/pics/image4.jpg" }
                         ListElement { imageUrl: ":/pics/image5.jpg" }
                     }
-
                     delegate: Rectangle {
                         id: imageBorder
                         width: imageItem.width + 10
@@ -119,9 +117,7 @@ Rectangle {
                 }
             }
         }
-
     }
-
     Rectangle {
         id: imageChooserBottom
         height: imageChooserTop.height
@@ -138,26 +134,21 @@ Rectangle {
             anchors.right: parent.right
             anchors.top: parent.top
         }
-
         Button {
             text: "Start game"
             height: 48
             anchors.centerIn: parent
             onClicked: {
                 if (imageChooser.selectedImageUrl != "")
-                {
                     imageChooser.accepted();
-                }
                 else
-                {
                     youMustChooseDialog.open();
-                }
             }
         }
         Button {
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
-            anchors.rightMargin: 10
+            anchors.rightMargin: 6
             width: 70
             height: 48
             text: "..."
@@ -166,20 +157,17 @@ Rectangle {
             }
         }
     }
-
     Dialog {
         id: youMustChooseDialog
         title: qsTr("Please choose")
         text: qsTr("You must choose an image before continuing.")
         acceptButtonText: qsTr("Ok")
     }
-
     Dialog {
         id: menuDialog
         title: "Puzzle Master"
         contentHeight: menuDialogColumn.height
         contentWidth: menuDialogColumn.width
-
         content: Column {
             id: menuDialogColumn
             spacing: 10

@@ -26,7 +26,6 @@ Rectangle {
     function adjustHandleX() {
         handle.x = picker.width * (value - minValue) / (maxValue - minValue);
     }
-
     function calculateValue() {
         value = Math.round((maxValue - minValue) * handle.x / picker.width) + minValue;
     }
@@ -55,7 +54,6 @@ Rectangle {
         anchors.rightMargin: handle.width / 2
         anchors.verticalCenter: parent.verticalCenter
     }
-
     Button {
         id: handle
         x: 0
@@ -64,7 +62,6 @@ Rectangle {
         radius: width / 2 - 1
         anchors.verticalCenter: parent.verticalCenter
     }
-
     MouseArea {
         id: sliderDragArea
         anchors.fill: parent
