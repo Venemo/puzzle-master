@@ -35,7 +35,7 @@ Dialog {
         width: 500
 
         TextEdit {
-            color: "white"
+            color: "#ffffff"
             font.pixelSize: 25
             text: qsTr("Columns")
             activeFocusOnPress: false
@@ -53,7 +53,7 @@ Dialog {
                 onValueChanged: optionsDialog.columns = value
             }
             TextEdit {
-                color: "white"
+                color: "#ffffff"
                 font.pixelSize: 25
                 text: columnsSlider.value
                 activeFocusOnPress: false
@@ -61,7 +61,7 @@ Dialog {
             }
         }
         TextEdit {
-            color: "white"
+            color: "#ffffff"
             font.pixelSize: 25
             text: qsTr("Rows")
             activeFocusOnPress: false
@@ -79,7 +79,7 @@ Dialog {
                 onValueChanged: optionsDialog.rows = value
             }
             TextEdit {
-                color: "white"
+                color: "#ffffff"
                 font.pixelSize: 25
                 text: rowsSlider.value
                 activeFocusOnPress: false

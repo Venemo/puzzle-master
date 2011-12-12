@@ -25,7 +25,7 @@ Rectangle {
     signal accepted
 
     id: imageChooser
-    color: "black"
+    color: "#000000"
 
     Rectangle {
         id: imageChooserTop
@@ -56,7 +56,7 @@ Rectangle {
         property Rectangle selectedItemBorder: null
 
         id: imageChooserMiddle
-        color: "white"
+        color: "#ffffff"
         anchors.top: imageChooserTop.bottom
         anchors.bottom: imageChooserBottom.top
         anchors.left: parent.left
@@ -135,7 +135,7 @@ Rectangle {
             anchors.top: parent.top
         }
         Button {
-            text: "Start game"
+            text: qsTr("Start game")
             height: 48
             anchors.centerIn: parent
             onClicked: {
@@ -151,7 +151,7 @@ Rectangle {
             anchors.rightMargin: 6
             width: 70
             height: 48
-            text: "..."
+            text: qsTr("...")
             onClicked: {
                 menuDialog.open();
             }
@@ -165,7 +165,7 @@ Rectangle {
     }
     Dialog {
         id: menuDialog
-        title: "Puzzle Master"
+        title: qsTr("Puzzle Master")
         contentHeight: menuDialogColumn.height
         contentWidth: menuDialogColumn.width
         content: Column {

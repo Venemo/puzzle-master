@@ -43,7 +43,7 @@ PuzzleBoard {
             anchors.rightMargin: 6
             width: 70
             height: 48
-            text: "..."
+            text: qsTr("...")
             onClicked: {
                 menuDialog.open();
             }
@@ -52,7 +52,7 @@ PuzzleBoard {
     Dialog {
         z: 1
         id: menuDialog
-        title: "Puzzle Master"
+        title: qsTr("Puzzle Master")
         contentHeight: menuDialogColumn.height
         contentWidth: menuDialogColumn.width
         content: Column {
