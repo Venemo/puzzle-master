@@ -216,20 +216,7 @@ void PuzzleItem::doDrag(const QPointF &position)
     if (_dragging)
     {
         setPos(mapToParent(position) - _dragStart);
-
-        if (_canMerge)
-        {
-            foreach (PuzzleItem *p, neighbours())
-            {
-                QPointF diff = - _supposedPosition + p->_supposedPosition - ((QGraphicsItem*)p)->mapToItem(this, 0, 0);
-                qreal rotationDiff = simplifyAngle(p->rotation() - rotation());
-
-                if (abs((int)diff.x()) < tolerance() && abs((int)diff.y()) < tolerance() && abs(rotationDiff) < rotationTolerance())
-                {
-                    merge(p, position);
-                }
-            }
-        }
+        checkMergeableSiblings(position);
     }
 }
 
@@ -245,6 +232,23 @@ void PuzzleItem::handleRotation(const QPointF &v)
 
     if (!isnan(a))
         setRotation(simplifyAngle(a + _previousRotationValue));
+}
+
+void PuzzleItem::checkMergeableSiblings(const QPointF &position)
+{
+    if (_canMerge)
+    {
+        foreach (PuzzleItem *p, neighbours())
+        {
+            QPointF diff = - _supposedPosition + p->_supposedPosition - ((QGraphicsItem*)p)->mapToItem(this, 0, 0);
+            qreal rotationDiff = simplifyAngle(p->rotation() - rotation());
+
+            if (abs((int)diff.x()) < tolerance() && abs((int)diff.y()) < tolerance() && abs(rotationDiff) < rotationTolerance())
+            {
+                merge(p, position);
+            }
+        }
+    }
 }
 
 void PuzzleItem::setCompensatedTransformOriginPoint(const QPointF &point)
@@ -300,9 +304,14 @@ void PuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     event->accept();
 
     if (_isRightButtonPressed)
+    {
         handleRotation(mapToParent(event->pos()) - mapToParent(centerPoint()));
+        checkMergeableSiblings(event->pos());
+    }
     else if (!_isDraggingWithTouch)
+    {
         doDrag(event->pos());
+    }
 }
 
 bool PuzzleItem::sceneEvent(QEvent *event)
@@ -366,6 +375,7 @@ bool PuzzleItem::sceneEvent(QEvent *event)
             handleRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
         }
 
+        checkMergeableSiblings(midpoint);
         event->accept();
         return true;
     }

@@ -76,6 +76,7 @@ protected:
     void startRotation(const QPointF &vector);
     void handleRotation(const QPointF &vector);
     void setCompensatedTransformOriginPoint(const QPointF &point);
+    void checkMergeableSiblings(const QPointF &position);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *ev);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *ev);
