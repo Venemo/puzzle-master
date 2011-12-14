@@ -62,6 +62,9 @@ Rectangle {
         duration: 120
         onStarted: {
             dialog.visible = true;
+            disableAllTheThings.enabled = true;
+        }
+        onCompleted: {
             disableAllTheThings.enabled = false;
         }
     }
