@@ -70,6 +70,12 @@ public slots:
     Q_INVOKABLE void disableFixedFPS();
     Q_INVOKABLE void shuffle();
 
+private:
+    enum TabStatus {
+        RightTab = 0x01,
+        BottomTab = 0x02
+    };
+
 };
 
 #endif // PUZZLEBOARD_H
