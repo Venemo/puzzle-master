@@ -20,8 +20,6 @@
 #include <QtDeclarative>
 #include "puzzleitem.h"
 
-extern QPainterPath qt_regionToPath(const QRegion &region);
-
 PuzzleItem::PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent)
     : QDeclarativeItem(parent),
       _canMerge(false),
@@ -214,10 +212,7 @@ void PuzzleItem::stopDrag()
 void PuzzleItem::doDrag(const QPointF &position)
 {
     if (_dragging)
-    {
         setPos(mapToParent(position) - _dragStart);
-        checkMergeableSiblings(position);
-    }
 }
 
 void PuzzleItem::startRotation(const QPointF &vector)
@@ -304,14 +299,11 @@ void PuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     event->accept();
 
     if (_isRightButtonPressed)
-    {
         handleRotation(mapToParent(event->pos()) - mapToParent(centerPoint()));
-        checkMergeableSiblings(event->pos());
-    }
     else if (!_isDraggingWithTouch)
-    {
         doDrag(event->pos());
-    }
+
+    checkMergeableSiblings(event->pos());
 }
 
 bool PuzzleItem::sceneEvent(QEvent *event)
@@ -372,6 +364,7 @@ bool PuzzleItem::sceneEvent(QEvent *event)
 
         if (touchEvent->touchPoints().count() >= 2)
         {
+            // Handling multitouch rotation
             handleRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
         }
 
