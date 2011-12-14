@@ -154,41 +154,52 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     {
         for (unsigned j = 0; j < rows; j++)
         {
-
             // Creating the pixmap for the piece
             QPixmap px(_unit.width() + tabSize + tabOffset + tabTolerance, _unit.height() + tabSize + tabOffset + tabTolerance);
             px.fill(Qt::transparent);
-            p.begin(&px);
-            p.setRenderHint(QPainter::SmoothPixmapTransform);
-            p.setRenderHint(QPainter::Antialiasing);
-            p.setRenderHint(QPainter::HighQualityAntialiasing);
-            p.setClipping(true);
 
             // The rectangle
             QPainterPath clip;
             clip.addRect(0, 0, _unit.width(), _unit.height());
 
-            QPainterPath leftBlank;
+            // Left
             if (i > 0)
+            {
+                QPainterPath leftBlank;
                 leftBlank.addEllipse(QPointF(tabOffset, _unit.height() / 2.0), tabSize, tabSize);
+                clip = clip.subtracted(leftBlank);
+            }
 
-            QPainterPath topBlank;
+            // Top
             if (j > 0)
+            {
+                QPainterPath topBlank;
                 topBlank.addEllipse(QPointF(_unit.width() / 2.0, tabOffset), tabSize, tabSize);
+                clip = clip.subtracted(topBlank);
+            }
 
-            // The right side thingy
-            QPainterPath rightTab;
+            // Right
             if (i < cols - 1)
+            {
+                QPainterPath rightTab;
                 rightTab.addEllipse(QPointF(_unit.width() + tabOffset, _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
+                clip = clip.united(rightTab);
+            }
 
-            // The bottom side thingy
-            QPainterPath bottomTab;
+            // Bottom
             if (j < rows - 1)
+            {
+                QPainterPath bottomTab;
                 bottomTab.addEllipse(QPointF(_unit.width() / 2.0, _unit.height() + tabOffset), tabSize + tabTolerance, tabSize + tabTolerance);
+                clip = clip.united(bottomTab);
+            }
 
-            QPainterPath finalClip = clip.united(rightTab).united(bottomTab).subtracted(leftBlank).subtracted(topBlank);
-            p.setClipPath(finalClip);
-
+            p.begin(&px);
+            p.setRenderHint(QPainter::SmoothPixmapTransform);
+            p.setRenderHint(QPainter::Antialiasing);
+            p.setRenderHint(QPainter::HighQualityAntialiasing);
+            p.setClipping(true);
+            p.setClipPath(clip);
             p.drawPixmap(0, 0, pixmap, i * _unit.width(), j * _unit.height(), _unit.width() * 2, _unit.height() * 2);
             p.end();
 
@@ -198,7 +209,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setHeight(_unit.height());
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(QPointF(item->puzzleCoordinates().x() * _unit.width(), item->puzzleCoordinates().y() * _unit.height()));
-            item->setShape(finalClip);
+            item->setShape(clip);
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
 
             QPointF oldPos(w0 + (i * _unit.width()),
