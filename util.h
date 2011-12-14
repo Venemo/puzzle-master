@@ -13,6 +13,7 @@
     private: type pname; \
     public: inline const type &name() const { return pname; } inline void settername (const type &value) { pname = value; } \
     private:
+
 // "Full" property with signal
 #define GENPROPERTY_F(type, pname, name, settername, signalname) \
     private: type pname; \

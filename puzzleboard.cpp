@@ -146,9 +146,9 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     qreal w0 = (width() - pixmap.width()) / 2;
     qreal h0 = (height() - pixmap.height()) / 2;
 
-    qreal thingySize = min<qreal>(_unit.width() / 6.0, _unit.height() / 6.0);
-    qreal thingyOffset = thingySize * 2.0 / 3.0;
-    int thingyTolerance = 2;
+    qreal tabSize = min<qreal>(_unit.width() / 6.0, _unit.height() / 6.0);
+    qreal tabOffset = tabSize * 2.0 / 3.0;
+    int tabTolerance = 2;
 
     for (unsigned i = 0; i < cols; i++)
     {
@@ -156,35 +156,37 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
         {
 
             // Creating the pixmap for the piece
-            QPixmap px(_unit.width() + thingySize + thingyOffset + thingyTolerance, _unit.height() + thingySize + thingyOffset + thingyTolerance);
+            QPixmap px(_unit.width() + tabSize + tabOffset + tabTolerance, _unit.height() + tabSize + tabOffset + tabTolerance);
             px.fill(Qt::transparent);
             p.begin(&px);
+            p.setRenderHint(QPainter::SmoothPixmapTransform);
+            p.setRenderHint(QPainter::Antialiasing);
             p.setRenderHint(QPainter::HighQualityAntialiasing);
             p.setClipping(true);
 
             // The rectangle
-            QPainterPath mainRect;
-            mainRect.addRect(0, 0, _unit.width(), _unit.height());
+            QPainterPath clip;
+            clip.addRect(0, 0, _unit.width(), _unit.height());
 
             QPainterPath leftBlank;
             if (i > 0)
-                leftBlank.addEllipse(QPointF(thingyOffset, _unit.height() / 2.0), thingySize, thingySize);
+                leftBlank.addEllipse(QPointF(tabOffset, _unit.height() / 2.0), tabSize, tabSize);
 
             QPainterPath topBlank;
             if (j > 0)
-                topBlank.addEllipse(QPointF(_unit.width() / 2.0, thingyOffset), thingySize, thingySize);
+                topBlank.addEllipse(QPointF(_unit.width() / 2.0, tabOffset), tabSize, tabSize);
 
             // The right side thingy
             QPainterPath rightTab;
             if (i < cols - 1)
-                rightTab.addEllipse(QPointF(_unit.width() + thingyOffset, _unit.height() / 2.0), thingySize + thingyTolerance, thingySize + thingyTolerance);
+                rightTab.addEllipse(QPointF(_unit.width() + tabOffset, _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
 
             // The bottom side thingy
             QPainterPath bottomTab;
             if (j < rows - 1)
-                bottomTab.addEllipse(QPointF(_unit.width() / 2.0, _unit.height() + thingyOffset), thingySize + thingyTolerance, thingySize + thingyTolerance);
+                bottomTab.addEllipse(QPointF(_unit.width() / 2.0, _unit.height() + tabOffset), tabSize + tabTolerance, tabSize + tabTolerance);
 
-            QPainterPath finalClip = mainRect.united(rightTab).united(bottomTab).subtracted(leftBlank).subtracted(topBlank);
+            QPainterPath finalClip = clip.united(rightTab).united(bottomTab).subtracted(leftBlank).subtracted(topBlank);
             p.setClipPath(finalClip);
 
             p.drawPixmap(0, 0, pixmap, i * _unit.width(), j * _unit.height(), _unit.width() * 2, _unit.height() * 2);
@@ -240,7 +242,7 @@ void PuzzleBoard::shuffle()
             rotateAnimation->setEasingCurve(easingCurve);
             group->addAnimation(rotateAnimation);
         }
-        if (randomInt(0, 10) > 5)
+        if (randomInt(0, 1))
             item->raise();
     }
 
