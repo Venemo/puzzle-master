@@ -227,8 +227,8 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
             // creating the piece
             PuzzleItem *item = new PuzzleItem(px, this);
-            item->setWidth(_unit.width());
-            item->setHeight(_unit.height());
+            item->setWidth(_unit.width() + tabFull * 2);
+            item->setHeight(_unit.height() + tabFull * 2);
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(QPointF(item->puzzleCoordinates().x() * _unit.width(), item->puzzleCoordinates().y() * _unit.height()));
             item->setShape(clip);
