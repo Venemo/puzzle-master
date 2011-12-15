@@ -166,6 +166,8 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             QPainterPath clip;
             clip.addRect(tabFull, tabFull, _unit.width(), _unit.height());
 
+            int sxCorrection = 0, syCorrection = 0;
+
             // Left
             if (i > 0)
             {
@@ -174,6 +176,13 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                     QPainterPath leftBlank;
                     leftBlank.addEllipse(QPointF(tabFull + tabOffset, tabFull + _unit.height() / 2.0), tabSize, tabSize);
                     clip = clip.subtracted(leftBlank);
+                }
+                else
+                {
+                    QPainterPath leftTab;
+                    leftTab.addEllipse(QPointF(tabSize + tabTolerance, tabFull + _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
+                    clip = clip.united(leftTab);
+                    sxCorrection -= tabFull;
                 }
             }
 
@@ -186,12 +195,19 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                     topBlank.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + tabOffset), tabSize, tabSize);
                     clip = clip.subtracted(topBlank);
                 }
+                else
+                {
+                    QPainterPath topTab;
+                    topTab.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabSize + tabTolerance), tabSize + tabTolerance, tabSize + tabTolerance);
+                    clip = clip.united(topTab);
+                    syCorrection -= tabFull;
+                }
             }
 
             // Right
             if (i < cols - 1)
             {
-                statuses[i * rows + j] |= PuzzleBoard::RightTab;
+                statuses[i * rows + j] |= randomInt(0, 1) * PuzzleBoard::RightTab;
 
                 if (statuses[i * rows + j] & PuzzleBoard::RightTab)
                 {
@@ -199,18 +215,30 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                     rightTab.addEllipse(QPointF(tabFull + _unit.width() + tabOffset, tabFull + _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
                     clip = clip.united(rightTab);
                 }
+                else
+                {
+                    QPainterPath rightBlank;
+                    rightBlank.addEllipse(QPointF(tabFull + _unit.width() - tabOffset, tabFull + _unit.height() / 2.0), tabSize, tabSize);
+                    clip = clip.subtracted(rightBlank);
+                }
             }
 
             // Bottom
             if (j < rows - 1)
             {
-                statuses[i * rows + j] |= PuzzleBoard::BottomTab;
+                statuses[i * rows + j] |= randomInt(0, 1) * PuzzleBoard::BottomTab;
 
                 if (statuses[i * rows + j] & PuzzleBoard::BottomTab)
                 {
                     QPainterPath bottomTab;
                     bottomTab.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + _unit.height() + tabOffset), tabSize + tabTolerance, tabSize + tabTolerance);
                     clip = clip.united(bottomTab);
+                }
+                else
+                {
+                    QPainterPath bottomBlank;
+                    bottomBlank.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + _unit.height() - tabOffset), tabSize, tabSize);
+                    clip = clip.subtracted(bottomBlank);
                 }
             }
 
@@ -222,10 +250,10 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             p.setRenderHint(QPainter::HighQualityAntialiasing);
             p.setClipping(true);
             p.setClipPath(clip);
-            p.drawPixmap(tabFull, tabFull, pixmap, i * _unit.width(), j * _unit.height(), _unit.width() * 2, _unit.height() * 2);
+            p.drawPixmap(tabFull + sxCorrection, tabFull + syCorrection, pixmap, i * _unit.width() + sxCorrection, j * _unit.height() + syCorrection, _unit.width() * 2, _unit.height() * 2);
             p.end();
 
-            // creating the piece
+            // Creating the piece
             PuzzleItem *item = new PuzzleItem(px, this);
             item->setWidth(_unit.width() + tabFull * 2);
             item->setHeight(_unit.height() + tabFull * 2);
@@ -245,6 +273,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             emit loadProgressChanged(i * rows + j + 1);
         }
     }
+    delete statuses;
     setNeighbours(cols, rows);
     emit loaded();
 
