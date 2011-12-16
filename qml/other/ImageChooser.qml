@@ -84,6 +84,7 @@ Rectangle {
                         ListElement { imageUrl: ":/pics/image3.jpg" }
                         ListElement { imageUrl: ":/pics/image4.jpg" }
                         ListElement { imageUrl: ":/pics/image5.jpg" }
+                        ListElement { imageUrl: "file:///home/user/MyDocs/Pictures/Objects005.jpg" }
                     }
                     delegate: Rectangle {
                         id: imageBorder
@@ -99,8 +100,10 @@ Rectangle {
 
                             id: imageItem
                             asynchronous: false
-                            fillMode: Image.PreserveAspectFit
+                            fillMode: Image.PreserveAspectCrop
                             width: imageChooser.width / imageChooser.columnNumber - 20
+                            height: width / 16.0 * 9.0
+                            clip: true
                             anchors.centerIn: parent
                             source: imageUrl
                             sourceSize.width: imageChooser.width / imageChooser.columnNumber - 20

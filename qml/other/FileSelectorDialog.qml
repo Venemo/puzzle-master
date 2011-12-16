@@ -66,6 +66,8 @@ Dialog
                         asynchronous: true
                         width: fileSelectorDialog.contentWidth / fileSelectorDialog.columnNumber - 20
                         height: width / 16.0 * 9.0
+                        fillMode: Image.PreserveAspectCrop
+                        clip: true
                         anchors.centerIn: parent
                         source: url
                         sourceSize.width: fileSelectorDialog.contentWidth / fileSelectorDialog.columnNumber - 20

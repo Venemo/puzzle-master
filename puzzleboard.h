@@ -58,6 +58,7 @@ public:
     void setNeighbours(int x, int y);
     PuzzleItem *find(const QPoint &puzzleCoordinates);
     bool isAccelerometerActive() const;
+    QPixmap processImage(const QString &url);
 
 protected:
     void accelerometerMovement(qreal x, qreal y, qreal z);

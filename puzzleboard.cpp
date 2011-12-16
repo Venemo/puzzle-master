@@ -133,46 +133,79 @@ void PuzzleBoard::disableFixedFPS()
     }
 }
 
+QPixmap PuzzleBoard::processImage(const QString &url)
+{
+    QString url2(url);
+    url2.remove("file://");
+    QPixmap pix(url2);
+
+    if (pix.isNull())
+        return pix;
+
+    // If the image is better displayed in "portrait mode", rotate it.
+    if ((pix.width() < pix.height() && width() >= height()) || (pix.width() >= pix.height() && width() < height()))
+    {
+        pix = pix.scaledToHeight(width());
+        QPixmap pix2(pix.height(), pix.width());
+        QPainter p;
+        p.begin(&pix2);
+        p.rotate(-90);
+        p.translate(- pix2.height(), 0);
+        p.drawPixmap(0, 0, pix);
+        p.end();
+        pix = pix2;
+    }
+
+    // Scale it to our width
+    pix = pix.scaledToWidth(width());
+
+    // If still not good enough, just crop it
+    if (pix.height() > height())
+    {
+        QPixmap pix2(width(), height());
+        QPainter p;
+        p.begin(&pix2);
+        p.drawPixmap(0, 0, pix, 0, (pix.height() - height()) / 2, pix.width(), pix.height());
+        p.end();
+        pix = pix2;
+    }
+
+    return pix;
+}
+
 void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowMultitouch)
 {
-
     if (height() == 0 || height() == 0)
     {
         qDebug() << "The size of this PuzzleBoard item is not okay, not starting game.";
         return;
     }
 
-    QString url = imageUrl;
-    url.remove("file://");
-    qDebug() << "trying to start game with" << url;
-    QPixmap image(url);
+    qDebug() << "trying to start game with" << imageUrl;
+    QPixmap pixmap = processImage(imageUrl);
 
-    if (image.isNull())
+    if (pixmap.isNull())
     {
-        qDebug() << "image is null, not starting game.";
+        qDebug() << "pixmap is null, not starting game.";
         return;
     }
 
     qDeleteAll(puzzleItems());
     _puzzleItems.clear();
-
     _allowMultitouch = allowMultitouch;
-
-    QPixmap pixmap = image.scaled(width(), height(), Qt::KeepAspectRatio);
     _originalPixmapSize = pixmap.size();
     _originalScaleRatio = 1;
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
 
-    qreal w0 = (width() - pixmap.width()) / 2;
-    qreal h0 = (height() - pixmap.height()) / 2;
+    int tabTolerance = 2,
+            *statuses = new int[cols * rows];
+    qreal w0 = (width() - pixmap.width()) / 2,
+            h0 = (height() - pixmap.height()) / 2,
+            tabSize = min<qreal>(_unit.width() / 6.0, _unit.height() / 6.0),
+            tabOffset = tabSize * 2.0 / 3.0,
+            tabFull = tabSize + tabOffset + tabTolerance;
 
-    qreal tabSize = min<qreal>(_unit.width() / 6.0, _unit.height() / 6.0);
-    qreal tabOffset = tabSize * 2.0 / 3.0;
-    int tabTolerance = 2;
-    qreal tabFull = tabSize + tabOffset + tabTolerance;
-
-    int *statuses = new int[cols * rows];
     memset(statuses, 0, rows * cols * sizeof(int));
 
     for (unsigned i = 0; i < cols; i++)
