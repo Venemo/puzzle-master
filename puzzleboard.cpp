@@ -135,13 +135,17 @@ void PuzzleBoard::disableFixedFPS()
 
 void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowMultitouch)
 {
+
     if (height() == 0 || height() == 0)
     {
-        qDebug() << "The size of this item is not okay, not starting game.";
+        qDebug() << "The size of this PuzzleBoard item is not okay, not starting game.";
         return;
     }
 
-    QPixmap image(imageUrl);
+    QString url = imageUrl;
+    url.remove("file://");
+    qDebug() << "trying to start game with" << url;
+    QPixmap image(url);
 
     if (image.isNull())
     {

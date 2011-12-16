@@ -19,6 +19,7 @@
 #include <QApplication>
 #include <QDeclarativeView>
 #include <QDeclarativeEngine>
+#include <QDeclarativeContext>
 #include <QSettings>
 #include <QLibraryInfo>
 

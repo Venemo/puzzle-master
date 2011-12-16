@@ -78,6 +78,7 @@ Rectangle {
 
                 Repeater {
                     model: ListModel {
+                        id: imagesModel
                         ListElement { imageUrl: ":/pics/image1.jpg" }
                         ListElement { imageUrl: ":/pics/image2.jpg" }
                         ListElement { imageUrl: ":/pics/image3.jpg" }
@@ -97,11 +98,12 @@ Rectangle {
                             }
 
                             id: imageItem
-                            asynchronous: true
+                            asynchronous: false
                             fillMode: Image.PreserveAspectFit
                             width: imageChooser.width / imageChooser.columnNumber - 20
                             anchors.centerIn: parent
                             source: imageUrl
+                            sourceSize.width: imageChooser.width / imageChooser.columnNumber - 20
 
                             MouseArea {
                                 anchors.fill: parent
@@ -182,6 +184,14 @@ Rectangle {
             }
             Button {
                 width: 500
+                text: qsTr("Add own image")
+                onClicked: {
+                    menuDialog.close();
+                    fileSelectorDialog.open();
+                }
+            }
+            Button {
+                width: 500
                 text: qsTr("Quit")
                 normalGradient: Gradient {
                     GradientStop { position: 0; color: "#ED1C24"; }
@@ -198,5 +208,9 @@ Rectangle {
                 }
             }
         }
+    }
+    FileSelectorDialog {
+        id: fileSelectorDialog
+        onAccepted: imagesModel.append({ imageUrl: fileSelectorDialog.selectedImageUrl })
     }
 }

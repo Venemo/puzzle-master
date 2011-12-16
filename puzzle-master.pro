@@ -49,7 +49,8 @@ OTHER_FILES += \
     qml/other/Dialog.qml \
     qml/other/GameBoard.qml \
     qml/other/OptionsDialog.qml \
-    qml/other/Slider.qml
+    qml/other/Slider.qml \
+    qml/other/FileSelectorDialog.qml
 
 # Platforms
 
@@ -109,6 +110,3 @@ contains(DEFINES, HAVE_QACCELEROMETER) {
     CONFIG += mobility
     MOBILITY += sensors
 }
-
-
-

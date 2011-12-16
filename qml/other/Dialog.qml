@@ -147,7 +147,7 @@ Rectangle {
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: (titleText.height + separatorRect.height + (dialog.text != "" ? textText.height : 0)) / 2
+        anchors.verticalCenterOffset: (titleText.height + separatorRect.height + (dialog.text != "" ? textText.height : 0)) / 2 - 20
     }
     Row {
         id: buttonRow

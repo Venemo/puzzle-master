@@ -7,5 +7,6 @@
         <file>qml/other/GameBoard.qml</file>
         <file>qml/other/OptionsDialog.qml</file>
         <file>qml/other/Slider.qml</file>
+        <file>qml/other/FileSelectorDialog.qml</file>
     </qresource>
 </RCC>
