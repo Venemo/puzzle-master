@@ -36,7 +36,7 @@ HEADERS += \
 
 RESOURCES += \
     translations.qrc \
-    pics-hd.qrc \
+    pics-original.qrc \
     ui-other.qrc
 
 TRANSLATIONS += \

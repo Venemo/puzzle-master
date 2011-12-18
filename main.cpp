@@ -42,21 +42,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QApplication::setOrganizationName("Venemo");
     QApplication::setApplicationVersion(QString(APP_VERSION));
 
-    QString langCode;
-    langCode = getenv("LANG");
-    if (langCode.isEmpty() || langCode == "C")
-        langCode = QLocale::system().name();
-
-    qDebug() << "Puzzle Master's current language code is" << langCode;
-
-    QTranslator tQt, tApp;
-    tQt.load("qt_" + langCode, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    tApp.load("puzzle-master_" + langCode, ":/translations");
-
-    qsrand((uint)QTime::currentTime().msec());
-    qmlRegisterType<PuzzleBoard>("net.venemo.puzzlemaster", 2, 0, "PuzzleBoard");
-    qmlRegisterType<AppSettings>("net.venemo.puzzlemaster", 2, 0, "AppSettings");
-
     QApplication *app;
     QDeclarativeView *view;
 
@@ -69,13 +54,30 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view = new QDeclarativeView();
 #endif
 
-    QApplication::installTranslator(&tQt);
-    QApplication::installTranslator(&tApp);
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
+    qsrand((uint)QTime::currentTime().msec());
+    qmlRegisterType<PuzzleBoard>("net.venemo.puzzlemaster", 2, 0, "PuzzleBoard");
+    qmlRegisterType<AppSettings>("net.venemo.puzzlemaster", 2, 0, "AppSettings");
+
+    QString langCode(getenv("LANG"));
+    if (langCode.isEmpty() || langCode == "C")
+        langCode = QLocale::system().name();
+    if (langCode.contains('.'))
+        langCode = langCode.mid(0, langCode.lastIndexOf('.'));
+
+    qDebug() << "Puzzle Master's current language code is" << langCode;
+
+    if (QFile::exists(":/translations/puzzle-master_" + langCode + ".qm"))
+    {
+        qDebug() << "A translation for the language code" << langCode << "exists, loading it";
+        QTranslator *translator = new QTranslator(app);
+        translator->load("puzzle-master_" + langCode, ":/translations");
+        QApplication::installTranslator(translator);
+    }
 
 #if defined(HAVE_OPENGL)
     qDebug() << "Puzzle Master is using a QGLWidget viewport";
-    QGLWidget *glWidget = new QGLWidget();
+    QGLWidget *glWidget = new QGLWidget(QGLFormat(QGL::DoubleBuffer), view);
     view->setViewport(glWidget);
 #endif
 
@@ -94,9 +96,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->showFullScreen();
 
     int result = app->exec();
-#if defined(HAVE_OPENGL)
-    delete glWidget;
-#endif
     delete view;
     delete app;
     return result;
