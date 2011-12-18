@@ -20,8 +20,8 @@ import QtQuick 1.0
 import net.venemo.puzzlemaster 2.0
 
 Rectangle {
-    width: 854
-    height: 480
+    width: initialSize.width
+    height: initialSize.height
 
     AppSettings {
         id: appSettings

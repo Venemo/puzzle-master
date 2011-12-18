@@ -22,6 +22,7 @@
 #include <QDeclarativeContext>
 #include <QSettings>
 #include <QLibraryInfo>
+#include <QDesktopWidget>
 
 #if defined(HAVE_OPENGL)
 #include <QGLWidget>
@@ -92,6 +93,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
     view->viewport()->setAttribute(Qt::WA_NoSystemBackground);
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    view->rootContext()->setContextProperty("initialSize", app->desktop()->geometry());
     view->setSource(QUrl("qrc:/qml/other/AppWindow.qml"));
     view->showFullScreen();
 
