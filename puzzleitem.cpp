@@ -34,9 +34,10 @@ PuzzleItem::PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent)
     setFlag(QGraphicsItem::ItemHasNoContents, false);
     setFlag(QGraphicsItem::ItemStacksBehindParent, false);
     setFlag(QGraphicsItem::ItemNegativeZStacksBehindParent, false);
-    setFlag(QGraphicsItem::ItemClipsToShape, true);
     setAcceptTouchEvents(true);
+#if !defined(MEEGO_EDITION_HARMATTAN) && !defined(Q_OS_SYMBIAN)
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
+#endif
 }
 
 QPointF PuzzleItem::centerPoint() const
@@ -88,7 +89,7 @@ void PuzzleItem::setShape(const QPainterPath &shape)
     _shape = shape;
 
     QPainterPathStroker stroker;
-    stroker.setWidth(5);
+    stroker.setWidth(4);
     stroker.setJoinStyle(Qt::BevelJoin);
     _stroke = (stroker.createStroke(_shape) + _shape).simplified();
 }
@@ -419,7 +420,7 @@ void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
-    painter->fillPath(_stroke, QBrush(QColor(70, 70, 70, 180)));
+    painter->fillPath(_stroke, QBrush(QColor(75, 75, 75, 255)));
     painter->drawPixmap(0, 0, _pixmap);
 }
 

@@ -74,11 +74,17 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
 
 #if defined(HAVE_OPENGL)
-    qDebug() << "Puzzle Master is using QGLWidget viewport";
+    qDebug() << "Puzzle Master is using a QGLWidget viewport";
     QGLWidget *glWidget = new QGLWidget();
     view->setViewport(glWidget);
 #endif
 
+    view->setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing);
+    view->setOptimizationFlag(QGraphicsView::DontSavePainterState);
+    view->setRenderHint(QPainter::SmoothPixmapTransform, false);
+    view->setRenderHint(QPainter::Antialiasing, false);
+    view->setRenderHint(QPainter::HighQualityAntialiasing, false);
+    view->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
     view->setAttribute(Qt::WA_OpaquePaintEvent);
     view->setAttribute(Qt::WA_NoSystemBackground);
     view->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);

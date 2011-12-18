@@ -129,7 +129,7 @@ void PuzzleBoard::disableFixedFPS()
 
     foreach (QGraphicsView *view, scene()->views())
     {
-        view->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+        view->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
     }
 }
 
