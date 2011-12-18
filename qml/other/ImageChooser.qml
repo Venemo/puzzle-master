@@ -84,7 +84,6 @@ Rectangle {
                         ListElement { imageUrl: ":/pics/image3.jpg" }
                         ListElement { imageUrl: ":/pics/image4.jpg" }
                         ListElement { imageUrl: ":/pics/image5.jpg" }
-                        ListElement { imageUrl: "file:///home/user/MyDocs/Pictures/Objects005.jpg" }
                     }
                     delegate: Rectangle {
                         id: imageBorder
