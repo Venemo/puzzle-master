@@ -43,13 +43,13 @@ TRANSLATIONS += \
     translations/puzzle-master_hu_HU.ts
 
 OTHER_FILES += \
+    qml/other/components/Button.qml \
+    qml/other/components/Dialog.qml \
+    qml/other/components/Slider.qml \
     qml/other/AppWindow.qml \
-    qml/other/Button.qml \
     qml/other/ImageChooser.qml \
-    qml/other/Dialog.qml \
     qml/other/GameBoard.qml \
     qml/other/OptionsDialog.qml \
-    qml/other/Slider.qml \
     qml/other/FileSelectorDialog.qml
 
 # Platforms

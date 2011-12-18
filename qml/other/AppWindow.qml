@@ -18,6 +18,7 @@
 
 import QtQuick 1.0
 import net.venemo.puzzlemaster 2.0
+import "./components"
 
 Rectangle {
     width: initialSize.width

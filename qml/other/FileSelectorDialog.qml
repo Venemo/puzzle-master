@@ -18,6 +18,7 @@
 
 import QtQuick 1.0
 import QtMobility.gallery 1.1
+import "./components"
 
 Dialog
 {

@@ -17,10 +17,11 @@
 // Copyright (C) 2010-2011, Timur Kristóf <venemo@fedoraproject.org>
 
 import QtQuick 1.0
+import "./components"
 
 Dialog {
     property int columns: 4
-    property int rows: 4
+    property int rows: 3
 
     id: optionsDialog
     title: qsTr("Game difficulty")
