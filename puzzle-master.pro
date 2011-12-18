@@ -43,8 +43,9 @@ TRANSLATIONS += \
     translations/puzzle-master_hu_HU.ts
 
 OTHER_FILES += \
-    qml/other/components/Button.qml \
+    qml/other/components/Panel.qml \
     qml/other/components/Dialog.qml \
+    qml/other/components/Button.qml \
     qml/other/components/Slider.qml \
     qml/other/AppWindow.qml \
     qml/other/ImageChooser.qml \

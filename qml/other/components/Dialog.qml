@@ -18,7 +18,7 @@
 
 import QtQuick 1.0
 
-Rectangle {
+Panel {
     property string backgroundColor: "#ee101010"
     property string fontColor: "#ffffff"
     property string title: ""
@@ -29,66 +29,30 @@ Rectangle {
     property int contentHeight: 0
     property int contentWidth: 500
     property bool enableBackgroundClicking: true
+    property bool shouldAccept: false
 
     signal rejected
     signal accepted
 
     function reject() {
-        hideAnimation.shouldAccept = false;
-        hideAnimation.start();
+        shouldAccept = false;
+        close();
     }
     function accept() {
-        hideAnimation.shouldAccept = true;
-        hideAnimation.start();
-    }
-    function open() {
-        showAnimation.start();
-    }
-    function close() {
-        hideAnimation.start();
+        shouldAccept = true;
+        close();
     }
 
     id: dialog
     color: dialog.backgroundColor
     visible: false
-    anchors.fill: parent
-
-    NumberAnimation {
-        id: showAnimation
-        target: dialog
-        property: "opacity"
-        from: 0
-        to: 1
-        duration: 120
-        onStarted: {
-            dialog.visible = true;
-            disableAllTheThings.enabled = true;
-        }
-        onCompleted: {
-            disableAllTheThings.enabled = false;
-        }
+    onClosed: {
+        if (shouldAccept)
+            dialog.accepted();
+        else
+            dialog.rejected();
     }
-    NumberAnimation {
-        property bool shouldAccept: false
 
-        id: hideAnimation
-        target: dialog
-        property: "opacity"
-        from: 1
-        to: 0
-        duration: 120
-        onStarted: {
-            disableAllTheThings.enabled = true;
-        }
-        onCompleted: {
-            dialog.visible = false;
-
-            if (shouldAccept)
-                dialog.accepted();
-            else
-                dialog.rejected();
-        }
-    }
     MouseArea {
         anchors.fill: parent
         onClicked: {
@@ -180,10 +144,5 @@ Rectangle {
             borderColor: "#980C10"
             visible: rejectButtonText != ""
         }
-    }
-    MouseArea {
-        id: disableAllTheThings
-        anchors.fill: parent
-        enabled: false
     }
 }
