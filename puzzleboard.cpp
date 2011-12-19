@@ -198,8 +198,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
 
-    int tabTolerance = 2,
-            *statuses = new int[cols * rows];
+    int tabTolerance = 2, *statuses = new int[cols * rows], strokeThickness = 4;
     qreal   w0 = (width() - pixmap.width()) / 2,
             h0 = (height() - pixmap.height()) / 2,
             tabSize = min<qreal>(_unit.width() / 6.0, _unit.height() / 6.0),
@@ -307,6 +306,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             }
 
             clip = clip.translated(xCorrection, yCorrection).simplified();
+            rectClip = rectClip.translated(xCorrection, yCorrection);
 
             // Creating the pixmap for the piece
             QPixmap px(_unit.width() + widthCorrection + 1, _unit.height() + heightCorrection + 1);
@@ -322,20 +322,23 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             p.drawPixmap(tabFull + xCorrection + sxCorrection, tabFull + yCorrection + syCorrection, pixmap, i * _unit.width() + sxCorrection, j * _unit.height() + syCorrection, _unit.width() * 2, _unit.height() * 2);
             p.end();
 
-            QPointF supposed(w0 + (i * _unit.width()) + sxCorrection,
-                             h0 + (j * _unit.height()) + syCorrection);
+            QPointF supposed(w0 + (i * _unit.width()) + sxCorrection - strokeThickness,
+                             h0 + (j * _unit.height()) + syCorrection - strokeThickness);
+            stroker.setWidth(strokeThickness);
+            QPainterPath stroke = stroker.createStroke(clip).united(clip).simplified();
+            stroker.setWidth(strokeThickness * 2);
+            QPainterPath fakeShape = (stroker.createStroke(clip + rectClip) + clip + rectClip).simplified();
 
             // Creating the piece
             PuzzleItem *item = new PuzzleItem(px, this);
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(supposed);
             item->setPos(supposed);
-            stroker.setWidth(4);
-            item->setStroke((stroker.createStroke(clip) + clip).simplified());
-            stroker.setWidth(4);
-            item->setFakeShape((stroker.createStroke(clip + rectClip) + clip + rectClip).simplified());
-            item->setWidth(px.width());
-            item->setHeight(px.height());
+            item->setPixmapOffset(QPoint(strokeThickness, strokeThickness));
+            item->setStroke(stroke.translated(strokeThickness, strokeThickness));
+            item->setFakeShape(fakeShape.translated(strokeThickness, strokeThickness));
+            item->setWidth(px.width() + strokeThickness * 2);
+            item->setHeight(px.height() + strokeThickness * 2);
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
 
             item->show();

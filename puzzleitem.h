@@ -32,6 +32,7 @@ private:
     Q_OBJECT
     GENPROPERTY_S(QPoint, _puzzleCoordinates, puzzleCoordinates, setPuzzleCoordinates)
     GENPROPERTY_S(QPointF, _supposedPosition, supposedPosition, setSupposedPosition)
+    GENPROPERTY_S(QPoint, _pixmapOffset, pixmapOffset, setPixmapOffset)
     GENPROPERTY_R(QList<PuzzleItem*>, _neighbours, neighbours)
     GENPROPERTY_S(QPixmap, _pixmap, pixmap, setPixmap)
     GENPROPERTY_S(bool, _canMerge, canMerge, setCanMerge)
