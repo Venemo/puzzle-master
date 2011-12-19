@@ -220,7 +220,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             rectClip.addRect(tabFull, tabFull, _unit.width(), _unit.height());
             QPainterPath clip = rectClip;
 
-            int sxCorrection = 0, syCorrection = 0, widthCorrection = 0, heightCorrection = 0;
+            int sxCorrection = 0, syCorrection = 0, xCorrection = 0, yCorrection = 0, widthCorrection = 0, heightCorrection = 0;
 
             // Left
             if (i > 0)
@@ -230,6 +230,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                     QPainterPath leftBlank;
                     leftBlank.addEllipse(QPointF(tabFull + tabOffset, tabFull + _unit.height() / 2.0), tabSize, tabSize);
                     clip = clip.subtracted(leftBlank);
+                    xCorrection -= tabFull;
                 }
                 else
                 {
@@ -237,8 +238,11 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                     leftTab.addEllipse(QPointF(tabSize + tabTolerance, tabFull + _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
                     clip = clip.united(leftTab);
                     sxCorrection -= tabFull;
+                    widthCorrection += tabFull;
                 }
             }
+            else
+                xCorrection -= tabFull;
 
             // Top
             if (j > 0)
@@ -248,6 +252,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                     QPainterPath topBlank;
                     topBlank.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + tabOffset), tabSize, tabSize);
                     clip = clip.subtracted(topBlank);
+                    yCorrection -= tabFull;
                 }
                 else
                 {
@@ -255,8 +260,11 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                     topTab.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabSize + tabTolerance), tabSize + tabTolerance, tabSize + tabTolerance);
                     clip = clip.united(topTab);
                     syCorrection -= tabFull;
+                    heightCorrection += tabFull;
                 }
             }
+            else
+                yCorrection -= tabFull;
 
             // Right
             if (i < cols - 1)
@@ -298,10 +306,10 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                 }
             }
 
-            clip = clip.simplified();
+            clip = clip.translated(xCorrection, yCorrection).simplified();
 
             // Creating the pixmap for the piece
-            QPixmap px(_unit.width() + tabFull + widthCorrection, _unit.height() + tabFull + heightCorrection);
+            QPixmap px(_unit.width() + widthCorrection, _unit.height() + heightCorrection);
             px.fill(Qt::transparent);
 
             // Painting the pixmap
@@ -311,11 +319,11 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             p.setRenderHint(QPainter::HighQualityAntialiasing);
             p.setClipping(true);
             p.setClipPath(clip);
-            p.drawPixmap(tabFull + sxCorrection, tabFull + syCorrection, pixmap, i * _unit.width() + sxCorrection, j * _unit.height() + syCorrection, _unit.width() * 2, _unit.height() * 2);
+            p.drawPixmap(tabFull + xCorrection + sxCorrection, tabFull + yCorrection + syCorrection, pixmap, i * _unit.width() + sxCorrection, j * _unit.height() + syCorrection, _unit.width() * 2, _unit.height() * 2);
             p.end();
 
-            QPointF supposed(w0 + (i * _unit.width()) - tabFull,
-                             h0 + (j * _unit.height()) - tabFull);
+            QPointF supposed(w0 + (i * _unit.width()) + sxCorrection,
+                             h0 + (j * _unit.height()) + syCorrection);
 
             // Creating the piece
             PuzzleItem *item = new PuzzleItem(px, this);
@@ -326,8 +334,8 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setStroke((stroker.createStroke(clip) + clip).simplified());
             stroker.setWidth(4);
             item->setFakeShape((stroker.createStroke(clip + rectClip) + clip + rectClip).simplified());
-            item->setWidth(item->fakeShape().boundingRect().width());
-            item->setHeight(item->fakeShape().boundingRect().height());
+            item->setWidth(px.width());
+            item->setHeight(px.height());
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
 
             item->show();
