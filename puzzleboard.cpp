@@ -198,7 +198,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
 
-    int tabTolerance = 2, *statuses = new int[cols * rows], strokeThickness = 4;
+    int tabTolerance = 1, *statuses = new int[cols * rows], strokeThickness = 5, usabilityThickness = 6;
     qreal   w0 = (width() - pixmap.width()) / 2,
             h0 = (height() - pixmap.height()) / 2,
             tabSize = min<qreal>(_unit.width() / 6.0, _unit.height() / 6.0),
@@ -216,7 +216,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
         {
             // Creating the shape of the piece
             QPainterPath rectClip;
-            rectClip.addRect(tabFull, tabFull, _unit.width(), _unit.height());
+            rectClip.addRect(tabFull - 1, tabFull - 1, _unit.width() + 1, _unit.height() + 1);
             QPainterPath clip = rectClip;
 
             int sxCorrection = 0, syCorrection = 0, xCorrection = 0, yCorrection = 0, widthCorrection = 0, heightCorrection = 0;
@@ -322,11 +322,11 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             p.drawPixmap(tabFull + xCorrection + sxCorrection, tabFull + yCorrection + syCorrection, pixmap, i * _unit.width() + sxCorrection, j * _unit.height() + syCorrection, _unit.width() * 2, _unit.height() * 2);
             p.end();
 
-            QPointF supposed(w0 + (i * _unit.width()) + sxCorrection - strokeThickness,
-                             h0 + (j * _unit.height()) + syCorrection - strokeThickness);
+            QPointF supposed(w0 + (i * _unit.width()) + sxCorrection - usabilityThickness,
+                             h0 + (j * _unit.height()) + syCorrection - usabilityThickness);
             stroker.setWidth(strokeThickness);
             QPainterPath stroke = stroker.createStroke(clip).united(clip).simplified();
-            stroker.setWidth(strokeThickness * 2);
+            stroker.setWidth(usabilityThickness * 2);
             QPainterPath fakeShape = (stroker.createStroke(clip + rectClip) + clip + rectClip).simplified();
 
             // Creating the piece
@@ -334,11 +334,11 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(supposed);
             item->setPos(supposed);
-            item->setPixmapOffset(QPoint(strokeThickness, strokeThickness));
-            item->setStroke(stroke.translated(strokeThickness, strokeThickness));
-            item->setFakeShape(fakeShape.translated(strokeThickness, strokeThickness));
-            item->setWidth(px.width() + strokeThickness * 2);
-            item->setHeight(px.height() + strokeThickness * 2);
+            item->setPixmapOffset(QPoint(usabilityThickness, usabilityThickness));
+            item->setStroke(stroke.translated(usabilityThickness, usabilityThickness));
+            item->setFakeShape(fakeShape.translated(usabilityThickness, usabilityThickness));
+            item->setWidth(px.width() + usabilityThickness * 2);
+            item->setHeight(px.height() + usabilityThickness * 2);
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
 
             item->show();
