@@ -19,7 +19,7 @@
 import QtQuick 1.0
 import "./components"
 
-Rectangle {
+Panel {
     property string selectedImageUrl: ""
     property int columnNumber: 3
 

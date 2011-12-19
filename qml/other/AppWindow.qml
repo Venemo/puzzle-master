@@ -29,16 +29,27 @@ Rectangle {
     }
     GameBoard {
         id: gameBoard
+        visible: false
         anchors.fill: parent
         onGameWon: {
             gameWonDialog.open();
         }
     }
     ImageChooser {
+        property bool shouldStartGame: false
+
         id: imageChooser
         anchors.fill: parent
+
         onAccepted: {
             optionsDialog.open();
+        }
+        onClosed: {
+            if (imageChooser.shouldStartGame) {
+                imageChooser.shouldStartGame = false;
+                gameBoard.visible = true;
+                gameBoard.play();
+            }
         }
     }
     Dialog {
@@ -54,7 +65,7 @@ Rectangle {
         }
         onRejected: {
             gameBoard.visible = false;
-            imageChooser.visible = true;
+            imageChooser.open();
         }
     }
     Dialog {
@@ -74,9 +85,8 @@ Rectangle {
     OptionsDialog {
         id: optionsDialog
         onAccepted: {
-            imageChooser.visible = false;
-            gameBoard.visible = true;
-            gameBoard.play();
+            imageChooser.shouldStartGame = true;
+            imageChooser.close();
         }
         onVisibleChanged: {
             optionsDialog.columns = appSettings.columns;

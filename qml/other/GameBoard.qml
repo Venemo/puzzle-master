@@ -82,7 +82,7 @@ PuzzleBoard {
                 onClicked: {
                     menuDialog.close();
                     gameBoard.visible = false;
-                    imageChooser.visible = true;
+                    imageChooser.open();
                 }
             }
             Button {
