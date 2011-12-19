@@ -77,6 +77,7 @@ signals:
     void loadProgressChanged(int progress);
     void shuffleComplete();
     void assembleComplete();
+    void imageProcessingComplete();
 
 private slots:
     void accelerometerReadingChanged();

@@ -22,13 +22,19 @@ import "./components"
 
 PuzzleBoard {
     function play() {
-        gameBoard.startGame(imageChooser.selectedImageUrl, optionsDialog.rows, optionsDialog.columns, true);
+        imageProcessingDialog.open();
     }
 
     id: gameBoard
     tolerance: 10
     rotationTolerance: 20
     z: 0
+    onLoadProgressChanged: progressDialog.progress = progress
+    onImageProcessingComplete: {
+        imageProcessingDialog.close()
+        progressDialog.open()
+    }
+    onLoaded: progressDialog.close()
 
     Rectangle {
         z: 1
@@ -111,5 +117,23 @@ PuzzleBoard {
                 }
             }
         }
+    }
+    Dialog {
+        id: imageProcessingDialog
+        z: 1
+        title: qsTr("Please wait...")
+        text: qsTr("The selected image is being processed.");
+        enableBackgroundClicking: false
+        onOpened: gameBoard.startGame(imageChooser.selectedImageUrl, optionsDialog.rows, optionsDialog.columns, true);
+    }
+    Dialog {
+        property int progress: 1
+
+        id: progressDialog
+        z: 1
+        title: qsTr("Please wait...")
+        text: qsTr("Generating puzzle piece %1").arg(progressDialog.progress)
+        onProgressChanged: text = qsTr("Generating puzzle piece %1").arg(progressDialog.progress)
+        enableBackgroundClicking: false
     }
 }

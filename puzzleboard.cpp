@@ -183,6 +183,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
     qDebug() << "trying to start game with" << imageUrl;
     QPixmap pixmap = processImage(imageUrl);
+    emit imageProcessingComplete();
 
     if (pixmap.isNull())
     {
