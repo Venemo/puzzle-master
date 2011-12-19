@@ -200,7 +200,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
     int tabTolerance = 2,
             *statuses = new int[cols * rows];
-    qreal w0 = (width() - pixmap.width()) / 2,
+    qreal   w0 = (width() - pixmap.width()) / 2,
             h0 = (height() - pixmap.height()) / 2,
             tabSize = min<qreal>(_unit.width() / 6.0, _unit.height() / 6.0),
             tabOffset = tabSize * 2.0 / 3.0,
@@ -309,7 +309,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             clip = clip.translated(xCorrection, yCorrection).simplified();
 
             // Creating the pixmap for the piece
-            QPixmap px(_unit.width() + widthCorrection, _unit.height() + heightCorrection);
+            QPixmap px(_unit.width() + widthCorrection + 1, _unit.height() + heightCorrection + 1);
             px.fill(Qt::transparent);
 
             // Painting the pixmap
