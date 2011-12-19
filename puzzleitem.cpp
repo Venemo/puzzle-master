@@ -161,10 +161,10 @@ bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
         p.drawPixmap(x2, y2, item->pixmap());
         p.end();
 
-        _puzzleCoordinates = QPoint(min<int>(item->puzzleCoordinates().x(), puzzleCoordinates().x()), min<int>(item->puzzleCoordinates().y(), puzzleCoordinates().y()));
-        _supposedPosition = QPointF(min<qreal>(item->supposedPosition().x(), supposedPosition().x()), min<qreal>(item->supposedPosition().y(), supposedPosition().y()));
-        _stroke = _stroke.translated(x1, y1).united(item->_stroke.translated(x2, y2)).simplified();
-        _fakeShape = _fakeShape.translated(x1, y1).united(item->_fakeShape.translated(x2, y2)).simplified();
+        setPuzzleCoordinates(QPoint(min<int>(item->puzzleCoordinates().x(), puzzleCoordinates().x()), min<int>(item->puzzleCoordinates().y(), puzzleCoordinates().y())));
+        setSupposedPosition(QPointF(min<qreal>(item->supposedPosition().x(), supposedPosition().x()), min<qreal>(item->supposedPosition().y(), supposedPosition().y())));
+        setStroke(_stroke.translated(x1, y1).united(item->_stroke.translated(x2, y2)).simplified());
+        setFakeShape(_fakeShape.translated(x1, y1).united(item->_fakeShape.translated(x2, y2)).simplified());
         setPixmap(pix);
         setWidth(_pixmap.width());
         setHeight(_pixmap.height());
