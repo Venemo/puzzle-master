@@ -35,10 +35,16 @@ PuzzleBoard {
         progressDialog.open()
     }
     onLoaded: progressDialog.close()
-    onVisibleChanged: gameBoard.deleteAllPieces()
+    onGameStarted: menuButtonPanel.open()
+    onVisibleChanged: {
+        gameBoard.deleteAllPieces()
+        menuButtonPanel.close()
+    }
 
-    Rectangle {
+    Panel {
+        id: menuButtonPanel
         z: 1
+        anchors.fill: null
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         width: 82
@@ -122,6 +128,7 @@ PuzzleBoard {
     Dialog {
         id: imageProcessingDialog
         z: 1
+        backgroundColor: "#f7040404"
         title: qsTr("Please wait...")
         text: qsTr("The selected image is being processed.");
         enableBackgroundClicking: false
@@ -132,6 +139,7 @@ PuzzleBoard {
 
         id: progressDialog
         z: 1
+        backgroundColor: "#f7040404"
         title: qsTr("Please wait...")
         text: qsTr("Generating puzzle piece %1").arg(progressDialog.progress)
         onProgressChanged: text = qsTr("Generating puzzle piece %1").arg(progressDialog.progress)
