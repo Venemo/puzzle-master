@@ -40,12 +40,13 @@ private:
     GENPROPERTY_S(QPixmap, _pixmap, pixmap, setPixmap)
     GENPROPERTY_S(bool, _canMerge, canMerge, setCanMerge)
     GENPROPERTY_S(qreal, _weight, weight, setWeight)
+    GENPROPERTY_S(QPainterPath, _stroke, stroke, setStroke)
+    GENPROPERTY_S(QPainterPath, _fakeShape, fakeShape, setFakeShape)
 
     QPointF _dragStart, _rotationStartVector;
     bool _dragging, _isDraggingWithTouch, _isRightButtonPressed;
     double _previousRotationValue;
     int _previousTouchPointCount;
-    QPainterPath _shape, _stroke;
 
 public:
     explicit PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent = 0);
@@ -53,7 +54,6 @@ public:
     inline qreal rotationTolerance() const;
     inline const QSize &unit() const;
     virtual QPainterPath shape() const;
-    void setShape(const QPainterPath &shape);
     bool merge(PuzzleItem *item, const QPointF &dragPosition);
     void raise();
     void verifyPosition();

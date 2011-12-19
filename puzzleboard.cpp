@@ -205,6 +205,10 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
     memset(statuses, 0, rows * cols * sizeof(int));
 
+    QPainterPathStroker stroker;
+    stroker.setWidth(4);
+    stroker.setJoinStyle(Qt::BevelJoin);
+
     for (unsigned i = 0; i < cols; i++)
     {
         for (unsigned j = 0; j < rows; j++)
@@ -214,8 +218,9 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             px.fill(Qt::transparent);
 
             // Creating the shape of the piece
-            QPainterPath clip;
-            clip.addRect(tabFull, tabFull, _unit.width(), _unit.height());
+            QPainterPath rectClip;
+            rectClip.addRect(tabFull, tabFull, _unit.width(), _unit.height());
+            QPainterPath clip = rectClip;
 
             int sxCorrection = 0, syCorrection = 0;
 
@@ -310,7 +315,8 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setHeight(_unit.height() + tabFull * 2);
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(QPointF(item->puzzleCoordinates().x() * _unit.width(), item->puzzleCoordinates().y() * _unit.height()));
-            item->setShape(clip);
+            item->setStroke((stroker.createStroke(clip) + clip).simplified());
+            item->setFakeShape((stroker.createStroke(clip + rectClip) + clip + rectClip).simplified());
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
 
             QPointF oldPos(w0 + (i * _unit.width()) - tabFull,

@@ -84,16 +84,6 @@ void PuzzleItem::disableMerge()
     setCanMerge(false);
 }
 
-void PuzzleItem::setShape(const QPainterPath &shape)
-{
-    _shape = shape;
-
-    QPainterPathStroker stroker;
-    stroker.setWidth(4);
-    stroker.setJoinStyle(Qt::BevelJoin);
-    _stroke = (stroker.createStroke(_shape) + _shape).simplified();
-}
-
 bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
 {
     if (isNeighbourOf(item) && _canMerge && item->_canMerge)
@@ -148,8 +138,9 @@ bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
 
         _puzzleCoordinates -= QPoint(u1, v1);
         _supposedPosition = QPointF(min<qreal>(item->supposedPosition().x(), supposedPosition().x()), min<qreal>(item->supposedPosition().y(), supposedPosition().y()));
+        _stroke = _stroke.translated(x1, y1).united(item->_stroke.translated(x2, y2)).simplified();
+        _fakeShape = _fakeShape.translated(x1, y1).united(item->_fakeShape.translated(x2, y2)).simplified();
         setPixmap(pix);
-        setShape(_shape.translated(x1, y1).united(item->_shape.translated(x2, y2)).simplified());
         setWidth(_pixmap.width());
         setHeight(_pixmap.height());
         setPos(pos() + old00 - mapToParent(x1, y1));
@@ -426,5 +417,5 @@ void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
 QPainterPath PuzzleItem::shape() const
 {
-    return _stroke;
+    return _fakeShape;
 }
