@@ -126,33 +126,28 @@ bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
             this->addNeighbour(n);
         }
 
-        QPoint vector = item->puzzleCoordinates() - puzzleCoordinates();
         QPointF positionVector = item->supposedPosition() - supposedPosition();
         QPointF old00 = mapToParent(0, 0);
 
-        int x1, x2, y1, y2, u1, v1;
-        if (vector.x() >= 0)
+        int x1, x2, y1, y2;
+        if (positionVector.x() >= 0)
         {
             x1 = 0;
-            u1 = 0;
             x2 = positionVector.x();
         }
         else
         {
             x1 = - positionVector.x();
-            u1 = - vector.x();
             x2 = 0;
         }
-        if (vector.y() >= 0)
+        if (positionVector.y() >= 0)
         {
             y1 = 0;
-            v1 = 0;
             y2 = positionVector.y();
         }
         else
         {
             y1 = - positionVector.y();
-            v1 = - vector.y();
             y2 = 0;
         }
 
@@ -166,7 +161,7 @@ bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
         p.drawPixmap(x2, y2, item->pixmap());
         p.end();
 
-        _puzzleCoordinates -= QPoint(u1, v1);
+        _puzzleCoordinates = QPoint(min<int>(item->puzzleCoordinates().x(), puzzleCoordinates().x()), min<int>(item->puzzleCoordinates().y(), puzzleCoordinates().y()));
         _supposedPosition = QPointF(min<qreal>(item->supposedPosition().x(), supposedPosition().x()), min<qreal>(item->supposedPosition().y(), supposedPosition().y()));
         _stroke = _stroke.translated(x1, y1).united(item->_stroke.translated(x2, y2)).simplified();
         _fakeShape = _fakeShape.translated(x1, y1).united(item->_fakeShape.translated(x2, y2)).simplified();
@@ -460,6 +455,7 @@ void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
+    //painter->drawRect(boundingRect());
     //painter->drawEllipse(mapFromScene(pos()), 10, 10);
     painter->fillPath(_stroke, QBrush(QColor(75, 75, 75, 255)));
     painter->drawPixmap(0, 0, _pixmap);
