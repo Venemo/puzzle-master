@@ -21,6 +21,9 @@
 #include <QPainter>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
+#include <QTime>
+#include <QTimer>
+#include <QApplication>
 
 #include "puzzleboard.h"
 #include "puzzleitem.h"
@@ -32,6 +35,7 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     _allowMultitouch(false),
     _fixedFPSTimer(0)
 {
+    connect(this, SIGNAL(gameWon()), this, SIGNAL(gameEnded()));
 #if defined(HAVE_QACCELEROMETER)
     accelerometer = new QtMobility::QAccelerometer(this);
     connect(accelerometer, SIGNAL(readingChanged()), this, SLOT(accelerometerReadingChanged()));
@@ -159,7 +163,8 @@ QPixmap PuzzleBoard::processImage(const QString &url)
     }
 
     // Scale it to our width
-    pix = pix.scaledToWidth(width());
+    if (pix.width() - 1 > width() || pix.width() + 1 < width())
+        pix = pix.scaledToWidth(width());
 
     // If still not good enough, just crop it
     if (pix.height() > height())
@@ -183,15 +188,20 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
         return;
     }
 
+    QTime time = QTime::currentTime();
+    time.start();
+
     qDebug() << "trying to start game with" << imageUrl;
     QPixmap pixmap = processImage(imageUrl);
-    emit imageProcessingComplete();
 
     if (pixmap.isNull())
     {
         qDebug() << "pixmap is null, not starting game.";
         return;
     }
+
+    qDebug() << time.elapsed() << "ms spent with processing the image";
+    time.restart();
 
     deleteAllPieces();
     _allowMultitouch = allowMultitouch;
@@ -214,6 +224,8 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     {
         for (unsigned j = 0; j < rows; j++)
         {
+            time.restart();
+
             // Creating the shape of the piece
             QPainterPath rectClip;
             rectClip.addRect(tabFull - 1, tabFull - 1, _unit.width() + 1, _unit.height() + 1);
@@ -344,12 +356,16 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->show();
             _puzzleItems.append(item);
 
+            qDebug() << time.elapsed() << "ms spent with generating piece" << i * rows + j + 1 << item->puzzleCoordinates();
             emit loadProgressChanged(i * rows + j + 1);
+            QApplication::instance()->processEvents();
+
         }
     }
     delete statuses;
     setNeighbours(cols, rows);
     emit loaded();
+    QApplication::instance()->processEvents();
 
     QTimer::singleShot(1000, this, SLOT(shuffle()));
 }

@@ -22,24 +22,18 @@ import "./components"
 
 PuzzleBoard {
     function play() {
-        imageProcessingDialog.open();
+        progressDialog.open();
     }
 
     id: gameBoard
     tolerance: 10
     rotationTolerance: 20
     z: 0
-    onLoadProgressChanged: progressDialog.progress = progress
-    onImageProcessingComplete: {
-        imageProcessingDialog.close()
-        progressDialog.open()
-    }
+    onLoadProgressChanged: progressDialog.text = qsTr("Generating puzzle piece %1").arg(progress)
     onLoaded: progressDialog.close()
     onGameStarted: menuButtonPanel.open()
-    onVisibleChanged: {
-        gameBoard.deleteAllPieces()
-        menuButtonPanel.close()
-    }
+    onGameEnded: menuButtonPanel.close()
+    onVisibleChanged: gameBoard.deleteAllPieces()
 
     Panel {
         id: menuButtonPanel
@@ -69,6 +63,8 @@ PuzzleBoard {
         title: qsTr("Puzzle Master")
         contentHeight: menuDialogColumn.height
         contentWidth: menuDialogColumn.width
+        onOpened: gameBoard.disable()
+        onClosed: gameBoard.enable()
         content: Column {
             id: menuDialogColumn
             spacing: 10
@@ -126,23 +122,12 @@ PuzzleBoard {
         }
     }
     Dialog {
-        id: imageProcessingDialog
-        z: 1
-        backgroundColor: "#f7040404"
-        title: qsTr("Please wait...")
-        text: qsTr("The selected image is being processed.");
-        enableBackgroundClicking: false
-        onOpened: gameBoard.startGame(imageChooser.selectedImageUrl, optionsDialog.rows, optionsDialog.columns, true);
-    }
-    Dialog {
-        property int progress: 1
-
         id: progressDialog
         z: 1
-        backgroundColor: "#f7040404"
         title: qsTr("Please wait...")
-        text: qsTr("Generating puzzle piece %1").arg(progressDialog.progress)
-        onProgressChanged: text = qsTr("Generating puzzle piece %1").arg(progressDialog.progress)
+        text: qsTr("The selected image is being processed.");
+        backgroundColor: "#99101010"
         enableBackgroundClicking: false
+        onOpened: gameBoard.startGame(imageChooser.selectedImageUrl, optionsDialog.rows, optionsDialog.columns, true)
     }
 }

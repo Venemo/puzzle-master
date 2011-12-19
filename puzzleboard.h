@@ -20,7 +20,6 @@
 #define PUZZLEBOARD_H
 
 #include <QDeclarativeItem>
-#include <QTimer>
 #include <QPointer>
 
 #if defined(HAVE_QACCELEROMETER)
@@ -29,6 +28,7 @@
 
 #include "util.h"
 
+class QTimer;
 class PuzzleItem;
 
 class PuzzleBoard : public QDeclarativeItem
@@ -41,7 +41,6 @@ class PuzzleBoard : public QDeclarativeItem
     GENPROPERTY_F(int, _rotationTolerance, rotationTolerance, setRotationTolerance, rotationToleranceChanged)
     Q_PROPERTY(int rotationTolerance READ rotationTolerance WRITE setRotationTolerance NOTIFY rotationToleranceChanged)
     GENPROPERTY_R(bool, _allowMultitouch, allowMultitouch)
-    Q_PROPERTY(bool allowMultitouch READ allowMultitouch NOTIFY allowMultitouchChanged)
 
     QTimer *_fixedFPSTimer;
     QList<QPointer<PuzzleItem> > _puzzleItems;
@@ -65,7 +64,6 @@ signals:
     void isAccelerometerActiveChanged();
     void toleranceChanged();
     void rotationToleranceChanged();
-    void allowMultitouchChanged();
 
     void gameStarted();
     void gameEnded();
@@ -74,7 +72,6 @@ signals:
     void loadProgressChanged(int progress);
     void shuffleComplete();
     void assembleComplete();
-    void imageProcessingComplete();
 
 private slots:
     void accelerometerReadingChanged();
