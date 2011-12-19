@@ -24,7 +24,6 @@
 
 PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     QDeclarativeItem(parent),
-    _originalScaleRatio(1),
     _tolerance(5),
     _rotationTolerance(10),
     _allowMultitouch(false),
@@ -194,8 +193,6 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     qDeleteAll(puzzleItems());
     _puzzleItems.clear();
     _allowMultitouch = allowMultitouch;
-    _originalPixmapSize = pixmap.size();
-    _originalScaleRatio = 1;
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
 
@@ -339,11 +336,11 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 void PuzzleBoard::shuffle()
 {
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
-    QEasingCurve easingCurve(QEasingCurve::InExpo);
+    QEasingCurve easingCurve(QEasingCurve::InElastic);
 
     foreach (PuzzleItem *item, puzzleItems())
     {
-        QPointF newPos(randomInt(0, originalPixmapSize().width() - _unit.width()), randomInt(0, originalPixmapSize().height() - _unit.width()));
+        QPointF newPos(randomInt(0, width() - _unit.width()), randomInt(0, height() - _unit.width()));
 
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
         anim->setEndValue(newPos);
@@ -399,11 +396,6 @@ void PuzzleBoard::assemble()
     connect(group, SIGNAL(finished()), this, SIGNAL(gameEnded()));
     enableFixedFPS();
     group->start(QAbstractAnimation::DeleteWhenStopped);
-}
-
-void PuzzleBoard::surrenderGame()
-{
-    assemble();
 }
 
 void PuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)

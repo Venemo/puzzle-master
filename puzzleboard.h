@@ -35,8 +35,6 @@ class PuzzleBoard : public QDeclarativeItem
 {
     Q_OBJECT
     Q_PROPERTY(bool isAccelerometerActive READ isAccelerometerActive NOTIFY isAccelerometerActiveChanged)
-    GENPROPERTY_R(QSize, _originalPixmapSize, originalPixmapSize)
-    GENPROPERTY_R(qreal, _originalScaleRatio, originalScaleRatio)
     GENPROPERTY_R(QSize, _unit, unit)
     GENPROPERTY_R(QPointF, _initial00PiecePosition, initial00PiecePosition)
     GENPROPERTY_F(int, _tolerance, tolerance, setTolerance, toleranceChanged)
@@ -83,11 +81,10 @@ private slots:
     void accelerometerReadingChanged();
 
 public slots:
-    Q_INVOKABLE void surrenderGame();
-    Q_INVOKABLE void enableAccelerometer();
-    Q_INVOKABLE void disableAccelerometer();
     Q_INVOKABLE void disable();
     Q_INVOKABLE void enable();
+    Q_INVOKABLE void enableAccelerometer();
+    Q_INVOKABLE void disableAccelerometer();
     Q_INVOKABLE void enableFixedFPS();
     Q_INVOKABLE void disableFixedFPS();
     Q_INVOKABLE void shuffle();
