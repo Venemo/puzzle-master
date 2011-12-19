@@ -89,6 +89,7 @@ public slots:
     Q_INVOKABLE void disableFixedFPS();
     Q_INVOKABLE void shuffle();
     Q_INVOKABLE void assemble();
+    Q_INVOKABLE void deleteAllPieces();
 
 private:
     enum TabStatus {

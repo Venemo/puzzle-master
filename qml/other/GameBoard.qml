@@ -35,6 +35,7 @@ PuzzleBoard {
         progressDialog.open()
     }
     onLoaded: progressDialog.close()
+    onVisibleChanged: gameBoard.deleteAllPieces()
 
     Rectangle {
         z: 1

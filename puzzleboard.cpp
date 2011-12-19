@@ -190,8 +190,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
         return;
     }
 
-    qDeleteAll(puzzleItems());
-    _puzzleItems.clear();
+    deleteAllPieces();
     _allowMultitouch = allowMultitouch;
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
@@ -425,6 +424,12 @@ void PuzzleBoard::disable()
     {
         item->disableMerge();
     }
+}
+
+void PuzzleBoard::deleteAllPieces()
+{
+    qDeleteAll(puzzleItems());
+    _puzzleItems.clear();
 }
 
 QList<PuzzleItem*> PuzzleBoard::puzzleItems()
