@@ -206,7 +206,6 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     memset(statuses, 0, rows * cols * sizeof(int));
 
     QPainterPathStroker stroker;
-    stroker.setWidth(4);
     stroker.setJoinStyle(Qt::BevelJoin);
 
     for (unsigned i = 0; i < cols; i++)
@@ -315,7 +314,9 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setHeight(_unit.height() + tabFull * 2);
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(QPointF(item->puzzleCoordinates().x() * _unit.width(), item->puzzleCoordinates().y() * _unit.height()));
+            stroker.setWidth(4);
             item->setStroke((stroker.createStroke(clip) + clip).simplified());
+            stroker.setWidth(10);
             item->setFakeShape((stroker.createStroke(clip + rectClip) + clip + rectClip).simplified());
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
 
