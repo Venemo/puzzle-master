@@ -16,8 +16,9 @@
 //
 // Copyright (C) 2010-2011, Timur Kristóf <venemo@fedoraproject.org>
 
-#include <QtGui>
-#include <QtDeclarative>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QPainter>
 
 #include "puzzleboard.h"
 #include "puzzleitem.h"
@@ -308,26 +309,24 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             p.drawPixmap(tabFull + sxCorrection, tabFull + syCorrection, pixmap, i * _unit.width() + sxCorrection, j * _unit.height() + syCorrection, _unit.width() * 2, _unit.height() * 2);
             p.end();
 
+            QPointF supposed(w0 + (i * _unit.width()) - tabFull,
+                             h0 + (j * _unit.height()) - tabFull);
+
             // Creating the piece
             PuzzleItem *item = new PuzzleItem(px, this);
             item->setWidth(_unit.width() + tabFull * 2);
             item->setHeight(_unit.height() + tabFull * 2);
             item->setPuzzleCoordinates(QPoint(i, j));
-            item->setSupposedPosition(QPointF(item->puzzleCoordinates().x() * _unit.width(), item->puzzleCoordinates().y() * _unit.height()));
+            item->setSupposedPosition(supposed);
+            item->setPos(supposed);
             stroker.setWidth(4);
             item->setStroke((stroker.createStroke(clip) + clip).simplified());
             stroker.setWidth(10);
             item->setFakeShape((stroker.createStroke(clip + rectClip) + clip + rectClip).simplified());
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
 
-            QPointF oldPos(w0 + (i * _unit.width()) - tabFull,
-                           h0 + (j * _unit.height()) - tabFull);
-            item->setPos(oldPos);
             item->show();
             _puzzleItems.append(item);
-
-            if (i == 0 && j == 0)
-                _initial00PiecePosition = oldPos;
 
             emit loadProgressChanged(i * rows + j + 1);
         }
@@ -383,7 +382,7 @@ void PuzzleBoard::assemble()
         item->disableMerge();
 
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
-        anim->setEndValue(initial00PiecePosition() + item->supposedPosition());
+        anim->setEndValue(item->supposedPosition());
         anim->setDuration(2000);
         anim->setEasingCurve(easingCurve);
         group->addAnimation(anim);

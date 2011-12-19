@@ -21,14 +21,10 @@
 
 #include <QDeclarativeItem>
 #include <QPixmap>
-#include "puzzleboard.h"
+
 #include "util.h"
 
-#define DROPSHADOW_COLOR_DEFAULT QColor(0, 0, 0, 200)
-#define DROPSHADOW_COLOR_SELECTED QColor(0, 0, 0, 255)
-
-#define DROPSHADOW_RADIUS_DEFAULT 20
-#define DROPSHADOW_RADIUS_SELECTED 25
+class PuzzleBoard;
 
 class PuzzleItem : public QDeclarativeItem
 {
@@ -49,10 +45,7 @@ private:
     int _previousTouchPointCount;
 
 public:
-    explicit PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent = 0);
-    inline int tolerance() const;
-    inline qreal rotationTolerance() const;
-    inline const QSize &unit() const;
+    explicit PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent = 0);
     virtual QPainterPath shape() const;
     bool merge(PuzzleItem *item, const QPointF &dragPosition);
     void raise();
@@ -84,20 +77,5 @@ protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 };
-
-inline const QSize &PuzzleItem::unit() const
-{
-    return ((PuzzleBoard*)parent())->unit();
-}
-
-inline int PuzzleItem::tolerance() const
-{
-    return ((PuzzleBoard*)parent())->tolerance();
-}
-
-inline qreal PuzzleItem::rotationTolerance() const
-{
-    return ((PuzzleBoard*)parent())->rotationTolerance();
-}
 
 #endif // PUZZLEPIECE_H

@@ -16,11 +16,14 @@
 //
 // Copyright (C) 2010-2011, Timur Kristóf <venemo@fedoraproject.org>
 
-#include <QtGui>
-#include <QtDeclarative>
-#include "puzzleitem.h"
+#include <QPainter>
+#include <QGraphicsSceneMouseEvent>
+#include <QTouchEvent>
 
-PuzzleItem::PuzzleItem(const QPixmap &pixmap, QDeclarativeItem *parent)
+#include "puzzleitem.h"
+#include "puzzleboard.h"
+
+PuzzleItem::PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent)
     : QDeclarativeItem(parent),
       _canMerge(false),
       _weight(randomInt(100, 950) / 1000.0),
@@ -160,7 +163,7 @@ bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
                     *rotateAnimation = new QPropertyAnimation(this, "rotation", group);
             QEasingCurve easingCurve(QEasingCurve::OutExpo);
 
-            posAnim->setEndValue(((PuzzleBoard*)parent())->initial00PiecePosition());
+            posAnim->setEndValue(supposedPosition());
             posAnim->setDuration(1000);
             posAnim->setEasingCurve(easingCurve);
 
@@ -225,12 +228,16 @@ void PuzzleItem::checkMergeableSiblings(const QPointF &position)
 {
     if (_canMerge)
     {
+        PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
+
         foreach (PuzzleItem *p, neighbours())
         {
             QPointF diff = - _supposedPosition + p->_supposedPosition - ((QGraphicsItem*)p)->mapToItem(this, 0, 0);
             qreal rotationDiff = simplifyAngle(p->rotation() - rotation());
 
-            if (abs((int)diff.x()) < tolerance() && abs((int)diff.y()) < tolerance() && abs(rotationDiff) < rotationTolerance())
+            if (abs((int)diff.x()) < board->tolerance()
+                    && abs((int)diff.y()) < board->tolerance()
+                    && abs(rotationDiff) < board->rotationTolerance())
             {
                 merge(p, position);
             }
@@ -371,6 +378,7 @@ bool PuzzleItem::sceneEvent(QEvent *event)
 void PuzzleItem::verifyPosition()
 {
     QPointF p = mapToParent(0, 0);
+    PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
 
     int x = (int)p.x();
     int maxX = (int)((QDeclarativeItem*)parent())->width() - (pixmap().width() / 2);
@@ -382,8 +390,8 @@ void PuzzleItem::verifyPosition()
 
     if (!(x < maxX && x > (minX) && y < maxY && y > (minY)))
     {
-        int pX = CLAMP(x, minX + unit().width() / 2, maxX - unit().width() / 2);
-        int pY = CLAMP(y, minY + unit().height() / 2, maxY - unit().height() / 2);
+        int pX = CLAMP(x, minX + board->unit().width() / 2, maxX - board->unit().width() / 2);
+        int pY = CLAMP(y, minY + board->unit().height() / 2, maxY - board->unit().height() / 2);
 
         _dragging = false;
         _isDraggingWithTouch = false;
