@@ -26,7 +26,7 @@ PuzzleBoard {
     }
 
     id: gameBoard
-    tolerance: 10
+    tolerance: 15
     rotationTolerance: 20
     z: 0
     onLoadProgressChanged: progressDialog.text = qsTr("Generating puzzle piece %1").arg(progress)

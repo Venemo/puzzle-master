@@ -427,7 +427,7 @@ void PuzzleItem::verifyPosition()
 
     if (p.x() > maxX || p.x() < minX || p.y() > maxY || p.y() < minY)
     {
-        QPointF newPos = QPointF(CLAMP(p.x(), minX, maxX), CLAMP(p.y(), minY, maxY)) + pos() - p;
+        QPointF newPos = QPointF(CLAMP(p.x(), minX + 40, maxX - 40), CLAMP(p.y(), minY + 40, maxY - 40)) + pos() - p;
 
         _dragging = false;
         _isDraggingWithTouch = false;
