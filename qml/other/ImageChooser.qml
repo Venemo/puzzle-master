@@ -18,6 +18,7 @@
 
 import QtQuick 1.0
 import "./components"
+import "./components/style"
 
 Panel {
     property string selectedImageUrl: ""
@@ -143,6 +144,7 @@ Panel {
             text: qsTr("Start game")
             height: 48
             anchors.centerIn: parent
+            style: GreenButtonStyle { }
             onClicked: {
                 if (imageChooser.selectedImageUrl != "")
                     imageChooser.accepted();
@@ -157,6 +159,7 @@ Panel {
             width: 70
             height: 48
             text: qsTr("...")
+            style: GreenButtonStyle { }
             onClicked: {
                 menuDialog.open();
             }
@@ -196,15 +199,7 @@ Panel {
             Button {
                 width: 500
                 text: qsTr("Quit")
-                normalGradient: Gradient {
-                    GradientStop { position: 0; color: "#ED1C24"; }
-                    GradientStop { position: 1; color: "#AA1317"; }
-                }
-                pressedGradient: Gradient {
-                    GradientStop { position: 0; color: "#AA1317"; }
-                    GradientStop { position: 1; color: "#AA1317"; }
-                }
-                borderColor: "#980C10"
+                style: RedButtonStyle { }
                 onClicked: {
                     menuDialog.close();
                     areYouSureToQuitDialog.open();

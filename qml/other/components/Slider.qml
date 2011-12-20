@@ -17,6 +17,7 @@
 // Copyright (C) 2010-2011, Timur Kristóf <venemo@fedoraproject.org>
 
 import QtQuick 1.0
+import "./style"
 
 Rectangle {
     property int minValue: 0

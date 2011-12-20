@@ -17,34 +17,16 @@
 // Copyright (C) 2010-2011, Timur Kristóf <venemo@fedoraproject.org>
 
 import QtQuick 1.0
-import "./style"
 
-Rectangle {
-    property alias text: buttonText.text
-    property ButtonStyle style: ButtonStyle { }
-
-    signal clicked
-
-    id: button
-    radius: 10
-    width: buttonText.width * 1.5
-    height: buttonText.height * 1.75
-    border.color: button.style.borderColor
-    border.width: 2
-    gradient: button.style.normalGradient
-
-    TextEdit {
-        id: buttonText
-        anchors.centerIn: parent
-        font.pixelSize: 25
-        color: button.style.fontColor
-        activeFocusOnPress: false
+ButtonStyle {
+    normalGradient: Gradient {
+        GradientStop { position: 0; color: "#ED1C24"; }
+        GradientStop { position: 1; color: "#AA1317"; }
     }
-    MouseArea {
-        id: buttonMouseArea
-        anchors.fill: parent
-        onPressed: button.gradient = button.style.pressedGradient
-        onReleased: button.gradient = button.style.normalGradient
-        onClicked: button.clicked();
+    pressedGradient: Gradient {
+        GradientStop { position: 0; color: "#AA1317"; }
+        GradientStop { position: 1; color: "#AA1317"; }
     }
+    borderColor: "#980C10"
+    fontColor: "#ffffff"
 }

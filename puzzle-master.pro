@@ -47,6 +47,9 @@ OTHER_FILES += \
     qml/other/components/Dialog.qml \
     qml/other/components/Button.qml \
     qml/other/components/Slider.qml \
+    qml/other/components/style/ButtonStyle.qml \
+    qml/other/components/style/GreenButtonStyle.qml \
+    qml/other/components/style/RedButtonStyle.qml \
     qml/other/AppWindow.qml \
     qml/other/ImageChooser.qml \
     qml/other/GameBoard.qml \

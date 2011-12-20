@@ -17,6 +17,7 @@
 // Copyright (C) 2010-2011, Timur Kristóf <venemo@fedoraproject.org>
 
 import QtQuick 1.0
+import "./style"
 
 Panel {
     property string backgroundColor: "#ee101010"
@@ -127,22 +128,15 @@ Panel {
             width: 170
             onClicked: dialog.accept();
             visible: acceptButtonText != ""
+            style: GreenButtonStyle { }
         }
         Button {
             id: rejectButton
             text: rejectButtonText
             width: 170
             onClicked: dialog.reject();
-            normalGradient: Gradient {
-                GradientStop { position: 0; color: "#ED1C24"; }
-                GradientStop { position: 1; color: "#AA1317"; }
-            }
-            pressedGradient: Gradient {
-                GradientStop { position: 0; color: "#AA1317"; }
-                GradientStop { position: 1; color: "#AA1317"; }
-            }
-            borderColor: "#980C10"
             visible: rejectButtonText != ""
+            style: RedButtonStyle { }
         }
     }
 }
