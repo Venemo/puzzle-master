@@ -104,17 +104,7 @@ bool PuzzleItem::isNeighbourOf(const PuzzleItem *piece) const
     return false;
 }
 
-void PuzzleItem::enableMerge()
-{
-    setCanMerge(true);
-}
-
-void PuzzleItem::disableMerge()
-{
-    setCanMerge(false);
-}
-
-bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
+void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
 {
     if (isNeighbourOf(item) && _canMerge && item->_canMerge)
     {
@@ -129,27 +119,15 @@ bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
         QPointF positionVector = item->supposedPosition() - supposedPosition();
         QPointF old00 = mapToParent(0, 0);
 
-        int x1, x2, y1, y2;
+        int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
         if (positionVector.x() >= 0)
-        {
-            x1 = 0;
             x2 = positionVector.x();
-        }
         else
-        {
             x1 = - positionVector.x();
-            x2 = 0;
-        }
         if (positionVector.y() >= 0)
-        {
-            y1 = 0;
             y2 = positionVector.y();
-        }
         else
-        {
             y1 = - positionVector.y();
-            y2 = 0;
-        }
 
         QPixmap pix(max<int>(x1 + pixmap().width(), x2 + item->pixmap().width()),
                     max<int>(y1 + pixmap().height(), y2 + item->pixmap().height()));
@@ -170,39 +148,16 @@ bool PuzzleItem::merge(PuzzleItem *item, const QPointF &dragPosition)
         setHeight(_pixmap.height());
         setPos(pos() + old00 - mapToParent(x1, y1));
         _dragStart = mapToParent(dragPosition + QPointF(x1, y1)) - pos();
-
-        item->hide();
-        item->deleteLater();
-        _canMerge = true;
+        delete item;
 
         if (neighbours().count() == 0)
         {
-            _dragging = false;
-            _canMerge = false;
-
-            QParallelAnimationGroup *group = new QParallelAnimationGroup(this);
-            QPropertyAnimation *posAnim = new QPropertyAnimation(this, "pos", group),
-                    *rotateAnimation = new QPropertyAnimation(this, "rotation", group);
-            QEasingCurve easingCurve(QEasingCurve::OutExpo);
-
-            posAnim->setEndValue(supposedPosition());
-            posAnim->setDuration(1000);
-            posAnim->setEasingCurve(easingCurve);
-
-            rotateAnimation->setEndValue(0);
-            rotateAnimation->setDuration(1000);
-            rotateAnimation->setEasingCurve(easingCurve);
-
-            connect(group, SIGNAL(finished()), this, SIGNAL(noNeighbours()));
-
-            group->addAnimation(posAnim);
-            group->addAnimation(rotateAnimation);
-            group->start(QAbstractAnimation::DeleteWhenStopped);
+            _dragging = _isDraggingWithTouch = _canMerge = false;
+            emit noNeighbours();
         }
-
-        return true;
+        else
+            _canMerge = true;
     }
-    return false;
 }
 
 void PuzzleItem::startDrag(const QPointF &p)
@@ -261,7 +216,7 @@ void PuzzleItem::checkMergeableSiblings(const QPointF &position)
                     && abs((int)diff.y()) < board->tolerance()
                     && abs(rotationDiff) < board->rotationTolerance())
             {
-                merge(p, position);
+                mergeIfPossible(p, position);
             }
         }
     }

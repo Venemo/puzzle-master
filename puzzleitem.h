@@ -48,7 +48,7 @@ private:
 public:
     explicit PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent = 0);
     virtual QPainterPath shape() const;
-    bool merge(PuzzleItem *item, const QPointF &dragPosition);
+    void mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition);
     void raise();
     void verifyPosition();
     void addNeighbour(PuzzleItem *piece);
@@ -57,8 +57,8 @@ public:
     QPointF centerPoint() const;
 
 public slots:
-    void enableMerge();
-    void disableMerge();
+    inline void enableMerge() { _canMerge = true; }
+    inline void disableMerge() { _canMerge = false; }
 
 signals:
     void noNeighbours();

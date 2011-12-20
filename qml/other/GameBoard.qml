@@ -30,15 +30,20 @@ PuzzleBoard {
     tolerance: 15
     rotationTolerance: 20
     z: 0
-    onLoadProgressChanged: progressDialog.text = qsTr("Generating puzzle piece %1").arg(progress)
+    onLoadProgressChanged: progressDialog.text = qsTr("Creating puzzle piece %1").arg(progress)
     onLoaded: progressDialog.close()
     onGameStarted: menuButtonPanel.open()
-    onGameEnded: menuButtonPanel.close()
-    onVisibleChanged: gameBoard.deleteAllPieces()
+    onGameWon: menuButtonPanel.close()
+    onVisibleChanged: {
+        menuButtonPanel.visible = false;
+        gameBoard.deleteAllPieces()
+    }
 
     Panel {
         id: menuButtonPanel
         z: 1
+        visible: false
+        opacity: 0
         anchors.fill: null
         anchors.bottom: parent.bottom
         anchors.right: parent.right
@@ -54,19 +59,23 @@ PuzzleBoard {
             height: 48
             text: qsTr("...")
             style: GreenButtonStyle { }
-            onClicked: {
-                menuDialog.open();
-            }
+            onClicked: menuDialog.open()
         }
     }
     Dialog {
+        property bool shouldReenableGame: true
+
         z: 1
         id: menuDialog
         title: "PuzzleMaster"
         contentHeight: menuDialogColumn.height
         contentWidth: menuDialogColumn.width
         onOpened: gameBoard.disable()
-        onClosed: gameBoard.enable()
+        onClosed: {
+            if (menuDialog.shouldReenableGame)
+                gameBoard.enable()
+            menuDialog.shouldReenableGame = true;
+        }
         content: Column {
             id: menuDialogColumn
             spacing: 10
@@ -75,16 +84,18 @@ PuzzleBoard {
                 width: 500
                 text: qsTr("Solve game")
                 onClicked: {
-                    menuDialog.close();
-                    gameBoard.assemble();
+                    menuDialog.shouldReenableGame = false;
+                    menuDialog.close()
+                    gameBoard.assemble()
                 }
             }
             Button {
                 width: 500
                 text: qsTr("Restart game")
                 onClicked: {
-                    menuDialog.close();
-                    play();
+                    menuDialog.close()
+                    menuButtonPanel.close()
+                    play()
                 }
             }
             Button {

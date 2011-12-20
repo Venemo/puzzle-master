@@ -47,6 +47,7 @@ Panel {
     id: dialog
     color: dialog.backgroundColor
     visible: false
+    opacity: 0
     onClosed: {
         if (shouldAccept)
             dialog.accepted();

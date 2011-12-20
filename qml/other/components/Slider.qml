@@ -74,9 +74,9 @@ Rectangle {
                 calculateValue();
             }
         }
-        onPressed: handle.gradient = handle.pressedGradient
+        onPressed: handle.gradient = handle.style.pressedGradient
         onReleased: {
-            handle.gradient = handle.normalGradient;
+            handle.gradient = handle.style.normalGradient;
             calculateValue();
             adjustHandleX();
         }

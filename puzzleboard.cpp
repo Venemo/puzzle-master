@@ -35,7 +35,6 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     _allowMultitouch(false),
     _fixedFPSTimer(0)
 {
-    connect(this, SIGNAL(gameWon()), this, SIGNAL(gameEnded()));
 #if defined(HAVE_QACCELEROMETER)
     accelerometer = new QtMobility::QAccelerometer(this);
     connect(accelerometer, SIGNAL(readingChanged()), this, SLOT(accelerometerReadingChanged()));
@@ -351,7 +350,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setFakeShape(fakeShape.translated(usabilityThickness, usabilityThickness));
             item->setWidth(px.width() + usabilityThickness * 2);
             item->setHeight(px.height() + usabilityThickness * 2);
-            connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
+            connect(item, SIGNAL(noNeighbours()), this, SLOT(assemble()));
 
             item->show();
             _puzzleItems.append(item);
@@ -411,7 +410,7 @@ void PuzzleBoard::assemble()
 
     foreach (PuzzleItem *item, puzzleItems())
     {
-        item->disableMerge();
+        item->setCanMerge(false);
 
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
         anim->setEndValue(item->supposedPosition());
@@ -430,7 +429,10 @@ void PuzzleBoard::assemble()
     }
 
     connect(group, SIGNAL(finished()), this, SLOT(disableFixedFPS()));
-    connect(group, SIGNAL(finished()), this, SIGNAL(gameEnded()));
+    if (puzzleItems().count() == 1)
+        connect(group, SIGNAL(finished()), this, SIGNAL(gameWon()));
+    else
+        connect(group, SIGNAL(finished()), this, SIGNAL(assembleComplete()));
     enableFixedFPS();
     group->start(QAbstractAnimation::DeleteWhenStopped);
 }

@@ -66,7 +66,6 @@ signals:
     void rotationToleranceChanged();
 
     void gameStarted();
-    void gameEnded();
     void gameWon();
     void loaded();
     void loadProgressChanged(int progress);
