@@ -48,8 +48,10 @@ Dialog
 
             Repeater {
                 model: DocumentGalleryModel {
+                    id: picsModel
                     rootType: DocumentGallery.Image
                     properties: [ "url" ]
+                    sortProperties: [ "-dateTaken" ]
                 }
                 delegate: Rectangle {
                     id: imageBorder
