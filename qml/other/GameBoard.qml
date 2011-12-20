@@ -23,7 +23,7 @@ import "./components/style"
 
 PuzzleBoard {
     function play() {
-        progressDialog.open();
+        progressDialog.open()
     }
 
     id: gameBoard
@@ -35,7 +35,8 @@ PuzzleBoard {
     onGameStarted: menuButtonPanel.open()
     onGameWon: menuButtonPanel.close()
     onVisibleChanged: {
-        menuButtonPanel.visible = false;
+        menuButtonPanel.visible = false
+        progressDialog.text = qsTr("The selected image is being processed.")
         gameBoard.deleteAllPieces()
     }
 
@@ -130,7 +131,6 @@ PuzzleBoard {
         id: progressDialog
         z: 1
         title: qsTr("Please wait...")
-        text: qsTr("The selected image is being processed.");
         backgroundColor: "#99101010"
         enableBackgroundClicking: false
         onOpened: gameBoard.startGame(imageChooser.selectedImageUrl, optionsDialog.rows, optionsDialog.columns, true)

@@ -26,9 +26,9 @@ Dialog
     property int columnNumber: 5
 
     id: fileSelectorDialog
-    title: "Select a picture"
-    acceptButtonText: "Select"
-    rejectButtonText: "Cancel"
+    title: qsTr("Select a picture")
+    acceptButtonText: qsTr("Select")
+    rejectButtonText: qsTr("Cancel")
     contentWidth: fileSelectorFlickable.width
     contentHeight: fileSelectorFlickable.height
     content: Flickable {
