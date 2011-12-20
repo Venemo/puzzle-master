@@ -47,7 +47,7 @@ Panel {
         }
 
         TextEdit {
-            text: qsTr("Welcome! Select an image.")
+            text: qsTr("Welcome! Choose an image.")
             anchors.centerIn: parent
             font.pixelSize: 30
             color: "#ffffff"
@@ -173,7 +173,7 @@ Panel {
     }
     Dialog {
         id: menuDialog
-        title: qsTr("Puzzle Master")
+        title: "PuzzleMaster"
         contentHeight: menuDialogColumn.height
         contentWidth: menuDialogColumn.width
         content: Column {
@@ -190,7 +190,7 @@ Panel {
             }
             Button {
                 width: 500
-                text: qsTr("Add own image")
+                text: qsTr("Add custom image")
                 onClicked: {
                     menuDialog.close();
                     fileSelectorDialog.open();

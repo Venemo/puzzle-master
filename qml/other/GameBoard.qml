@@ -62,7 +62,7 @@ PuzzleBoard {
     Dialog {
         z: 1
         id: menuDialog
-        title: qsTr("Puzzle Master")
+        title: "PuzzleMaster"
         contentHeight: menuDialogColumn.height
         contentWidth: menuDialogColumn.width
         onOpened: gameBoard.disable()

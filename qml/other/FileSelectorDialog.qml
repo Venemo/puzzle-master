@@ -26,7 +26,7 @@ Dialog
     property int columnNumber: 5
 
     id: fileSelectorDialog
-    title: "Select your picture"
+    title: "Select a picture"
     acceptButtonText: "Select"
     rejectButtonText: "Cancel"
     contentWidth: fileSelectorFlickable.width
