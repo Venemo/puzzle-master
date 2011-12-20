@@ -181,6 +181,10 @@ QPixmap PuzzleBoard::processImage(const QString &url)
 
 void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowMultitouch)
 {
+    emit loadProgressChanged(0);
+    deleteAllPieces();
+    QApplication::instance()->processEvents();
+
     if (height() == 0 || height() == 0)
     {
         qDebug() << "The size of this PuzzleBoard item is not okay, not starting game.";
@@ -202,7 +206,6 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     qDebug() << time.elapsed() << "ms spent with processing the image";
     time.restart();
 
-    deleteAllPieces();
     _allowMultitouch = allowMultitouch;
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
