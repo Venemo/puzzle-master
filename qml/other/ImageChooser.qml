@@ -96,6 +96,10 @@ Panel {
                     source: url
                     sourceSize.width: imageSelectorGrid.cellWidth - 10
                 }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: imageSelectorGrid.currentIndex = index
+                }
             }
             highlight: Rectangle {
                 color: "#538312"

@@ -64,6 +64,10 @@ Dialog
                 sourceSize.width: imageSelectorGrid.cellWidth - 10
                 anchors.centerIn: parent
             }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: imageSelectorGrid.currentIndex = index
+            }
         }
         highlight: Rectangle {
             color: "#538312"
