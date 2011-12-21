@@ -135,6 +135,8 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
         return;
     }
 
+    qDeleteAll(childItems());
+
     _allowMultitouch = allowMultitouch;
 
     QPixmap pixmap = image.scaled(width(), height(), Qt::KeepAspectRatio);
