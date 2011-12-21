@@ -21,8 +21,8 @@
 #include <QPainter>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
-#include <QTime>
 #include <QTimer>
+#include <QElapsedTimer>
 #include <QApplication>
 
 #include "puzzleboard.h"
@@ -191,8 +191,8 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
         return;
     }
 
-    QTime time = QTime::currentTime();
-    time.start();
+    QElapsedTimer timer;
+    timer.start();
 
     qDebug() << "trying to start game with" << imageUrl;
     QPixmap pixmap = processImage(imageUrl);
@@ -203,8 +203,8 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
         return;
     }
 
-    qDebug() << time.elapsed() << "ms spent with processing the image";
-    time.restart();
+    qDebug() << timer.elapsed() << "ms spent with processing the image";
+    timer.restart();
 
     _allowMultitouch = allowMultitouch;
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
@@ -226,7 +226,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     {
         for (unsigned j = 0; j < rows; j++)
         {
-            time.restart();
+            timer.restart();
 
             // Creating the shape of the piece
             QPainterPath rectClip;
@@ -358,7 +358,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->show();
             _puzzleItems.append(item);
 
-            qDebug() << time.elapsed() << "ms spent with generating piece" << i * rows + j + 1 << item->puzzleCoordinates();
+            qDebug() << timer.elapsed() << "ms spent with generating piece" << i * rows + j + 1 << item->puzzleCoordinates();
             emit loadProgressChanged(i * rows + j + 1);
             QApplication::instance()->processEvents();
 

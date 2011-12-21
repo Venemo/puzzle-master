@@ -22,6 +22,7 @@
 #include <QTouchEvent>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
+#include <QElapsedTimer>
 #include <cmath>
 
 #include "puzzleitem.h"
@@ -410,6 +411,7 @@ void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
+    // Uncomment for or various debugging purposes
     //painter->drawRect(boundingRect());
     //painter->drawEllipse(mapFromScene(pos()), 10, 10);
     //painter->fillPath(_fakeShape, QBrush(QColor(0, 0, 255, 130)));
