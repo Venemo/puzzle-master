@@ -21,7 +21,7 @@ import "./components"
 import "./components/style"
 
 Panel {
-    property string selectedImageUrl: imagesModel.get(imageSelectorGrid.currentIndex).url
+    property string selectedImageUrl: imageSelectorGrid.currentIndex < 0 ? "" : imagesModel.get(imageSelectorGrid.currentIndex).url
     property int columnNumber: 3
 
     signal accepted
@@ -74,6 +74,7 @@ Panel {
             cellHeight: imageSelectorGrid.cellWidth / imageChooser.width * imageChooser.height
             width: imageSelectorGrid.cellWidth * imageChooser.columnNumber
             currentIndex: -1
+            highlightMoveDuration: 80
             model: ListModel {
                 id: imagesModel
                 ListElement { url: ":/pics/image1.jpg" }

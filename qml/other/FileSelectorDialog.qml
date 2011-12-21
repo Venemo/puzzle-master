@@ -22,7 +22,7 @@ import "./components"
 
 Dialog
 {
-    property string selectedImageUrl: imageSelectorGrid.model.get(imageSelectorGrid.currentIndex).url
+    property string selectedImageUrl: imageSelectorGrid.currentIndex < 0 ? "" : imageSelectorGrid.model.get(imageSelectorGrid.currentIndex).url
 
     id: fileSelectorDialog
     enableBackgroundClicking: false
@@ -41,6 +41,7 @@ Dialog
         focus: true
         cacheBuffer: imageSelectorGrid.height / 2
         currentIndex: -1
+        highlightMoveDuration: 80
 
         model: DocumentGalleryModel {
             id: picsModel

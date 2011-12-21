@@ -54,7 +54,7 @@ Rectangle {
     }
     Dialog {
         id: gameWonDialog
-        title: qsTr("You rock!")
+        title: qsTr("You're a winner!")
         text: qsTr("Congratulations, you have successfully solved the given puzzle.")
         enableBackgroundClicking: false
         acceptButtonText: qsTr("Play again")
