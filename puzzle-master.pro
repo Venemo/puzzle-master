@@ -25,12 +25,14 @@ VERSION = 2.0
 SOURCES += \
     main.cpp \
     appsettings.cpp \
+    appeventhandler.cpp \
     puzzleitem.cpp \
     puzzleboard.cpp
 
 HEADERS += \
     util.h \
     appsettings.h \
+    appeventhandler.h \
     puzzleitem.h \
     puzzleboard.h
 
@@ -72,7 +74,7 @@ unix {
 }
 contains(MEEGO_EDITION, harmattan) {
     # We want to use applauncherd here, and it has an accelerometer
-    DEFINES += HAVE_APPLAUNCHERD HAVE_QACCELEROMETER MEEGO_EDITION_HARMATTAN
+    DEFINES += HAVE_APPLAUNCHERD HAVE_QACCELEROMETER HAVE_SWIPELOCK MEEGO_EDITION_HARMATTAN
     # The MeeGo graphics system is better than using QGLWidget
     DEFINES -= HAVE_OPENGL
 }

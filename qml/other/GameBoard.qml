@@ -37,11 +37,18 @@ PuzzleBoard {
             progressDialog.text = qsTr("The selected image is being processed.")
     }
     onLoaded: progressDialog.close()
-    onGameStarted: menuButtonPanel.open()
-    onGameWon: menuButtonPanel.close()
+    onGameStarted: {
+        appEventHandler.adjustForPlaying()
+        menuButtonPanel.open()
+    }
+    onGameWon: {
+        appEventHandler.adjustForUi()
+        menuButtonPanel.close()
+    }
     onVisibleChanged: {
         menuButtonPanel.visible = false
         gameBoard.deleteAllPieces()
+        appEventHandler.adjustForUi()
     }
 
     Panel {
@@ -75,11 +82,15 @@ PuzzleBoard {
         title: "PuzzleMaster"
         contentHeight: menuDialogColumn.height
         contentWidth: menuDialogColumn.width
-        onOpened: gameBoard.disable()
+        onOpened: {
+            appEventHandler.adjustForUi()
+            gameBoard.disable()
+        }
         onClosed: {
+            appEventHandler.adjustForPlaying()
             if (menuDialog.shouldReenableGame)
                 gameBoard.enable()
-            menuDialog.shouldReenableGame = true;
+            menuDialog.shouldReenableGame = true
         }
         content: Column {
             id: menuDialogColumn
@@ -89,7 +100,7 @@ PuzzleBoard {
                 width: 500
                 text: qsTr("Solve game")
                 onClicked: {
-                    menuDialog.shouldReenableGame = false;
+                    menuDialog.shouldReenableGame = false
                     menuDialog.close()
                     gameBoard.assemble()
                 }
@@ -107,17 +118,17 @@ PuzzleBoard {
                 width: 500
                 text: qsTr("Abandon game")
                 onClicked: {
-                    menuDialog.close();
-                    gameBoard.visible = false;
-                    imageChooser.open();
+                    menuDialog.close()
+                    gameBoard.visible = false
+                    imageChooser.open()
                 }
             }
             Button {
                 width: 500
                 text: qsTr("About")
                 onClicked: {
-                    menuDialog.close();
-                    aboutDialog.open();
+                    menuDialog.close()
+                    aboutDialog.open()
                 }
             }
             Button {
@@ -125,8 +136,8 @@ PuzzleBoard {
                 text: qsTr("Quit")
                 style: RedButtonStyle { }
                 onClicked: {
-                    menuDialog.close();
-                    areYouSureToQuitDialog.open();
+                    menuDialog.close()
+                    areYouSureToQuitDialog.open()
                 }
             }
         }

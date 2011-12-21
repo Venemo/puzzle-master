@@ -37,6 +37,7 @@
 #include "util.h"
 #include "puzzleboard.h"
 #include "appsettings.h"
+#include "appeventhandler.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -84,6 +85,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setViewport(glWidget);
 #endif
 
+    AppEventHandler *appEventHandler = new AppEventHandler(view);
+    QSize windowSize = app->desktop()->geometry().size();
+
     view->setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing);
     view->setOptimizationFlag(QGraphicsView::DontSavePainterState);
     view->setRenderHint(QPainter::SmoothPixmapTransform, false);
@@ -95,8 +99,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
     view->viewport()->setAttribute(Qt::WA_NoSystemBackground);
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
-    view->rootContext()->setContextProperty("initialSize", app->desktop()->geometry());
+    view->rootContext()->setContextProperty("initialSize", windowSize);
+    view->rootContext()->setContextProperty("appEventHandler", appEventHandler);
     view->setSource(QUrl("qrc:/qml/other/AppWindow.qml"));
+    view->resize(windowSize);
     view->showFullScreen();
 
     int result = app->exec();
