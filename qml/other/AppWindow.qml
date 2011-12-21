@@ -7,16 +7,35 @@ Rectangle {
 
     PuzzleBoard
     {
-        width: 854
-        height: 480
-        anchors.centerIn: parent
+        anchors.fill: parent
         id: puzzleBoard
+        tolerance: 15
+        rotationTolerance: 20
+
+        onGameWon: {
+            playButton.visible = true;
+        }
     }
 
-    Component.onCompleted:
-    {
-        puzzleBoard.tolerance = 15;
-        puzzleBoard.rotationTolerance = 20;
-        puzzleBoard.startGame(":/image5.jpg", 3, 3, true);
+    Rectangle {
+        id: playButton
+        color: "white"
+        radius: 10
+        width: 200
+        height: 75
+        border.color: "gray"
+        anchors.centerIn: parent
+
+        Text {
+            text: qsTr("Click here to play")
+            anchors.centerIn: parent
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                playButton.visible = false;
+                puzzleBoard.startGame(":/image5.jpg", 3, 4, true);
+            }
+        }
     }
 }
