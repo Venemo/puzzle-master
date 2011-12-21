@@ -20,6 +20,10 @@
 #include <QDesktopWidget>
 #include <QApplication>
 
+#if defined(HAVE_SWIPELOCK) && !defined(Q_WS_X11)
+#error What were you thinking? Swipe lock only works on MeeGo & X11
+#endif
+
 #if defined(HAVE_SWIPELOCK)
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
