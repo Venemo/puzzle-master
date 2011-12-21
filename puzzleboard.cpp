@@ -43,7 +43,7 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
 
 void PuzzleBoard::setNeighbours(int x, int y)
 {
-    foreach (PuzzleItem *p, puzzleItems())
+    foreach (PuzzleItem *p, _puzzleItems)
     {
         if (p->puzzleCoordinates().x() != x - 1)
             p->addNeighbour(find(p->puzzleCoordinates() + QPoint(1, 0)));
@@ -55,7 +55,7 @@ void PuzzleBoard::setNeighbours(int x, int y)
 
 PuzzleItem *PuzzleBoard::find(const QPoint &puzzleCoordinates)
 {
-    foreach (PuzzleItem *p, puzzleItems())
+    foreach (PuzzleItem *p, _puzzleItems)
     {
         if (p->puzzleCoordinates() == puzzleCoordinates)
             return p;
@@ -356,12 +356,11 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             connect(item, SIGNAL(noNeighbours()), this, SLOT(assemble()));
 
             item->show();
-            _puzzleItems.append(item);
+            _puzzleItems.insert(item);
 
             qDebug() << timer.elapsed() << "ms spent with generating piece" << i * rows + j + 1 << item->puzzleCoordinates();
             emit loadProgressChanged(i * rows + j + 1);
             QApplication::instance()->processEvents();
-
         }
     }
     delete statuses;
@@ -377,7 +376,7 @@ void PuzzleBoard::shuffle()
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
     QEasingCurve easingCurve(QEasingCurve::InElastic);
 
-    foreach (PuzzleItem *item, puzzleItems())
+    foreach (PuzzleItem *item, _puzzleItems)
     {
         QPointF newPos(randomInt(0, width() - _unit.width()), randomInt(0, height() - _unit.width()));
 
@@ -411,7 +410,7 @@ void PuzzleBoard::assemble()
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
     QEasingCurve easingCurve(QEasingCurve::OutExpo);
 
-    foreach (PuzzleItem *item, puzzleItems())
+    foreach (PuzzleItem *item, _puzzleItems)
     {
         item->setCanMerge(false);
 
@@ -432,7 +431,7 @@ void PuzzleBoard::assemble()
     }
 
     connect(group, SIGNAL(finished()), this, SLOT(disableFixedFPS()));
-    if (puzzleItems().count() == 1)
+    if (_puzzleItems.count() == 1)
         connect(group, SIGNAL(finished()), this, SIGNAL(gameWon()));
     else
         connect(group, SIGNAL(finished()), this, SIGNAL(assembleComplete()));
@@ -443,7 +442,7 @@ void PuzzleBoard::assemble()
 void PuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)
 {
     Q_UNUSED(z);
-    foreach (PuzzleItem *item, puzzleItems())
+    foreach (PuzzleItem *item, _puzzleItems)
     {
         if (item->canMerge())
         {
@@ -455,7 +454,7 @@ void PuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)
 
 void PuzzleBoard::enable()
 {
-    foreach (PuzzleItem *item, puzzleItems())
+    foreach (PuzzleItem *item, _puzzleItems)
     {
         item->enableMerge();
     }
@@ -463,7 +462,7 @@ void PuzzleBoard::enable()
 
 void PuzzleBoard::disable()
 {
-    foreach (PuzzleItem *item, puzzleItems())
+    foreach (PuzzleItem *item, _puzzleItems)
     {
         item->disableMerge();
     }
@@ -471,19 +470,12 @@ void PuzzleBoard::disable()
 
 void PuzzleBoard::deleteAllPieces()
 {
-    qDeleteAll(puzzleItems());
+    qDeleteAll(_puzzleItems);
     _puzzleItems.clear();
 }
 
-QList<PuzzleItem*> PuzzleBoard::puzzleItems()
+void PuzzleBoard::removePuzzleItem(PuzzleItem *item)
 {
-    QList<PuzzleItem*> result;
-    foreach (const QPointer<PuzzleItem> &ptr, _puzzleItems)
-    {
-        if (ptr.isNull())
-            _puzzleItems.removeAll(ptr);
-        else
-            result.append(ptr.data());
-    }
-    return result;
+    _puzzleItems.remove(item);
+    item->deleteLater();
 }

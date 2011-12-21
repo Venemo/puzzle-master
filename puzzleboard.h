@@ -43,7 +43,7 @@ class PuzzleBoard : public QDeclarativeItem
     GENPROPERTY_R(bool, _allowMultitouch, allowMultitouch)
 
     QTimer *_fixedFPSTimer;
-    QList<QPointer<PuzzleItem> > _puzzleItems;
+    QSet<PuzzleItem*> _puzzleItems;
 #if defined(HAVE_QACCELEROMETER)
     QtMobility::QAccelerometer *accelerometer;
 #endif
@@ -53,12 +53,12 @@ public:
     Q_INVOKABLE void startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowMultitouch);
     void setNeighbours(int x, int y);
     PuzzleItem *find(const QPoint &puzzleCoordinates);
+    void removePuzzleItem(PuzzleItem *item);
     bool isAccelerometerActive() const;
     QPixmap processImage(const QString &url);
 
 protected:
     void accelerometerMovement(qreal x, qreal y, qreal z);
-    QList<PuzzleItem*> puzzleItems();
 
 signals:
     void isAccelerometerActiveChanged();

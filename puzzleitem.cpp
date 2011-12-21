@@ -149,7 +149,7 @@ void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
         setHeight(_pixmap.height());
         setPos(pos() + old00 - mapToParent(x1, y1));
         _dragStart = mapToParent(dragPosition + QPointF(x1, y1)) - pos();
-        delete item;
+        static_cast<PuzzleBoard*>(parent())->removePuzzleItem(item);
 
         if (neighbours().count() == 0)
         {
