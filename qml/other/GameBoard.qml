@@ -36,9 +36,12 @@ PuzzleBoard {
         else
             progressDialog.text = qsTr("The selected image is being processed.")
     }
-    onLoaded: progressDialog.close()
-    onGameStarted: {
+    onLoaded: {
         appEventHandler.adjustForPlaying()
+        progressDialog.close()
+    }
+    onGameStarted: {
+        menuDialog.shouldReenableGame = true
         menuButtonPanel.open()
     }
     onGameWon: {
@@ -75,7 +78,7 @@ PuzzleBoard {
         }
     }
     Dialog {
-        property bool shouldReenableGame: true
+        property bool shouldReenableGame: false
 
         z: 1
         id: menuDialog
@@ -90,7 +93,6 @@ PuzzleBoard {
             appEventHandler.adjustForPlaying()
             if (menuDialog.shouldReenableGame)
                 gameBoard.enable()
-            menuDialog.shouldReenableGame = true
         }
         content: Column {
             id: menuDialogColumn
@@ -118,7 +120,7 @@ PuzzleBoard {
                 width: 500
                 text: qsTr("Abandon game")
                 onClicked: {
-                    menuDialog.close()
+                    menuDialog.visible = false
                     gameBoard.visible = false
                     imageChooser.open()
                 }
@@ -149,5 +151,23 @@ PuzzleBoard {
         backgroundColor: "#99101010"
         enableBackgroundClicking: false
         onOpened: gameBoard.startGame(imageChooser.selectedImageUrl, optionsDialog.rows, optionsDialog.columns, true)
+    }
+    Dialog {
+        id: pausedDialog
+        z: 1
+        title: qsTr("Game paused")
+        text: qsTr("Switch back to continue it")
+        opacity: 1
+        onVisibleChanged: {
+            if (pausedDialog.visible)
+                menuDialog.visible = false;
+            else
+                menuDialog.visible = true;
+        }
+        Connections {
+            target: appEventHandler
+            onWindowActivated: pausedDialog.visible = false
+            onWindowDeactivated: pausedDialog.visible = true
+        }
     }
 }

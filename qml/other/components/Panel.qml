@@ -20,6 +20,8 @@ import QtQuick 1.0
 import "./style"
 
 Rectangle {
+    property int animationDuration: 120
+
     signal opened
     signal closed
 
@@ -39,7 +41,7 @@ Rectangle {
         property: "opacity"
         from: 0
         to: 1
-        duration: 120
+        duration: animationDuration
         onStarted: {
             panel.visible = true;
             disableAllTheThings.enabled = true;
@@ -55,7 +57,7 @@ Rectangle {
         property: "opacity"
         from: 1
         to: 0
-        duration: 120
+        duration: animationDuration
         onStarted: {
             disableAllTheThings.enabled = true;
         }

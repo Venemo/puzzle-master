@@ -21,14 +21,21 @@
 
 #include <QWidget>
 
+#if defined(HAVE_SWIPELOCK) && !defined(Q_WS_X11)
+#error What were you thinking? Swipe lock only works on MeeGo & X11
+#endif
+
 class AppEventHandler : public QObject
 {
     Q_OBJECT
 
 public:
     explicit AppEventHandler(QWidget *parent = 0);
+    bool eventFilter(QObject *obj, QEvent *event);
     
 signals:
+    void windowActivated();
+    void windowDeactivated();
     
 public slots:
     void adjustForPlaying();

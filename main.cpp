@@ -58,6 +58,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view = new QDeclarativeView();
 #endif
 
+    AppEventHandler *appEventHandler = new AppEventHandler(view);
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
     qsrand((uint)QTime::currentTime().msec());
     qmlRegisterType<PuzzleBoard>("net.venemo.puzzlemaster", 2, 0, "PuzzleBoard");
@@ -85,9 +86,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setViewport(glWidget);
 #endif
 
-    AppEventHandler *appEventHandler = new AppEventHandler(view);
-    QSize windowSize = app->desktop()->geometry().size();
-
     view->setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing);
     view->setOptimizationFlag(QGraphicsView::DontSavePainterState);
     view->setRenderHint(QPainter::SmoothPixmapTransform, false);
@@ -99,10 +97,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
     view->viewport()->setAttribute(Qt::WA_NoSystemBackground);
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
-    view->rootContext()->setContextProperty("initialSize", windowSize);
+    view->rootContext()->setContextProperty("initialSize", QApplication::desktop()->geometry().size());
     view->rootContext()->setContextProperty("appEventHandler", appEventHandler);
     view->setSource(QUrl("qrc:/qml/other/AppWindow.qml"));
-    view->resize(windowSize);
     view->showFullScreen();
 
     int result = app->exec();

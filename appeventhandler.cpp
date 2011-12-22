@@ -16,19 +16,18 @@
 //
 // Copyright (C) 2010-2011, Timur Kristóf <venemo@fedoraproject.org>
 
-#include "appeventhandler.h"
 #include <QDesktopWidget>
 #include <QApplication>
-
-#if defined(HAVE_SWIPELOCK) && !defined(Q_WS_X11)
-#error What were you thinking? Swipe lock only works on MeeGo & X11
-#endif
+#include <QEvent>
+#include <QDebug>
 
 #if defined(HAVE_SWIPELOCK)
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <QX11Info>
 #endif
+
+#include "appeventhandler.h"
 
 #if defined(HAVE_SWIPELOCK)
 static Atom customRegionAtom = 0;
@@ -49,6 +48,25 @@ AppEventHandler::AppEventHandler(QWidget *parent) :
         customRegion[3] = QApplication::desktop()->geometry().height();
     }
 #endif
+
+    parent->installEventFilter(this);
+}
+
+bool AppEventHandler::eventFilter(QObject *obj, QEvent *event)
+{
+    Q_UNUSED(obj);
+
+    if (event->type() == QEvent::WindowActivate)
+    {
+        qDebug() << "Window activated";
+        emit windowActivated();
+    }
+    else if (event->type() == QEvent::WindowDeactivate)
+    {
+        qDebug() << "Window deactivated";
+        emit windowDeactivated();
+    }
+    return false;
 }
 
 void AppEventHandler::adjustForPlaying()
