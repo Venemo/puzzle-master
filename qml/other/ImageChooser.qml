@@ -193,6 +193,6 @@ Panel {
     }
     FileSelectorDialog {
         id: fileSelectorDialog
-        onAccepted: imagesModel.append({ url: fileSelectorDialog.selectedImageUrl })
+        onAccepted: imagesModel.insert(0, { url: fileSelectorDialog.selectedImageUrl })
     }
 }

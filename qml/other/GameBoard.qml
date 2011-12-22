@@ -100,20 +100,20 @@ PuzzleBoard {
 
             Button {
                 width: 500
-                text: qsTr("Solve game")
-                onClicked: {
-                    menuDialog.shouldReenableGame = false
-                    menuDialog.close()
-                    gameBoard.assemble()
-                }
-            }
-            Button {
-                width: 500
                 text: qsTr("Restart game")
                 onClicked: {
                     menuDialog.close()
                     menuButtonPanel.close()
                     play()
+                }
+            }
+            Button {
+                width: 500
+                text: qsTr("Surrender")
+                onClicked: {
+                    menuDialog.shouldReenableGame = false
+                    menuDialog.close()
+                    gameBoard.assemble()
                 }
             }
             Button {
@@ -156,7 +156,8 @@ PuzzleBoard {
         id: pausedDialog
         z: 1
         title: qsTr("Game paused")
-        text: qsTr("Switch back to continue it")
+        text: qsTr("Switch back to continue it.")
+        backgroundColor: "#99101010"
         opacity: 1
         onVisibleChanged: {
             if (pausedDialog.visible)
