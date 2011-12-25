@@ -2,9 +2,9 @@ import QtQuick 1.0
 
 Rectangle {
     property string selectionColor: "blue"
-    property string selectedImageUrl: null
-    property int deselectedImageHeight: 300
-    property int selectedImageHeight: 350
+    property string selectedImageUrl: ""
+    property int deselectedImageHeight: 290
+    property double selectedImageSizeMultiplier: 1.1
 
     signal accepted
 
@@ -47,12 +47,12 @@ Rectangle {
             anchors.fill: parent
             enabled: true
             contentWidth: imageSelectorRow.width
+            anchors.leftMargin: 20
+            anchors.rightMargin: 20
 
             Row {
                 id: imageSelectorRow
                 spacing: 5
-                anchors.leftMargin: 20
-                anchors.rightMargin: 20
                 anchors.verticalCenter: parent.verticalCenter
 
                 Repeater {
@@ -83,12 +83,18 @@ Rectangle {
                                 anchors.fill: parent
                                 onClicked: {
                                     if (imageChooserMiddle.selectedItemBorder !== null)
+                                    {
                                         imageChooserMiddle.selectedItemBorder.color = "white";
+                                    }
                                     if (imageChooserMiddle.selectedItemImage !== null)
-                                        imageChooserMiddle.selectedItemImage.height = imageChooser.deselectedImageHeight;
+                                    {
+                                        imageChooserMiddle.selectedItemImage.height /= imageChooser.selectedImageSizeMultiplier;
+                                        imageChooserMiddle.selectedItemImage.width /= imageChooser.selectedImageSizeMultiplier;
+                                    }
 
                                     imageBorder.color = imageChooser.selectionColor;
-                                    imageItem.height = imageChooser.selectedImageHeight;
+                                    imageItem.height *= imageChooser.selectedImageSizeMultiplier;
+                                    imageItem.width *= imageChooser.selectedImageSizeMultiplier;
                                     imageChooserMiddle.selectedItemBorder = imageBorder;
                                     imageChooserMiddle.selectedItemImage = imageItem;
                                     imageChooser.selectedImageUrl = imageUrl;
