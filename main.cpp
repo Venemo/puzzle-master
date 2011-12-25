@@ -35,11 +35,16 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<PuzzleBoard>("net.venemo.puzzlemaster", 2, 0, "PuzzleBoard");
 
-    QGLWidget glWidget;
     QDeclarativeView view(QUrl("qrc:/qml/other/AppWindow.qml"));
     QObject::connect(view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 
+    QGLWidget glWidget;
     view.setViewport(&glWidget);
+
+    view.setAttribute(Qt::WA_OpaquePaintEvent);
+    view.setAttribute(Qt::WA_NoSystemBackground);
+    view.viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
+    view.viewport()->setAttribute(Qt::WA_NoSystemBackground);
     view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
     view.showFullScreen();
 
