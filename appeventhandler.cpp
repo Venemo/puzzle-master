@@ -27,7 +27,7 @@
 #include <QX11Info>
 #endif
 
-#ifdef Q_OS_SYMBIAN
+#if defined(Q_OS_SYMBIAN)
 #include <eikenv.h>
 #include <eikappui.h>
 #include <aknenv.h>
@@ -56,7 +56,7 @@ AppEventHandler::AppEventHandler(QWidget *parent) :
     }
 #endif
 
-#ifdef Q_OS_SYMBIAN
+#if defined(Q_OS_SYMBIAN)
     CAknAppUi* appUi = dynamic_cast<CAknAppUi*> (CEikonEnv::Static()->AppUi());
     if (appUi)
     {
