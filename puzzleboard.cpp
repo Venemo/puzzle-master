@@ -31,7 +31,7 @@
 PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     QDeclarativeItem(parent),
     _allowRotation(false),
-    _usabilityThickness(12),
+    _usabilityThickness(20),
     _tolerance(5),
     _rotationTolerance(10),
     _fixedFPSTimer(0)
