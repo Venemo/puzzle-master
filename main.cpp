@@ -34,6 +34,10 @@
 #include <MDeclarativeCache>
 #endif
 
+#if defined (HAVE_DEVICEINFO)
+#include <QSystemDeviceInfo>
+#endif
+
 #include "util.h"
 #include "puzzleboard.h"
 #include "appsettings.h"
@@ -86,6 +90,24 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setViewport(glWidget);
 #endif
 
+    bool allowRotation = true;
+
+#if defined (HAVE_DEVICEINFO)
+    QtMobility::QSystemDeviceInfo *info = new QtMobility::QSystemDeviceInfo();
+    qDebug() << "Puzzle Master is running on... Manufacturer:" << info->manufacturer() << "Model:" << info->model() << "Product name:" << info->productName();
+    qDebug() << "Input method type is" << info->inputMethodType();
+    allowRotation = (info->inputMethodType() & QtMobility::QSystemDeviceInfo::MultiTouch) || (info->inputMethodType() & QtMobility::QSystemDeviceInfo::Mouse);
+    if (info->manufacturer() == "Nokia" && info->model() == "N8-00")
+        allowRotation = false;
+    delete info;
+#endif
+
+#if defined(DISABLE_ROTATION)
+    allowRotation = false;
+#endif
+
+    qDebug() << "Puzzle Master has" << (allowRotation ? "enabled" : "disabled") << "rotation support.";
+
     view->setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing);
     view->setOptimizationFlag(QGraphicsView::DontSavePainterState);
     view->setRenderHint(QPainter::SmoothPixmapTransform, false);
@@ -98,6 +120,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->viewport()->setAttribute(Qt::WA_NoSystemBackground);
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     view->rootContext()->setContextProperty("initialSize", QApplication::desktop()->geometry().size());
+    view->rootContext()->setContextProperty("allowRotation", allowRotation);
     view->rootContext()->setContextProperty("appEventHandler", appEventHandler);
     view->setSource(QUrl("qrc:/qml/other/AppWindow.qml"));
     view->showFullScreen();

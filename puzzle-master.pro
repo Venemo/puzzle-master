@@ -81,7 +81,7 @@ contains(MEEGO_EDITION, harmattan) {
 }
 maemo5 {
     # We want the accelerometer
-    DEFINES += HAVE_QACCELEROMETER
+    DEFINES += HAVE_QACCELEROMETER DISABLE_ROTATION
     # And the weird Maemo5 paths
     target.path = /opt/puzzle-master
     desktopfile.path = /usr/share/applications/hildon
@@ -89,7 +89,7 @@ maemo5 {
 symbian {
     QMAKE_CXXFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
     # We want the accelerometer, but not OpenGL
-    DEFINES += HAVE_QACCELEROMETER QT_NO_OPENGL
+    DEFINES += HAVE_QACCELEROMETER HAVE_DEVICEINFO QT_NO_OPENGL
     DEFINES -= HAVE_OPENGL
     QT -= opengl
     # Symbian icon
@@ -98,6 +98,7 @@ symbian {
     # Some weird Symbian stuff...
     TARGET.UID3 = 0xe5b4435f
     TARGET.EPOCSTACKSIZE = 0x28000
+    TARGET.CAPABILITY += ReadDeviceData
     LIBS += -lcone -leikcore -lavkon
     # Max. heap size is 20 MiB
     TARGET.EPOCHEAPSIZE = 0x020000 0x20971520
@@ -121,4 +122,9 @@ contains(DEFINES, HAVE_QACCELEROMETER) {
     # Ability to enable accelerometer
     CONFIG += mobility
     MOBILITY += sensors
+}
+contains(DEFINES, HAVE_DEVICEINFO) {
+    # Checking for device models
+    CONFIG += mobility
+    MOBILITY += systeminfo
 }

@@ -169,7 +169,7 @@ PuzzleBoard {
         title: qsTr("Please wait...")
         backgroundColor: "#99101010"
         enableBackgroundClicking: false
-        onOpened: gameBoard.startGame(imageChooser.selectedImageUrl, appSettings.rows, appSettings.columns, true)
+        onOpened: gameBoard.startGame(imageChooser.selectedImageUrl, appSettings.rows, appSettings.columns, allowRotation)
     }
     Dialog {
         id: pausedDialog
