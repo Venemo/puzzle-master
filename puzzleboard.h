@@ -44,6 +44,7 @@ class PuzzleBoard : public QDeclarativeItem
 
     QTimer *_fixedFPSTimer;
     QSet<PuzzleItem*> _puzzleItems;
+    QHash<PuzzleItem*, QPair<QPointF, int> > _restorablePositions;
 #if defined(HAVE_QACCELEROMETER)
     QtMobility::QAccelerometer *accelerometer;
 #endif
@@ -71,6 +72,7 @@ signals:
     void loadProgressChanged(int progress);
     void shuffleComplete();
     void assembleComplete();
+    void restoreComplete();
 
 private slots:
     void accelerometerReadingChanged();
@@ -84,6 +86,7 @@ public slots:
     Q_INVOKABLE void disableFixedFPS();
     Q_INVOKABLE void shuffle();
     Q_INVOKABLE void assemble();
+    Q_INVOKABLE void restore();
     Q_INVOKABLE void deleteAllPieces();
 };
 

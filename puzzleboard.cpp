@@ -413,10 +413,12 @@ void PuzzleBoard::assemble()
 {
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
     QEasingCurve easingCurve(QEasingCurve::OutExpo);
+    _restorablePositions.clear();
+    disable();
 
     foreach (PuzzleItem *item, _puzzleItems)
     {
-        item->setCanMerge(false);
+        _restorablePositions[item] = QPair<QPointF, int>(item->pos(), item->rotation());
 
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
         anim->setEndValue(item->supposedPosition());
@@ -439,6 +441,42 @@ void PuzzleBoard::assemble()
         connect(group, SIGNAL(finished()), this, SIGNAL(gameWon()));
     else
         connect(group, SIGNAL(finished()), this, SIGNAL(assembleComplete()));
+    enableFixedFPS();
+    group->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+void PuzzleBoard::restore()
+{
+    if (_restorablePositions.count() != _puzzleItems.count())
+    {
+        qDebug() << "The puzzle can't be restored, because something is messed up.";
+        return;
+    }
+
+    QParallelAnimationGroup *group = new QParallelAnimationGroup();
+    QEasingCurve easingCurve(QEasingCurve::InExpo);
+
+    foreach (PuzzleItem *item, _puzzleItems)
+    {
+        QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
+        anim->setEndValue(_restorablePositions[item].first);
+        anim->setDuration(2000);
+        anim->setEasingCurve(easingCurve);
+        group->addAnimation(anim);
+
+        if (_allowMultitouch)
+        {
+            QPropertyAnimation *rotateAnimation = new QPropertyAnimation(item, "rotation", group);
+            rotateAnimation->setEndValue(_restorablePositions[item].second);
+            rotateAnimation->setDuration(2000);
+            rotateAnimation->setEasingCurve(easingCurve);
+            group->addAnimation(rotateAnimation);
+        }
+    }
+
+    connect(group, SIGNAL(finished()), this, SLOT(disableFixedFPS()));
+    connect(group, SIGNAL(finished()), this, SLOT(enable()));
+    connect(group, SIGNAL(finished()), this, SIGNAL(restoreComplete()));
     enableFixedFPS();
     group->start(QAbstractAnimation::DeleteWhenStopped);
 }
@@ -476,6 +514,7 @@ void PuzzleBoard::deleteAllPieces()
 {
     qDeleteAll(_puzzleItems);
     _puzzleItems.clear();
+    _restorablePositions.clear();
 }
 
 void PuzzleBoard::removePuzzleItem(PuzzleItem *item)

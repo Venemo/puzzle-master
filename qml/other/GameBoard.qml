@@ -26,6 +26,8 @@ PuzzleBoard {
         progressDialog.open()
     }
 
+    property bool isHintDisplayed: false
+
     id: gameBoard
     tolerance: (- appSettings.snapDifficulty + 3) * 7
     rotationTolerance: (- appSettings.snapDifficulty + 3) * 9
@@ -52,6 +54,9 @@ PuzzleBoard {
         menuButtonPanel.visible = false
         gameBoard.deleteAllPieces()
         appEventHandler.adjustForUi()
+    }
+    onRestoreComplete: {
+        menuDialog.shouldReenableGame = true;
     }
 
     Panel {
@@ -100,29 +105,43 @@ PuzzleBoard {
 
             Button {
                 width: 500
-                text: qsTr("Restart game")
+                text: gameBoard.isHintDisplayed ? qsTr("Continue game") : qsTr("Get a hint!")
                 onClicked: {
-                    menuDialog.close()
-                    menuButtonPanel.close()
-                    play()
+                    if (gameBoard.isHintDisplayed) {
+                        menuDialog.shouldReenableGame = false
+                        menuDialog.close()
+                        gameBoard.restore()
+                        gameBoard.isHintDisplayed = false;
+                    }
+                    else {
+                        menuDialog.shouldReenableGame = false
+                        menuDialog.close()
+                        gameBoard.assemble()
+                        gameBoard.isHintDisplayed = true;
+                    }
                 }
+                style: GreenButtonStyle { }
             }
-            Button {
-                width: 500
-                text: qsTr("Surrender")
-                onClicked: {
-                    menuDialog.shouldReenableGame = false
-                    menuDialog.close()
-                    gameBoard.assemble()
+            Row {
+                spacing: 10
+
+                Button {
+                    width: 245
+                    text: qsTr("Restart")
+                    onClicked: {
+                        menuDialog.close()
+                        menuButtonPanel.close()
+                        play()
+                    }
                 }
-            }
-            Button {
-                width: 500
-                text: qsTr("Abandon game")
-                onClicked: {
-                    menuDialog.visible = false
-                    gameBoard.visible = false
-                    imageChooser.open()
+                Button {
+                    width: 245
+                    text: qsTr("Surrender")
+                    onClicked: {
+                        menuDialog.visible = false
+                        gameBoard.visible = false
+                        imageChooser.open()
+                    }
                 }
             }
             Button {
