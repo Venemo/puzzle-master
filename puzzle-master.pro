@@ -98,6 +98,7 @@ symbian {
     # Some weird Symbian stuff...
     TARGET.UID3 = 0xe5b4435f
     TARGET.EPOCSTACKSIZE = 0x28000
+    LIBS += -lcone -leikcore -lavkon
     # Max. heap size is 20 MiB
     TARGET.EPOCHEAPSIZE = 0x020000 0x20971520
 }

@@ -27,6 +27,13 @@
 #include <QX11Info>
 #endif
 
+#ifdef Q_OS_SYMBIAN
+#include <eikenv.h>
+#include <eikappui.h>
+#include <aknenv.h>
+#include <aknappui.h>
+#endif
+
 #include "appeventhandler.h"
 
 #if defined(HAVE_SWIPELOCK)
@@ -46,6 +53,14 @@ AppEventHandler::AppEventHandler(QWidget *parent) :
         customRegion[1] = 0;
         customRegion[2] = QApplication::desktop()->geometry().width();
         customRegion[3] = QApplication::desktop()->geometry().height();
+    }
+#endif
+
+#ifdef Q_OS_SYMBIAN
+    CAknAppUi* appUi = dynamic_cast<CAknAppUi*> (CEikonEnv::Static()->AppUi());
+    if (appUi)
+    {
+        appUi->SetOrientationL(CAknAppUi::EAppUiOrientationLandscape);
     }
 #endif
 
