@@ -141,7 +141,10 @@ void PuzzleBoard::disableFixedFPS()
 QPixmap PuzzleBoard::processImage(const QString &url)
 {
     QString url2(url);
-    url2.remove("file://");
+    if (url.contains(QRegExp("/[A-Za-z]:/")))
+        url2.remove("file:///");
+    else
+        url2.remove("file://");
     QPixmap pix(url2);
 
     if (pix.isNull())

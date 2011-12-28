@@ -19,7 +19,6 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#define APP_VERSION "2.0"
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 
 // Simple property

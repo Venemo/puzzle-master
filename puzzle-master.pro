@@ -21,6 +21,7 @@ QT += core gui declarative
 TARGET = puzzle-master
 TEMPLATE = app
 VERSION = 2.0
+DEFINES += APP_VERSION=\"2.0\"
 
 SOURCES += \
     main.cpp \
@@ -60,7 +61,7 @@ OTHER_FILES += \
 
 # Platforms
 
-unix {
+unix:!symbian {
     QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
     QMAKE_LFLAGS += -pie -rdynamic
     DEFINES += HAVE_OPENGL
@@ -86,11 +87,14 @@ maemo5 {
     desktopfile.path = /usr/share/applications/hildon
 }
 symbian {
+    QMAKE_CXXFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
     # We want the accelerometer, but not OpenGL
-    DEFINES += HAVE_QACCELEROMETER
+    DEFINES += HAVE_QACCELEROMETER QT_NO_OPENGL
     DEFINES -= HAVE_OPENGL
+    QT -= opengl
     # Symbian icon
     ICON = installables/puzzle-master.svg
+    TARGET = PuzzleMaster
     # Some weird Symbian stuff...
     TARGET.UID3 = 0xe5b4435f
     TARGET.EPOCSTACKSIZE = 0x28000
@@ -110,6 +114,7 @@ contains(DEFINES, HAVE_APPLAUNCHERD) {
 contains(DEFINES, HAVE_OPENGL) {
     # If we want QGLWidget as viewport
     QT += opengl
+    DEFINES -= QT_NO_OPENGL
 }
 contains(DEFINES, HAVE_QACCELEROMETER) {
     # Ability to enable accelerometer
