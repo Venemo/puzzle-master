@@ -27,6 +27,7 @@ PuzzleBoard {
     }
 
     property bool isHintDisplayed: false
+    property bool waitForHint: false
 
     id: gameBoard
     tolerance: (- appSettings.snapDifficulty + 3) * 7
@@ -56,7 +57,13 @@ PuzzleBoard {
         appEventHandler.adjustForUi()
     }
     onRestoreComplete: {
-        menuDialog.shouldReenableGame = true;
+        menuDialog.shouldReenableGame = true
+        gameBoard.isHintDisplayed = false
+        gameBoard.waitForHint = false
+    }
+    onAssembleComplete: {
+        gameBoard.isHintDisplayed = true
+        gameBoard.waitForHint = false
     }
 
     Panel {
@@ -105,19 +112,20 @@ PuzzleBoard {
 
             Button {
                 width: 500
-                text: gameBoard.isHintDisplayed ? qsTr("Continue game") : qsTr("Get a hint!")
+                text: waitForHint ? qsTr("Wait...") : (gameBoard.isHintDisplayed ? qsTr("Continue game") : qsTr("Get a hint!"))
                 onClicked: {
-                    if (gameBoard.isHintDisplayed) {
-                        menuDialog.shouldReenableGame = false
-                        menuDialog.close()
-                        gameBoard.restore()
-                        gameBoard.isHintDisplayed = false;
-                    }
-                    else {
-                        menuDialog.shouldReenableGame = false
-                        menuDialog.close()
-                        gameBoard.assemble()
-                        gameBoard.isHintDisplayed = true;
+                    if (!waitForHint) {
+                        if (gameBoard.isHintDisplayed) {
+                            gameBoard.waitForHint = true
+                            menuDialog.close()
+                            gameBoard.restore()
+                        }
+                        else {
+                            menuDialog.shouldReenableGame = false
+                            gameBoard.waitForHint = true
+                            menuDialog.close()
+                            gameBoard.assemble()
+                        }
                     }
                 }
                 style: GreenButtonStyle { }
@@ -180,9 +188,9 @@ PuzzleBoard {
         opacity: 1
         onVisibleChanged: {
             if (pausedDialog.visible)
-                menuDialog.visible = false;
+                menuDialog.visible = false
             else
-                menuDialog.visible = true;
+                menuDialog.visible = true
         }
         Connections {
             target: appEventHandler
