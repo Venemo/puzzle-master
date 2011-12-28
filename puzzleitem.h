@@ -90,6 +90,7 @@ protected:
     inline qreal rightTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::RightTab ? 1 : 0); }
     inline qreal bottomTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::BottomTab ? 1 : 0); }
     inline bool allowRotation() const { return static_cast<PuzzleBoard*>(parent())->allowRotation(); }
+    inline int usabilityThickness() const { return static_cast<PuzzleBoard*>(parent())->usabilityThickness(); }
 
 };
 

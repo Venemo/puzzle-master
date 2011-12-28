@@ -30,9 +30,10 @@
 
 PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     QDeclarativeItem(parent),
+    _allowRotation(false),
+    _usabilityThickness(12),
     _tolerance(5),
     _rotationTolerance(10),
-    _allowRotation(false),
     _fixedFPSTimer(0)
 {
 #if defined(HAVE_QACCELEROMETER)
@@ -213,7 +214,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
 
-    int tabTolerance = 1, *statuses = new int[cols * rows], strokeThickness = 5, usabilityThickness = 10;
+    int tabTolerance = 1, *statuses = new int[cols * rows], strokeThickness = 5;
     qreal   w0 = (width() - pixmap.width()) / 2,
             h0 = (height() - pixmap.height()) / 2,
             tabSize = min<qreal>(_unit.width() / 6.0, _unit.height() / 6.0),
@@ -342,11 +343,11 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             p.drawPixmap(tabFull + xCorrection + sxCorrection, tabFull + yCorrection + syCorrection, pixmap, i * _unit.width() + sxCorrection, j * _unit.height() + syCorrection, _unit.width() * 2, _unit.height() * 2);
             p.end();
 
-            QPointF supposed(w0 + (i * _unit.width()) + sxCorrection - usabilityThickness,
-                             h0 + (j * _unit.height()) + syCorrection - usabilityThickness);
+            QPointF supposed(w0 + (i * _unit.width()) + sxCorrection - _usabilityThickness,
+                             h0 + (j * _unit.height()) + syCorrection - _usabilityThickness);
             stroker.setWidth(strokeThickness);
             QPainterPath stroke = stroker.createStroke(clip).united(clip).simplified();
-            stroker.setWidth(usabilityThickness * 2);
+            stroker.setWidth(_usabilityThickness * 2);
             QPainterPath fakeShape = (stroker.createStroke(clip + rectClip) + clip + rectClip).simplified();
 
             // Creating the piece
@@ -354,11 +355,11 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(supposed);
             item->setPos(supposed);
-            item->setPixmapOffset(QPoint(usabilityThickness, usabilityThickness));
-            item->setStroke(stroke.translated(usabilityThickness, usabilityThickness));
-            item->setFakeShape(fakeShape.translated(usabilityThickness, usabilityThickness));
-            item->setWidth(px.width() + usabilityThickness * 2);
-            item->setHeight(px.height() + usabilityThickness * 2);
+            item->setPixmapOffset(QPoint(_usabilityThickness + 1, _usabilityThickness + 1));
+            item->setStroke(stroke.translated(_usabilityThickness + 1, _usabilityThickness + 1));
+            item->setFakeShape(fakeShape.translated(_usabilityThickness, _usabilityThickness + 1));
+            item->setWidth(px.width() + _usabilityThickness * 2 + 2);
+            item->setHeight(px.height() + _usabilityThickness * 2 + 2);
             item->setTabStatus(statuses[i * rows + j]);
             connect(item, SIGNAL(noNeighbours()), this, SLOT(assemble()));
 

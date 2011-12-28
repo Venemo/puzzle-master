@@ -171,8 +171,8 @@ void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
         setStroke(_stroke.translated(x1, y1).united(item->_stroke.translated(x2, y2)).simplified());
         setFakeShape(_fakeShape.translated(x1, y1).united(item->_fakeShape.translated(x2, y2)).simplified());
         setPixmap(pix);
-        setWidth(_pixmap.width());
-        setHeight(_pixmap.height());
+        setWidth(_pixmap.width() + usabilityThickness() * 2 + 2);
+        setHeight(_pixmap.height() + usabilityThickness() * 2 + 2);
         setPos(pos() + old00 - mapToParent(x1, y1));
         _dragStart = mapToParent(dragPosition + QPointF(x1, y1)) - pos();
         static_cast<PuzzleBoard*>(parent())->removePuzzleItem(item);
@@ -231,15 +231,9 @@ void PuzzleItem::handleRotation(const QPointF &v)
 void PuzzleItem::checkMergeableSiblings(const QPointF &position)
 {
     if (_canMerge)
-    {
         foreach (PuzzleItem *p, neighbours())
-        {
             if (checkMergeability(p) || p->checkMergeability(this))
-            {
                 mergeIfPossible(p, position);
-            }
-        }
-    }
 }
 
 bool PuzzleItem::checkMergeability(PuzzleItem *p)
