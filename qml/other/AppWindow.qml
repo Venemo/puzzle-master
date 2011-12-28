@@ -78,7 +78,7 @@ Rectangle {
     }
     Dialog {
         id: aboutDialog
-        title: qsTr("About Puzzle Master")
+        title: qsTr("About Puzzle Master %1").arg(appVersion)
         text: qsTr("Brought to you by Timur Kristóf.\nPuzzle Master is a fun and addictive jigsaw puzzle game.\nUsing Qt.")
         acceptButtonText: qsTr("Ok")
     }

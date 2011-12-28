@@ -121,6 +121,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     view->rootContext()->setContextProperty("initialSize", QApplication::desktop()->geometry().size());
     view->rootContext()->setContextProperty("allowRotation", allowRotation);
+    view->rootContext()->setContextProperty("appVersion", QString(APP_VERSION));
     view->rootContext()->setContextProperty("appEventHandler", appEventHandler);
     view->setSource(QUrl("qrc:/qml/other/AppWindow.qml"));
     view->showFullScreen();
