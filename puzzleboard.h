@@ -40,7 +40,7 @@ class PuzzleBoard : public QDeclarativeItem
     Q_PROPERTY(int tolerance READ tolerance WRITE setTolerance NOTIFY toleranceChanged)
     GENPROPERTY_F(int, _rotationTolerance, rotationTolerance, setRotationTolerance, rotationToleranceChanged)
     Q_PROPERTY(int rotationTolerance READ rotationTolerance WRITE setRotationTolerance NOTIFY rotationToleranceChanged)
-    GENPROPERTY_R(bool, _allowMultitouch, allowMultitouch)
+    GENPROPERTY_R(bool, _allowRotation, allowRotation)
 
     QTimer *_fixedFPSTimer;
     QSet<PuzzleItem*> _puzzleItems;
@@ -51,7 +51,7 @@ class PuzzleBoard : public QDeclarativeItem
 
 public:
     explicit PuzzleBoard(QDeclarativeItem *parent = 0);
-    Q_INVOKABLE void startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowMultitouch);
+    Q_INVOKABLE void startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowRotation);
     void setNeighbours(int x, int y);
     PuzzleItem *find(const QPoint &puzzleCoordinates);
     void removePuzzleItem(PuzzleItem *item);

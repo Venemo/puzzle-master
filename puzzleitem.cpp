@@ -292,7 +292,7 @@ void PuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
             startDrag(event->pos());
         }
-        else if (event->button() == Qt::RightButton)
+        else if (event->button() == Qt::RightButton && allowRotation())
         {
             _isRightButtonPressed = true;
             setCompensatedTransformOriginPoint(centerPoint());
@@ -324,7 +324,7 @@ void PuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     QDeclarativeItem::mouseMoveEvent(event);
     event->accept();
 
-    if (_isRightButtonPressed)
+    if (_isRightButtonPressed && allowRotation())
         handleRotation(mapToParent(event->pos()) - mapToParent(centerPoint()));
     else if (!_isDraggingWithTouch)
         doDrag(event->pos());
@@ -378,12 +378,13 @@ bool PuzzleItem::sceneEvent(QEvent *event)
         else
             doDrag(midpoint);
 
-        if (_previousTouchPointCount < 2 && touchEvent->touchPoints().count() >= 2)
-            startRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
-
-        // Handling multitouch rotation
-        if (touchEvent->touchPoints().count() >= 2)
-            handleRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
+        if (allowRotation())
+        {
+            if (_previousTouchPointCount < 2 && touchEvent->touchPoints().count() >= 2)
+                startRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
+            if (touchEvent->touchPoints().count() >= 2)
+                handleRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
+        }
 
         checkMergeableSiblings(midpoint);
         _previousTouchPointCount = touchEvent->touchPoints().count();

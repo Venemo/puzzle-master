@@ -32,7 +32,7 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     QDeclarativeItem(parent),
     _tolerance(5),
     _rotationTolerance(10),
-    _allowMultitouch(false),
+    _allowRotation(false),
     _fixedFPSTimer(0)
 {
 #if defined(HAVE_QACCELEROMETER)
@@ -182,7 +182,7 @@ QPixmap PuzzleBoard::processImage(const QString &url)
     return pix;
 }
 
-void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowMultitouch)
+void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowRotation)
 {
     emit loadProgressChanged(0);
     deleteAllPieces();
@@ -209,7 +209,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     qDebug() << timer.elapsed() << "ms spent with processing the image";
     timer.restart();
 
-    _allowMultitouch = allowMultitouch;
+    _allowRotation = allowRotation;
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
 
@@ -392,15 +392,13 @@ void PuzzleBoard::shuffle()
         anim->setEasingCurve(easingCurve);
         group->addAnimation(anim);
 
-        if (_allowMultitouch)
-        {
-            QPropertyAnimation *rotateAnimation = new QPropertyAnimation(item, "rotation", group);
-            rotateAnimation->setEndValue(randomInt(0, 359));
-            rotateAnimation->setKeyValueAt(0.5, randomInt(0, 359));
-            rotateAnimation->setDuration(2500);
-            rotateAnimation->setEasingCurve(easingCurve);
-            group->addAnimation(rotateAnimation);
-        }
+        QPropertyAnimation *rotateAnimation = new QPropertyAnimation(item, "rotation", group);
+        rotateAnimation->setEndValue(_allowRotation ? randomInt(0, 359) : 0);
+        rotateAnimation->setKeyValueAt(0.5, randomInt(0, 359));
+        rotateAnimation->setDuration(2500);
+        rotateAnimation->setEasingCurve(easingCurve);
+        group->addAnimation(rotateAnimation);
+
         if (randomInt(0, 1))
             item->raise();
     }
@@ -429,14 +427,11 @@ void PuzzleBoard::assemble()
         anim->setEasingCurve(easingCurve);
         group->addAnimation(anim);
 
-        if (_allowMultitouch)
-        {
             QPropertyAnimation *rotateAnimation = new QPropertyAnimation(item, "rotation", group);
             rotateAnimation->setEndValue(0);
             rotateAnimation->setDuration(2000);
             rotateAnimation->setEasingCurve(easingCurve);
             group->addAnimation(rotateAnimation);
-        }
     }
 
     connect(group, SIGNAL(finished()), this, SLOT(disableFixedFPS()));
@@ -467,14 +462,11 @@ void PuzzleBoard::restore()
         anim->setEasingCurve(easingCurve);
         group->addAnimation(anim);
 
-        if (_allowMultitouch)
-        {
             QPropertyAnimation *rotateAnimation = new QPropertyAnimation(item, "rotation", group);
             rotateAnimation->setEndValue(_restorablePositions[item].second);
             rotateAnimation->setDuration(2000);
             rotateAnimation->setEasingCurve(easingCurve);
             group->addAnimation(rotateAnimation);
-        }
     }
 
     connect(group, SIGNAL(finished()), this, SLOT(disableFixedFPS()));

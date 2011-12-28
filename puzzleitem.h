@@ -89,6 +89,7 @@ protected:
     inline qreal topTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::TopTab ? 1 : 0); }
     inline qreal rightTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::RightTab ? 1 : 0); }
     inline qreal bottomTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::BottomTab ? 1 : 0); }
+    inline bool allowRotation() const { return static_cast<PuzzleBoard*>(parent())->allowRotation(); }
 
 };
 
