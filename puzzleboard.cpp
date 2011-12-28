@@ -210,7 +210,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
 
-    int tabTolerance = 1, *statuses = new int[cols * rows], strokeThickness = 5, usabilityThickness = 6;
+    int tabTolerance = 1, *statuses = new int[cols * rows], strokeThickness = 5, usabilityThickness = 10;
     qreal   w0 = (width() - pixmap.width()) / 2,
             h0 = (height() - pixmap.height()) / 2,
             tabSize = min<qreal>(_unit.width() / 6.0, _unit.height() / 6.0),
