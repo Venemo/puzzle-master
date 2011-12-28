@@ -136,20 +136,12 @@ PuzzleBoard {
                 Button {
                     width: 245
                     text: qsTr("Restart")
-                    onClicked: {
-                        menuDialog.close()
-                        menuButtonPanel.close()
-                        play()
-                    }
+                    onClicked: areYouSureToRestartDialog.open()
                 }
                 Button {
                     width: 245
                     text: qsTr("Surrender")
-                    onClicked: {
-                        menuDialog.visible = false
-                        gameBoard.visible = false
-                        imageChooser.open()
-                    }
+                    onClicked: areYouSureToSurrenderDialog.open()
                 }
             }
             Button {
@@ -196,6 +188,32 @@ PuzzleBoard {
             target: appEventHandler
             onWindowActivated: pausedDialog.visible = false
             onWindowDeactivated: pausedDialog.visible = true
+        }
+    }
+    Dialog {
+        id: areYouSureToSurrenderDialog
+        z: 1
+        title: qsTr("Are you sure?")
+        text: qsTr("Do you want to give up this game?\nYou can't continue it then. Use \"Get a hint!\" if you need a clue.")
+        acceptButtonText: qsTr("Yes")
+        rejectButtonText: qsTr("No")
+        onAccepted: {
+            menuDialog.visible = false
+            gameBoard.visible = false
+            imageChooser.open()
+        }
+    }
+    Dialog {
+        id: areYouSureToRestartDialog
+        z: 1
+        title: qsTr("Are you sure?")
+        text: qsTr("Do you want to restart this game?")
+        acceptButtonText: qsTr("Yes")
+        rejectButtonText: qsTr("No")
+        onAccepted: {
+            menuDialog.close()
+            menuButtonPanel.close()
+            play()
         }
     }
 }
