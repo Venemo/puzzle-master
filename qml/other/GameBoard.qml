@@ -27,8 +27,8 @@ PuzzleBoard {
     }
 
     id: gameBoard
-    tolerance: 15
-    rotationTolerance: 20
+    tolerance: 13
+    rotationTolerance: 17
     z: 0
     onLoadProgressChanged: {
         if (progress > 0)

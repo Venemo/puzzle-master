@@ -49,7 +49,7 @@ Dialog {
                 id: columnsSlider
                 width: parent.width - 20
                 minValue: 2
-                maxValue: 5
+                maxValue: 8
                 value: optionsDialog.columns
                 onValueChanged: optionsDialog.columns = value
             }
@@ -75,7 +75,7 @@ Dialog {
                 id: rowsSlider
                 width: parent.width - 20
                 minValue: 2
-                maxValue: 5
+                maxValue: 6
                 value: optionsDialog.rows
                 onValueChanged: optionsDialog.rows = value
             }

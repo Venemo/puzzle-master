@@ -85,8 +85,10 @@ Rectangle {
     OptionsDialog {
         id: optionsDialog
         onAccepted: {
-            imageChooser.shouldStartGame = true;
-            imageChooser.close();
+            if (appSettings.rows >= 4 || appSettings.columns >= 6)
+                difficultyDialog.open()
+            else
+                imageChooser.startGame()
         }
         onVisibleChanged: {
             optionsDialog.columns = appSettings.columns;
@@ -94,5 +96,14 @@ Rectangle {
         }
         onColumnsChanged: appSettings.columns = columns
         onRowsChanged: appSettings.rows = rows
+    }
+    Dialog {
+        id: difficultyDialog
+        title: qsTr("Isn't this a bit difficult?")
+        text: qsTr("The selected options will make the game VERY difficult.\nAre you sure to proceed?")
+        acceptButtonText: qsTr("Yes")
+        rejectButtonText: qsTr("No")
+        onAccepted: imageChooser.startGame()
+        onRejected: optionsDialog.open()
     }
 }

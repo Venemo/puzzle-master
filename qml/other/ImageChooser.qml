@@ -21,6 +21,11 @@ import "./components"
 import "./components/style"
 
 Panel {
+    function startGame() {
+        imageChooser.shouldStartGame = true;
+        imageChooser.close();
+    }
+
     property string selectedImageUrl: imageSelectorGrid.currentIndex < 0 ? "" : imagesModel.get(imageSelectorGrid.currentIndex).url
     property int columnNumber: 3
 
