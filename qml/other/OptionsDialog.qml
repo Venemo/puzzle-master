@@ -29,111 +29,111 @@ Dialog {
     acceptButtonText: qsTr("Play")
     rejectButtonText: qsTr("Cancel")
     enableBackgroundClicking: false
-    contentWidth: optionsFlickable.width
-    contentHeight: optionsFlickable.height
-    content: Flickable {
-        id: optionsFlickable
+    contentWidth: optionsColumn.width
+    contentHeight: optionsColumn.height
+    content: Grid {
+        id: optionsColumn
+        spacing: 20
         width: 500
-        clip: true
-        enabled: true
-        height: optionsDialog.height - 150
-        contentHeight: optionsColumn.height
+        columns: 2
 
-        Column {
-            id: optionsColumn
+        TextEdit {
+            color: "#ffffff"
+            font.pixelSize: 25
+            text: qsTr("Columns")
+            activeFocusOnPress: false
+            anchors.verticalCenter: columnsRow.verticalCenter
+        }
+        Row {
+            id: columnsRow
+            width: parent.width - 100
             spacing: 10
-            width: 500
 
-            TextEdit {
-                color: "#ffffff"
-                font.pixelSize: 25
-                text: qsTr("Columns")
-                activeFocusOnPress: false
+            Slider {
+                id: columnsSlider
+                width: parent.width - 30
+                minValue: 2
+                maxValue: 8
+                value: appSettings.columns
             }
-            Row {
-                width: parent.width
-                spacing: 10
-
-                Slider {
-                    id: columnsSlider
-                    width: parent.width - 20
-                    minValue: 2
-                    maxValue: 8
-                    value: appSettings.columns
-                }
-                Binding {
-                    target: appSettings
-                    property: "columns"
-                    value: columnsSlider.value
-                }
-                TextEdit {
-                    color: "#ffffff"
-                    font.pixelSize: 25
-                    text: columnsSlider.value
-                    activeFocusOnPress: false
-                    anchors.verticalCenter: columnsSlider.verticalCenter
-                }
+            Binding {
+                target: appSettings
+                property: "columns"
+                value: columnsSlider.value
             }
             TextEdit {
+                id: columnsLabel
                 color: "#ffffff"
                 font.pixelSize: 25
-                text: qsTr("Rows")
+                text: columnsSlider.value
                 activeFocusOnPress: false
+                anchors.verticalCenter: columnsSlider.verticalCenter
             }
-            Row {
-                width: parent.width
-                spacing: 10
+        }
+        TextEdit {
+            color: "#ffffff"
+            font.pixelSize: 25
+            text: qsTr("Rows")
+            activeFocusOnPress: false
+            anchors.verticalCenter: rowsRow.verticalCenter
+        }
+        Row {
+            id: rowsRow
+            width: parent.width - 100
+            spacing: 10
 
-                Slider {
-                    id: rowsSlider
-                    width: parent.width - 20
-                    minValue: 2
-                    maxValue: 6
-                    value: appSettings.rows
-                }
-                Binding {
-                    target: appSettings
-                    property: "rows"
-                    value: rowsSlider.value
-                }
-                TextEdit {
-                    color: "#ffffff"
-                    font.pixelSize: 25
-                    text: rowsSlider.value
-                    activeFocusOnPress: false
-                    anchors.verticalCenter: rowsSlider.verticalCenter
-                }
+            Slider {
+                id: rowsSlider
+                width: parent.width - 30
+                minValue: 2
+                maxValue: 6
+                value: appSettings.rows
+            }
+            Binding {
+                target: appSettings
+                property: "rows"
+                value: rowsSlider.value
             }
             TextEdit {
+                id: rowsLabel
                 color: "#ffffff"
                 font.pixelSize: 25
-                text: qsTr("Snap difficulty")
+                text: rowsSlider.value
                 activeFocusOnPress: false
+                anchors.verticalCenter: rowsSlider.verticalCenter
             }
-            Row {
-                width: parent.width
-                spacing: 10
+        }
+        TextEdit {
+            color: "#ffffff"
+            font.pixelSize: 25
+            text: qsTr("Snap")
+            activeFocusOnPress: false
+            anchors.verticalCenter: snapDifficultyRow.verticalCenter
+        }
+        Row {
+            id: snapDifficultyRow
+            width: parent.width - 100
+            spacing: 10
 
-                Slider {
-                    id: snapDifficultySlider
-                    width: parent.width - snapDifficultyLabel.width - 10
-                    minValue: 0
-                    maxValue: 2
-                    value: appSettings.snapDifficulty
-                }
-                Binding {
-                    target: appSettings
-                    property: "snapDifficulty"
-                    value: snapDifficultySlider.value
-                }
-                TextEdit {
-                    id: snapDifficultyLabel
-                    color: "#ffffff"
-                    font.pixelSize: 25
-                    text: snapDifficultySlider.value == 0 ? "Easy" : (snapDifficultySlider.value == 1 ? "Normal" : "Difficult")
-                    activeFocusOnPress: false
-                    anchors.verticalCenter: snapDifficultySlider.verticalCenter
-                }
+            Slider {
+                id: snapDifficultySlider
+                width: parent.width - snapDifficultyLabel.width - 10
+                minValue: 0
+                maxValue: 2
+                value: appSettings.snapDifficulty
+            }
+            Binding {
+                target: appSettings
+                property: "snapDifficulty"
+                value: snapDifficultySlider.value
+            }
+            TextEdit {
+                id: snapDifficultyLabel
+                color: "#ffffff"
+                font.pixelSize: 25
+                text: snapDifficultySlider.value == 0 ? "Easy" : (snapDifficultySlider.value == 1 ? "Normal" : "Difficult")
+                activeFocusOnPress: false
+                anchors.verticalCenter: snapDifficultySlider.verticalCenter
             }
         }
     }

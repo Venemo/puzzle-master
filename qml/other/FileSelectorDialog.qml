@@ -33,10 +33,10 @@ Dialog
     contentHeight: imageSelectorGrid.height
     content: GridView {
         id: imageSelectorGrid
-        cellWidth: imageSelectorGrid.width / 4
+        cellWidth: imageSelectorGrid.width / 4 - 5
         cellHeight: imageSelectorGrid.cellWidth / fileSelectorDialog.width * fileSelectorDialog.height
-        width: 600
-        height: fileSelectorDialog.height - 150
+        width: fileSelectorDialog.width * 4 / 5
+        height: fileSelectorDialog.height - 160
         clip: true
         focus: true
         cacheBuffer: imageSelectorGrid.height / 2

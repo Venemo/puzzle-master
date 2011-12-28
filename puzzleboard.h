@@ -34,7 +34,7 @@ class PuzzleBoard : public QDeclarativeItem
 {
     Q_OBJECT
     GENPROPERTY_R(bool, _allowRotation, allowRotation)
-    GENPROPERTY_R(bool, _usabilityThickness, usabilityThickness)
+    GENPROPERTY_R(int, _usabilityThickness, usabilityThickness)
     GENPROPERTY_R(QSize, _unit, unit)
     GENPROPERTY_R(qreal, _tabSizes, tabSizes)
     GENPROPERTY_F(int, _tolerance, tolerance, setTolerance, toleranceChanged)
