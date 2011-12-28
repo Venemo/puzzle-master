@@ -27,8 +27,8 @@ PuzzleBoard {
     }
 
     id: gameBoard
-    tolerance: 13
-    rotationTolerance: 17
+    tolerance: (- appSettings.snapDifficulty + 3) * 7
+    rotationTolerance: (- appSettings.snapDifficulty + 3) * 9
     z: 0
     onLoadProgressChanged: {
         if (progress > 0)
@@ -150,7 +150,7 @@ PuzzleBoard {
         title: qsTr("Please wait...")
         backgroundColor: "#99101010"
         enableBackgroundClicking: false
-        onOpened: gameBoard.startGame(imageChooser.selectedImageUrl, optionsDialog.rows, optionsDialog.columns, true)
+        onOpened: gameBoard.startGame(imageChooser.selectedImageUrl, appSettings.rows, appSettings.columns, true)
     }
     Dialog {
         id: pausedDialog

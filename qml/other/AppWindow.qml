@@ -90,12 +90,6 @@ Rectangle {
             else
                 imageChooser.startGame()
         }
-        onVisibleChanged: {
-            optionsDialog.columns = appSettings.columns;
-            optionsDialog.rows = appSettings.rows;
-        }
-        onColumnsChanged: appSettings.columns = columns
-        onRowsChanged: appSettings.rows = rows
     }
     Dialog {
         id: difficultyDialog

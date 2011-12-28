@@ -234,7 +234,7 @@ void PuzzleItem::checkMergeableSiblings(const QPointF &position)
     {
         foreach (PuzzleItem *p, neighbours())
         {
-            if (checkMergeability(p))
+            if (checkMergeability(p) || p->checkMergeability(this))
             {
                 mergeIfPossible(p, position);
             }

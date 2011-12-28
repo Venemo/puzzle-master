@@ -41,6 +41,7 @@ class AppSettings : public QObject
     Q_PROPERTY(bool areSettingsDeleted READ areSettingsDeleted NOTIFY areSettingsDeletedChanged)
     Q_PROPERTY(int rows READ rows WRITE setRows NOTIFY rowsChanged)
     Q_PROPERTY(int columns READ columns WRITE setColumns NOTIFY columnsChanged)
+    Q_PROPERTY(int snapDifficulty READ snapDifficulty WRITE setSnapDifficulty NOTIFY snapDifficultyChanged)
 
     QSettings _backend;
 
@@ -49,11 +50,13 @@ public:
 
     SETTINGPROPERTY(int, rows, setRows, rowsChanged, "rows", 3)
     SETTINGPROPERTY(int, columns, setColumns, columnsChanged, "columns", 4)
+    SETTINGPROPERTY(int, snapDifficulty, setSnapDifficulty, snapDifficultyChanged, "snapDifficulty", 1)
 
 signals:
     void areSettingsDeletedChanged();
     void rowsChanged();
     void columnsChanged();
+    void snapDifficultyChanged();
 
 };
 

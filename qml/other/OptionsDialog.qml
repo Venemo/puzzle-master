@@ -20,8 +20,9 @@ import QtQuick 1.0
 import "./components"
 
 Dialog {
-    property int columns: 4
-    property int rows: 3
+    property alias columns: columnsSlider.value
+    property alias rows: rowsSlider.value
+    property alias snapDifficulty: snapDifficultySlider.value
 
     id: optionsDialog
     title: qsTr("Game difficulty")
@@ -50,8 +51,12 @@ Dialog {
                 width: parent.width - 20
                 minValue: 2
                 maxValue: 8
-                value: optionsDialog.columns
-                onValueChanged: optionsDialog.columns = value
+                value: appSettings.columns
+            }
+            Binding {
+                target: appSettings
+                property: "columns"
+                value: columnsSlider.value
             }
             TextEdit {
                 color: "#ffffff"
@@ -76,8 +81,12 @@ Dialog {
                 width: parent.width - 20
                 minValue: 2
                 maxValue: 6
-                value: optionsDialog.rows
-                onValueChanged: optionsDialog.rows = value
+                value: appSettings.rows
+            }
+            Binding {
+                target: appSettings
+                property: "rows"
+                value: rowsSlider.value
             }
             TextEdit {
                 color: "#ffffff"
@@ -85,6 +94,36 @@ Dialog {
                 text: rowsSlider.value
                 activeFocusOnPress: false
                 anchors.verticalCenter: rowsSlider.verticalCenter
+            }
+        }
+        TextEdit {
+            color: "#ffffff"
+            font.pixelSize: 25
+            text: qsTr("Snap difficulty")
+            activeFocusOnPress: false
+        }
+        Row {
+            width: parent.width
+            spacing: 10
+
+            Slider {
+                id: snapDifficultySlider
+                width: parent.width - 70
+                minValue: 0
+                maxValue: 2
+                value: appSettings.snapDifficulty
+            }
+            Binding {
+                target: appSettings
+                property: "snapDifficulty"
+                value: snapDifficultySlider.value
+            }
+            TextEdit {
+                color: "#ffffff"
+                font.pixelSize: 25
+                text: snapDifficultySlider.value == 0 ? "Easy" : (snapDifficultySlider.value == 1 ? "Normal" : "Difficult")
+                activeFocusOnPress: false
+                anchors.verticalCenter: snapDifficultySlider.verticalCenter
             }
         }
     }
