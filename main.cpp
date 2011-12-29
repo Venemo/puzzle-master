@@ -79,7 +79,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     // Checking for translations
 
     QString langCode(getenv("LANG"));
-    if (langCode.isEmpty() || langCode == "C")
+    if (langCode.isEmpty() || langCode == "C" || !langCode.contains("_"))
         langCode = QLocale::system().name();
     if (langCode.contains('.'))
         langCode = langCode.mid(0, langCode.lastIndexOf('.'));

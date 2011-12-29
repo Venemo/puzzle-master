@@ -128,7 +128,7 @@ Dialog {
                 id: snapDifficultyLabel
                 color: "#ffffff"
                 font.pixelSize: 25
-                text: snapDifficultySlider.value == 0 ? "Easy" : (snapDifficultySlider.value == 1 ? "Normal" : "Difficult")
+                text: snapDifficultySlider.value == 0 ? qsTr("Easy") : (snapDifficultySlider.value == 1 ? qsTr("Normal") : qsTr("Difficult"))
                 activeFocusOnPress: false
                 anchors.verticalCenter: snapDifficultySlider.verticalCenter
             }
