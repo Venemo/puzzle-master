@@ -36,12 +36,12 @@ Panel {
     signal accepted
 
     function reject() {
-        shouldAccept = false;
-        close();
+        shouldAccept = false
+        close()
     }
     function accept() {
-        shouldAccept = true;
-        close();
+        shouldAccept = true
+        close()
     }
 
     id: dialog
@@ -50,16 +50,16 @@ Panel {
     opacity: 0
     onClosed: {
         if (shouldAccept)
-            dialog.accepted();
+            dialog.accepted()
         else
-            dialog.rejected();
+            dialog.rejected()
     }
 
     MouseArea {
         anchors.fill: parent
         onClicked: {
             if (enableBackgroundClicking)
-                dialog.reject();
+                dialog.reject()
         }
     }
     MouseArea {
@@ -127,7 +127,7 @@ Panel {
             id: acceptButton
             text: acceptButtonText
             width: 170
-            onClicked: dialog.accept();
+            onClicked: dialog.accept()
             visible: acceptButtonText != ""
             style: GreenButtonStyle { }
         }
@@ -135,7 +135,7 @@ Panel {
             id: rejectButton
             text: rejectButtonText
             width: 170
-            onClicked: dialog.reject();
+            onClicked: dialog.reject()
             visible: rejectButtonText != ""
             style: RedButtonStyle { }
         }

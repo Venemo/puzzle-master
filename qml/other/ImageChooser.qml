@@ -22,8 +22,8 @@ import "./components/style"
 
 Panel {
     function startGame() {
-        imageChooser.shouldStartGame = true;
-        imageChooser.close();
+        imageChooser.shouldStartGame = true
+        imageChooser.close()
     }
 
     property string selectedImageUrl: ""
@@ -38,15 +38,15 @@ Panel {
     Component.onCompleted: {
         var selectorComponent = null
         if (allowGalleryModel) {
-            console.log("ImageChooser: trying to initiate GallerySelectorDialog")
+            console.log("ImageChooser: trying to load GallerySelectorDialog")
             selectorComponent = Qt.createComponent("GallerySelectorDialog.qml")
         }
         if (selectorComponent === null || selectorComponent.status === Component.Error || selectorComponent.status === Component.Null) {
-            console.log("ImageChooser: trying to initiate FileSelectorDialog")
+            console.log("ImageChooser: trying to load FileSelectorDialog")
             selectorComponent = Qt.createComponent("FileSelectorDialog.qml")
         }
         if (selectorComponent === null || selectorComponent.status === Component.Error || selectorComponent.status === Component.Null) {
-            console.log("Nor FileSelectorDialog neither GallerySelectorDialog could be loaded! This is a serious error.")
+            console.log("Nor FileSelectorDialog neither GallerySelectorDialog could be loaded! Adding custom images will not be possible.")
         }
         else {
             fileSelectorDialog = selectorComponent.createObject(imageChooser)
@@ -157,9 +157,9 @@ Panel {
             style: GreenButtonStyle { }
             onClicked: {
                 if (imageChooser.selectedImageUrl != "")
-                    imageChooser.accepted();
+                    imageChooser.accepted()
                 else
-                    youMustChooseDialog.open();
+                    youMustChooseDialog.open()
             }
         }
         Button {
@@ -171,7 +171,7 @@ Panel {
             text: qsTr("...")
             style: GreenButtonStyle { }
             onClicked: {
-                menuDialog.open();
+                menuDialog.open()
             }
         }
     }
@@ -194,8 +194,8 @@ Panel {
                 width: 500
                 text: qsTr("About")
                 onClicked: {
-                    menuDialog.close();
-                    aboutDialog.open();
+                    menuDialog.close()
+                    aboutDialog.open()
                 }
             }
             Button {
@@ -203,8 +203,8 @@ Panel {
                 text: qsTr("Add custom image")
                 visible: fileSelectorDialog !== null
                 onClicked: {
-                    menuDialog.close();
-                    fileSelectorDialog.open();
+                    menuDialog.close()
+                    fileSelectorDialog.open()
                 }
             }
             Button {
@@ -212,8 +212,8 @@ Panel {
                 text: qsTr("Quit")
                 style: RedButtonStyle { }
                 onClicked: {
-                    menuDialog.close();
-                    areYouSureToQuitDialog.open();
+                    menuDialog.close()
+                    areYouSureToQuitDialog.open()
                 }
             }
         }

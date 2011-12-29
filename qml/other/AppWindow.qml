@@ -32,7 +32,7 @@ Rectangle {
         visible: false
         anchors.fill: parent
         onGameWon: {
-            gameWonDialog.open();
+            gameWonDialog.open()
         }
     }
     ImageChooser {
@@ -42,13 +42,13 @@ Rectangle {
         anchors.fill: parent
 
         onAccepted: {
-            optionsDialog.open();
+            optionsDialog.open()
         }
         onClosed: {
             if (imageChooser.shouldStartGame) {
-                imageChooser.shouldStartGame = false;
-                gameBoard.visible = true;
-                gameBoard.play();
+                imageChooser.shouldStartGame = false
+                gameBoard.visible = true
+                gameBoard.play()
             }
         }
     }
@@ -61,11 +61,11 @@ Rectangle {
         rejectButtonText: qsTr("Choose other")
         backgroundColor: "#99101010"
         onAccepted: {
-            gameBoard.play();
+            gameBoard.play()
         }
         onRejected: {
-            gameBoard.visible = false;
-            imageChooser.open();
+            gameBoard.visible = false
+            imageChooser.open()
         }
     }
     Dialog {

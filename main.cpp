@@ -39,19 +39,20 @@
 #include <QSystemDeviceInfo>
 #endif
 
-#include "util.h"
 #include "puzzleboard.h"
 #include "appsettings.h"
 #include "appeventhandler.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
+    // Some settings
+
     QApplication::addLibraryPath("./plugins");
     QApplication::setApplicationName("Puzzle Master");
     QApplication::setOrganizationName("Venemo");
     QApplication::setApplicationVersion(QString(APP_VERSION));
 
-    // Initiating QApplication and QDeclarativeView
+    // Initializing QApplication and QDeclarativeView
 
     QApplication *app;
     QDeclarativeView *view;
@@ -67,7 +68,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view = new QDeclarativeView();
 #endif
 
-    // Some more initializations
+    // Some wireup
 
     AppEventHandler *appEventHandler = new AppEventHandler(view);
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));

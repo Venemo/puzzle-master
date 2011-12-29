@@ -25,10 +25,10 @@ Rectangle {
     property int value: minValue
 
     function adjustHandleX() {
-        handle.x = picker.width * (value - minValue) / (maxValue - minValue);
+        handle.x = picker.width * (value - minValue) / (maxValue - minValue)
     }
     function calculateValue() {
-        value = Math.round((maxValue - minValue) * handle.x / picker.width) + minValue;
+        value = Math.round((maxValue - minValue) * handle.x / picker.width) + minValue
     }
 
     id: slider
@@ -46,8 +46,14 @@ Rectangle {
         id: picker
         height: 15
         gradient: Gradient {
-            GradientStop { position: 0; color: "#888888"; }
-            GradientStop { position: 1; color: "#575757"; }
+            GradientStop {
+                position: 0
+                color: "#888888"
+            }
+            GradientStop {
+                position: 1
+                color: "#575757"
+            }
         }
         anchors.left: parent.left
         anchors.right: parent.right
@@ -69,16 +75,16 @@ Rectangle {
         onMouseXChanged: {
             if (pressed)
             {
-                var xx = mouseX - handle.width / 2;
+                var xx = mouseX - handle.width / 2
                 handle.x = (xx < 0 ? 0 : (xx > picker.width ? picker.width : xx))
-                calculateValue();
+                calculateValue()
             }
         }
         onPressed: handle.gradient = handle.style.pressedGradient
         onReleased: {
-            handle.gradient = handle.style.normalGradient;
-            calculateValue();
-            adjustHandleX();
+            handle.gradient = handle.style.normalGradient
+            calculateValue()
+            adjustHandleX()
         }
     }
 }

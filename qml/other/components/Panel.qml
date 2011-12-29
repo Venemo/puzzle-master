@@ -26,10 +26,10 @@ Rectangle {
     signal closed
 
     function open() {
-        showAnimation.start();
+        showAnimation.start()
     }
     function close() {
-        hideAnimation.start();
+        hideAnimation.start()
     }
 
     id: panel
@@ -43,12 +43,12 @@ Rectangle {
         to: 1
         duration: animationDuration
         onStarted: {
-            panel.visible = true;
-            disableAllTheThings.enabled = true;
+            panel.visible = true
+            disableAllTheThings.enabled = true
         }
         onCompleted: {
-            disableAllTheThings.enabled = false;
-            panel.opened();
+            disableAllTheThings.enabled = false
+            panel.opened()
         }
     }
     NumberAnimation {
@@ -59,11 +59,11 @@ Rectangle {
         to: 0
         duration: animationDuration
         onStarted: {
-            disableAllTheThings.enabled = true;
+            disableAllTheThings.enabled = true
         }
         onCompleted: {
-            panel.visible = false;
-            panel.closed();
+            panel.visible = false
+            panel.closed()
         }
     }
     MouseArea {

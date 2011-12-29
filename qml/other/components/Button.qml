@@ -45,6 +45,6 @@ Rectangle {
         anchors.fill: parent
         onPressed: button.gradient = button.style.pressedGradient
         onReleased: button.gradient = button.style.normalGradient
-        onClicked: button.clicked();
+        onClicked: button.clicked()
     }
 }
