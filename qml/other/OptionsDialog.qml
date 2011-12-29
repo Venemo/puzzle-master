@@ -42,7 +42,6 @@ Dialog {
             font.pixelSize: 25
             text: qsTr("Columns")
             activeFocusOnPress: false
-            anchors.verticalCenter: columnsRow.verticalCenter
         }
         Row {
             id: columnsRow
@@ -75,7 +74,6 @@ Dialog {
             font.pixelSize: 25
             text: qsTr("Rows")
             activeFocusOnPress: false
-            anchors.verticalCenter: rowsRow.verticalCenter
         }
         Row {
             id: rowsRow
@@ -108,7 +106,6 @@ Dialog {
             font.pixelSize: 25
             text: qsTr("Snap")
             activeFocusOnPress: false
-            anchors.verticalCenter: snapDifficultyRow.verticalCenter
         }
         Row {
             id: snapDifficultyRow

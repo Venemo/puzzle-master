@@ -17,7 +17,7 @@
 // Copyright (C) 2010-2011, Timur Kristóf <venemo@fedoraproject.org>
 
 import QtQuick 1.0
-import Qt.labs.folderlistmodel 1.0
+import QtMobility.gallery 1.1
 import "./components"
 
 Dialog
@@ -42,11 +42,13 @@ Dialog
         cacheBuffer: imageSelectorGrid.height / 2
         currentIndex: -1
         highlightMoveDuration: 80
-        model: FolderListModel {
-            folder: "file://" + picturesFolder
-            showDirs: false
-            showOnlyReadable: true
-            nameFilters: ["*.jpg", "*.jpeg", "*.png", "*.bmp"]
+
+        model: DocumentGalleryModel {
+            id: picsModel
+            rootType: DocumentGallery.Image
+            properties: [ "url" ]
+            sortProperties: [ "-dateTaken" ]
+            autoUpdate: true
         }
         delegate: Item {
             width: imageSelectorGrid.cellWidth
@@ -59,30 +61,14 @@ Dialog
                 height: imageSelectorGrid.cellHeight - 10
                 fillMode: Image.PreserveAspectCrop
                 clip: true
-                source: filePath
+                source: url
                 sourceSize.width: imageSelectorGrid.cellWidth - 10
                 anchors.centerIn: parent
-            }
-            Rectangle {
-                color: "#77000000"
-                height: 25
-                clip: true
-                anchors.left: imageItem.left
-                anchors.top: imageItem.top
-                anchors.right: imageItem.right
-
-                TextEdit {
-                    text: fileName
-                    color: "#ffffff"
-                    wrapMode: Text.WrapAnywhere
-                    font.pixelSize: 17
-                    anchors.centerIn: parent
-                }
             }
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    selectedImageUrl = filePath
+                    fileSelectorDialog.selectedImageUrl = url
                     imageSelectorGrid.currentIndex = index
                 }
             }

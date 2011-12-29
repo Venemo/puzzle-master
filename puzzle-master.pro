@@ -57,14 +57,15 @@ OTHER_FILES += \
     qml/other/ImageChooser.qml \
     qml/other/GameBoard.qml \
     qml/other/OptionsDialog.qml \
-    qml/other/FileSelectorDialog.qml
+    qml/other/FileSelectorDialog.qml \
+    qml/other/GallerySelectorDialog.qml
 
 # Platforms
 
 unix:!symbian {
     QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
     QMAKE_LFLAGS += -pie -rdynamic
-    DEFINES += HAVE_OPENGL
+    DEFINES += HAVE_OPENGL DISABLE_QMLGALLERY
     INSTALLS += target iconfile desktopfile
 
     target.path = /usr/bin
@@ -77,11 +78,12 @@ contains(MEEGO_EDITION, harmattan) {
     # We want to use applauncherd here, and it has an accelerometer
     DEFINES += HAVE_APPLAUNCHERD HAVE_QACCELEROMETER HAVE_SWIPELOCK MEEGO_EDITION_HARMATTAN
     # The MeeGo graphics system is better than using QGLWidget
-    DEFINES -= HAVE_OPENGL
+    DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY
 }
 maemo5 {
     # We want the accelerometer
     DEFINES += HAVE_QACCELEROMETER DISABLE_ROTATION
+    DEFINES -= DISABLE_QMLGALLERY
     # And the weird Maemo5 paths
     target.path = /opt/puzzle-master
     desktopfile.path = /usr/share/applications/hildon
@@ -90,7 +92,7 @@ symbian {
     QMAKE_CXXFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
     # We want the accelerometer, but not OpenGL
     DEFINES += HAVE_QACCELEROMETER HAVE_DEVICEINFO QT_NO_OPENGL
-    DEFINES -= HAVE_OPENGL
+    DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY
     QT -= opengl
     # Symbian icon
     ICON = installables/puzzle-master.svg

@@ -12,5 +12,6 @@
         <file>qml/other/GameBoard.qml</file>
         <file>qml/other/OptionsDialog.qml</file>
         <file>qml/other/FileSelectorDialog.qml</file>
+        <file>qml/other/GallerySelectorDialog.qml</file>
     </qresource>
 </RCC>

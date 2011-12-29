@@ -25,6 +25,7 @@
 #include <QDesktopWidget>
 #include <QFile>
 #include <QTranslator>
+#include <QDesktopServices>
 
 #if defined(HAVE_OPENGL)
 #include <QGLWidget>
@@ -50,8 +51,12 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QApplication::setOrganizationName("Venemo");
     QApplication::setApplicationVersion(QString(APP_VERSION));
 
+    // Initiating QApplication and QDeclarativeView
+
     QApplication *app;
     QDeclarativeView *view;
+
+    // Using applauncherd when available
 
 #if defined(HAVE_APPLAUNCHERD)
     qDebug() << "Puzzle Master is using MDeclarativeCache";
@@ -62,11 +67,15 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view = new QDeclarativeView();
 #endif
 
+    // Some more initializations
+
     AppEventHandler *appEventHandler = new AppEventHandler(view);
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
     qsrand((uint)QTime::currentTime().msec());
     qmlRegisterType<PuzzleBoard>("net.venemo.puzzlemaster", 2, 0, "PuzzleBoard");
     qmlRegisterType<AppSettings>("net.venemo.puzzlemaster", 2, 0, "AppSettings");
+
+    // Checking for translations
 
     QString langCode(getenv("LANG"));
     if (langCode.isEmpty() || langCode == "C")
@@ -84,11 +93,15 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
         QApplication::installTranslator(translator);
     }
 
+    // Checking for OpenGL support
+
 #if defined(HAVE_OPENGL)
     qDebug() << "Puzzle Master is using a QGLWidget viewport";
     QGLWidget *glWidget = new QGLWidget(QGLFormat(QGL::DoubleBuffer), view);
     view->setViewport(glWidget);
 #endif
+
+    // Checking for rotation support
 
     bool allowRotation = true;
 
@@ -108,6 +121,16 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     qDebug() << "Puzzle Master has" << (allowRotation ? "enabled" : "disabled") << "rotation support.";
 
+    // Checking for QML gallery plugin support
+
+    bool allowGalleryModel = true;
+
+#if defined(DISABLE_QMLGALLERY)
+    allowGalleryModel = false;
+#endif
+
+    // Setting up the view
+
     view->setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing);
     view->setOptimizationFlag(QGraphicsView::DontSavePainterState);
     view->setRenderHint(QPainter::SmoothPixmapTransform, false);
@@ -121,10 +144,14 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     view->rootContext()->setContextProperty("initialSize", QApplication::desktop()->geometry().size());
     view->rootContext()->setContextProperty("allowRotation", allowRotation);
+    view->rootContext()->setContextProperty("allowGalleryModel", allowGalleryModel);
     view->rootContext()->setContextProperty("appVersion", QString(APP_VERSION));
     view->rootContext()->setContextProperty("appEventHandler", appEventHandler);
+    view->rootContext()->setContextProperty("picturesFolder", QDesktopServices::storageLocation(QDesktopServices::PicturesLocation));
     view->setSource(QUrl("qrc:/qml/other/AppWindow.qml"));
     view->showFullScreen();
+
+    // Launching the app
 
     int result = app->exec();
     delete view;

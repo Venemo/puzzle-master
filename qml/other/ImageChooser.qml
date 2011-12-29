@@ -26,14 +26,32 @@ Panel {
         imageChooser.close();
     }
 
-    property string selectedImageUrl: imageSelectorGrid.currentIndex < 0 ? "" : imagesModel.get(imageSelectorGrid.currentIndex).url
+    property string selectedImageUrl: ""
     property int columnNumber: 3
+    property Dialog fileSelectorDialog: null
 
     signal accepted
 
     id: imageChooser
     color: "#000000"
 
+    Component.onCompleted: {
+        var selectorComponent = null
+        if (allowGalleryModel) {
+            console.log("ImageChooser: trying to initiate GallerySelectorDialog")
+            selectorComponent = Qt.createComponent("GallerySelectorDialog.qml")
+        }
+        if (selectorComponent === null || selectorComponent.status === Component.Error || selectorComponent.status === Component.Null) {
+            console.log("ImageChooser: trying to initiate FileSelectorDialog")
+            selectorComponent = Qt.createComponent("FileSelectorDialog.qml")
+        }
+        if (selectorComponent === null || selectorComponent.status === Component.Error || selectorComponent.status === Component.Null) {
+            console.log("Nor FileSelectorDialog neither GallerySelectorDialog could be loaded! This is a serious error.")
+        }
+        else {
+            fileSelectorDialog = selectorComponent.createObject(imageChooser)
+        }
+    }
     Rectangle {
         id: imageChooserTop
         height: 60
@@ -104,7 +122,10 @@ Panel {
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: imageSelectorGrid.currentIndex = index
+                    onClicked: {
+                        imageChooser.selectedImageUrl = url
+                        imageSelectorGrid.currentIndex = index
+                    }
                 }
             }
             highlight: Rectangle {
@@ -180,6 +201,7 @@ Panel {
             Button {
                 width: 500
                 text: qsTr("Add custom image")
+                visible: fileSelectorDialog !== null
                 onClicked: {
                     menuDialog.close();
                     fileSelectorDialog.open();
@@ -196,8 +218,8 @@ Panel {
             }
         }
     }
-    FileSelectorDialog {
-        id: fileSelectorDialog
+    Connections {
+        target: fileSelectorDialog
         onAccepted: imagesModel.insert(0, { url: fileSelectorDialog.selectedImageUrl })
     }
 }

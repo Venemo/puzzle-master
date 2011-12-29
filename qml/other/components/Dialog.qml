@@ -113,7 +113,7 @@ Panel {
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: (titleText.height + separatorRect.height + (dialog.text != "" ? textText.height : 0)) / 2 - 20
+        anchors.verticalCenterOffset: (titleText.height + separatorRect.height + (dialog.text != "" ? textText.height : 0)) / 2 - 30
     }
     Row {
         id: buttonRow
