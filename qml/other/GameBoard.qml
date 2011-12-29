@@ -25,6 +25,13 @@ PuzzleBoard {
     function play() {
         progressDialog.open()
     }
+    function close() {
+        menuDialog.visible = false
+        gameBoard.visible = false
+    }
+    function open() {
+        gameBoard.visible = true
+    }
 
     property bool isHintDisplayed: false
     property bool waitForHint: false
@@ -169,7 +176,12 @@ PuzzleBoard {
         title: qsTr("Please wait...")
         backgroundColor: "#99101010"
         enableBackgroundClicking: false
-        onOpened: gameBoard.startGame(imageChooser.selectedImageUrl, appSettings.rows, appSettings.columns, allowRotation)
+        onOpened: {
+            if (!gameBoard.startGame(imageChooser.selectedImageUrl, appSettings.rows, appSettings.columns, allowRotation)) {
+                progressDialog.close()
+                failedToStartDialog.open()
+            }
+        }
     }
     Dialog {
         id: pausedDialog
@@ -199,7 +211,7 @@ PuzzleBoard {
         rejectButtonText: qsTr("No")
         onAccepted: {
             menuDialog.visible = false
-            gameBoard.visible = false
+            gameBoard.close()
             imageChooser.open()
         }
     }
@@ -214,6 +226,18 @@ PuzzleBoard {
             menuDialog.close()
             menuButtonPanel.close()
             play()
+        }
+    }
+    Dialog {
+        id: failedToStartDialog
+        z: 1
+        enableBackgroundClicking: false
+        title: qsTr("An error has occoured")
+        text: qsTr("Sorry, we couldn't start the game. Please try to start it with another picture.")
+        acceptButtonText: qsTr("Ok")
+        onAccepted: {
+            gameBoard.close()
+            imageChooser.open()
         }
     }
 }

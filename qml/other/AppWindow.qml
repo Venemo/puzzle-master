@@ -47,7 +47,7 @@ Rectangle {
         onClosed: {
             if (imageChooser.shouldStartGame) {
                 imageChooser.shouldStartGame = false
-                gameBoard.visible = true
+                gameBoard.open()
                 gameBoard.play()
             }
         }
@@ -64,7 +64,7 @@ Rectangle {
             gameBoard.play()
         }
         onRejected: {
-            gameBoard.visible = false
+            gameBoard.close()
             imageChooser.open()
         }
     }

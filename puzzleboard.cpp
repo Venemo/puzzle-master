@@ -184,7 +184,7 @@ QPixmap PuzzleBoard::processImage(const QString &url)
     return pix;
 }
 
-void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowRotation)
+bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowRotation)
 {
     emit loadProgressChanged(0);
     deleteAllPieces();
@@ -193,7 +193,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     if (height() == 0 || height() == 0)
     {
         qDebug() << "The size of this PuzzleBoard item is not okay, not starting game.";
-        return;
+        return false;
     }
 
     QElapsedTimer timer;
@@ -205,7 +205,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     if (pixmap.isNull())
     {
         qDebug() << "pixmap is null, not starting game.";
-        return;
+        return false;
     }
 
     qDebug() << timer.elapsed() << "ms spent with processing the image";
@@ -385,6 +385,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     QApplication::instance()->processEvents();
 
     QTimer::singleShot(1000, this, SLOT(shuffle()));
+    return true;
 }
 
 void PuzzleBoard::shuffle()
