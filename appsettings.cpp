@@ -17,6 +17,9 @@
 // Copyright (C) 2010-2011, Timur Kristóf <venemo@fedoraproject.org>
 
 #include <QDebug>
+#include <QFile>
+#include <QDataStream>
+#include <QRegExp>
 
 #include "appsettings.h"
 
@@ -31,7 +34,7 @@ AppSettings::AppSettings(QObject *parent) :
     bool containedSettingsVersion = _backend.contains(APPSETTING_SETTINGSVERSION);
     int savedSettingsVersion = _backend.value(APPSETTING_SETTINGSVERSION, 0).toInt();
 
-    if (savedSettingsVersion < APPSETTINGS_VERSION)
+    if (savedSettingsVersion != APPSETTINGS_VERSION)
     {
         // Clearing all settings if the saved version is different than current one
         _backend.clear();
@@ -43,5 +46,52 @@ AppSettings::AppSettings(QObject *parent) :
             emit areSettingsDeletedChanged();
             qDebug() << "Old settings are now deleted.";
         }
+    }
+}
+
+QStringList AppSettings::loadCustomImages()
+{
+    QStringList list;
+    QByteArray array = customImageListData();
+    QDataStream stream(&array, QIODevice::ReadOnly);
+    stream >> list;
+
+    foreach (const QString &url, list)
+    {
+        if (!QFile::exists(url))
+        {
+            qDebug() << "removing saved custom image" << url << "because it doesn't exist";
+            list.removeAll(url);
+        }
+    }
+
+    QByteArray array2;
+    QDataStream stream2(&array2, QIODevice::WriteOnly);
+    stream2 << list;
+    setCustomImageListData(array2);
+
+    qDebug() << "loaded URLs are" << list;
+
+    return list;
+}
+
+void AppSettings::addCustomImage(const QString &url)
+{
+    QString url2(url);
+    if (url.contains(QRegExp("/[A-Za-z]:/")))
+        url2.remove("file:///");
+    else
+        url2.remove("file://");
+
+    QStringList list = loadCustomImages();
+
+    if (!list.contains(url2))
+    {
+        qDebug() << "adding custom image" << url2;
+        list.append(url2);
+        QByteArray array;
+        QDataStream stream(&array, QIODevice::WriteOnly);
+        stream << list;
+        setCustomImageListData(array);
     }
 }

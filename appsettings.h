@@ -21,6 +21,8 @@
 
 #include <QObject>
 #include <QSettings>
+#include <QByteArray>
+#include <QStringList>
 
 #include "util.h"
 
@@ -30,6 +32,7 @@
     inline void settername (const type &value) { _backend.setValue(settingKey, value); emit signalname (); }
 
 // Increase this when anything changes in the settings
+// (but don't if you just add a new setting)
 #define APPSETTINGS_VERSION 1
 
 class QSettings;
@@ -51,12 +54,17 @@ public:
     SETTINGPROPERTY(int, rows, setRows, rowsChanged, "rows", 3)
     SETTINGPROPERTY(int, columns, setColumns, columnsChanged, "columns", 4)
     SETTINGPROPERTY(int, snapDifficulty, setSnapDifficulty, snapDifficultyChanged, "snapDifficulty", 1)
+    SETTINGPROPERTY(QByteArray, customImageListData, setCustomImageListData, customImageListDataChanged, "customImageListData", QByteArray())
+
+    Q_INVOKABLE QStringList loadCustomImages();
+    Q_INVOKABLE void addCustomImage(const QString &url);
 
 signals:
     void areSettingsDeletedChanged();
     void rowsChanged();
     void columnsChanged();
     void snapDifficultyChanged();
+    void customImageListDataChanged();
 
 };
 

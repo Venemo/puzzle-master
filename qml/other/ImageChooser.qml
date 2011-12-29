@@ -37,6 +37,7 @@ Panel {
 
     Component.onCompleted: {
         var selectorComponent = null
+
         if (allowGalleryModel) {
             console.log("ImageChooser: trying to load GallerySelectorDialog")
             selectorComponent = Qt.createComponent("GallerySelectorDialog.qml")
@@ -68,7 +69,6 @@ Panel {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
         }
-
         TextEdit {
             text: qsTr("Welcome! Choose an image.")
             anchors.centerIn: parent
@@ -105,6 +105,12 @@ Panel {
                 ListElement { url: ":/pics/image3.jpg" }
                 ListElement { url: ":/pics/image4.jpg" }
                 ListElement { url: ":/pics/image5.jpg" }
+                Component.onCompleted: {
+                    var urls = appSettings.loadCustomImages()
+                    for (var i = 0; i < urls.length; i++) {
+                        imagesModel.insert(0, { url: "file://" + urls[i] })
+                    }
+                }
             }
             delegate: Item {
                 width: imageSelectorGrid.cellWidth
@@ -220,6 +226,9 @@ Panel {
     }
     Connections {
         target: fileSelectorDialog
-        onAccepted: imagesModel.insert(0, { url: fileSelectorDialog.selectedImageUrl })
+        onAccepted: {
+            appSettings.addCustomImage(fileSelectorDialog.selectedImageUrl)
+            imagesModel.insert(0, { url: fileSelectorDialog.selectedImageUrl })
+        }
     }
 }
