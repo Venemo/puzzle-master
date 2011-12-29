@@ -30,8 +30,9 @@
 
 PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     QDeclarativeItem(parent),
-    _allowRotation(false),
+    _allowRotation(true),
     _usabilityThickness(12),
+    _strokeThickness(3),
     _tolerance(5),
     _rotationTolerance(10),
     _fixedFPSTimer(0)
@@ -214,7 +215,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
     QPainter p;
 
-    int tabTolerance = 1, *statuses = new int[cols * rows], strokeThickness = 5;
+    int tabTolerance = 1, *statuses = new int[cols * rows];
     qreal   w0 = (width() - pixmap.width()) / 2,
             h0 = (height() - pixmap.height()) / 2,
             tabSize = min<qreal>(_unit.width() / 6.0, _unit.height() / 6.0),
@@ -345,10 +346,16 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
             QPointF supposed(w0 + (i * _unit.width()) + sxCorrection - _usabilityThickness,
                              h0 + (j * _unit.height()) + syCorrection - _usabilityThickness);
-            stroker.setWidth(strokeThickness);
-            QPainterPath stroke = stroker.createStroke(clip).united(clip).simplified();
+            stroker.setWidth(_strokeThickness * 2);
+            QPainterPath strokePath = stroker.createStroke(clip).united(clip).simplified();
             stroker.setWidth(_usabilityThickness * 2);
             QPainterPath fakeShape = (stroker.createStroke(clip + rectClip) + clip + rectClip).simplified();
+
+            QPixmap stroke(px.width() + _strokeThickness * 2, px.height() + _strokeThickness * 2);
+            stroke.fill(Qt::transparent);
+            p.begin(&stroke);
+            p.fillPath(strokePath.translated(_strokeThickness, _strokeThickness), QBrush(QColor(75, 75, 75, 255)));
+            p.end();
 
             // Creating the piece
             PuzzleItem *item = new PuzzleItem(px, this);
@@ -356,8 +363,9 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setSupposedPosition(supposed);
             item->setPos(supposed);
             item->setPixmapOffset(QPoint(_usabilityThickness + 1, _usabilityThickness + 1));
-            item->setStroke(stroke.translated(_usabilityThickness + 1, _usabilityThickness + 1));
-            item->setFakeShape(fakeShape.translated(_usabilityThickness, _usabilityThickness + 1));
+            item->setStrokeOffset(item->pixmapOffset() - QPoint(_strokeThickness, _strokeThickness));
+            item->setStroke(stroke);
+            item->setFakeShape(fakeShape.translated(_usabilityThickness + 1, _usabilityThickness + 1));
             item->setWidth(px.width() + _usabilityThickness * 2 + 2);
             item->setHeight(px.height() + _usabilityThickness * 2 + 2);
             item->setTabStatus(statuses[i * rows + j]);

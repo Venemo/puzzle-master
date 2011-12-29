@@ -142,13 +142,19 @@ void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
             y1 = - positionVector.y();
 
         QPixmap pix(max<int>(x1 + pixmap().width(), x2 + item->pixmap().width()),
-                    max<int>(y1 + pixmap().height(), y2 + item->pixmap().height()));
+                    max<int>(y1 + pixmap().height(), y2 + item->pixmap().height())),
+                newStroke(pix.width() + strokeThickness() * 2, pix.height() + strokeThickness() * 2);
         pix.fill(Qt::transparent);
+        newStroke.fill(Qt::transparent);
 
         QPainter p;
         p.begin(&pix);
         p.drawPixmap(x1, y1, pixmap());
         p.drawPixmap(x2, y2, item->pixmap());
+        p.end();
+        p.begin(&newStroke);
+        p.drawPixmap(x1, y1, _stroke);
+        p.drawPixmap(x2, y2, item->_stroke);
         p.end();
 
         int newStatus = 0;
@@ -168,7 +174,7 @@ void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
         setTabStatus(newStatus);
         setPuzzleCoordinates(QPoint(min<int>(item->puzzleCoordinates().x(), puzzleCoordinates().x()), min<int>(item->puzzleCoordinates().y(), puzzleCoordinates().y())));
         setSupposedPosition(QPointF(min<qreal>(item->supposedPosition().x(), supposedPosition().x()), min<qreal>(item->supposedPosition().y(), supposedPosition().y())));
-        setStroke(_stroke.translated(x1, y1).united(item->_stroke.translated(x2, y2)).simplified());
+        setStroke(newStroke);
         setFakeShape(_fakeShape.translated(x1, y1).united(item->_fakeShape.translated(x2, y2)).simplified());
         setPixmap(pix);
         setWidth(_pixmap.width() + usabilityThickness() * 2 + 2);
@@ -450,7 +456,7 @@ void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     //painter->drawRect(boundingRect());
     //painter->drawEllipse(mapFromScene(pos()), 10, 10);
     //painter->fillPath(_fakeShape, QBrush(QColor(0, 0, 255, 130)));
-    painter->fillPath(_stroke, QBrush(QColor(75, 75, 75, 255)));
+    painter->drawPixmap(_strokeOffset, _stroke);
     painter->drawPixmap(_pixmapOffset, _pixmap);
 }
 

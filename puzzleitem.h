@@ -32,12 +32,13 @@ class PuzzleItem : public QDeclarativeItem
     GENPROPERTY_S(QPoint, _puzzleCoordinates, puzzleCoordinates, setPuzzleCoordinates)
     GENPROPERTY_S(QPointF, _supposedPosition, supposedPosition, setSupposedPosition)
     GENPROPERTY_S(QPoint, _pixmapOffset, pixmapOffset, setPixmapOffset)
+    GENPROPERTY_S(QPoint, _strokeOffset, strokeOffset, setStrokeOffset)
     GENPROPERTY_R(QList<PuzzleItem*>, _neighbours, neighbours)
     GENPROPERTY_S(QPixmap, _pixmap, pixmap, setPixmap)
+    GENPROPERTY_S(QPixmap, _stroke, stroke, setStroke)
+    GENPROPERTY_S(QPainterPath, _fakeShape, fakeShape, setFakeShape)
     GENPROPERTY_S(bool, _canMerge, canMerge, setCanMerge)
     GENPROPERTY_S(qreal, _weight, weight, setWeight)
-    GENPROPERTY_S(QPainterPath, _stroke, stroke, setStroke)
-    GENPROPERTY_S(QPainterPath, _fakeShape, fakeShape, setFakeShape)
     GENPROPERTY_S(unsigned, _tabStatus, tabStatus, setTabStatus)
 
     QPointF _dragStart, _rotationStartVector;
@@ -91,6 +92,7 @@ protected:
     inline qreal bottomTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::BottomTab ? 1 : 0); }
     inline bool allowRotation() const { return static_cast<PuzzleBoard*>(parent())->allowRotation(); }
     inline int usabilityThickness() const { return static_cast<PuzzleBoard*>(parent())->usabilityThickness(); }
+    inline int strokeThickness() const { return static_cast<PuzzleBoard*>(parent())->strokeThickness(); }
 
 };
 
