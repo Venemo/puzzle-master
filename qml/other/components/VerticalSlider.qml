@@ -24,28 +24,28 @@ Rectangle {
     property int maxValue: 10
     property int value: minValue
 
-    function adjustHandleX() {
+    function adjustHandleY() {
         var val = value < minValue ? minValue : (value > maxValue ? maxValue : value)
-        handle.x = picker.width * (val - minValue) / (maxValue - minValue)
+        handle.y = picker.height * (val - minValue) / (maxValue - minValue)
     }
     function calculateValue() {
-        value = Math.round((maxValue - minValue) * handle.x / picker.width) + minValue
+        value = Math.round((maxValue - minValue) * handle.y / picker.height) + minValue
     }
 
-    id: slider
-    height: 40
-    width: 100
+    id: verticalSlider
+    height: 100
+    width: 40
     color: "transparent"
 
     onValueChanged: {
         if (!sliderDragArea.pressed)
-            adjustHandleX()
+            adjustHandleY()
     }
-    onVisibleChanged: adjustHandleX()
+    onVisibleChanged: adjustHandleY()
 
     Rectangle {
         id: picker
-        height: 15
+        width: 15
         gradient: Gradient {
             GradientStop {
                 position: 0
@@ -56,36 +56,38 @@ Rectangle {
                 color: "#575757"
             }
         }
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.leftMargin: handle.width / 2
-        anchors.rightMargin: handle.width / 2
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.topMargin: handle.height / 2
+        anchors.bottomMargin: handle.height / 2
+        anchors.horizontalCenter: parent.horizontalCenter
     }
     Button {
         id: handle
-        x: 0
-        width: slider.height - 4
-        height: slider.height - 4
-        radius: width / 2 - 1
-        anchors.verticalCenter: parent.verticalCenter
+        y: 0
+        width: verticalSlider.width - 4
+        height: verticalSlider.width - 4
+        radius: height / 2 - 1
+        anchors.horizontalCenter: parent.horizontalCenter
     }
     MouseArea {
         id: sliderDragArea
-        anchors.fill: parent
-        onMouseXChanged: {
+        anchors.fill: verticalSlider
+        onMouseYChanged: {
             if (pressed)
             {
-                var xx = mouseX - handle.width / 2
-                handle.x = (xx < 0 ? 0 : (xx > picker.width ? picker.width : xx))
+                var yy = mouseY - handle.height / 2
+                handle.y = (yy < 0 ? 0 : (yy > picker.height ? picker.height : yy))
                 calculateValue()
             }
         }
-        onPressed: handle.gradient = handle.style.pressedGradient
+        onPressed: {
+            handle.gradient = handle.style.pressedGradient
+        }
         onReleased: {
             handle.gradient = handle.style.normalGradient
             calculateValue()
-            adjustHandleX()
+            adjustHandleY()
         }
     }
 }

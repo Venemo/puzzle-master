@@ -58,7 +58,9 @@ OTHER_FILES += \
     qml/other/GameBoard.qml \
     qml/other/OptionsDialog.qml \
     qml/other/FileSelectorDialog.qml \
-    qml/other/GallerySelectorDialog.qml
+    qml/other/GallerySelectorDialog.qml \
+    qml/other/components/VerticalSlider.qml \
+    qml/other/components/VerticalScrollBar.qml
 
 # Platforms
 

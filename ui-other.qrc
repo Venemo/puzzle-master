@@ -3,7 +3,9 @@
         <file>qml/other/components/Button.qml</file>
         <file>qml/other/components/Dialog.qml</file>
         <file>qml/other/components/Slider.qml</file>
+        <file>qml/other/components/VerticalSlider.qml</file>
         <file>qml/other/components/Panel.qml</file>
+        <file>qml/other/components/VerticalScrollBar.qml</file>
         <file>qml/other/components/style/ButtonStyle.qml</file>
         <file>qml/other/components/style/GreenButtonStyle.qml</file>
         <file>qml/other/components/style/RedButtonStyle.qml</file>
