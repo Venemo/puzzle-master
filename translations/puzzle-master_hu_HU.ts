@@ -168,6 +168,18 @@ Ha feladod, már nem folytathatod. Ha tippet szeretnél, akkor válaszd az &quot
         <source>Do you want to restart this game?</source>
         <translation>Szeretnéd újrakezdeni a játékot?</translation>
     </message>
+    <message>
+        <source>An error has occoured</source>
+        <translation>Hiba történt!</translation>
+    </message>
+    <message>
+        <source>Sorry, we couldn&apos;t start the game. Please try to start it with another picture.</source>
+        <translation>Sajnos nem tudtuk elkezdeni a játékot. Kérlek, próbálkozz egy másik képpel!</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation>Oké</translation>
+    </message>
 </context>
 <context>
     <name>ImageChooser</name>
