@@ -180,6 +180,10 @@ Ha feladod, már nem folytathatod. Ha tippet szeretnél, akkor válaszd az &quot
         <source>Ok</source>
         <translation>Oké</translation>
     </message>
+    <message>
+        <source>Puzzle Master</source>
+        <translation>Puzzle Master</translation>
+    </message>
 </context>
 <context>
     <name>ImageChooser</name>
@@ -218,6 +222,10 @@ Ha feladod, már nem folytathatod. Ha tippet szeretnél, akkor válaszd az &quot
     <message>
         <source>Quit</source>
         <translation>Kilépés</translation>
+    </message>
+    <message>
+        <source>Puzzle Master</source>
+        <translation>Puzzle Master</translation>
     </message>
 </context>
 <context>

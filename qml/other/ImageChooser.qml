@@ -189,7 +189,7 @@ Panel {
     }
     Dialog {
         id: menuDialog
-        title: "PuzzleMaster"
+        title: qsTr("Puzzle Master")
         contentHeight: menuDialogColumn.height
         contentWidth: menuDialogColumn.width
         content: Column {
