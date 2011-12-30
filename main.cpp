@@ -130,6 +130,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     allowGalleryModel = false;
 #endif
 
+    // Checking the size
+
+    QSize initialSize = QApplication::desktop()->screenGeometry(view).size();
+    qDebug() << "initial size is" << initialSize;
+
     // Setting up the view
 
     view->setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing);
@@ -143,7 +148,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
     view->viewport()->setAttribute(Qt::WA_NoSystemBackground);
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
-    view->rootContext()->setContextProperty("initialSize", QApplication::desktop()->geometry().size());
+    view->rootContext()->setContextProperty("initialSize", initialSize);
     view->rootContext()->setContextProperty("allowRotation", allowRotation);
     view->rootContext()->setContextProperty("allowGalleryModel", allowGalleryModel);
     view->rootContext()->setContextProperty("appVersion", QString(APP_VERSION));
