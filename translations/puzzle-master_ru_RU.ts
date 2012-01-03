@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="hu_HU">
+<TS version="2.0" language="ru_RU">
 <context>
     <name>AppWindow</name>
     <message>
@@ -63,7 +63,7 @@ Are you sure to proceed?</source>
     </message>
     <message>
         <source>You have already added the selected image.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Вы уже добавили выбранную картинку</translation>
     </message>
 </context>
 <context>
@@ -209,7 +209,7 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     </message>
     <message>
         <source>Please choose</source>
-        <translation>Выберите!</translation>
+        <translation type="unfinished">Пожалуйста, выберите</translation>
     </message>
     <message>
         <source>You must choose an image before continuing.</source>
@@ -233,7 +233,7 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     </message>
     <message>
         <source>Remove custom image</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Убрать свою картинку</translation>
     </message>
 </context>
 <context>
