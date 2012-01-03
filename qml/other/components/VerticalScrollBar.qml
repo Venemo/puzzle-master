@@ -23,6 +23,7 @@ VerticalSlider {
     property Flickable flickable: null
 
     id: verticalScrollBar
+    width: visible ? 40 : 0
     maxValue: flickable.contentHeight - flickable.height
     minValue: 0
     value: flickable.contentY

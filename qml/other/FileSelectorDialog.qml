@@ -29,73 +29,85 @@ Dialog
     title: qsTr("Select a picture")
     acceptButtonText: imageSelectorGrid.currentIndex >= 0 ? qsTr("Select") : ""
     rejectButtonText: qsTr("Cancel")
-    contentWidth: imageSelectorGrid.width
-    contentHeight: imageSelectorGrid.height
-    content: GridView {
-        id: imageSelectorGrid
-        cellWidth: imageSelectorGrid.width / 4 - 5
-        cellHeight: imageSelectorGrid.cellWidth / fileSelectorDialog.width * fileSelectorDialog.height
-        width: fileSelectorDialog.width * 4 / 5
-        height: fileSelectorDialog.height - 160
-        clip: true
-        focus: true
-        cacheBuffer: imageSelectorGrid.height / 2
-        currentIndex: -1
-        highlightMoveDuration: 80
-        model: FolderListModel {
-            folder: picturesFolder
-            showDirs: false
-            showOnlyReadable: true
-            nameFilters: ["*.jpg", "*.jpeg", "*.png", "*.bmp"]
-        }
-        delegate: Item {
-            width: imageSelectorGrid.cellWidth
-            height: imageSelectorGrid.cellHeight
+    contentWidth: imageSelectorItem.width
+    contentHeight: imageSelectorItem.height
+    content: Item {
+        id: imageSelectorItem
+        width: imageSelectorGrid.width + imageSelectorGridScrollBar.width
+        height: imageSelectorGrid.height
 
-            Image {
-                id: imageItem
-                asynchronous: true
-                width: imageSelectorGrid.cellWidth - 10
-                height: imageSelectorGrid.cellHeight - 10
-                fillMode: Image.PreserveAspectCrop
-                clip: true
-                source: filePath
-                sourceSize.width: imageSelectorGrid.cellWidth - 10
-                anchors.centerIn: parent
+        GridView {
+            id: imageSelectorGrid
+            cellWidth: imageSelectorGrid.width / 4 - 5
+            cellHeight: imageSelectorGrid.cellWidth / fileSelectorDialog.width * fileSelectorDialog.height
+            width: fileSelectorDialog.width * 4 / 5
+            height: fileSelectorDialog.height - 160
+            clip: true
+            focus: true
+            cacheBuffer: imageSelectorGrid.height / 2
+            currentIndex: -1
+            highlightMoveDuration: 80
+            model: FolderListModel {
+                folder: picturesFolder
+                showDirs: false
+                showOnlyReadable: true
+                nameFilters: ["*.jpg", "*.jpeg", "*.png", "*.bmp"]
             }
-            Rectangle {
-                color: "#77000000"
-                height: 25
-                clip: true
-                anchors.left: imageItem.left
-                anchors.top: imageItem.top
-                anchors.right: imageItem.right
+            delegate: Item {
+                width: imageSelectorGrid.cellWidth
+                height: imageSelectorGrid.cellHeight
 
-                TextEdit {
-                    text: fileName
-                    color: "#ffffff"
-                    wrapMode: Text.WrapAnywhere
-                    font.pixelSize: 17
+                Image {
+                    id: imageItem
+                    asynchronous: true
+                    width: imageSelectorGrid.cellWidth - 10
+                    height: imageSelectorGrid.cellHeight - 10
+                    fillMode: Image.PreserveAspectCrop
+                    clip: true
+                    source: filePath
+                    sourceSize.width: imageSelectorGrid.cellWidth - 10
                     anchors.centerIn: parent
                 }
-            }
-            TextEdit {
-                text: qsTr("An error has occoured")
-                visible: imageItem.status == Image.Error
-                color: "#ffffff"
-                anchors.centerIn: parent
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    selectedImageUrl = filePath
-                    imageSelectorGrid.currentIndex = index
+                Rectangle {
+                    color: "#77000000"
+                    height: 25
+                    clip: true
+                    anchors.left: imageItem.left
+                    anchors.top: imageItem.top
+                    anchors.right: imageItem.right
+
+                    TextEdit {
+                        text: fileName
+                        color: "#ffffff"
+                        wrapMode: Text.WrapAnywhere
+                        font.pixelSize: 17
+                        anchors.centerIn: parent
+                    }
+                }
+                TextEdit {
+                    text: qsTr("An error has occoured")
+                    visible: imageItem.status == Image.Error
+                    color: "#ffffff"
+                    anchors.centerIn: parent
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        selectedImageUrl = filePath
+                        imageSelectorGrid.currentIndex = index
+                    }
                 }
             }
+            highlight: Rectangle {
+                color: "#538312"
+                radius: 5
+            }
         }
-        highlight: Rectangle {
-            color: "#538312"
-            radius: 5
+        VerticalScrollBar {
+            id: imageSelectorGridScrollBar
+            visible: allowScrollbars
+            flickable: imageSelectorGrid
+            anchors.right: parent.right
         }
     }
 }

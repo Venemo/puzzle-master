@@ -110,15 +110,16 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setViewport(glWidget);
 #endif
 
-    // Checking for rotation support
+    // Checking for rotation and touchscreen support
 
-    bool allowRotation = true;
+    bool allowRotation = true, allowScrollbars = true;
 
 #if defined (HAVE_DEVICEINFO)
     QtMobility::QSystemDeviceInfo *info = new QtMobility::QSystemDeviceInfo();
     qDebug() << "Puzzle Master is running on... Manufacturer:" << info->manufacturer() << "Model:" << info->model() << "Product name:" << info->productName();
     qDebug() << "Input method type is" << info->inputMethodType();
     allowRotation = (info->inputMethodType() & QtMobility::QSystemDeviceInfo::MultiTouch) || (info->inputMethodType() & QtMobility::QSystemDeviceInfo::Mouse);
+    allowScrollbars = !(info->inputMethodType() & QtMobility::QSystemDeviceInfo::MultiTouch) && !(info->inputMethodType() & QtMobility::QSystemDeviceInfo::SingleTouch);
     if (info->manufacturer() == "Nokia" && info->model() == "N8-00")
         allowRotation = false;
     delete info;
@@ -128,7 +129,12 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     allowRotation = false;
 #endif
 
+#if defined(DISABLE_SCROLLBARS)
+    allowScrollbars = false;
+#endif
+
     qDebug() << "Puzzle Master has" << (allowRotation ? "enabled" : "disabled") << "rotation support.";
+    qDebug() << "Scroll bars will" << (allowScrollbars ? "appear" : "not appear");
 
     // Checking for QML gallery plugin support
 
@@ -167,6 +173,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     view->rootContext()->setContextProperty("initialSize", initialSize);
     view->rootContext()->setContextProperty("allowRotation", allowRotation);
+    view->rootContext()->setContextProperty("allowScrollbars", allowScrollbars);
     view->rootContext()->setContextProperty("allowGalleryModel", allowGalleryModel);
     view->rootContext()->setContextProperty("appVersion", QString(APP_VERSION));
     view->rootContext()->setContextProperty("appEventHandler", appEventHandler);

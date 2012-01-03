@@ -82,13 +82,13 @@ unix:!symbian {
 }
 contains(MEEGO_EDITION, harmattan) {
     # We want to use applauncherd here, and it has an accelerometer
-    DEFINES += HAVE_APPLAUNCHERD HAVE_QACCELEROMETER HAVE_SWIPELOCK MEEGO_EDITION_HARMATTAN
+    DEFINES += HAVE_APPLAUNCHERD HAVE_QACCELEROMETER HAVE_SWIPELOCK MEEGO_EDITION_HARMATTAN DISABLE_SCROLLBARS
     # The MeeGo graphics system is better than using QGLWidget
     DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY
 }
 maemo5 {
     # We want the accelerometer
-    DEFINES += HAVE_QACCELEROMETER DISABLE_ROTATION
+    DEFINES += HAVE_QACCELEROMETER DISABLE_ROTATION DISABLE_SCROLLBARS
     DEFINES -= DISABLE_QMLGALLERY
     # And the weird Maemo5 paths
     target.path = /opt/puzzle-master
@@ -97,7 +97,7 @@ maemo5 {
 symbian {
     QMAKE_CXXFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden -O3 -ffast-math
     # We want the accelerometer, but not OpenGL
-    DEFINES += HAVE_QACCELEROMETER HAVE_DEVICEINFO QT_NO_OPENGL APP_VERSION=\"$$VERSION\"
+    DEFINES += HAVE_QACCELEROMETER HAVE_DEVICEINFO QT_NO_OPENGL APP_VERSION=\"$$VERSION\" DISABLE_SCROLLBARS
     DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY APP_VERSION=\\\"$$VERSION\\\"
     QT -= opengl
     # Symbian icon
