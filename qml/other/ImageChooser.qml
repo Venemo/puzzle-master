@@ -220,7 +220,7 @@ Panel {
             Button {
                 width: 500
                 text: qsTr("Remove custom image")
-                visible: imageSelectorGrid.currentIndex < imagesModel.count - imagesModel.initialImageCount
+                visible: imageSelectorGrid.currentIndex >= 0 && imageSelectorGrid.currentIndex < imagesModel.count - imagesModel.initialImageCount
                 onClicked: {
                     menuDialog.close()
                     imagesModel.remove(imagesModel.get(imageSelectorGrid.currentIndex))
