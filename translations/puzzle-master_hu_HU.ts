@@ -61,6 +61,10 @@ Are you sure to proceed?</source>
         <translation>A választott beállítások NAGYON nehézzé teszik a játékot.
 Biztosan folytatod?</translation>
     </message>
+    <message>
+        <source>You have already added the selected image.</source>
+        <translation>Már hozzáadtad a kiválasztott képet.</translation>
+    </message>
 </context>
 <context>
     <name>FileSelectorDialog</name>
@@ -96,7 +100,7 @@ Biztosan folytatod?</translation>
     <name>GameBoard</name>
     <message>
         <source>Creating puzzle piece %1 of %2</source>
-        <translation>Az %1. puzzle darab rajzolása. (Összesen %2)</translation>
+        <translation>Puzzle darabok rajzolása. %1 / %2</translation>
     </message>
     <message>
         <source>The selected image is being processed.</source>
@@ -226,6 +230,10 @@ Ha feladod, már nem folytathatod. Ha tippet szeretnél, akkor válaszd az &quot
     <message>
         <source>Puzzle Master</source>
         <translation>Puzzle Master</translation>
+    </message>
+    <message>
+        <source>Remove custom image</source>
+        <translation>Egyéni kép törlése</translation>
     </message>
 </context>
 <context>
