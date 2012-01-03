@@ -97,6 +97,11 @@ Are you sure to proceed?</source>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../qml/other/FileSelectorDialog.qml" line="83"/>
+        <source>An error has occoured</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>

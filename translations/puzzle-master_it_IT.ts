@@ -100,6 +100,11 @@ Sei sicuro di voler procedere?</translation>
         <source>Cancel</source>
         <translation>Indietro</translation>
     </message>
+    <message>
+        <location filename="../qml/other/FileSelectorDialog.qml" line="83"/>
+        <source>An error has occoured</source>
+        <translation type="unfinished">C&apos;è stato un errore</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>

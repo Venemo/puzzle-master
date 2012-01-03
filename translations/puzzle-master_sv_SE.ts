@@ -80,6 +80,10 @@ Are you sure to proceed?</source>
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
+    <message>
+        <source>An error has occoured</source>
+        <translation type="unfinished">Ett fel uppstod!</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>

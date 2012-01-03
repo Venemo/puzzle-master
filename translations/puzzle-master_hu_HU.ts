@@ -80,6 +80,10 @@ Biztosan folytatod?</translation>
         <source>Cancel</source>
         <translation>Mégsem</translation>
     </message>
+    <message>
+        <source>An error has occoured</source>
+        <translation type="unfinished">Hiba történt!</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>

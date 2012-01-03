@@ -80,6 +80,10 @@ Are you sure to proceed?</source>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
+    <message>
+        <source>An error has occoured</source>
+        <translation type="unfinished">Произошла ошибка!</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
