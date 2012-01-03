@@ -21,7 +21,7 @@ QT += core gui declarative
 TARGET = puzzle-master
 TEMPLATE = app
 VERSION = 1.9.97
-DEFINES += APP_VERSION=\\\"$VERSION\\\"
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += \
     main.cpp \
@@ -97,8 +97,8 @@ maemo5 {
 symbian {
     QMAKE_CXXFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden -O3 -ffast-math
     # We want the accelerometer, but not OpenGL
-    DEFINES += HAVE_QACCELEROMETER HAVE_DEVICEINFO QT_NO_OPENGL APP_VERSION=\"$VERSION\"
-    DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY APP_VERSION=\\\"$VERSION\\\"
+    DEFINES += HAVE_QACCELEROMETER HAVE_DEVICEINFO QT_NO_OPENGL APP_VERSION=\"$$VERSION\"
+    DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY APP_VERSION=\\\"$$VERSION\\\"
     QT -= opengl
     # Symbian icon
     ICON = installables/puzzle-master.svg
