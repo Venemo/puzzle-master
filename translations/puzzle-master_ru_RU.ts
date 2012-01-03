@@ -63,7 +63,7 @@ Are you sure to proceed?</source>
     </message>
     <message>
         <source>You have already added the selected image.</source>
-        <translation type="unfinished">Вы уже добавили выбранную картинку</translation>
+        <translation>Вы уже добавили выбранную картинку</translation>
     </message>
 </context>
 <context>
@@ -82,7 +82,7 @@ Are you sure to proceed?</source>
     </message>
     <message>
         <source>An error has occoured</source>
-        <translation type="unfinished">Произошла ошибка!</translation>
+        <translation>Произошла ошибка!</translation>
     </message>
 </context>
 <context>
@@ -213,7 +213,7 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     </message>
     <message>
         <source>Please choose</source>
-        <translation type="unfinished">Пожалуйста, выберите</translation>
+        <translation>Пожалуйста, выберите</translation>
     </message>
     <message>
         <source>You must choose an image before continuing.</source>
@@ -237,7 +237,7 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     </message>
     <message>
         <source>Remove custom image</source>
-        <translation type="unfinished">Убрать свою картинку</translation>
+        <translation>Убрать свою картинку</translation>
     </message>
 </context>
 <context>

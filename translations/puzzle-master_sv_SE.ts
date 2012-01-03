@@ -82,7 +82,7 @@ Are you sure to proceed?</source>
     </message>
     <message>
         <source>An error has occoured</source>
-        <translation type="unfinished">Ett fel uppstod!</translation>
+        <translation>Ett fel uppstod!</translation>
     </message>
 </context>
 <context>

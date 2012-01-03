@@ -82,7 +82,7 @@ Biztosan folytatod?</translation>
     </message>
     <message>
         <source>An error has occoured</source>
-        <translation type="unfinished">Hiba történt!</translation>
+        <translation>Hiba történt!</translation>
     </message>
 </context>
 <context>

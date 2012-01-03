@@ -101,9 +101,9 @@ Sei sicuro di voler procedere?</translation>
         <translation>Indietro</translation>
     </message>
     <message>
-        <location filename="../qml/other/FileSelectorDialog.qml" line="83"/>
+        <location filename="../qml/other/FileSelectorDialog.qml" line="88"/>
         <source>An error has occoured</source>
-        <translation type="unfinished">C&apos;è stato un errore</translation>
+        <translation>C&apos;è stato un errore</translation>
     </message>
 </context>
 <context>
@@ -250,52 +250,52 @@ Non potrai riprenderla dopo. Usa &quot;Chiedi un suggerimento!&quot; se hai biso
         <translation>Benvenuto! Scegli una immagine.</translation>
     </message>
     <message>
-        <location filename="../qml/other/ImageChooser.qml" line="164"/>
+        <location filename="../qml/other/ImageChooser.qml" line="174"/>
         <source>Start game</source>
         <translation>Nuova partita</translation>
     </message>
     <message>
-        <location filename="../qml/other/ImageChooser.qml" line="181"/>
+        <location filename="../qml/other/ImageChooser.qml" line="191"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../qml/other/ImageChooser.qml" line="190"/>
+        <location filename="../qml/other/ImageChooser.qml" line="200"/>
         <source>Please choose</source>
         <translation>Scegliere prego</translation>
     </message>
     <message>
-        <location filename="../qml/other/ImageChooser.qml" line="191"/>
+        <location filename="../qml/other/ImageChooser.qml" line="201"/>
         <source>You must choose an image before continuing.</source>
         <translation>Devi scegliere una immagine per continuare.</translation>
     </message>
     <message>
-        <location filename="../qml/other/ImageChooser.qml" line="192"/>
+        <location filename="../qml/other/ImageChooser.qml" line="202"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../qml/other/ImageChooser.qml" line="196"/>
+        <location filename="../qml/other/ImageChooser.qml" line="206"/>
         <source>Puzzle Master</source>
         <translation>Puzzle Master</translation>
     </message>
     <message>
-        <location filename="../qml/other/ImageChooser.qml" line="205"/>
+        <location filename="../qml/other/ImageChooser.qml" line="215"/>
         <source>About</source>
         <translation>Info su</translation>
     </message>
     <message>
-        <location filename="../qml/other/ImageChooser.qml" line="213"/>
+        <location filename="../qml/other/ImageChooser.qml" line="223"/>
         <source>Add custom image</source>
         <translation>Aggiungi immagine personalizzata</translation>
     </message>
     <message>
-        <location filename="../qml/other/ImageChooser.qml" line="222"/>
+        <location filename="../qml/other/ImageChooser.qml" line="232"/>
         <source>Remove custom image</source>
         <translation>Rimuovi immagine personalizzata</translation>
     </message>
     <message>
-        <location filename="../qml/other/ImageChooser.qml" line="231"/>
+        <location filename="../qml/other/ImageChooser.qml" line="242"/>
         <source>Quit</source>
         <translation>Esci</translation>
     </message>
