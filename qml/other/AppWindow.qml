@@ -26,6 +26,7 @@ Rectangle {
 
     AppSettings {
         id: appSettings
+        onCustomImageAlreadyAdded: alreadyAddedDialog.open()
     }
     GameBoard {
         id: gameBoard
@@ -99,5 +100,11 @@ Rectangle {
         rejectButtonText: qsTr("No")
         onAccepted: imageChooser.startGame()
         onRejected: optionsDialog.open()
+    }
+    Dialog {
+        id: alreadyAddedDialog
+        title: ""
+        text: qsTr("You have already added the selected image.")
+        acceptButtonText: qsTr("Ok")
     }
 }

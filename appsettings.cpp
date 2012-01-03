@@ -23,6 +23,9 @@
 
 #include "appsettings.h"
 
+// Increase this when anything changes in the settings
+// (but don't if you just add a new setting)
+#define APPSETTINGS_VERSION 1
 #define APPSETTING_SETTINGSVERSION "SettingsVersion"
 
 AppSettings::AppSettings(QObject *parent) :
@@ -58,7 +61,13 @@ QStringList AppSettings::loadCustomImages()
 
     foreach (const QString &url, list)
     {
-        if (!QFile::exists(url))
+        QString url2(url);
+        if (url.contains(QRegExp("/[A-Za-z]:/")))
+            url2.remove("file:///");
+        else
+            url2.remove("file://");
+
+        if (!QFile::exists(url) && !QFile::exists(url2))
         {
             qDebug() << "removing saved custom image" << url << "because it doesn't exist";
             list.removeAll(url);
@@ -75,23 +84,42 @@ QStringList AppSettings::loadCustomImages()
     return list;
 }
 
-void AppSettings::addCustomImage(const QString &url)
+bool AppSettings::addCustomImage(const QString &url)
 {
-    QString url2(url);
-    if (url.contains(QRegExp("/[A-Za-z]:/")))
-        url2.remove("file:///");
-    else
-        url2.remove("file://");
-
     QStringList list = loadCustomImages();
 
-    if (!list.contains(url2))
+    if (!list.contains(url))
     {
-        qDebug() << "adding custom image" << url2;
-        list.append(url2);
+        qDebug() << "adding custom image" << url;
+        list.append(url);
         QByteArray array;
         QDataStream stream(&array, QIODevice::WriteOnly);
         stream << list;
         setCustomImageListData(array);
+        return true;
     }
+    else
+    {
+        emit customImageAlreadyAdded(url);
+    }
+
+    return false;
+}
+
+bool AppSettings::removeCustomImage(const QString &url)
+{
+    QStringList list = loadCustomImages();
+
+    if (list.contains(url))
+    {
+        qDebug() << "removing custom image" << url;
+        list.removeAll(url);
+        QByteArray array;
+        QDataStream stream(&array, QIODevice::WriteOnly);
+        stream << list;
+        setCustomImageListData(array);
+        return true;
+    }
+
+    return false;
 }

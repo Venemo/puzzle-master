@@ -99,18 +99,22 @@ Panel {
             currentIndex: -1
             highlightMoveDuration: 80
             model: ListModel {
+                property int initialImageCount: 0
+
                 id: imagesModel
+                Component.onCompleted: {
+                    imagesModel.initialImageCount = imagesModel.count
+                    var urls = appSettings.loadCustomImages()
+                    for (var i = 0; i < urls.length; i++) {
+                        imagesModel.insert(0, { url: urls[i] })
+                    }
+                }
+
                 ListElement { url: ":/pics/image1.jpg" }
                 ListElement { url: ":/pics/image2.jpg" }
                 ListElement { url: ":/pics/image3.jpg" }
                 ListElement { url: ":/pics/image4.jpg" }
                 ListElement { url: ":/pics/image5.jpg" }
-                Component.onCompleted: {
-                    var urls = appSettings.loadCustomImages()
-                    for (var i = 0; i < urls.length; i++) {
-                        imagesModel.insert(0, { url: "file://" + urls[i] })
-                    }
-                }
             }
             delegate: Item {
                 width: imageSelectorGrid.cellWidth
@@ -215,6 +219,15 @@ Panel {
             }
             Button {
                 width: 500
+                text: qsTr("Remove custom image")
+                visible: imageSelectorGrid.currentIndex < imagesModel.count - imagesModel.initialImageCount
+                onClicked: {
+                    menuDialog.close()
+                    imagesModel.remove(imagesModel.get(imageSelectorGrid.currentIndex))
+                }
+            }
+            Button {
+                width: 500
                 text: qsTr("Quit")
                 style: RedButtonStyle { }
                 onClicked: {
@@ -227,8 +240,8 @@ Panel {
     Connections {
         target: fileSelectorDialog
         onAccepted: {
-            appSettings.addCustomImage(fileSelectorDialog.selectedImageUrl)
-            imagesModel.insert(0, { url: fileSelectorDialog.selectedImageUrl })
+            if (appSettings.addCustomImage(fileSelectorDialog.selectedImageUrl))
+                imagesModel.insert(0, { url: fileSelectorDialog.selectedImageUrl })
         }
     }
 }

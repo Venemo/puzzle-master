@@ -65,7 +65,7 @@ OTHER_FILES += \
 # Platforms
 
 unix:!symbian {
-    QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
+    QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden -O3 -ffast-math
     QMAKE_LFLAGS += -pie -rdynamic
     DEFINES += HAVE_OPENGL DISABLE_QMLGALLERY
     INSTALLS += target iconfile desktopfile
@@ -91,10 +91,10 @@ maemo5 {
     desktopfile.path = /usr/share/applications/hildon
 }
 symbian {
-    QMAKE_CXXFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
+    QMAKE_CXXFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden -O3 -ffast-math
     # We want the accelerometer, but not OpenGL
-    DEFINES += HAVE_QACCELEROMETER HAVE_DEVICEINFO QT_NO_OPENGL
-    DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY
+    DEFINES += HAVE_QACCELEROMETER HAVE_DEVICEINFO QT_NO_OPENGL APP_VERSION=\"2.0\"
+    DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY APP_VERSION=\\\"2.0\\\"
     QT -= opengl
     # Symbian icon
     ICON = installables/puzzle-master.svg
@@ -105,6 +105,9 @@ symbian {
     LIBS += -lcone -leikcore -lavkon
     # Max. heap size is 20 MiB
     TARGET.EPOCHEAPSIZE = 0x020000 0x20971520
+}
+win32 {
+    DEFINES += HAVE_OPENGL _USE_MATH_DEFINES _CRT_SECURE_NO_WARNINGS
 }
 
 # Features

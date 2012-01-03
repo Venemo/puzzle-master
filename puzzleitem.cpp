@@ -29,7 +29,9 @@
 
 inline static qreal angle(const QPointF &v)
 {
-    if (v.x() >= 0)
+    if (v.x() == 0)
+        return 90;
+    if (v.x() > 0)
         return atan(v.y() / v.x());
 
     return atan(v.y() / v.x()) - M_PI;
@@ -141,8 +143,8 @@ void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
         else
             y1 = - positionVector.y();
 
-        QPixmap pix(max<int>(x1 + pixmap().width(), x2 + item->pixmap().width()),
-                    max<int>(y1 + pixmap().height(), y2 + item->pixmap().height())),
+        QPixmap pix(myMax<int>(x1 + pixmap().width(), x2 + item->pixmap().width()),
+                    myMax<int>(y1 + pixmap().height(), y2 + item->pixmap().height())),
                 newStroke(pix.width() + strokeThickness() * 2, pix.height() + strokeThickness() * 2);
         pix.fill(Qt::transparent);
         newStroke.fill(Qt::transparent);
@@ -172,8 +174,8 @@ void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
             newStatus |= PuzzleItem::BottomTab;
 
         setTabStatus(newStatus);
-        setPuzzleCoordinates(QPoint(min<int>(item->puzzleCoordinates().x(), puzzleCoordinates().x()), min<int>(item->puzzleCoordinates().y(), puzzleCoordinates().y())));
-        setSupposedPosition(QPointF(min<qreal>(item->supposedPosition().x(), supposedPosition().x()), min<qreal>(item->supposedPosition().y(), supposedPosition().y())));
+        setPuzzleCoordinates(QPoint(myMin<int>(item->puzzleCoordinates().x(), puzzleCoordinates().x()), myMin<int>(item->puzzleCoordinates().y(), puzzleCoordinates().y())));
+        setSupposedPosition(QPointF(myMin<qreal>(item->supposedPosition().x(), supposedPosition().x()), myMin<qreal>(item->supposedPosition().y(), supposedPosition().y())));
         setStroke(newStroke);
         setFakeShape(_fakeShape.translated(x1, y1).united(item->_fakeShape.translated(x2, y2)).simplified());
         setPixmap(pix);
@@ -229,9 +231,7 @@ void PuzzleItem::startRotation(const QPointF &vector)
 void PuzzleItem::handleRotation(const QPointF &v)
 {
     qreal a = angle(_rotationStartVector, v) * 180 / M_PI;
-
-    if (!isnan(a))
-        setRotation(simplifyAngle(a + _previousRotationValue));
+    setRotation(simplifyAngle(a + _previousRotationValue));
 }
 
 void PuzzleItem::checkMergeableSiblings(const QPointF &position)
@@ -253,7 +253,7 @@ bool PuzzleItem::checkMergeability(PuzzleItem *p)
     else if (p->_puzzleCoordinates.x() < _puzzleCoordinates.x())
         px += p->_pixmapOffset.x() + p->_pixmap.width() - p->rightTabSize();
     else
-        px += p->_pixmapOffset.x() + min<int>(_pixmap.width() - leftTabSize() - rightTabSize(), p->_pixmap.width() - p->leftTabSize() - p->rightTabSize()) / 2 + p->leftTabSize();
+        px += p->_pixmapOffset.x() + myMin<int>(_pixmap.width() - leftTabSize() - rightTabSize(), p->_pixmap.width() - p->leftTabSize() - p->rightTabSize()) / 2 + p->leftTabSize();
 
     // Vertical
     if (p->puzzleCoordinates().y() > _puzzleCoordinates.y())
@@ -261,7 +261,7 @@ bool PuzzleItem::checkMergeability(PuzzleItem *p)
     else if (p->puzzleCoordinates().y() < _puzzleCoordinates.y())
         py += p->_pixmapOffset.y() + p->_pixmap.height() - p->bottomTabSize();
     else
-        py += p->_pixmapOffset.y() + min<int>(_pixmap.height() - topTabSize() - bottomTabSize(), p->_pixmap.height() - p->topTabSize() - p->bottomTabSize()) / 2 + p->topTabSize();
+        py += p->_pixmapOffset.y() + myMin<int>(_pixmap.height() - topTabSize() - bottomTabSize(), p->_pixmap.height() - p->topTabSize() - p->bottomTabSize()) / 2 + p->topTabSize();
 
     QPointF diff = - _supposedPosition + p->_supposedPosition + QPointF(px, py) - static_cast<QGraphicsItem*>(p)->mapToItem(this, px, py);
     qreal distance = sqrt(diff.x() * diff.x() + diff.y() * diff.y());
@@ -402,7 +402,7 @@ void PuzzleItem::verifyPosition()
             p2 = mapToScene(width(), 0),
             p3 = mapToScene(0, height()),
             p4 = mapToScene(width(), height()),
-            p(min<qreal>(min<qreal>(p1.x(), p2.x()), min<qreal>(p3.x(), p4.x())), min<qreal>(min<qreal>(p1.y(), p2.y()), min<qreal>(p3.y(), p4.y())));
+            p(myMin<qreal>(myMin<qreal>(p1.x(), p2.x()), myMin<qreal>(p3.x(), p4.x())), myMin<qreal>(myMin<qreal>(p1.y(), p2.y()), myMin<qreal>(p3.y(), p4.y())));
 
     if (a >= 0 && a < 90)
         a = 90 - a;

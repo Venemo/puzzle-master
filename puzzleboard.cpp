@@ -218,7 +218,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     int tabTolerance = 1, *statuses = new int[cols * rows];
     qreal   w0 = (width() - pixmap.width()) / 2,
             h0 = (height() - pixmap.height()) / 2,
-            tabSize = min<qreal>(_unit.width() / 6.0, _unit.height() / 6.0),
+            tabSize = myMin<qreal>(_unit.width() / 6.0, _unit.height() / 6.0),
             tabOffset = tabSize * 2.0 / 3.0,
             tabFull = tabSize + tabOffset + tabTolerance;
 
