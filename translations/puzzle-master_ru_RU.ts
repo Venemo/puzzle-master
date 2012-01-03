@@ -5,19 +5,19 @@
     <name>AppWindow</name>
     <message>
         <source>You&apos;re a winner!</source>
-        <translation>Вы победитель!</translation>
+        <translation>Вы выйграли!</translation>
     </message>
     <message>
         <source>Congratulations, you have successfully solved the given puzzle.</source>
-        <translation>Поздравляю, вы успешно разрешили загадку.</translation>
+        <translation>Поздравляю, вы успешно собрали паззл.</translation>
     </message>
     <message>
         <source>Play again</source>
-        <translation>Еще раз</translation>
+        <translation>Заново?</translation>
     </message>
     <message>
         <source>Choose other</source>
-        <translation>Выбрать другую</translation>
+        <translation>Другая картинка</translation>
     </message>
     <message>
         <source>Are you sure?</source>
@@ -44,7 +44,7 @@
 Puzzle Master is a fun and addictive jigsaw puzzle game.
 Using Qt.</source>
         <translation>Автор Timur Kristóf.
-A Puzzle Master веселая и увлекательная игра головоломок.
+A Puzzle Master веселая и увлекательная игра-паззл.
 Написанная на Qt.</translation>
     </message>
     <message>
@@ -78,7 +78,7 @@ Are you sure to proceed?</source>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Отмена</translation>
+        <translation>Отменить</translation>
     </message>
     <message>
         <source>An error has occoured</source>
@@ -89,7 +89,7 @@ Are you sure to proceed?</source>
     <name>GallerySelectorDialog</name>
     <message>
         <source>Select a picture</source>
-        <translation>Выбрать картинку</translation>
+        <translation>Выберите картинку</translation>
     </message>
     <message>
         <source>Select</source>
@@ -97,18 +97,18 @@ Are you sure to proceed?</source>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Отмена</translation>
+        <translation>Отменить</translation>
     </message>
 </context>
 <context>
     <name>GameBoard</name>
     <message>
         <source>Creating puzzle piece %1 of %2</source>
-        <translation>Загружаем картику (%1 из %2) </translation>
+        <translation>Подгружаем объекты (%1 из %2) </translation>
     </message>
     <message>
         <source>The selected image is being processed.</source>
-        <translation>Загрузка выбранной картинки</translation>
+        <translation>Загрузка картинки</translation>
     </message>
     <message>
         <source>...</source>
@@ -128,7 +128,7 @@ Are you sure to proceed?</source>
     </message>
     <message>
         <source>Restart</source>
-        <translation>Рестарт</translation>
+        <translation>Сначала</translation>
     </message>
     <message>
         <source>Surrender</source>
@@ -161,8 +161,8 @@ Are you sure to proceed?</source>
     <message>
         <source>Do you want to give up this game?
 You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.</source>
-        <translation>Вы сдаетесь?
-Вы не сможете продолжить если покините игру. Воспользуйтесь подсказкой, если нужна помощь.</translation>
+        <translation>Если вы сдадитесь, то не сможете продолжить позже.
+Лучше воспользуйтесь подсказкой, если вам нужна помощь.</translation>
     </message>
     <message>
         <source>Yes</source>
@@ -182,7 +182,7 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     </message>
     <message>
         <source>Sorry, we couldn&apos;t start the game. Please try to start it with another picture.</source>
-        <translation>Извините, но нам не удалось запустить игру. Выберите другую картинку.</translation>
+        <translation>Извините, но нам не удалось запустить игру.Попробуйте выбрать другую картинку.</translation>
     </message>
     <message>
         <source>Ok</source>
@@ -201,11 +201,11 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     </message>
     <message>
         <source>Welcome! Choose an image.</source>
-        <translation>Добро пожаловать! Выберите картинку.</translation>
+        <translation>Привет!Выбери картинку</translation>
     </message>
     <message>
         <source>Start game</source>
-        <translation>Начать игру</translation>
+        <translation>Играть!</translation>
     </message>
     <message>
         <source>...</source>
@@ -213,7 +213,7 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     </message>
     <message>
         <source>Please choose</source>
-        <translation>Пожалуйста, выберите</translation>
+        <translation>Пожалуйста, выберите картинку</translation>
     </message>
     <message>
         <source>You must choose an image before continuing.</source>
@@ -225,7 +225,7 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     </message>
     <message>
         <source>Add custom image</source>
-        <translation>Добавить свою картинку</translation>
+        <translation>Добавить картинку</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -237,7 +237,7 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     </message>
     <message>
         <source>Remove custom image</source>
-        <translation>Убрать свою картинку</translation>
+        <translation>Убрать картинку</translation>
     </message>
 </context>
 <context>
@@ -252,19 +252,19 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Отмена</translation>
+        <translation>Отменить</translation>
     </message>
     <message>
         <source>Columns</source>
-        <translation>Колонки</translation>
+        <translation>Cтолбиков</translation>
     </message>
     <message>
         <source>Rows</source>
-        <translation>Столбики</translation>
+        <translation>Рядов</translation>
     </message>
     <message>
         <source>Snap</source>
-        <translation>Перемешать</translation>
+        <translation>Форма</translation>
     </message>
     <message>
         <source>Easy</source>
