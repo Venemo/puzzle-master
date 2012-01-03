@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>translations/puzzle-master_hu_HU.qm</file>
+        <file>translations/puzzle-master_cs_CZ.qm</file>
+        <file>translations/puzzle-master_it_IT.qm</file>
+        <file>translations/puzzle-master_ru_RU.qm</file>
+        <file>translations/puzzle-master_sv_SE.qm</file>
     </qresource>
 </RCC>
