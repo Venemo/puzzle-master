@@ -108,7 +108,7 @@ Panel {
                 Component.onCompleted: {
                     var urls = appSettings.loadCustomImages()
                     for (var i = 0; i < urls.length; i++) {
-                        imagesModel.insert(0, { url: "file://" + urls[i] })
+                        imagesModel.insert(0, { url: urls[i] })
                     }
                 }
             }

@@ -31,10 +31,6 @@
     inline type name() const { return _backend.value(settingKey, defaultValue).value<type>(); } \
     inline void settername (const type &value) { _backend.setValue(settingKey, value); emit signalname (); }
 
-// Increase this when anything changes in the settings
-// (but don't if you just add a new setting)
-#define APPSETTINGS_VERSION 1
-
 class QSettings;
 
 class AppSettings : public QObject

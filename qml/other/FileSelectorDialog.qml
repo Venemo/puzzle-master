@@ -43,7 +43,7 @@ Dialog
         currentIndex: -1
         highlightMoveDuration: 80
         model: FolderListModel {
-            folder: "file://" + picturesFolder
+            folder: picturesFolder
             showDirs: false
             showOnlyReadable: true
             nameFilters: ["*.jpg", "*.jpeg", "*.png", "*.bmp"]

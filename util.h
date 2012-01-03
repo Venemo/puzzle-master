@@ -54,14 +54,14 @@ inline int randomInt(int low, int high)
     return qrand() % ((high + 1) - low) + low;
 }
 
-template<class T>
-inline T max(T i, T j)
+template<typename T>
+inline T myMax(const T &i, const T &j)
 {
     return i > j? i : j;
 }
 
-template<class T>
-inline T min(T i, T j)
+template<typename T>
+inline T myMin(const T &i, const T &j)
 {
     return i < j? i : j;
 }
