@@ -61,6 +61,10 @@ Are you sure to proceed?</source>
         <translation>Ditt valda alternativ kommer göra spelet VÄLDIGT svårt
 Är du säker att du vill fortsätta?</translation>
     </message>
+    <message>
+        <source>You have already added the selected image.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FileSelectorDialog</name>
@@ -226,6 +230,10 @@ Du kan inte fortsätta senare. Använd &quot;Få en ledtråd&quot; om du behöve
     <message>
         <source>Puzzle Master</source>
         <translation>Puzzle Master</translation>
+    </message>
+    <message>
+        <source>Remove custom image</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
