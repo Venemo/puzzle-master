@@ -53,7 +53,8 @@ public:
     SETTINGPROPERTY(QByteArray, customImageListData, setCustomImageListData, customImageListDataChanged, "customImageListData", QByteArray())
 
     Q_INVOKABLE QStringList loadCustomImages();
-    Q_INVOKABLE void addCustomImage(const QString &url);
+    Q_INVOKABLE bool addCustomImage(const QString &url);
+    Q_INVOKABLE bool removeCustomImage(const QString &url);
 
 signals:
     void areSettingsDeletedChanged();
@@ -61,6 +62,7 @@ signals:
     void columnsChanged();
     void snapDifficultyChanged();
     void customImageListDataChanged();
+    void customImageAlreadyAdded(const QString &url);
 
 };
 

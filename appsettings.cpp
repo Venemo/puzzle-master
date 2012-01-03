@@ -84,7 +84,7 @@ QStringList AppSettings::loadCustomImages()
     return list;
 }
 
-void AppSettings::addCustomImage(const QString &url)
+bool AppSettings::addCustomImage(const QString &url)
 {
     QStringList list = loadCustomImages();
 
@@ -96,5 +96,30 @@ void AppSettings::addCustomImage(const QString &url)
         QDataStream stream(&array, QIODevice::WriteOnly);
         stream << list;
         setCustomImageListData(array);
+        return true;
     }
+    else
+    {
+        emit customImageAlreadyAdded(url);
+    }
+
+    return false;
+}
+
+bool AppSettings::removeCustomImage(const QString &url)
+{
+    QStringList list = loadCustomImages();
+
+    if (list.contains(url))
+    {
+        qDebug() << "removing custom image" << url;
+        list.removeAll(url);
+        QByteArray array;
+        QDataStream stream(&array, QIODevice::WriteOnly);
+        stream << list;
+        setCustomImageListData(array);
+        return true;
+    }
+
+    return false;
 }
