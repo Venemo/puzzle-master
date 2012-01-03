@@ -79,6 +79,12 @@ Dialog
                     anchors.centerIn: parent
                 }
             }
+            TextEdit {
+                text: qsTr("An error has occoured")
+                visible: imageItem.status == Image.Error
+                color: "#ffffff"
+                anchors.centerIn: parent
+            }
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
