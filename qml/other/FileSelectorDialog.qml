@@ -44,7 +44,7 @@ Dialog
             height: fileSelectorDialog.height - 160
             clip: true
             focus: true
-            cacheBuffer: imageSelectorGrid.height / 2
+            cacheBuffer: allowScrollbars ? initialSize.height * 3 : initialSize.height
             currentIndex: -1
             highlightMoveDuration: 80
             model: FolderListModel {
@@ -105,7 +105,8 @@ Dialog
         }
         VerticalScrollBar {
             id: imageSelectorGridScrollBar
-            visible: allowScrollbars
+            visibleWhen: allowScrollbars
+            enableScrolling: allowScrollbars
             flickable: imageSelectorGrid
             anchors.right: parent.right
         }

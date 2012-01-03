@@ -21,9 +21,12 @@ import "./style"
 
 VerticalSlider {
     property Flickable flickable: null
+    property bool enableScrolling: true
+    property bool visibleWhen: true
 
     id: verticalScrollBar
     width: visible ? 40 : 0
+    visible: visibleWhen && flickable.contentHeight > flickable.height
     maxValue: flickable.contentHeight - flickable.height
     minValue: 0
     value: flickable.contentY
@@ -39,8 +42,14 @@ VerticalSlider {
         }
     }
     Binding {
+        when: enableScrolling
         target: flickable
         property: "contentY"
         value: verticalScrollBar.value
+    }
+    Binding {
+        target: flickable
+        property: "boundsBehavior"
+        value: enableScrolling ? Flickable.StopAtBounds : Flickable.DragAndOvershootBounds
     }
 }

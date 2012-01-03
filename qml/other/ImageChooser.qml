@@ -88,12 +88,14 @@ Panel {
         GridView {
             id: imageSelectorGrid
             focus: true
+            cacheBuffer: allowScrollbars ? initialSize.height * 3 : initialSize.height
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.topMargin: 5
             anchors.bottomMargin: 5
             anchors.horizontalCenter: parent.horizontalCenter
-            cellWidth: imageChooser.width / imageChooser.columnNumber - 5
+            anchors.horizontalCenterOffset: - imageSelectorGridScrollBar.width / 2
+            cellWidth: (imageChooser.width - imageSelectorGridScrollBar.width) / imageChooser.columnNumber - 5
             cellHeight: imageSelectorGrid.cellWidth / imageChooser.width * imageChooser.height
             width: imageSelectorGrid.cellWidth * imageChooser.columnNumber
             currentIndex: -1
@@ -142,6 +144,14 @@ Panel {
                 color: "#538312"
                 radius: 5
             }
+        }
+        VerticalScrollBar {
+            id: imageSelectorGridScrollBar
+            visibleWhen: allowScrollbars
+            enableScrolling: allowScrollbars
+            flickable: imageSelectorGrid
+            anchors.right: parent.right
+            anchors.rightMargin: 7
         }
     }
     Rectangle {
@@ -223,6 +233,7 @@ Panel {
                 visible: imageSelectorGrid.currentIndex >= 0 && imageSelectorGrid.currentIndex < imagesModel.count - imagesModel.initialImageCount
                 onClicked: {
                     menuDialog.close()
+                    appSettings.removeCustomImage(imagesModel.get(imageSelectorGrid.currentIndex).url)
                     imagesModel.remove(imagesModel.get(imageSelectorGrid.currentIndex))
                 }
             }
