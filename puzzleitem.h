@@ -41,9 +41,9 @@ class PuzzleItem : public QDeclarativeItem
     GENPROPERTY_S(qreal, _weight, weight, setWeight)
     GENPROPERTY_S(unsigned, _tabStatus, tabStatus, setTabStatus)
 
-    QPointF _dragStart, _rotationStartVector;
+    QPointF _dragStart;
     bool _dragging, _isDraggingWithTouch, _isRightButtonPressed;
-    double _previousRotationValue;
+    qreal _rotationStart;
     int _previousTouchPointCount;
 
 public:
