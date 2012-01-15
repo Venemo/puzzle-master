@@ -35,7 +35,7 @@
 #include <MDeclarativeCache>
 #endif
 
-#if defined (HAVE_DEVICEINFO)
+#if defined (HAVE_DEVICEINFO) || defined (Q_OS_SYMBIAN)
 #include <QSystemDeviceInfo>
 #endif
 
@@ -114,14 +114,23 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     bool allowRotation = true, allowScrollbars = true;
 
-#if defined (HAVE_DEVICEINFO)
+#if defined (HAVE_DEVICEINFO_CHECK)
     QtMobility::QSystemDeviceInfo *info = new QtMobility::QSystemDeviceInfo();
     qDebug() << "Puzzle Master is running on... Manufacturer:" << info->manufacturer() << "Model:" << info->model() << "Product name:" << info->productName();
     qDebug() << "Input method type is" << info->inputMethodType();
     allowRotation = (info->inputMethodType() & QtMobility::QSystemDeviceInfo::MultiTouch) || (info->inputMethodType() & QtMobility::QSystemDeviceInfo::Mouse);
     allowScrollbars = !(info->inputMethodType() & QtMobility::QSystemDeviceInfo::MultiTouch) && !(info->inputMethodType() & QtMobility::QSystemDeviceInfo::SingleTouch);
+    delete info;
+#endif
+
+#if defined (Q_OS_SYMBIAN)
+    QtMobility::QSystemDeviceInfo *info = new QtMobility::QSystemDeviceInfo();
     if (info->manufacturer() == "Nokia" && info->model() == "N8-00")
         allowRotation = false;
+    else if (QSysInfo::symbianVersion() < QSysInfo::SV_SF_3)
+        allowRotation = false;
+    else
+        allowRotation = true;
     delete info;
 #endif
 

@@ -98,9 +98,11 @@ maemo5 {
 symbian {
     QMAKE_CXXFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden -O3 -ffast-math
     # We want the accelerometer, but not OpenGL
-    DEFINES += HAVE_QACCELEROMETER HAVE_DEVICEINFO QT_NO_OPENGL APP_VERSION=\"$$VERSION\" DISABLE_SCROLLBARS
+    DEFINES += HAVE_QACCELEROMETER QT_NO_OPENGL APP_VERSION=\"$$VERSION\" DISABLE_SCROLLBARS
     DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY APP_VERSION=\\\"$$VERSION\\\"
     QT -= opengl
+    CONFIG += mobility
+    MOBILITY += systeminfo
     # Symbian icon
     ICON = installables/puzzle-master.svg
     TARGET = PuzzleMaster
@@ -112,7 +114,9 @@ symbian {
     TARGET.EPOCHEAPSIZE = 0x020000 0x20971520
 }
 win32 {
+    TARGET = PuzzleMaster
     DEFINES += HAVE_OPENGL _USE_MATH_DEFINES _CRT_SECURE_NO_WARNINGS
+    RC_FILE = installables/puzzle-master.rc
 }
 
 # Features
@@ -134,7 +138,7 @@ contains(DEFINES, HAVE_QACCELEROMETER) {
     CONFIG += mobility
     MOBILITY += sensors
 }
-contains(DEFINES, HAVE_DEVICEINFO) {
+contains(DEFINES, HAVE_DEVICEINFO_CHECK) {
     # Checking for device models
     CONFIG += mobility
     MOBILITY += systeminfo
