@@ -20,7 +20,7 @@ QT += core gui declarative
 
 TARGET = puzzle-master
 TEMPLATE = app
-VERSION = 1.9.97
+VERSION = 1.9.98
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += \
@@ -48,7 +48,8 @@ TRANSLATIONS += \
     translations/puzzle-master_ru_RU.ts \
     translations/puzzle-master_it_IT.ts \
     translations/puzzle-master_cs_CZ.ts \
-    translations/puzzle-master_he_IL.ts
+    translations/puzzle-master_he_IL.ts \
+    translations/puzzle-master_tr_TR.ts
 
 OTHER_FILES += \
     qml/other/components/Panel.qml \

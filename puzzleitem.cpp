@@ -37,11 +37,6 @@ inline static qreal angle(const QPointF &v)
     return atan(v.y() / v.x()) - M_PI;
 }
 
-inline static qreal angle(const QPointF &v1, const QPointF &v2)
-{
-    return angle(v2) - angle(v1);
-}
-
 inline static qreal simplifyAngle(qreal a)
 {
     while (a >= 360)
@@ -71,7 +66,6 @@ PuzzleItem::PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent)
       _dragging(false),
       _isDraggingWithTouch(false),
       _isRightButtonPressed(false),
-      _previousRotationValue(0),
       _previousTouchPointCount(0)
 {
     setPixmap(pixmap);
@@ -224,14 +218,13 @@ void PuzzleItem::doDrag(const QPointF &position)
 
 void PuzzleItem::startRotation(const QPointF &vector)
 {
-    _previousRotationValue = rotation();
-    _rotationStartVector = vector;
+    _rotationStart = angle(vector) * 180 / M_PI - rotation();
 }
 
 void PuzzleItem::handleRotation(const QPointF &v)
 {
-    qreal a = angle(_rotationStartVector, v) * 180 / M_PI;
-    setRotation(simplifyAngle(a + _previousRotationValue));
+    qreal a = angle(v) * 180 / M_PI - _rotationStart;
+    setRotation(simplifyAngle(a));
 }
 
 void PuzzleItem::checkMergeableSiblings(const QPointF &position)

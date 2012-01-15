@@ -1,113 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="he_IL">
+<TS version="2.0" language="tr_TR">
 <context>
     <name>AppWindow</name>
     <message>
         <source>You&apos;re a winner!</source>
-        <translation>זכית!</translation>
+        <translation>Kazanan!</translation>
     </message>
     <message>
         <source>Congratulations, you have successfully solved the given puzzle.</source>
-        <translation>כל הכבוד! פתרת בהצלחה את הפאזל</translation>
+        <translation>Tebrikler, size verilen puzzle başarıyla çözdünüz.</translation>
     </message>
     <message>
         <source>Play again</source>
-        <translation>שחק שנית</translation>
+        <translation>Yeniden oyna</translation>
     </message>
     <message>
         <source>Choose other</source>
-        <translation>בחירת אחר</translation>
+        <translation>Başka seç</translation>
     </message>
     <message>
         <source>Are you sure?</source>
-        <translation>האם אתם בטוחים?</translation>
+        <translation>Emin misiniz?</translation>
     </message>
     <message>
         <source>Do you wish to quit the game?</source>
-        <translation>האם ברצונך לעזוב את המשחק?</translation>
+        <translation>Oyundan çıkmak ister misiniz?</translation>
     </message>
     <message>
         <source>Yes</source>
-        <translation>כן</translation>
+        <translation>Evet</translation>
     </message>
     <message>
         <source>No</source>
-        <translation>לא</translation>
+        <translation>Hayır</translation>
     </message>
     <message>
         <source>About Puzzle Master %1</source>
-        <translation>אודות פאזל מאסטר %1</translation>
+        <translation>Hakkında %1</translation>
     </message>
     <message>
         <source>Brought to you by Timur Kristóf.
 Puzzle Master is a fun and addictive jigsaw puzzle game.
 Using Qt.</source>
-        <translation>נוצר ע&quot;י טימור קריסטוף.
-פאזל מאסטר הינו משחק תצרף (פאזל) מהנה וממכר המבוסס על תשתית Qt</translation>
+        <translation>Timur Kristof tarafından hazırlanmıştır.
+Puzzle Master eğlenceli ve hafızaya dayalı bir oyundur.
+Qt kullanılarak oluşturulmuştur.</translation>
     </message>
     <message>
         <source>Ok</source>
-        <translation>Ok</translation>
+        <translation>Tamam</translation>
     </message>
     <message>
         <source>Isn&apos;t this a bit difficult?</source>
-        <translation>זה לא קשה קצת?</translation>
+        <translation>Biraz zor gelmedi mi?</translation>
     </message>
     <message>
         <source>The selected options will make the game VERY difficult.
 Are you sure to proceed?</source>
-        <translation>האפשרויות שנבחרו יהפכו את המשחק לקשה מאוד.
-האם ברצונכם להמשיך?</translation>
+        <translation>Bu seçilen ayar oyunu EPEY zorlaştıracaktır.
+Emin misiniz?</translation>
     </message>
     <message>
         <source>You have already added the selected image.</source>
-        <translation>התמונה שנבחרה כבר נוספה</translation>
+        <translation>Seçilen resmi zaten eklediniz.</translation>
     </message>
 </context>
 <context>
     <name>FileSelectorDialog</name>
     <message>
         <source>Select a picture</source>
-        <translation>בחרו תמונה</translation>
+        <translation>Resim seç</translation>
     </message>
     <message>
         <source>Select</source>
-        <translation>בחר</translation>
+        <translation>Seç</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>ביטול</translation>
+        <translation>İptal</translation>
     </message>
     <message>
         <source>An error has occoured</source>
-        <translation>התרחשה תקלה</translation>
+        <translation>Hata oluştu</translation>
     </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
     <message>
         <source>Select a picture</source>
-        <translation>בחרו תמונה</translation>
+        <translation>Resim seç</translation>
     </message>
     <message>
         <source>Select</source>
-        <translation>בחר</translation>
+        <translation>Seç</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>ביטול</translation>
+        <translation>İptal</translation>
     </message>
 </context>
 <context>
     <name>GameBoard</name>
     <message>
         <source>Creating puzzle piece %1 of %2</source>
-        <translation>יוצר את חלק הפאזל מס&apos; %1 מתוך %2</translation>
+        <translation>Puzzle parçaları oluşturma (%1/%2)</translation>
     </message>
     <message>
         <source>The selected image is being processed.</source>
-        <translation>התמונה שנבחרה בתהליכי עיבוד</translation>
+        <translation>Seçilen resim işleniyor.</translation>
     </message>
     <message>
         <source>...</source>
@@ -115,96 +116,96 @@ Are you sure to proceed?</source>
     </message>
     <message>
         <source>Wait...</source>
-        <translation>המתינו...</translation>
+        <translation>Bekle...</translation>
     </message>
     <message>
         <source>Continue game</source>
-        <translation>המשך משחק</translation>
+        <translation>Oyuna devam et</translation>
     </message>
     <message>
         <source>Get a hint!</source>
-        <translation>רמז!</translation>
+        <translation>Yardım al!</translation>
     </message>
     <message>
         <source>Restart</source>
-        <translation>איתחול</translation>
+        <translation>Yeniden başlat</translation>
     </message>
     <message>
         <source>Surrender</source>
-        <translation>כניעה</translation>
+        <translation>Teslim ol</translation>
     </message>
     <message>
         <source>About</source>
-        <translation>אודות</translation>
+        <translation>Hakkında</translation>
     </message>
     <message>
         <source>Quit</source>
-        <translation>יציאה</translation>
+        <translation>Çıkış</translation>
     </message>
     <message>
         <source>Please wait...</source>
-        <translation>אנא המתינו...</translation>
+        <translation>Lütfen Bekleyin...</translation>
     </message>
     <message>
         <source>Game paused</source>
-        <translation>משחק בהמתנה</translation>
+        <translation>Oyun durduruldu</translation>
     </message>
     <message>
         <source>Switch back to continue it.</source>
-        <translation>חיזרו על מנת להמשיך</translation>
+        <translation>Devam etmek için tıklayın.</translation>
     </message>
     <message>
         <source>Are you sure?</source>
-        <translation>האם אתם בטוחים?</translation>
+        <translation>Emin misiniz?</translation>
     </message>
     <message>
         <source>Do you want to give up this game?
 You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.</source>
-        <translation>האם ברצונכם לוותר על המשחק?
-אם כן, לא תוכלו להמשיך. השתמשו ב&quot;רמז!&quot; אם ברצונכם לקבל רמז.</translation>
+        <translation>Biraz zor mu geldi ne?
+Bu şekilde devam edemezsin. &quot;Yardım al!&quot; seçmelisin.</translation>
     </message>
     <message>
         <source>Yes</source>
-        <translation>כן</translation>
+        <translation>Evet</translation>
     </message>
     <message>
         <source>No</source>
-        <translation>לא</translation>
+        <translation>Hayır</translation>
     </message>
     <message>
         <source>Do you want to restart this game?</source>
-        <translation>האם ברצונכם להתחיל את המשחק מחדש?</translation>
+        <translation>Bu oyunu yeniden başlatmak ister misiniz?</translation>
     </message>
     <message>
         <source>An error has occoured</source>
-        <translation>התרחשה תקלה</translation>
+        <translation>Hata oluştu</translation>
     </message>
     <message>
         <source>Sorry, we couldn&apos;t start the game. Please try to start it with another picture.</source>
-        <translation>סליחה, לא הצלחנו להתחיל את המשחק. אנא נסו שנית עם תמונה אחרת.</translation>
+        <translation>Üzgünüz, bu oyunu başlatamadık. Lütfen başka bir resim ile yeniden deneyiniz.</translation>
     </message>
     <message>
         <source>Ok</source>
-        <translation>Ok</translation>
+        <translation>Tamam</translation>
     </message>
     <message>
         <source>Puzzle Master</source>
-        <translation>פאזל מאסטר</translation>
+        <translation>Puzzle Efendisi</translation>
     </message>
 </context>
 <context>
     <name>ImageChooser</name>
     <message>
         <source>Ok</source>
-        <translation>Ok</translation>
+        <translation>Tamam</translation>
     </message>
     <message>
         <source>Welcome! Choose an image.</source>
-        <translation>ברוכים הבאים! אנא בחרו תמונה</translation>
+        <translation>Hoşgeldin! Resim seç.</translation>
     </message>
     <message>
         <source>Start game</source>
-        <translation>התחל משחק</translation>
+        <translation>Oyunu başlat</translation>
     </message>
     <message>
         <source>...</source>
@@ -212,70 +213,70 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     </message>
     <message>
         <source>Please choose</source>
-        <translation>אנא בחרו</translation>
+        <translation>Lütfen seçiniz</translation>
     </message>
     <message>
         <source>You must choose an image before continuing.</source>
-        <translation>עליכם לבחור תמונה בטרם תוכלו להמשיך</translation>
+        <translation>Devam etmeden önce bir resim seçmelisiniz.</translation>
     </message>
     <message>
         <source>About</source>
-        <translation>אודות</translation>
+        <translation>Hakkında</translation>
     </message>
     <message>
         <source>Add custom image</source>
-        <translation>הוסף תמונה</translation>
+        <translation>Diğer resim ekle</translation>
     </message>
     <message>
         <source>Quit</source>
-        <translation>יציאה</translation>
+        <translation>Çıkış</translation>
     </message>
     <message>
         <source>Puzzle Master</source>
-        <translation>פאזל מאסטר</translation>
+        <translation>Puzzle Efendisi</translation>
     </message>
     <message>
         <source>Remove custom image</source>
-        <translation>הסר תמונה</translation>
+        <translation>Diğer resmi kaldır</translation>
     </message>
 </context>
 <context>
     <name>OptionsDialog</name>
     <message>
         <source>Game difficulty</source>
-        <translation>קושי משחק</translation>
+        <translation>Zorluk derecesi</translation>
     </message>
     <message>
         <source>Play</source>
-        <translation>שחק</translation>
+        <translation>Oyna</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>ביטול</translation>
+        <translation>İptal</translation>
     </message>
     <message>
         <source>Columns</source>
-        <translation>עמודות</translation>
+        <translation>Sütun</translation>
     </message>
     <message>
         <source>Rows</source>
-        <translation>שורות</translation>
+        <translation>Satır</translation>
     </message>
     <message>
         <source>Snap</source>
-        <translation>הצמדה</translation>
+        <translation>Anlık</translation>
     </message>
     <message>
         <source>Easy</source>
-        <translation>קלה</translation>
+        <translation>Kolay</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>בינונית</translation>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Difficult</source>
-        <translation>קשה</translation>
+        <translation>Zor</translation>
     </message>
 </context>
 </TS>
