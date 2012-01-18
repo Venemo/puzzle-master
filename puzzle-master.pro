@@ -20,7 +20,7 @@ QT += core gui declarative
 
 TARGET = puzzle-master
 TEMPLATE = app
-VERSION = 1.9.98
+VERSION = 2.0.0
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += \
