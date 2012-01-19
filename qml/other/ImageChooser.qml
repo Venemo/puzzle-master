@@ -102,7 +102,7 @@ Panel {
                             asynchronous: false
                             fillMode: Image.PreserveAspectCrop
                             width: imageChooser.width / imageChooser.columnNumber - 20
-                            height: width / 16.0 * 9.0
+                            height: width / imageChooser.width * imageChooser.height
                             clip: true
                             anchors.centerIn: parent
                             source: imageUrl
