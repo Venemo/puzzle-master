@@ -215,16 +215,12 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     {
         for (unsigned j = 0; j < rows; j++)
         {
-            // Creating the pixmap for the piece
-            QPixmap px(_unit.width() + tabFull * 2, _unit.height() + tabFull * 2);
-            px.fill(Qt::transparent);
-
             // Creating the shape of the piece
             QPainterPath rectClip;
             rectClip.addRect(tabFull, tabFull, _unit.width(), _unit.height());
             QPainterPath clip = rectClip;
 
-            int sxCorrection = 0, syCorrection = 0;
+            int sxCorrection = 0, syCorrection = 0, widthCorrection = 0, heightCorrection = 0;
 
             // Left
             if (i > 0)
@@ -272,6 +268,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                     QPainterPath rightTab;
                     rightTab.addEllipse(QPointF(tabFull + _unit.width() + tabOffset, tabFull + _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
                     clip = clip.united(rightTab);
+                    widthCorrection += tabFull;
                 }
                 else
                 {
@@ -291,6 +288,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                     QPainterPath bottomTab;
                     bottomTab.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + _unit.height() + tabOffset), tabSize + tabTolerance, tabSize + tabTolerance);
                     clip = clip.united(bottomTab);
+                    heightCorrection += tabFull;
                 }
                 else
                 {
@@ -302,6 +300,11 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
             clip = clip.simplified();
 
+            // Creating the pixmap for the piece
+            QPixmap px(_unit.width() + tabFull + widthCorrection, _unit.height() + tabFull + heightCorrection);
+            px.fill(Qt::transparent);
+
+            // Painting the pixmap
             p.begin(&px);
             p.setRenderHint(QPainter::SmoothPixmapTransform);
             p.setRenderHint(QPainter::Antialiasing);
@@ -316,8 +319,8 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
             // Creating the piece
             PuzzleItem *item = new PuzzleItem(px, this);
-            item->setWidth(_unit.width() + tabFull * 2);
-            item->setHeight(_unit.height() + tabFull * 2);
+            item->setWidth(px.width());
+            item->setHeight(px.height());
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(supposed);
             item->setPos(supposed);
