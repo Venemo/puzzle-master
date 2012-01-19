@@ -319,15 +319,15 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
             // Creating the piece
             PuzzleItem *item = new PuzzleItem(px, this);
-            item->setWidth(px.width());
-            item->setHeight(px.height());
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(supposed);
             item->setPos(supposed);
             stroker.setWidth(4);
             item->setStroke((stroker.createStroke(clip) + clip).simplified());
-            stroker.setWidth(10);
+            stroker.setWidth(4);
             item->setFakeShape((stroker.createStroke(clip + rectClip) + clip + rectClip).simplified());
+            item->setWidth(item->fakeShape().boundingRect().width());
+            item->setHeight(item->fakeShape().boundingRect().height());
             connect(item, SIGNAL(noNeighbours()), this, SIGNAL(gameWon()));
 
             item->show();
