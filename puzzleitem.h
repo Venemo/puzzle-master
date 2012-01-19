@@ -20,10 +20,10 @@
 #define PUZZLEPIECE_H
 
 #include <QDeclarativeItem>
-#include <QPixmap>
 
 #include "util.h"
 
+class QPixmap;
 class PuzzleBoard;
 
 class PuzzleItem : public QDeclarativeItem

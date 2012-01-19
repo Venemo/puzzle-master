@@ -16,12 +16,39 @@
 //
 // Copyright (C) 2010-2011, Timur Kristóf <venemo@fedoraproject.org>
 
+#include <QPixmap>
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QTouchEvent>
+#include <QPropertyAnimation>
+#include <QParallelAnimationGroup>
+#include <cmath>
 
 #include "puzzleitem.h"
 #include "puzzleboard.h"
+
+inline static qreal angle(const QPointF &v)
+{
+    if (v.x() >= 0)
+        return atan(v.y() / v.x());
+
+    return atan(v.y() / v.x()) - M_PI;
+}
+
+inline static qreal angle(const QPointF &v1, const QPointF &v2)
+{
+    return angle(v2) - angle(v1);
+}
+
+inline static qreal simplifyAngle(qreal a)
+{
+    while (a >= 360)
+        a -= 360;
+    while (a < 0)
+        a += 360;
+
+    return a;
+}
 
 PuzzleItem::PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent)
     : QDeclarativeItem(parent),
@@ -201,7 +228,7 @@ void PuzzleItem::stopDrag()
 {
     _dragging = false;
     _isDraggingWithTouch = false;
-    //verifyPosition();
+    verifyPosition();
 }
 
 void PuzzleItem::doDrag(const QPointF &position)
@@ -377,21 +404,35 @@ bool PuzzleItem::sceneEvent(QEvent *event)
 
 void PuzzleItem::verifyPosition()
 {
-    QPointF p = mapToParent(0, 0);
     PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
+    qreal a = rotation();
+    QPointF p1 = mapToScene(0, 0),
+            p2 = mapToScene(width(), 0),
+            p3 = mapToScene(0, height()),
+            p4 = mapToScene(width(), height()),
+            p(min<qreal>(min<qreal>(p1.x(), p2.x()), min<qreal>(p3.x(), p4.x())), min<qreal>(min<qreal>(p1.y(), p2.y()), min<qreal>(p3.y(), p4.y())));
 
-    int x = (int)p.x();
-    int maxX = (int)((QDeclarativeItem*)parent())->width() - (pixmap().width() / 2);
-    int minX = - pixmap().width() + (pixmap().width() / 2);
+    if (a >= 0 && a < 90)
+        a = 90 - a;
+    else if (a >= 90 && a < 180)
+        a = a - 90;
+    else if (a >= 180 && a < 270)
+        a = a - 180;
+    else
+        a = a - 270;
 
-    int y = (int)p.y();
-    int maxY = (int)((QDeclarativeItem*)parent())->height() - (pixmap().height()  / 2);
-    int minY = - pixmap().height() + (pixmap().height() / 2);
+    a = a * M_PI / 180.0;
 
-    if (!(x < maxX && x > (minX) && y < maxY && y > (minY)))
+    qreal   w = boundingRect().height() * cos(a) + boundingRect().width() * sin(a),
+            h = boundingRect().width() * cos(a) + boundingRect().height() * sin(a),
+            maxX = board->width() - w / 2,
+            minX = - w / 2,
+            maxY = board->height() - h / 2,
+            minY = - h / 2;
+
+    if (p.x() > maxX || p.x() < minX || p.y() > maxY || p.y() < minY)
     {
-        int pX = CLAMP(x, minX + board->unit().width() / 2, maxX - board->unit().width() / 2);
-        int pY = CLAMP(y, minY + board->unit().height() / 2, maxY - board->unit().height() / 2);
+        QPointF newPos = QPointF(CLAMP(p.x(), minX, maxX), CLAMP(p.y(), minY, maxY)) + pos() - p;
 
         _dragging = false;
         _isDraggingWithTouch = false;
@@ -400,7 +441,7 @@ void PuzzleItem::verifyPosition()
         QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", this);
         connect(anim, SIGNAL(finished()), this, SLOT(enableMerge()));
 
-        anim->setEndValue(QPointF(pX, pY));
+        anim->setEndValue(newPos);
         anim->setDuration(150);
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutBounce));
         anim->start(QAbstractAnimation::DeleteWhenStopped);
@@ -419,6 +460,7 @@ void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
+    //painter->drawEllipse(mapFromScene(pos()), 10, 10);
     painter->fillPath(_stroke, QBrush(QColor(75, 75, 75, 255)));
     painter->drawPixmap(0, 0, _pixmap);
 }

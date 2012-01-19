@@ -19,6 +19,8 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QPainter>
+#include <QPropertyAnimation>
+#include <QParallelAnimationGroup>
 
 #include "puzzleboard.h"
 #include "puzzleitem.h"

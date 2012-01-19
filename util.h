@@ -19,10 +19,6 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <QFile>
-#include <QtCore>
-#include <cmath>
-
 #define APP_VERSION "2.0"
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 
@@ -53,18 +49,6 @@
             inline void settername (type value) { pname = value; emit signalname (); } \
     private:
 
-inline qreal angle(const QPointF &v)
-{
-    if (v.x() >= 0)
-        return atan(v.y() / v.x());
-    return atan(v.y() / v.x()) - M_PI;
-}
-
-inline qreal angle(const QPointF &v1, const QPointF &v2)
-{
-    return angle(v2) - angle(v1);
-}
-
 inline int randomInt(int low, int high)
 {
     // Random number between low and high
@@ -83,14 +67,5 @@ inline T min(T i, T j)
     return i < j? i : j;
 }
 
-inline qreal simplifyAngle(qreal a)
-{
-    while (a >= 360)
-        a -= 360;
-    while (a <= -360)
-        a += 360;
-
-    return a;
-}
 
 #endif // UTIL_H

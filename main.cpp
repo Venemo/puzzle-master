@@ -23,6 +23,8 @@
 #include <QSettings>
 #include <QLibraryInfo>
 #include <QDesktopWidget>
+#include <QFile>
+#include <QTranslator>
 
 #if defined(HAVE_OPENGL)
 #include <QGLWidget>
