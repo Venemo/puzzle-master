@@ -22,66 +22,54 @@ import "./components"
 
 Dialog
 {
-    property string selectedImageUrl: ""
-    property int columnNumber: 5
+    property string selectedImageUrl: imageSelectorGrid.model.get(imageSelectorGrid.currentIndex).url
 
     id: fileSelectorDialog
+    enableBackgroundClicking: false
     title: qsTr("Select a picture")
-    acceptButtonText: qsTr("Select")
+    acceptButtonText: imageSelectorGrid.currentIndex >= 0 ? qsTr("Select") : ""
     rejectButtonText: qsTr("Cancel")
-    contentWidth: fileSelectorFlickable.width
-    contentHeight: fileSelectorFlickable.height
-    content: Flickable {
-        id: fileSelectorFlickable
-        enabled: true
-        clip: true
-        contentHeight: imageSelectorGrid.height
+    contentWidth: imageSelectorGrid.width
+    contentHeight: imageSelectorGrid.height
+    content: GridView {
+        id: imageSelectorGrid
+        cellWidth: imageSelectorGrid.width / 4
+        cellHeight: imageSelectorGrid.cellWidth / fileSelectorDialog.width * fileSelectorDialog.height
         width: 600
-        height: fileSelectorDialog.height - 150
+        height: 300
+        clip: true
+        focus: true
+        cacheBuffer: imageSelectorGrid.height / 2
+        currentIndex: -1
 
-        Grid {
-            property Rectangle selectedItemBorder: null
+        model: DocumentGalleryModel {
+            id: picsModel
+            rootType: DocumentGallery.Image
+            properties: [ "url" ]
+            sortProperties: [ "-dateTaken" ]
+            autoUpdate: true
+        }
+        delegate: Item {
+            width: imageSelectorGrid.cellWidth
+            height: imageSelectorGrid.cellHeight
 
-            id: imageSelectorGrid
-            spacing: 5
-            columns: fileSelectorDialog.columnNumber
-
-            Repeater {
-                model: DocumentGalleryModel {
-                    id: picsModel
-                    rootType: DocumentGallery.Image
-                    properties: [ "url" ]
-                    sortProperties: [ "-dateTaken" ]
-                }
-                delegate: Rectangle {
-                    id: imageBorder
-                    width: imageItem.width + 10
-                    height: imageItem.height + 10
-                    color: imageBorder === imageSelectorGrid.selectedItemBorder ? "#538312" : "transparent"
-
-                    Image {
-                        function selectItem() {
-                            imageSelectorGrid.selectedItemBorder = imageBorder;
-                            fileSelectorDialog.selectedImageUrl = url;
-                        }
-
-                        id: imageItem
-                        asynchronous: true
-                        width: fileSelectorDialog.contentWidth / fileSelectorDialog.columnNumber - 20
-                        height: width / fileSelectorDialog.width * fileSelectorDialog.height
-                        fillMode: Image.PreserveAspectCrop
-                        clip: true
-                        anchors.centerIn: parent
-                        source: url
-                        sourceSize.width: fileSelectorDialog.contentWidth / fileSelectorDialog.columnNumber - 20
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: imageItem.selectItem();
-                        }
-                    }
-                }
+            Image {
+                id: imageItem
+                asynchronous: true
+                width: imageSelectorGrid.cellWidth - 10
+                height: imageSelectorGrid.cellHeight - 10
+                fillMode: Image.PreserveAspectCrop
+                clip: true
+                source: url
+                sourceSize.width: imageSelectorGrid.cellWidth - 10
+                anchors.centerIn: parent
             }
         }
+        highlight: Rectangle {
+            color: "#538312"
+            radius: 5
+        }
     }
+
 }
+

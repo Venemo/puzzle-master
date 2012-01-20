@@ -30,13 +30,17 @@ PuzzleBoard {
     tolerance: 15
     rotationTolerance: 20
     z: 0
-    onLoadProgressChanged: progressDialog.text = qsTr("Creating puzzle piece %1").arg(progress)
+    onLoadProgressChanged: {
+        if (progress > 0)
+            progressDialog.text = qsTr("Creating puzzle piece %1").arg(progress)
+        else
+            progressDialog.text = qsTr("The selected image is being processed.")
+    }
     onLoaded: progressDialog.close()
     onGameStarted: menuButtonPanel.open()
     onGameWon: menuButtonPanel.close()
     onVisibleChanged: {
         menuButtonPanel.visible = false
-        progressDialog.text = qsTr("The selected image is being processed.")
         gameBoard.deleteAllPieces()
     }
 

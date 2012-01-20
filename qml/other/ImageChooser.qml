@@ -21,7 +21,7 @@ import "./components"
 import "./components/style"
 
 Panel {
-    property string selectedImageUrl: ""
+    property string selectedImageUrl: imagesModel.get(imageSelectorGrid.currentIndex).url
     property int columnNumber: 3
 
     signal accepted
@@ -55,72 +55,51 @@ Panel {
         }
     }
     Rectangle {
-        property Rectangle selectedItemBorder: null
-
-        id: imageChooserMiddle
         color: "#ffffff"
         anchors.top: imageChooserTop.bottom
         anchors.bottom: imageChooserBottom.top
         anchors.left: parent.left
         anchors.right: parent.right
+        clip: true
 
-        Flickable {
-            enabled: true
-            clip: true
-            contentHeight: imageSelectorGrid.height
-            anchors.fill: parent
+        GridView {
+            id: imageSelectorGrid
+            focus: true
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
             anchors.topMargin: 5
             anchors.bottomMargin: 5
+            anchors.horizontalCenter: parent.horizontalCenter
+            cellWidth: imageChooser.width / imageChooser.columnNumber - 5
+            cellHeight: imageSelectorGrid.cellWidth / imageChooser.width * imageChooser.height
+            width: imageSelectorGrid.cellWidth * imageChooser.columnNumber
+            currentIndex: -1
+            model: ListModel {
+                id: imagesModel
+                ListElement { url: ":/pics/image1.jpg" }
+                ListElement { url: ":/pics/image2.jpg" }
+                ListElement { url: ":/pics/image3.jpg" }
+                ListElement { url: ":/pics/image4.jpg" }
+                ListElement { url: ":/pics/image5.jpg" }
+            }
+            delegate: Item {
+                width: imageSelectorGrid.cellWidth
+                height: imageSelectorGrid.cellHeight
 
-            Grid {
-                id: imageSelectorGrid
-                spacing: 5
-                columns: imageChooser.columnNumber
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                Repeater {
-                    model: ListModel {
-                        id: imagesModel
-                        ListElement { imageUrl: ":/pics/image1.jpg" }
-                        ListElement { imageUrl: ":/pics/image2.jpg" }
-                        ListElement { imageUrl: ":/pics/image3.jpg" }
-                        ListElement { imageUrl: ":/pics/image4.jpg" }
-                        ListElement { imageUrl: ":/pics/image5.jpg" }
-                    }
-                    delegate: Rectangle {
-                        id: imageBorder
-                        width: imageItem.width + 10
-                        height: imageItem.height + 10
-                        color: imageBorder === imageChooserMiddle.selectedItemBorder ? "#538312" : "white"
-
-                        Image {
-                            function selectItem() {
-                                imageChooserMiddle.selectedItemBorder = imageBorder;
-                                imageChooser.selectedImageUrl = imageUrl;
-                            }
-
-                            id: imageItem
-                            asynchronous: false
-                            fillMode: Image.PreserveAspectCrop
-                            width: imageChooser.width / imageChooser.columnNumber - 20
-                            height: width / imageChooser.width * imageChooser.height
-                            clip: true
-                            anchors.centerIn: parent
-                            source: imageUrl
-                            sourceSize.width: imageChooser.width / imageChooser.columnNumber - 20
-
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: {
-                                    if (imageBorder === imageChooserMiddle.selectedItemBorder)
-                                        imageChooser.accepted();
-                                    else
-                                        imageItem.selectItem();
-                                }
-                            }
-                        }
-                    }
+                Image {
+                    asynchronous: false
+                    fillMode: Image.PreserveAspectCrop
+                    width: imageSelectorGrid.cellWidth - 10
+                    height: imageSelectorGrid.cellHeight - 10
+                    clip: true
+                    anchors.centerIn: parent
+                    source: url
+                    sourceSize.width: imageSelectorGrid.cellWidth - 10
                 }
+            }
+            highlight: Rectangle {
+                color: "#538312"
+                radius: 5
             }
         }
     }
@@ -209,6 +188,6 @@ Panel {
     }
     FileSelectorDialog {
         id: fileSelectorDialog
-        onAccepted: imagesModel.append({ imageUrl: fileSelectorDialog.selectedImageUrl })
+        onAccepted: imagesModel.append({ url: fileSelectorDialog.selectedImageUrl })
     }
 }
