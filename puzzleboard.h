@@ -36,6 +36,7 @@ class PuzzleBoard : public QDeclarativeItem
     Q_OBJECT
     Q_PROPERTY(bool isAccelerometerActive READ isAccelerometerActive NOTIFY isAccelerometerActiveChanged)
     GENPROPERTY_R(QSize, _unit, unit)
+    GENPROPERTY_R(qreal, _tabSizes, tabSizes)
     GENPROPERTY_F(int, _tolerance, tolerance, setTolerance, toleranceChanged)
     Q_PROPERTY(int tolerance READ tolerance WRITE setTolerance NOTIFY toleranceChanged)
     GENPROPERTY_F(int, _rotationTolerance, rotationTolerance, setRotationTolerance, rotationToleranceChanged)
@@ -85,13 +86,6 @@ public slots:
     Q_INVOKABLE void shuffle();
     Q_INVOKABLE void assemble();
     Q_INVOKABLE void deleteAllPieces();
-
-private:
-    enum TabStatus {
-        RightTab = 0x01,
-        BottomTab = 0x02
-    };
-
 };
 
 #endif // PUZZLEBOARD_H

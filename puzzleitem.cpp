@@ -140,6 +140,21 @@ void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
         p.drawPixmap(x2, y2, item->pixmap());
         p.end();
 
+        int newStatus = 0;
+        if ((item->_supposedPosition.x() <= _supposedPosition.x() && (item->_tabStatus & PuzzleItem::LeftTab))
+                || (_supposedPosition.x() <= item->_supposedPosition.x() && (_tabStatus & PuzzleItem::LeftTab)))
+            newStatus |= PuzzleItem::LeftTab;
+        if ((item->_supposedPosition.y() <= _supposedPosition.y() && (item->_tabStatus & PuzzleItem::TopTab))
+                || (_supposedPosition.y() <= item->_supposedPosition.y() && (_tabStatus & PuzzleItem::TopTab)))
+            newStatus |= PuzzleItem::TopTab;
+        if ((item->_supposedPosition.x() + item->_pixmap.width() >= _supposedPosition.x() + _pixmap.width() && (item->_tabStatus & PuzzleItem::RightTab))
+                || (_supposedPosition.x() + _pixmap.width() >= item->_supposedPosition.x() + item->_pixmap.width() && (_tabStatus & PuzzleItem::RightTab)))
+            newStatus |= PuzzleItem::RightTab;
+        if ((item->_supposedPosition.y() + item->_pixmap.height() >= _supposedPosition.y() + _pixmap.height() && (item->_tabStatus & PuzzleItem::BottomTab))
+                || (_supposedPosition.y() + _pixmap.height() >= item->_supposedPosition.y() + item->_pixmap.height() && (_tabStatus & PuzzleItem::BottomTab)))
+            newStatus |= PuzzleItem::BottomTab;
+
+        setTabStatus(newStatus);
         setPuzzleCoordinates(QPoint(min<int>(item->puzzleCoordinates().x(), puzzleCoordinates().x()), min<int>(item->puzzleCoordinates().y(), puzzleCoordinates().y())));
         setSupposedPosition(QPointF(min<qreal>(item->supposedPosition().x(), supposedPosition().x()), min<qreal>(item->supposedPosition().y(), supposedPosition().y())));
         setStroke(_stroke.translated(x1, y1).united(item->_stroke.translated(x2, y2)).simplified());
@@ -206,21 +221,29 @@ void PuzzleItem::checkMergeableSiblings(const QPointF &position)
 {
     if (_canMerge)
     {
-        PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
-
         foreach (PuzzleItem *p, neighbours())
         {
-            QPointF diff = - _supposedPosition + p->_supposedPosition - ((QGraphicsItem*)p)->mapToItem(this, 0, 0);
-            qreal rotationDiff = simplifyAngle(p->rotation() - rotation());
-
-            if (abs((int)diff.x()) < board->tolerance()
-                    && abs((int)diff.y()) < board->tolerance()
-                    && abs(rotationDiff) < board->rotationTolerance())
+            if (checkMergeability(p))
             {
                 mergeIfPossible(p, position);
             }
         }
     }
+}
+
+bool PuzzleItem::checkMergeability(PuzzleItem *p)
+{
+    PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
+    qreal rotationDiff = simplifyAngle(p->rotation() - rotation());
+    QPointF diff = - _supposedPosition + p->_supposedPosition;
+
+    if (true) // TODO
+        diff -= ((QGraphicsItem*)p)->mapToItem(this, 0, 0);
+
+
+    return (abs((int)diff.x()) < board->tolerance()
+            && abs((int)diff.y()) < board->tolerance()
+            && abs(rotationDiff) < board->rotationTolerance());
 }
 
 void PuzzleItem::setCompensatedTransformOriginPoint(const QPointF &point)

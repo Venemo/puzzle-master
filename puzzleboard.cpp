@@ -217,6 +217,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             tabOffset = tabSize * 2.0 / 3.0,
             tabFull = tabSize + tabOffset + tabTolerance;
 
+    _tabSizes = tabOffset;
     memset(statuses, 0, rows * cols * sizeof(int));
 
     QPainterPathStroker stroker;
@@ -238,7 +239,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             // Left
             if (i > 0)
             {
-                if (statuses[(i - 1) * rows + j] & PuzzleBoard::RightTab)
+                if (statuses[(i - 1) * rows + j] & PuzzleItem::RightTab)
                 {
                     QPainterPath leftBlank;
                     leftBlank.addEllipse(QPointF(tabFull + tabOffset, tabFull + _unit.height() / 2.0), tabSize, tabSize);
@@ -247,6 +248,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                 }
                 else
                 {
+                    statuses[i * rows + j] |= PuzzleItem::LeftTab;
                     QPainterPath leftTab;
                     leftTab.addEllipse(QPointF(tabSize + tabTolerance, tabFull + _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
                     clip = clip.united(leftTab);
@@ -260,7 +262,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             // Top
             if (j > 0)
             {
-                if (statuses[i * rows + j - 1] & PuzzleBoard::BottomTab)
+                if (statuses[i * rows + j - 1] & PuzzleItem::BottomTab)
                 {
                     QPainterPath topBlank;
                     topBlank.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + tabOffset), tabSize, tabSize);
@@ -269,6 +271,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                 }
                 else
                 {
+                    statuses[i * rows + j] |= PuzzleItem::TopTab;
                     QPainterPath topTab;
                     topTab.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabSize + tabTolerance), tabSize + tabTolerance, tabSize + tabTolerance);
                     clip = clip.united(topTab);
@@ -282,9 +285,9 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             // Right
             if (i < cols - 1)
             {
-                statuses[i * rows + j] |= randomInt(0, 1) * PuzzleBoard::RightTab;
+                statuses[i * rows + j] |= randomInt(0, 1) * PuzzleItem::RightTab;
 
-                if (statuses[i * rows + j] & PuzzleBoard::RightTab)
+                if (statuses[i * rows + j] & PuzzleItem::RightTab)
                 {
                     QPainterPath rightTab;
                     rightTab.addEllipse(QPointF(tabFull + _unit.width() + tabOffset, tabFull + _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
@@ -302,9 +305,9 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             // Bottom
             if (j < rows - 1)
             {
-                statuses[i * rows + j] |= randomInt(0, 1) * PuzzleBoard::BottomTab;
+                statuses[i * rows + j] |= randomInt(0, 1) * PuzzleItem::BottomTab;
 
-                if (statuses[i * rows + j] & PuzzleBoard::BottomTab)
+                if (statuses[i * rows + j] & PuzzleItem::BottomTab)
                 {
                     QPainterPath bottomTab;
                     bottomTab.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + _unit.height() + tabOffset), tabSize + tabTolerance, tabSize + tabTolerance);
@@ -353,6 +356,7 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setFakeShape(fakeShape.translated(usabilityThickness, usabilityThickness));
             item->setWidth(px.width() + usabilityThickness * 2);
             item->setHeight(px.height() + usabilityThickness * 2);
+            item->setTabStatus(statuses[i * rows + j]);
             connect(item, SIGNAL(noNeighbours()), this, SLOT(assemble()));
 
             item->show();

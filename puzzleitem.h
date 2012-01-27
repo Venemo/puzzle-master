@@ -28,7 +28,6 @@ class PuzzleBoard;
 
 class PuzzleItem : public QDeclarativeItem
 {
-private:
     Q_OBJECT
     GENPROPERTY_S(QPoint, _puzzleCoordinates, puzzleCoordinates, setPuzzleCoordinates)
     GENPROPERTY_S(QPointF, _supposedPosition, supposedPosition, setSupposedPosition)
@@ -39,6 +38,7 @@ private:
     GENPROPERTY_S(qreal, _weight, weight, setWeight)
     GENPROPERTY_S(QPainterPath, _stroke, stroke, setStroke)
     GENPROPERTY_S(QPainterPath, _fakeShape, fakeShape, setFakeShape)
+    GENPROPERTY_S(unsigned, _tabStatus, tabStatus, setTabStatus)
 
     QPointF _dragStart, _rotationStartVector;
     bool _dragging, _isDraggingWithTouch, _isRightButtonPressed;
@@ -56,6 +56,13 @@ public:
     bool isNeighbourOf(const PuzzleItem *piece) const;
     QPointF centerPoint() const;
 
+    enum TabStatus {
+        LeftTab = 0x01,
+        TopTab = 0x02,
+        RightTab = 0x04,
+        BottomTab = 0x08
+    };
+
 public slots:
     inline void enableMerge() { _canMerge = true; }
     inline void disableMerge() { _canMerge = false; }
@@ -71,6 +78,7 @@ protected:
     void handleRotation(const QPointF &vector);
     void setCompensatedTransformOriginPoint(const QPointF &point);
     void checkMergeableSiblings(const QPointF &position);
+    bool checkMergeability(PuzzleItem *item);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *ev);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *ev);
