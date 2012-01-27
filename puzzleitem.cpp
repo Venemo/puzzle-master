@@ -51,6 +51,18 @@ inline static qreal simplifyAngle(qreal a)
     return a;
 }
 
+inline static QPointF findMidpoint(QTouchEvent *touchEvent)
+{
+    QPointF midpoint;
+
+    // Finding the midpoint
+    foreach (const QTouchEvent::TouchPoint &touchPoint, touchEvent->touchPoints())
+        midpoint += touchPoint.pos();
+
+    midpoint /= touchEvent->touchPoints().count();
+    return midpoint;
+}
+
 PuzzleItem::PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent)
     : QDeclarativeItem(parent),
       _canMerge(false),
@@ -240,7 +252,6 @@ bool PuzzleItem::checkMergeability(PuzzleItem *p)
     if (true) // TODO
         diff -= ((QGraphicsItem*)p)->mapToItem(this, 0, 0);
 
-
     return (abs((int)diff.x()) < board->tolerance()
             && abs((int)diff.y()) < board->tolerance()
             && abs(rotationDiff) < board->rotationTolerance());
@@ -263,15 +274,18 @@ void PuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     QDeclarativeItem::mousePressEvent(event);
     event->accept();
 
-    if (event->button() == Qt::LeftButton)
+    if (!_isDraggingWithTouch)
     {
-        startDrag(event->pos());
-    }
-    else if (event->button() == Qt::RightButton)
-    {
-        _isRightButtonPressed = true;
-        setCompensatedTransformOriginPoint(centerPoint());
-        startRotation(mapToParent(event->pos()) - mapToParent(centerPoint()));
+        if (event->button() == Qt::LeftButton)
+        {
+            startDrag(event->pos());
+        }
+        else if (event->button() == Qt::RightButton)
+        {
+            _isRightButtonPressed = true;
+            setCompensatedTransformOriginPoint(centerPoint());
+            startRotation(mapToParent(event->pos()) - mapToParent(centerPoint()));
+        }
     }
 }
 
@@ -314,62 +328,53 @@ bool PuzzleItem::sceneEvent(QEvent *event)
     if (!_canMerge)
         return false;
 
-    QTouchEvent *touchEvent = (QTouchEvent*) event;
+    QTouchEvent *touchEvent = 0;
+
+    if (event->type() == QEvent::TouchBegin || event->type() == QEvent::TouchUpdate || event->type() == QEvent::TouchEnd)
+    {
+        touchEvent = static_cast<QTouchEvent*>(event);
+        event->accept();
+    }
 
     if (event->type() == QEvent::TouchBegin)
     {
-        // There is exactly one touch point now
-        _dragging = false;
+        // Touch began, there may be any number of touch points now
         _isDraggingWithTouch = true;
-        startDrag(touchEvent->touchPoints().at(0).pos());
+        QPointF midpoint = findMidpoint(touchEvent);
+        startDrag(midpoint);
 
-        event->accept();
+        if (touchEvent->touchPoints().count() >= 2)
+            startRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
+
+        _previousTouchPointCount = touchEvent->touchPoints().count();
         return true;
     }
     else if (event->type() == QEvent::TouchEnd)
     {
-        // There is only one touch point which is now released
+        // Touch ended
         stopDrag();
-        event->accept();
         return true;
     }
     else if (event->type() == QEvent::TouchUpdate)
     {
-        QPointF midpoint(0, 0);
-
-        // Finding the midpoint
-        foreach (const QTouchEvent::TouchPoint &touchPoint, touchEvent->touchPoints())
-            midpoint += touchPoint.pos();
-
-        midpoint /= touchEvent->touchPoints().count();
+        QPointF midpoint = findMidpoint(touchEvent);
         setCompensatedTransformOriginPoint(midpoint);
 
+        // If you put one more finger onto an item, this prevents it from jumping
         if (touchEvent->touchPoints().count() != _previousTouchPointCount)
-        {
-            // If you put one more finger onto an item, this prevents it from jumping
             _dragStart = mapToParent(midpoint) - pos();
-        }
         else
-        {
             doDrag(midpoint);
-        }
 
-        if (_previousTouchPointCount < 2 && touchEvent->touchPoints().count() == 2)
-        {
-            // Starting rotation
+        if (_previousTouchPointCount < 2 && touchEvent->touchPoints().count() >= 2)
             startRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
-        }
 
-        _previousTouchPointCount = touchEvent->touchPoints().count();
-
+        // Handling multitouch rotation
         if (touchEvent->touchPoints().count() >= 2)
-        {
-            // Handling multitouch rotation
             handleRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
-        }
 
         checkMergeableSiblings(midpoint);
-        event->accept();
+        _previousTouchPointCount = touchEvent->touchPoints().count();
         return true;
     }
 
