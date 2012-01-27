@@ -22,9 +22,9 @@
 #include <QDeclarativeItem>
 
 #include "util.h"
+#include "puzzleboard.h"
 
 class QPixmap;
-class PuzzleBoard;
 
 class PuzzleItem : public QDeclarativeItem
 {
@@ -84,6 +84,11 @@ protected:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *ev);
     virtual bool sceneEvent(QEvent *event);
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+    inline qreal leftTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::LeftTab ? 1 : 0); }
+    inline qreal topTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::TopTab ? 1 : 0); }
+    inline qreal rightTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::RightTab ? 1 : 0); }
+    inline qreal bottomTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::BottomTab ? 1 : 0); }
 
 };
 

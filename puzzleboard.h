@@ -20,7 +20,6 @@
 #define PUZZLEBOARD_H
 
 #include <QDeclarativeItem>
-#include <QPointer>
 
 #if defined(HAVE_QACCELEROMETER)
 #include <QAccelerometer>
