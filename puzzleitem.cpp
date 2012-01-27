@@ -247,77 +247,46 @@ bool PuzzleItem::checkMergeability(PuzzleItem *p)
     PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
     qreal rotationDiff = simplifyAngle(p->rotation() - rotation());
     qreal x = 0, y = 0, px = 0, py = 0;
-    QPointF supposed(_supposedPosition), psupposed(p->_supposedPosition);
 
     if (p->_puzzleCoordinates.x() > _puzzleCoordinates.x())
     {
         // The other piece is supposed to be right to this one
-        qreal compensation = _pixmapOffset.x() + _pixmap.width() - rightTabSize();
-        supposed += QPointF(compensation, 0);
-        x += compensation;
-
-        qreal pcompensation = p->_pixmapOffset.x() + p->leftTabSize();
-        psupposed += QPointF(pcompensation, 0);
-        px += pcompensation;
+        x += _pixmapOffset.x() + _pixmap.width() - rightTabSize();
+        px += p->_pixmapOffset.x() + p->leftTabSize();
     }
     else if (p->_puzzleCoordinates.x() < _puzzleCoordinates.x())
     {
         // The other piece is supposed to be left to this one
-        qreal compensation = _pixmapOffset.x() + leftTabSize();
-        supposed += QPointF(compensation, 0);
-        x += compensation;
-
-        qreal pcompensation = p->_pixmapOffset.x() + p->_pixmap.width() - p->rightTabSize();
-        psupposed += QPointF(pcompensation, 0);
-        px += pcompensation;
+        x += _pixmapOffset.x() + leftTabSize();
+        px += p->_pixmapOffset.x() + p->_pixmap.width() - p->rightTabSize();
     }
     else
     {
         // The other piece is supposed to be in the same column as this one
-        qreal compensation = _pixmapOffset.x() + (_pixmap.width() - leftTabSize() - rightTabSize()) / 2 + leftTabSize();
-        supposed += QPointF(compensation, 0);
-        x += compensation;
-
-        qreal pcompensation = p->_pixmapOffset.x() + (p->_pixmap.width() - p->leftTabSize() - p->rightTabSize()) / 2 + p->leftTabSize();
-        psupposed += QPointF(pcompensation, 0);
-        px += pcompensation;
+        x += _pixmapOffset.x() + (_pixmap.width() - leftTabSize() - rightTabSize()) / 2 + leftTabSize();
+        px += p->_pixmapOffset.x() + (p->_pixmap.width() - p->leftTabSize() - p->rightTabSize()) / 2 + p->leftTabSize();
     }
 
     if (p->puzzleCoordinates().y() > _puzzleCoordinates.y())
     {
         // The other piece is supposed to be below this one
-        qreal compensation = _pixmapOffset.y() + _pixmap.width() - bottomTabSize();
-        supposed += QPointF(0, compensation);
-        y += compensation;
-
-        qreal pcompensation = p->_pixmapOffset.y() + p->topTabSize();
-        psupposed += QPointF(0, pcompensation);
-        py += pcompensation;
+        y += _pixmapOffset.y() + _pixmap.width() - bottomTabSize();
+        py += p->_pixmapOffset.y() + p->topTabSize();
     }
     else if (p->puzzleCoordinates().y() < _puzzleCoordinates.y())
     {
         // The other piece is supposed to be above this one
-        qreal compensation = _pixmapOffset.y() + topTabSize();
-        supposed += QPointF(0, compensation);
-        y += compensation;
-
-        qreal pcompensation = p->_pixmapOffset.y() + p->_pixmap.height() - p->bottomTabSize();
-        psupposed += QPointF(0, pcompensation);
-        py += pcompensation;
+        y += _pixmapOffset.y() + topTabSize();
+        py += p->_pixmapOffset.y() + p->_pixmap.height() - p->bottomTabSize();
     }
     else
     {
         // The other piece is supposed to be in the same row as this one
-        qreal compensation = _pixmapOffset.y() + (_pixmap.height() - topTabSize() - bottomTabSize()) / 2 + topTabSize();
-        supposed += QPointF(0, compensation);
-        y += compensation;
-
-        qreal pcompensation = p->_pixmapOffset.y() + (p->_pixmap.height() - p->topTabSize() - p->bottomTabSize()) / 2 + p->topTabSize();
-        psupposed += QPointF(0, pcompensation);
-        py += pcompensation;
+        y += _pixmapOffset.y() + (_pixmap.height() - topTabSize() - bottomTabSize()) / 2 + topTabSize();
+        py += p->_pixmapOffset.y() + (p->_pixmap.height() - p->topTabSize() - p->bottomTabSize()) / 2 + p->topTabSize();
     }
 
-    QPointF diff = - supposed + psupposed + QPointF(x, y) - static_cast<QGraphicsItem*>(p)->mapToItem(this, px, py);
+    QPointF diff = - (_supposedPosition + QPointF(x, y)) + (p->_supposedPosition + QPointF(px, py)) + QPointF(x, y) - static_cast<QGraphicsItem*>(p)->mapToItem(this, px, py);
 
     return (abs((int)diff.x()) < board->tolerance()
             && abs((int)diff.y()) < board->tolerance()
