@@ -245,46 +245,29 @@ void PuzzleItem::checkMergeableSiblings(const QPointF &position)
 bool PuzzleItem::checkMergeability(PuzzleItem *p)
 {
     PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
-    qreal rotationDiff = simplifyAngle(p->rotation() - rotation());
+    qreal rotationDiff = abs(simplifyAngle(p->rotation() - rotation()));
     qreal px = 0, py = 0;
 
+    // Horizontal
     if (p->_puzzleCoordinates.x() > _puzzleCoordinates.x())
-    {
-        // The other piece is supposed to be right to this one
         px += p->_pixmapOffset.x() + p->leftTabSize();
-    }
     else if (p->_puzzleCoordinates.x() < _puzzleCoordinates.x())
-    {
-        // The other piece is supposed to be left to this one
         px += p->_pixmapOffset.x() + p->_pixmap.width() - p->rightTabSize();
-    }
     else
-    {
-        // The other piece is supposed to be in the same column as this one
         px += p->_pixmapOffset.x() + (p->_pixmap.width() - p->leftTabSize() - p->rightTabSize()) / 2 + p->leftTabSize();
-    }
 
+    // Vertical
     if (p->puzzleCoordinates().y() > _puzzleCoordinates.y())
-    {
-        // The other piece is supposed to be below this one
         py += p->_pixmapOffset.y() + p->topTabSize();
-    }
     else if (p->puzzleCoordinates().y() < _puzzleCoordinates.y())
-    {
-        // The other piece is supposed to be above this one
         py += p->_pixmapOffset.y() + p->_pixmap.height() - p->bottomTabSize();
-    }
     else
-    {
-        // The other piece is supposed to be in the same row as this one
         py += p->_pixmapOffset.y() + (p->_pixmap.height() - p->topTabSize() - p->bottomTabSize()) / 2 + p->topTabSize();
-    }
 
     QPointF diff = - _supposedPosition + p->_supposedPosition + QPointF(px, py) - static_cast<QGraphicsItem*>(p)->mapToItem(this, px, py);
+    qreal distance = sqrt(diff.x() * diff.x() + diff.y() * diff.y());
 
-    return (abs((int)diff.x()) < board->tolerance()
-            && abs((int)diff.y()) < board->tolerance()
-            && abs(rotationDiff) < board->rotationTolerance());
+    return distance < board->tolerance() && rotationDiff < board->rotationTolerance();
 }
 
 void PuzzleItem::setCompensatedTransformOriginPoint(const QPointF &point)
