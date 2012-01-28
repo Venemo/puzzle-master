@@ -245,8 +245,7 @@ void PuzzleItem::checkMergeableSiblings(const QPointF &position)
 bool PuzzleItem::checkMergeability(PuzzleItem *p)
 {
     PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
-    qreal rotationDiff = abs(simplifyAngle(p->rotation() - rotation()));
-    qreal px = 0, py = 0;
+    qreal rotationDiff = abs(simplifyAngle(p->rotation() - rotation())), px = 0, py = 0;
 
     // Horizontal
     if (p->_puzzleCoordinates.x() > _puzzleCoordinates.x())
@@ -254,7 +253,7 @@ bool PuzzleItem::checkMergeability(PuzzleItem *p)
     else if (p->_puzzleCoordinates.x() < _puzzleCoordinates.x())
         px += p->_pixmapOffset.x() + p->_pixmap.width() - p->rightTabSize();
     else
-        px += p->_pixmapOffset.x() + (p->_pixmap.width() - p->leftTabSize() - p->rightTabSize()) / 2 + p->leftTabSize();
+        px += p->_pixmapOffset.x() + min<int>(_pixmap.width() - leftTabSize() - rightTabSize(), p->_pixmap.width() - p->leftTabSize() - p->rightTabSize()) / 2 + p->leftTabSize();
 
     // Vertical
     if (p->puzzleCoordinates().y() > _puzzleCoordinates.y())
@@ -262,7 +261,7 @@ bool PuzzleItem::checkMergeability(PuzzleItem *p)
     else if (p->puzzleCoordinates().y() < _puzzleCoordinates.y())
         py += p->_pixmapOffset.y() + p->_pixmap.height() - p->bottomTabSize();
     else
-        py += p->_pixmapOffset.y() + (p->_pixmap.height() - p->topTabSize() - p->bottomTabSize()) / 2 + p->topTabSize();
+        py += p->_pixmapOffset.y() + min<int>(_pixmap.height() - topTabSize() - bottomTabSize(), p->_pixmap.height() - p->topTabSize() - p->bottomTabSize()) / 2 + p->topTabSize();
 
     QPointF diff = - _supposedPosition + p->_supposedPosition + QPointF(px, py) - static_cast<QGraphicsItem*>(p)->mapToItem(this, px, py);
     qreal distance = sqrt(diff.x() * diff.x() + diff.y() * diff.y());
