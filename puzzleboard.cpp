@@ -378,15 +378,14 @@ void PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 void PuzzleBoard::shuffle()
 {
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
-    QEasingCurve easingCurve(QEasingCurve::InElastic);
+    QEasingCurve easingCurve(QEasingCurve::InOutElastic);
 
     foreach (PuzzleItem *item, _puzzleItems)
     {
-        QPointF newPos(randomInt(0, width() - _unit.width()), randomInt(0, height() - _unit.width()));
-
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
-        anim->setEndValue(newPos);
-        anim->setDuration(2000);
+        anim->setKeyValueAt(0.5, QPointF(randomInt(0, width() - _unit.width()), randomInt(0, height() - _unit.width())));
+        anim->setEndValue(QPointF(randomInt(0, width() - _unit.width()), randomInt(0, height() - _unit.width())));
+        anim->setDuration(2500);
         anim->setEasingCurve(easingCurve);
         group->addAnimation(anim);
 
@@ -394,7 +393,8 @@ void PuzzleBoard::shuffle()
         {
             QPropertyAnimation *rotateAnimation = new QPropertyAnimation(item, "rotation", group);
             rotateAnimation->setEndValue(randomInt(0, 359));
-            rotateAnimation->setDuration(2000);
+            rotateAnimation->setKeyValueAt(0.5, randomInt(0, 359));
+            rotateAnimation->setDuration(2500);
             rotateAnimation->setEasingCurve(easingCurve);
             group->addAnimation(rotateAnimation);
         }
