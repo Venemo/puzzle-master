@@ -49,7 +49,8 @@ TRANSLATIONS += \
     translations/puzzle-master_it_IT.ts \
     translations/puzzle-master_cs_CZ.ts \
     translations/puzzle-master_he_IL.ts \
-    translations/puzzle-master_tr_TR.ts
+    translations/puzzle-master_tr_TR.ts \
+    translations/puzzle-master_fi_FI.ts
 
 OTHER_FILES += \
     qml/other/components/Panel.qml \
