@@ -117,6 +117,10 @@ Panel {
                 ListElement { url: ":/pics/image3.jpg" }
                 ListElement { url: ":/pics/image4.jpg" }
                 ListElement { url: ":/pics/image5.jpg" }
+                ListElement { url: ":/pics/image6.jpg" }
+                ListElement { url: ":/pics/image7.jpg" }
+                ListElement { url: ":/pics/image8.jpg" }
+                ListElement { url: ":/pics/image9.jpg" }
             }
             delegate: Item {
                 width: imageSelectorGrid.cellWidth
