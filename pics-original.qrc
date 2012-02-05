@@ -5,5 +5,9 @@
         <file alias="image3.jpg">pics/original/image3.jpg</file>
         <file alias="image4.jpg">pics/original/image4.jpg</file>
         <file alias="image5.jpg">pics/original/image5.jpg</file>
+        <file alias="image6.jpg">pics/original/image6.jpg</file>
+        <file alias="image7.jpg">pics/original/image7.jpg</file>
+        <file alias="image8.jpg">pics/original/image8.jpg</file>
+        <file alias="image9.jpg">pics/original/image9.jpg</file>
     </qresource>
 </RCC>
