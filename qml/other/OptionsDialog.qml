@@ -24,20 +24,25 @@ Dialog {
     property alias rows: rowsSlider.value
     property alias snapDifficulty: snapDifficultySlider.value
 
+    onOpened: { console.log(optionsGrid.leftColumnWidth); }
+
     id: optionsDialog
     title: qsTr("Game difficulty")
     acceptButtonText: qsTr("Play")
     rejectButtonText: qsTr("Cancel")
     enableBackgroundClicking: false
-    contentWidth: optionsColumn.width
-    contentHeight: optionsColumn.height
+    contentWidth: optionsGrid.width
+    contentHeight: optionsGrid.height
     content: Grid {
-        id: optionsColumn
+        property int leftColumnWidth: Math.max(Math.max(columnsCaption.width, rowsCaption.width), snapDifficultyCaption.width)
+
+        id: optionsGrid
         spacing: 20
         width: 500
         columns: 2
 
         TextEdit {
+            id: columnsCaption
             color: "#ffffff"
             font.pixelSize: 25
             text: qsTr("Columns")
@@ -45,7 +50,7 @@ Dialog {
         }
         Row {
             id: columnsRow
-            width: parent.width - 100
+            width: parent.width - optionsGrid.leftColumnWidth - 20
             spacing: 10
 
             Slider {
@@ -70,6 +75,7 @@ Dialog {
             }
         }
         TextEdit {
+            id: rowsCaption
             color: "#ffffff"
             font.pixelSize: 25
             text: qsTr("Rows")
@@ -77,7 +83,7 @@ Dialog {
         }
         Row {
             id: rowsRow
-            width: parent.width - 100
+            width: parent.width - optionsGrid.leftColumnWidth - 20
             spacing: 10
 
             Slider {
@@ -102,6 +108,7 @@ Dialog {
             }
         }
         TextEdit {
+            id: snapDifficultyCaption
             color: "#ffffff"
             font.pixelSize: 25
             text: qsTr("Snap")
@@ -109,7 +116,7 @@ Dialog {
         }
         Row {
             id: snapDifficultyRow
-            width: parent.width - 100
+            width: parent.width - optionsGrid.leftColumnWidth - 20
             spacing: 10
 
             Slider {

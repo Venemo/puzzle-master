@@ -126,7 +126,7 @@ Panel {
         Button {
             id: acceptButton
             text: acceptButtonText
-            width: 170
+            width: 240
             onClicked: dialog.accept()
             visible: acceptButtonText != ""
             style: GreenButtonStyle { }
@@ -134,7 +134,7 @@ Panel {
         Button {
             id: rejectButton
             text: rejectButtonText
-            width: 170
+            width: 240
             onClicked: dialog.reject()
             visible: rejectButtonText != ""
             style: RedButtonStyle { }
