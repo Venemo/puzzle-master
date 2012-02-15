@@ -5,11 +5,11 @@
     <name>AppWindow</name>
     <message>
         <source>You&apos;re a winner!</source>
-        <translation>Du är en vinnare!</translation>
+        <translation>Du har vunnit!</translation>
     </message>
     <message>
         <source>Congratulations, you have successfully solved the given puzzle.</source>
-        <translation>Grattis, du ha successfullt löst pusslet!</translation>
+        <translation>Grattis, du har framgångsrikt löst pusslet!</translation>
     </message>
     <message>
         <source>Play again</source>
@@ -44,7 +44,8 @@
 Puzzle Master is a fun and addictive jigsaw puzzle game.
 Using Qt.</source>
         <translation>Skapad av Kristóf Timur.
-Puzzle Master är ett skoj och beroendeframkallande pussel
+Översatt till svenska av Daniel Sandman
+Puzzle Master är ett skoj och beroendeframkallande pussel.
 Gjord med Qt.</translation>
     </message>
     <message>
@@ -63,7 +64,7 @@ Are you sure to proceed?</source>
     </message>
     <message>
         <source>You have already added the selected image.</source>
-        <translation type="unfinished"></translation>
+        <translation>Du har redan lagt till den markerade bilden.</translation>
     </message>
 </context>
 <context>
@@ -237,7 +238,7 @@ Du kan inte fortsätta senare. Använd &quot;Få en ledtråd&quot; om du behöve
     </message>
     <message>
         <source>Remove custom image</source>
-        <translation type="unfinished"></translation>
+        <translation>Ta bort anpassad bild</translation>
     </message>
 </context>
 <context>
@@ -264,7 +265,7 @@ Du kan inte fortsätta senare. Använd &quot;Få en ledtråd&quot; om du behöve
     </message>
     <message>
         <source>Snap</source>
-        <translation>Fästa</translation>
+        <translation>Fästkänslighet</translation>
     </message>
     <message>
         <source>Easy</source>
@@ -276,7 +277,7 @@ Du kan inte fortsätta senare. Använd &quot;Få en ledtråd&quot; om du behöve
     </message>
     <message>
         <source>Difficult</source>
-        <translation>Svårt</translation>
+        <translation>Svår</translation>
     </message>
 </context>
 </TS>

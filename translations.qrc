@@ -7,5 +7,6 @@
         <file>translations/puzzle-master_he_IL.qm</file>
         <file>translations/puzzle-master_tr_TR.qm</file>
         <file>translations/puzzle-master_fi_FI.qm</file>
+        <file>translations/puzzle-master_sv_SE.qm</file>
     </qresource>
 </RCC>
