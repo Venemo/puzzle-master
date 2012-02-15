@@ -139,10 +139,12 @@ Panel {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        imageChooser.selectedImageUrl = url
                         imageSelectorGrid.currentIndex = index
                     }
                 }
+            }
+            onCurrentIndexChanged: {
+                imageChooser.selectedImageUrl = imagesModel.get(imageSelectorGrid.currentIndex).url
             }
             highlight: Rectangle {
                 color: "#538312"
