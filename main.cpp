@@ -88,6 +88,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     if (langCode.contains('.'))
         langCode = langCode.mid(0, langCode.lastIndexOf('.'));
 
+    // Uncomment for testing purposes
+    //langCode = "hu_HU";
+
     qDebug() << "Puzzle Master's current language code is" << langCode;
 
     if (QFile::exists(":/translations/puzzle-master_" + langCode + ".qm"))
