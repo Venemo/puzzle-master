@@ -20,7 +20,7 @@ QT += core gui declarative
 
 TARGET = puzzle-master
 TEMPLATE = app
-VERSION = 2.0.0
+VERSION = 2.0.2
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += \
@@ -88,6 +88,8 @@ contains(MEEGO_EDITION, harmattan) {
     DEFINES += HAVE_APPLAUNCHERD HAVE_QACCELEROMETER HAVE_SWIPELOCK MEEGO_EDITION_HARMATTAN DISABLE_SCROLLBARS
     # The MeeGo graphics system is better than using QGLWidget
     DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY
+    # Optification is needed by the Nokia Store
+    target.path = /opt/puzzle-master
 }
 maemo5 {
     # We want the accelerometer
