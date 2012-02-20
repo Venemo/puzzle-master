@@ -73,6 +73,12 @@ PuzzleBoard {
         gameBoard.waitForHint = false
     }
 
+    Image {
+        anchors.fill: parent
+        source: "qrc:/pics/background.jpg"
+        fillMode: Image.Tile
+        z: -1
+    }
     Panel {
         id: menuButtonPanel
         z: 1

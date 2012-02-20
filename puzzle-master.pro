@@ -40,7 +40,8 @@ HEADERS += \
 RESOURCES += \
     translations.qrc \
     pics-original.qrc \
-    ui-other.qrc
+    ui-other.qrc \
+    background.qrc
 
 TRANSLATIONS += \
     translations/puzzle-master_hu_HU.ts \
