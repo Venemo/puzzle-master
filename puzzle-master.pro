@@ -92,7 +92,7 @@ contains(MEEGO_EDITION, harmattan) {
     # Optification is needed by the Nokia Store
     target.path = /opt/puzzle-master
     INSTALLS += splash
-    splash.files = installables/puzzle-master-splash.png
+    splash.files = installables/puzzle-master-splash.jpg
     splash.path = /opt/puzzle-master
 }
 maemo5 {

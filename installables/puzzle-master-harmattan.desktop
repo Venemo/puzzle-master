@@ -4,6 +4,6 @@ Version=1.0
 Type=Application
 Name=PuzzleMaster
 Icon=/usr/share/icons/hicolor/scalable/apps/puzzle-master.svg
-Exec=invoker --single-instance --splash=/opt/puzzle-master/puzzle-master-splash.png --type=d /opt/puzzle-master/puzzle-master
+Exec=invoker --single-instance --splash=/opt/puzzle-master/puzzle-master-splash.jpg --type=d /opt/puzzle-master/puzzle-master
 Categories=Game;LogicGame;
 X-Osso-Type=application/x-executable
