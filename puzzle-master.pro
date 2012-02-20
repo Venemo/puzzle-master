@@ -91,6 +91,9 @@ contains(MEEGO_EDITION, harmattan) {
     DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY
     # Optification is needed by the Nokia Store
     target.path = /opt/puzzle-master
+    INSTALLS += splash
+    splash.files = installables/puzzle-master-splash.png
+    splash.path = /opt/puzzle-master
 }
 maemo5 {
     # We want the accelerometer
@@ -132,6 +135,9 @@ contains(DEFINES, HAVE_APPLAUNCHERD) {
     PKGCONFIG += qdeclarative-boostable
     INCLUDEPATH += /usr/include/applauncherd
     desktopfile.files = installables/puzzle-master-applauncherd.desktop
+    contains(MEEGO_EDITION, harmattan) {
+        desktopfile.files = installables/puzzle-master-harmattan.desktop
+    }
 }
 contains(DEFINES, HAVE_OPENGL) {
     # If we want QGLWidget as viewport
