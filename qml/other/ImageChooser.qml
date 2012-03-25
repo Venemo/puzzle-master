@@ -116,11 +116,17 @@ Panel {
                 ListElement { url: ":/pics/image2.jpg" }
                 ListElement { url: ":/pics/image3.jpg" }
                 ListElement { url: ":/pics/image4.jpg" }
-                ListElement { url: ":/pics/image5.jpg" }
+                ListElement { url: ":/pics/image10.jpg" }
                 ListElement { url: ":/pics/image6.jpg" }
+                ListElement { url: ":/pics/image5.jpg" }
+                ListElement { url: ":/pics/image11.jpg" }
+                ListElement { url: ":/pics/image12.jpg" }
+                ListElement { url: ":/pics/image13.jpg" }
                 ListElement { url: ":/pics/image7.jpg" }
                 ListElement { url: ":/pics/image8.jpg" }
                 ListElement { url: ":/pics/image9.jpg" }
+                ListElement { url: ":/pics/image14.jpg" }
+                ListElement { url: ":/pics/image15.jpg" }
             }
             delegate: Item {
                 width: imageSelectorGrid.cellWidth
