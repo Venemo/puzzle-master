@@ -348,8 +348,11 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
                              h0 + (j * _unit.height()) + syCorrection - _usabilityThickness);
             stroker.setWidth(_strokeThickness * 2);
             QPainterPath strokePath = stroker.createStroke(clip).united(clip).simplified();
-            stroker.setWidth(_usabilityThickness * 2);
-            QPainterPath fakeShape = (stroker.createStroke(clip + rectClip) + clip + rectClip).simplified();
+
+            QPainterPath bigRectClip;
+            bigRectClip.addRect(tabFull - 1, tabFull - 1, _unit.width() + 1 + _usabilityThickness * 2, _unit.height() + 1 + _usabilityThickness * 2);
+            bigRectClip = bigRectClip.translated(xCorrection - _usabilityThickness, yCorrection - _usabilityThickness);
+            QPainterPath fakeShape = (bigRectClip + clip).simplified();
 
             QPixmap stroke(px.width() + _strokeThickness * 2, px.height() + _strokeThickness * 2);
             stroke.fill(Qt::transparent);
