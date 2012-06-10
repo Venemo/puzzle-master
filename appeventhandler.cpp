@@ -34,6 +34,12 @@
 #include <aknappui.h>
 #endif
 
+#if defined(Q_WS_MAEMO_5)
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QFileDialog>
+#endif
+
 #include "appeventhandler.h"
 
 #if defined(HAVE_SWIPELOCK)
@@ -95,5 +101,44 @@ void AppEventHandler::adjustForUi()
 {
 #if defined(HAVE_SWIPELOCK)
     XChangeProperty(QX11Info::display(), static_cast<QWidget*>(parent())->winId(), customRegionAtom, XA_CARDINAL, 32, PropModeReplace, reinterpret_cast<unsigned char*>(defaultRegion), 4);
+#endif
+}
+
+bool AppEventHandler::showAppSwitcherButton()
+{
+#if defined(Q_WS_MAEMO_5)
+    return true;
+#else
+    return false;
+#endif
+}
+
+void AppEventHandler::displayAppSwitcher()
+{
+#if defined(Q_WS_MAEMO_5)
+    QDBusConnection::sessionBus().send(QDBusMessage::createSignal("/", "com.nokia.hildon_desktop", "exit_app_view"));
+#else
+    qDebug() << "displayAppSwitcher is not implemented for the current platform";
+#endif
+}
+
+bool AppEventHandler::showPlatformFileDialog()
+{
+#if defined(Q_WS_MAEMO_5)
+    return true;
+#else
+    return false;
+#endif
+}
+
+QString AppEventHandler::displayPlatformFileDialog()
+{
+#if defined(Q_WS_MAEMO_5)
+    QString path = QFileDialog::getOpenFileName(static_cast<QWidget*>(parent()), QString(), "/home/user/MyDocs", "Images (*.png *.jpeg *.jpg *.gif *.bmp)");
+    qDebug() << "selected path is" << path;
+    return "file://" + path;
+#else
+    qDebug() << "displayPlatformFileDialog is not implemented for the current platform";
+    return QString();
 #endif
 }

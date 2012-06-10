@@ -69,6 +69,40 @@ Panel {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
         }
+        Button {
+            id: appSwitcherButton
+            visible: appEventHandler.showAppSwitcherButton()
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.leftMargin: 6
+            width: 70
+            height: 48
+            text: ""
+            style: GreenButtonStyle { }
+            onClicked: {
+                appEventHandler.displayAppSwitcher()
+            }
+            Rectangle {
+                color: "#FFFFFF"
+                border.color: "#7DB72F"
+                border.width: 1
+                width: 25
+                height: 25
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: -5
+                anchors.horizontalCenterOffset: -5
+            }
+            Rectangle {
+                color: "#FFFFFF"
+                border.color: "#7DB72F"
+                border.width: 1
+                width: 25
+                height: 25
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: 5
+                anchors.horizontalCenterOffset: 5
+            }
+        }
         TextEdit {
             text: qsTr("Welcome! Choose an image.")
             anchors.centerIn: parent
@@ -233,10 +267,17 @@ Panel {
             Button {
                 width: 500
                 text: qsTr("Add custom image")
-                visible: fileSelectorDialog !== null
+                visible: fileSelectorDialog !== null || appEventHandler.showPlatformFileDialog()
                 onClicked: {
                     menuDialog.close()
-                    fileSelectorDialog.open()
+                    if (appEventHandler.showPlatformFileDialog()) {
+                        var fileUrl = appEventHandler.displayPlatformFileDialog();
+                        if (appSettings.addCustomImage(fileUrl))
+                            imagesModel.insert(0, { url: fileUrl })
+                    }
+                    else {
+                        fileSelectorDialog.open()
+                    }
                 }
             }
             Button {

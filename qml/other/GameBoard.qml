@@ -175,6 +175,41 @@ PuzzleBoard {
                 }
             }
         }
+        Button {
+            id: appSwitcherButton
+            visible: appEventHandler.showAppSwitcherButton()
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.leftMargin: 6
+            anchors.topMargin: 6
+            width: 70
+            height: 48
+            text: ""
+            style: GreenButtonStyle { }
+            onClicked: {
+                appEventHandler.displayAppSwitcher()
+            }
+            Rectangle {
+                color: "#FFFFFF"
+                border.color: "#7DB72F"
+                border.width: 1
+                width: 25
+                height: 25
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: -5
+                anchors.horizontalCenterOffset: -5
+            }
+            Rectangle {
+                color: "#FFFFFF"
+                border.color: "#7DB72F"
+                border.width: 1
+                width: 25
+                height: 25
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: 5
+                anchors.horizontalCenterOffset: 5
+            }
+        }
     }
     Dialog {
         id: progressDialog

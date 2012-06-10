@@ -96,11 +96,15 @@ contains(MEEGO_EDITION, harmattan) {
     splash.path = /opt/puzzle-master
 }
 maemo5 {
+    QT += dbus
     # We want the accelerometer
     DEFINES += HAVE_QACCELEROMETER DISABLE_ROTATION DISABLE_SCROLLBARS
     DEFINES -= DISABLE_QMLGALLERY
     # And the weird Maemo5 paths
     target.path = /opt/puzzle-master
+    iconfile.path = /usr/share/pixmaps
+    iconfile.files = installables/puzzle-master.png
+    desktopfile.files = installables/puzzle-master-fremantle.desktop
     desktopfile.path = /usr/share/applications/hildon
 }
 symbian {

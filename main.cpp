@@ -191,6 +191,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("appEventHandler", appEventHandler);
     view->rootContext()->setContextProperty("picturesFolder", picturesFolder);
     view->setSource(QUrl("qrc:/qml/other/AppWindow.qml"));
+    view->setWindowTitle(QObject::tr("Puzzle Master"));
     view->showFullScreen();
 
     // Launching the app

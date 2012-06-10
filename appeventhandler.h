@@ -32,6 +32,10 @@ class AppEventHandler : public QObject
 public:
     explicit AppEventHandler(QWidget *parent = 0);
     bool eventFilter(QObject *obj, QEvent *event);
+    Q_INVOKABLE bool showAppSwitcherButton();
+    Q_INVOKABLE void displayAppSwitcher();
+    Q_INVOKABLE bool showPlatformFileDialog();
+    Q_INVOKABLE QString displayPlatformFileDialog();
     
 signals:
     void windowActivated();
