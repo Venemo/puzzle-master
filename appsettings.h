@@ -48,7 +48,7 @@ public:
     explicit AppSettings(QObject *parent = 0);
 
     SETTINGPROPERTY(int, rows, setRows, rowsChanged, "rows", 3)
-    SETTINGPROPERTY(int, columns, setColumns, columnsChanged, "columns", 4)
+    SETTINGPROPERTY(int, columns, setColumns, columnsChanged, "columns", 3)
     SETTINGPROPERTY(int, snapDifficulty, setSnapDifficulty, snapDifficultyChanged, "snapDifficulty", 1)
     SETTINGPROPERTY(QByteArray, customImageListData, setCustomImageListData, customImageListDataChanged, "customImageListData", QByteArray())
 
