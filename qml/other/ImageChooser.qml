@@ -179,6 +179,10 @@ Panel {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
+                        if (imageSelectorGrid.currentIndex === index) {
+                            imageChooser.accepted()
+                        }
+
                         imageSelectorGrid.currentIndex = index
                     }
                 }
