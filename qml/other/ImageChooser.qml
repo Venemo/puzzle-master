@@ -233,6 +233,22 @@ Panel {
                         pressAnimation.start()
                     }
                 }
+                Button {
+                    style: RedButtonStyle { }
+                    text: "-"
+                    width: 50
+                    height: 50
+                    anchors {
+                        bottom: parent.bottom
+                        right: parent.right
+                    }
+                    visible: index < imagesModel.count - imagesModel.initialImageCount
+                    onClicked: {
+                        menuDialog.close()
+                        appSettings.removeCustomImage(imagesModel.get(index).url)
+                        imagesModel.remove(imagesModel.get(index))
+                    }
+                }
             }
             onCurrentIndexChanged: {
                 imageChooser.selectedImageUrl = imagesModel.get(imageSelectorGrid.currentIndex).url
@@ -288,16 +304,6 @@ Panel {
                 onClicked: {
                     menuDialog.close()
                     aboutDialog.open()
-                }
-            }
-            Button {
-                width: 500
-                text: qsTr("Remove custom image")
-                visible: imageSelectorGrid.currentIndex >= 0 && imageSelectorGrid.currentIndex < imagesModel.count - imagesModel.initialImageCount
-                onClicked: {
-                    menuDialog.close()
-                    appSettings.removeCustomImage(imagesModel.get(imageSelectorGrid.currentIndex).url)
-                    imagesModel.remove(imagesModel.get(imageSelectorGrid.currentIndex))
                 }
             }
             Button {
