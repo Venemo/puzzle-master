@@ -73,7 +73,7 @@ Panel {
             width: 65
             height: 45
             text: ""
-            style: GreenButtonStyle { }
+            style: PurpleButtonStyle { }
             onClicked: {
                 appEventHandler.displayAppSwitcher()
             }
