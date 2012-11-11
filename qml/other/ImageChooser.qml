@@ -73,7 +73,7 @@ Panel {
             width: 65
             height: 45
             text: ""
-            style: PurpleButtonStyle { }
+            style: purpleButtonStyle
             onClicked: {
                 appEventHandler.displayAppSwitcher()
             }
@@ -106,7 +106,7 @@ Panel {
             }
             width: 65
             height: 45
-            style: PurpleButtonStyle { }
+            style: purpleButtonStyle
             text: "+"
             font.pixelSize: 40
             visible: fileSelectorDialog !== null || appEventHandler.showPlatformFileDialog()
@@ -131,7 +131,7 @@ Panel {
             }
             width: 65
             height: 45
-            style: PurpleButtonStyle { }
+            style: purpleButtonStyle
             onClicked: menuDialog.open()
         }
         TextEdit {
@@ -234,7 +234,7 @@ Panel {
                     }
                 }
                 Button {
-                    style: RedButtonStyle { }
+                    style: redButtonStyle
                     text: "-"
                     width: 50
                     height: 50
@@ -309,7 +309,7 @@ Panel {
             Button {
                 width: 500
                 text: qsTr("Quit")
-                style: RedButtonStyle { }
+                style: redButtonStyle
                 onClicked: {
                     menuDialog.close()
                     areYouSureToQuitDialog.open()

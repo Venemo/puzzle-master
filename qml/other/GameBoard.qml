@@ -98,7 +98,7 @@ PuzzleBoard {
             anchors.rightMargin: 6
             width: 65
             height: 45
-            style: PurpleButtonStyle { }
+            style: purpleButtonStyle
             onClicked: menuDialog.open()
         }
     }
@@ -141,7 +141,7 @@ PuzzleBoard {
                         }
                     }
                 }
-                style: GreenButtonStyle { }
+                style: greenButtonStyle
             }
             Row {
                 spacing: 10
@@ -168,7 +168,7 @@ PuzzleBoard {
             Button {
                 width: 500
                 text: qsTr("Quit")
-                style: RedButtonStyle { }
+                style: redButtonStyle
                 onClicked: {
                     menuDialog.close()
                     areYouSureToQuitDialog.open()
@@ -185,7 +185,7 @@ PuzzleBoard {
             width: 70
             height: 48
             text: ""
-            style: GreenButtonStyle { }
+            style: greenButtonStyle
             onClicked: {
                 appEventHandler.displayAppSwitcher()
             }

@@ -19,11 +19,22 @@
 import QtQuick 1.0
 import net.venemo.puzzlemaster 2.0
 import "./components"
+import "./components/style"
 
 Rectangle {
     width: initialSize.width
     height: initialSize.height
     color: "#000"
+
+    RedButtonStyle {
+        id: redButtonStyle
+    }
+    GreenButtonStyle {
+        id: greenButtonStyle
+    }
+    PurpleButtonStyle {
+        id: purpleButtonStyle
+    }
 
     AppSettings {
         id: appSettings
