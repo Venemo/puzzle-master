@@ -83,22 +83,22 @@ PuzzleBoard {
         id: menuButtonPanel
         z: 1
         visible: false
-        opacity: 0
-        anchors.fill: null
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        width: 82
+        width: 80
         height: 60
-        color: "#997DB72F"
+        color: "#99a909a7"
+        anchors {
+            fill: null
+            top: parent.top
+            right: parent.right
+        }
 
-        Button {
+        MenuButton {
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             anchors.rightMargin: 6
-            width: 70
-            height: 48
-            text: qsTr("...")
-            style: GreenButtonStyle { }
+            width: 65
+            height: 45
+            style: PurpleButtonStyle { }
             onClicked: menuDialog.open()
         }
     }

@@ -20,10 +20,11 @@ import QtQuick 1.1
 import "./style"
 
 Button {
+    id: menuButton
     text: ""
 
     Rectangle {
-        color: "#fff"
+        color: menuButton.style.fontColor
         height: 3
         anchors {
             verticalCenter: parent.verticalCenter
@@ -36,7 +37,7 @@ Button {
     }
 
     Rectangle {
-        color: "#fff"
+        color: menuButton.style.fontColor
         height: 3
         anchors {
             verticalCenter: parent.verticalCenter
@@ -48,7 +49,7 @@ Button {
     }
 
     Rectangle {
-        color: "#fff"
+        color: menuButton.style.fontColor
         height: 3
         anchors {
             verticalCenter: parent.verticalCenter
