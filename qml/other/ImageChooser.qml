@@ -33,7 +33,8 @@ Panel {
     signal accepted
 
     id: imageChooser
-    color: "#000000"
+    color: "#a909a7"
+    radius: 15
 
     Component.onCompleted: {
         var selectorComponent = null
@@ -56,19 +57,13 @@ Panel {
     Rectangle {
         id: imageChooserTop
         height: 60
-        color: "#7DB72F"
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        radius: 15
-
-        Rectangle {
-            color: "#7DB72F"
-            height: imageChooserTop.radius + 1
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
+        color: "#00000000"
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
         }
+
         Button {
             id: appSwitcherButton
             visible: appEventHandler.showAppSwitcherButton()
@@ -103,6 +98,17 @@ Panel {
                 anchors.horizontalCenterOffset: 5
             }
         }
+        Button {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: 6
+            width: 70
+            height: 48
+            text: qsTr("...")
+            onClicked: {
+                menuDialog.open()
+            }
+        }
         TextEdit {
             text: qsTr("Welcome! Choose an image.")
             anchors.centerIn: parent
@@ -113,22 +119,37 @@ Panel {
     }
     Rectangle {
         color: "#ffffff"
-        anchors.top: imageChooserTop.bottom
-        anchors.bottom: imageChooserBottom.top
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors {
+            top: imageChooserTop.bottom
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
         clip: true
+        radius: 15
+
+        Rectangle {
+            color: "#ffffff"
+            height: 15
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+            }
+        }
 
         GridView {
             id: imageSelectorGrid
             focus: true
             cacheBuffer: allowScrollbars ? initialSize.height * 3 : initialSize.height
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.topMargin: 5
-            anchors.bottomMargin: 5
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.horizontalCenterOffset: - imageSelectorGridScrollBar.width / 2
+            anchors {
+                top: parent.top
+                bottom: parent.bottom
+                topMargin: 5
+                bottomMargin: 5
+                horizontalCenter: parent.horizontalCenter
+                horizontalCenterOffset: - imageSelectorGridScrollBar.width / 2
+            }
             cellWidth: (imageChooser.width - imageSelectorGridScrollBar.width) / imageChooser.columnNumber - 5
             cellHeight: imageSelectorGrid.cellWidth / imageChooser.width * imageChooser.height
             width: imageSelectorGrid.cellWidth * imageChooser.columnNumber
@@ -202,47 +223,6 @@ Panel {
             flickable: imageSelectorGrid
             anchors.right: parent.right
             anchors.rightMargin: 7
-        }
-    }
-    Rectangle {
-        id: imageChooserBottom
-        height: imageChooserTop.height
-        color: "#7DB72F"
-        radius: 15
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-
-        Rectangle {
-            color: "#7DB72F"
-            height: imageChooserBottom.radius + 1
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-        }
-        Button {
-            text: qsTr("Start game")
-            height: 48
-            anchors.centerIn: parent
-            style: GreenButtonStyle { }
-            onClicked: {
-                if (imageChooser.selectedImageUrl != "")
-                    imageChooser.accepted()
-                else
-                    youMustChooseDialog.open()
-            }
-        }
-        Button {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: parent.right
-            anchors.rightMargin: 6
-            width: 70
-            height: 48
-            text: qsTr("...")
-            style: GreenButtonStyle { }
-            onClicked: {
-                menuDialog.open()
-            }
         }
     }
     Dialog {

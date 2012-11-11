@@ -23,6 +23,7 @@ import "./components"
 Rectangle {
     width: initialSize.width
     height: initialSize.height
+    color: "#000"
 
     AppSettings {
         id: appSettings
