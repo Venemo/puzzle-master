@@ -24,8 +24,6 @@ Dialog {
     property alias rows: rowsSlider.value
     property alias snapDifficulty: snapDifficultySlider.value
 
-    onOpened: { console.log(optionsGrid.leftColumnWidth); }
-
     id: optionsDialog
     title: qsTr("Game difficulty")
     acceptButtonText: qsTr("Play")
