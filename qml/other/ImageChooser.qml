@@ -98,10 +98,37 @@ Panel {
                 anchors.horizontalCenterOffset: 5
             }
         }
+        Button {
+            anchors {
+                verticalCenter: parent.verticalCenter
+                right: menuButton.left
+                rightMargin: 6
+            }
+            width: 65
+            height: 45
+            style: PurpleButtonStyle { }
+            text: "+"
+            font.pixelSize: 40
+            visible: fileSelectorDialog !== null || appEventHandler.showPlatformFileDialog()
+            onClicked: {
+                menuDialog.close()
+                if (appEventHandler.showPlatformFileDialog()) {
+                    var fileUrl = appEventHandler.displayPlatformFileDialog();
+                    if (appSettings.addCustomImage(fileUrl))
+                        imagesModel.insert(0, { url: fileUrl })
+                }
+                else {
+                    fileSelectorDialog.open()
+                }
+            }
+        }
         MenuButton {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: parent.right
-            anchors.rightMargin: 6
+            id: menuButton
+            anchors {
+                verticalCenter: parent.verticalCenter
+                right: parent.right
+                rightMargin: 6
+            }
             width: 65
             height: 45
             style: PurpleButtonStyle { }
@@ -261,22 +288,6 @@ Panel {
                 onClicked: {
                     menuDialog.close()
                     aboutDialog.open()
-                }
-            }
-            Button {
-                width: 500
-                text: qsTr("Add custom image")
-                visible: fileSelectorDialog !== null || appEventHandler.showPlatformFileDialog()
-                onClicked: {
-                    menuDialog.close()
-                    if (appEventHandler.showPlatformFileDialog()) {
-                        var fileUrl = appEventHandler.displayPlatformFileDialog();
-                        if (appSettings.addCustomImage(fileUrl))
-                            imagesModel.insert(0, { url: fileUrl })
-                    }
-                    else {
-                        fileSelectorDialog.open()
-                    }
                 }
             }
             Button {
