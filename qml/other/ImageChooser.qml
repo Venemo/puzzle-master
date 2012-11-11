@@ -70,8 +70,8 @@ Panel {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 6
-            width: 70
-            height: 48
+            width: 65
+            height: 45
             text: ""
             style: GreenButtonStyle { }
             onClicked: {
@@ -98,16 +98,14 @@ Panel {
                 anchors.horizontalCenterOffset: 5
             }
         }
-        Button {
+        MenuButton {
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             anchors.rightMargin: 6
-            width: 70
-            height: 48
-            text: qsTr("...")
-            onClicked: {
-                menuDialog.open()
-            }
+            width: 65
+            height: 45
+            style: PurpleButtonStyle { }
+            onClicked: menuDialog.open()
         }
         TextEdit {
             text: qsTr("Welcome! Choose an image.")
@@ -154,7 +152,6 @@ Panel {
             cellHeight: imageSelectorGrid.cellWidth / imageChooser.width * imageChooser.height
             width: imageSelectorGrid.cellWidth * imageChooser.columnNumber
             currentIndex: -1
-            highlightMoveDuration: 80
             model: ListModel {
                 property int initialImageCount: 0
 
@@ -188,6 +185,7 @@ Panel {
                 height: imageSelectorGrid.cellHeight
 
                 Image {
+                    id: delegateImage
                     asynchronous: false
                     fillMode: Image.PreserveAspectCrop
                     width: imageSelectorGrid.cellWidth - 10
@@ -200,21 +198,38 @@ Panel {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        if (imageSelectorGrid.currentIndex === index) {
-                            imageChooser.accepted()
-                        }
+                        if (pressAnimation.running || releaseAnimation.running)
+                            return;
 
                         imageSelectorGrid.currentIndex = index
+                        pressAnimation.target = delegateImage
+                        pressAnimation.start()
                     }
                 }
             }
             onCurrentIndexChanged: {
                 imageChooser.selectedImageUrl = imagesModel.get(imageSelectorGrid.currentIndex).url
             }
-            highlight: Rectangle {
-                color: "#538312"
-                radius: 5
+        }
+        NumberAnimation {
+            id: pressAnimation
+            target: null;
+            property: "scale";
+            from: 1
+            to: 0.95
+            duration: 40;
+            onCompleted: {
+                imageChooser.accepted()
+                releaseAnimation.start()
             }
+        }
+        NumberAnimation {
+            id: releaseAnimation
+            target: pressAnimation.target;
+            property: "scale";
+            from: pressAnimation.to
+            to: pressAnimation.from
+            duration: pressAnimation.duration;
         }
         VerticalScrollBar {
             id: imageSelectorGridScrollBar

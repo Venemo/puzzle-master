@@ -68,7 +68,9 @@ OTHER_FILES += \
     qml/other/FileSelectorDialog.qml \
     qml/other/GallerySelectorDialog.qml \
     qml/other/components/VerticalSlider.qml \
-    qml/other/components/VerticalScrollBar.qml
+    qml/other/components/VerticalScrollBar.qml \
+    qml/other/components/MenuButton.qml \
+    qml/other/components/style/PurpleButtonStyle.qml
 
 # Platforms
 
