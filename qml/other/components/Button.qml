@@ -21,6 +21,7 @@ import "./style"
 
 Rectangle {
     property alias text: buttonText.text
+    property alias font: buttonText.font
     property ButtonStyle style: ButtonStyle { }
 
     signal clicked
