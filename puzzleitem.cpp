@@ -256,7 +256,7 @@ bool PuzzleItem::checkMergeability(PuzzleItem *p)
     else
         py += p->_pixmapOffset.y() + myMin<int>(_pixmap.height() - topTabSize() - bottomTabSize(), p->_pixmap.height() - p->topTabSize() - p->bottomTabSize()) / 2 + p->topTabSize();
 
-    QPointF diff = - _supposedPosition + p->_supposedPosition + QPointF(px, py) - static_cast<QGraphicsItem*>(p)->mapToItem(this, px, py);
+    QPointF diff = - _supposedPosition + p->_supposedPosition + QPointF(px, py) - p->QGraphicsItem::mapToItem(this, QPointF(px, py));
     qreal distance = sqrt(diff.x() * diff.x() + diff.y() * diff.y());
 
     return distance < board->tolerance() && rotationDiff < board->rotationTolerance();
