@@ -391,10 +391,10 @@ void PuzzleItem::verifyPosition()
 {
     PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
     qreal a = rotation();
-    QPointF p1 = mapToScene(0, 0),
-            p2 = mapToScene(width(), 0),
-            p3 = mapToScene(0, height()),
-            p4 = mapToScene(width(), height()),
+    QPointF p1 = mapToScene(QPointF(0, 0)),
+            p2 = mapToScene(QPointF(width(), 0)),
+            p3 = mapToScene(QPointF(0, height())),
+            p4 = mapToScene(QPointF(width(), height())),
             p(myMin<qreal>(myMin<qreal>(p1.x(), p2.x()), myMin<qreal>(p3.x(), p4.x())), myMin<qreal>(myMin<qreal>(p1.y(), p2.y()), myMin<qreal>(p3.y(), p4.y())));
 
     if (a >= 0 && a < 90)
