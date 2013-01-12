@@ -23,7 +23,7 @@
 #include <QParallelAnimationGroup>
 #include <QTimer>
 #include <QElapsedTimer>
-#include <QApplication>
+#include <QCoreApplication>
 
 #include "puzzleboard.h"
 #include "puzzleitem.h"
@@ -188,7 +188,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 {
     emit loadProgressChanged(0);
     deleteAllPieces();
-    QApplication::instance()->processEvents();
+    QCoreApplication::instance()->processEvents();
 
     if (height() == 0 || height() == 0)
     {
@@ -379,13 +379,13 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
             qDebug() << timer.elapsed() << "ms spent with generating piece" << i * rows + j + 1 << item->puzzleCoordinates();
             emit loadProgressChanged(i * rows + j + 1);
-            QApplication::instance()->processEvents();
+            QCoreApplication::instance()->processEvents();
         }
     }
     delete statuses;
     setNeighbours(cols, rows);
     emit loaded();
-    QApplication::instance()->processEvents();
+    QCoreApplication::instance()->processEvents();
 
     QTimer::singleShot(1000, this, SLOT(shuffle()));
     return true;
