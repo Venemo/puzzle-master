@@ -16,7 +16,7 @@
 //
 // Copyright (C) 2010-2011, Timur Kristóf <venemo@fedoraproject.org>
 
-import QtQuick 1.1
+import QtQuick 1.0
 import "./style"
 
 Button {
