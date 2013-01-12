@@ -26,6 +26,7 @@
 #include <QFile>
 #include <QTranslator>
 #include <QDesktopServices>
+#include <QElapsedTimer>
 
 #if defined(HAVE_OPENGL)
 #include <QGLWidget>
@@ -45,6 +46,9 @@
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
+    QElapsedTimer *timer = new QElapsedTimer();
+    timer->start();
+
     // Some settings
 
     QApplication::addLibraryPath("./plugins");
@@ -190,9 +194,16 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("appVersion", QString(APP_VERSION));
     view->rootContext()->setContextProperty("appEventHandler", appEventHandler);
     view->rootContext()->setContextProperty("picturesFolder", picturesFolder);
+
+    qDebug() << Q_FUNC_INFO << "initialization took" << timer->elapsed() << "ms";
+    timer->restart();
+
     view->setSource(QUrl("qrc:/qml/other/AppWindow.qml"));
     view->setWindowTitle(QObject::tr("Puzzle Master"));
     view->showFullScreen();
+
+    qDebug() << Q_FUNC_INFO << "setting the qml source took" << timer->elapsed() << "ms";
+    delete timer;
 
     // Launching the app
 
