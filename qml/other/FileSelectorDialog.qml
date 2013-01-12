@@ -24,6 +24,21 @@ Dialog
 {
     property string selectedImageUrl: ""
 
+    onOpened: {
+        console.log("Creating folder list model");
+        if (!imageSelectorGrid.model)
+            imageSelectorGrid.model = Qt.createQmlObject(" \
+                import QtQuick 1.0; \
+                import Qt.labs.folderlistmodel 1.0; \
+                 \
+                FolderListModel { \
+                    folder: picturesFolder; \
+                    showDirs: false; \
+                    showOnlyReadable: true; \
+                    nameFilters: [ '*.jpg', '*.jpeg', '*.png', '*.bmp' ]; \
+                }", imageSelectorGrid, "FolderListModelSnippet.qml");
+    }
+
     id: fileSelectorDialog
     enableBackgroundClicking: false
     title: qsTr("Select a picture")
@@ -47,12 +62,6 @@ Dialog
             cacheBuffer: allowScrollbars ? initialSize.height * 3 : initialSize.height
             currentIndex: -1
             highlightMoveDuration: 80
-            model: FolderListModel {
-                folder: picturesFolder
-                showDirs: false
-                showOnlyReadable: true
-                nameFilters: ["*.jpg", "*.jpeg", "*.png", "*.bmp"]
-            }
             delegate: Item {
                 width: imageSelectorGrid.cellWidth
                 height: imageSelectorGrid.cellHeight

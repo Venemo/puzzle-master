@@ -28,7 +28,7 @@ Panel {
 
     property string selectedImageUrl: ""
     property int columnNumber: 3
-    property Dialog fileSelectorDialog: null
+    property variant fileSelectorDialog: null
 
     signal accepted
 

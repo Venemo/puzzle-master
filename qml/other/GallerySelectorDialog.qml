@@ -24,6 +24,22 @@ Dialog
 {
     property string selectedImageUrl: ""
 
+    onOpened: {
+        console.log("Creating folder list model");
+        if (!imageSelectorGrid.model)
+            imageSelectorGrid.model = Qt.createQmlObject(" \
+                import QtQuick 1.0; \
+                import QtMobility.gallery 1.1; \
+                 \
+                DocumentGalleryModel { \
+                    id: picsModel; \
+                    rootType: DocumentGallery.Image; \
+                    properties: [ 'url' ]; \
+                    sortProperties: [ '-dateTaken' ]; \
+                    autoUpdate: true; \
+                }", imageSelectorGrid, "FolderListModelSnippet.qml");
+    }
+
     id: fileSelectorDialog
     enableBackgroundClicking: false
     title: qsTr("Select a picture")
@@ -43,13 +59,6 @@ Dialog
         currentIndex: -1
         highlightMoveDuration: 80
 
-        model: DocumentGalleryModel {
-            id: picsModel
-            rootType: DocumentGallery.Image
-            properties: [ "url" ]
-            sortProperties: [ "-dateTaken" ]
-            autoUpdate: true
-        }
         delegate: Item {
             width: imageSelectorGrid.cellWidth
             height: imageSelectorGrid.cellHeight
