@@ -39,19 +39,24 @@ Panel {
     Component.onCompleted: {
         var selectorComponent = null
 
-        if (allowGalleryModel) {
-            console.log("ImageChooser: trying to load GallerySelectorDialog")
-            selectorComponent = Qt.createComponent("GallerySelectorDialog.qml")
-        }
-        if (selectorComponent === null || selectorComponent.status === Component.Error || selectorComponent.status === Component.Null) {
-            console.log("ImageChooser: trying to load FileSelectorDialog")
-            selectorComponent = Qt.createComponent("FileSelectorDialog.qml")
-        }
-        if (selectorComponent === null || selectorComponent.status === Component.Error || selectorComponent.status === Component.Null) {
-            console.log("Nor FileSelectorDialog neither GallerySelectorDialog could be loaded! Adding custom images will not be possible.")
+        if (appEventHandler.showPlatformFileDialog()) {
+            console.log("The platform's native file selector dialog will be used to add custom images");
         }
         else {
-            fileSelectorDialog = selectorComponent.createObject(imageChooser)
+            if (allowGalleryModel) {
+                console.log("ImageChooser: trying to load GallerySelectorDialog")
+                selectorComponent = Qt.createComponent("GallerySelectorDialog.qml")
+            }
+            if (selectorComponent === null || selectorComponent.status === Component.Error || selectorComponent.status === Component.Null) {
+                console.log("ImageChooser: trying to load FileSelectorDialog")
+                selectorComponent = Qt.createComponent("FileSelectorDialog.qml")
+            }
+            if (selectorComponent === null || selectorComponent.status === Component.Error || selectorComponent.status === Component.Null) {
+                console.log("Nor FileSelectorDialog neither GallerySelectorDialog could be loaded! Adding custom images will not be possible.")
+            }
+            else {
+                fileSelectorDialog = selectorComponent.createObject(imageChooser)
+            }
         }
     }
     Rectangle {
@@ -109,7 +114,7 @@ Panel {
             style: purpleButtonStyle
             text: "+"
             font.pixelSize: 40
-            visible: fileSelectorDialog !== null || appEventHandler.showPlatformFileDialog()
+            visible: (typeof(fileSelectorDialog) != "undefined" && fileSelectorDialog !== null) || appEventHandler.showPlatformFileDialog()
             onClicked: {
                 menuDialog.close()
                 if (appEventHandler.showPlatformFileDialog()) {
