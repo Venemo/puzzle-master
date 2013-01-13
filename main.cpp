@@ -51,10 +51,14 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     // Some settings
 
-    QApplication::addLibraryPath("./plugins");
-    QApplication::setApplicationName("Puzzle Master");
-    QApplication::setOrganizationName("Venemo");
-    QApplication::setApplicationVersion(QString(APP_VERSION));
+#if Q_OS_BLACKBERRY
+    QCoreApplication::addLibraryPath("app/native/lib");
+    QCoreApplication::addLibraryPath("app/native/plugins");
+#endif
+    QCoreApplication::addLibraryPath("./plugins");
+    QCoreApplication::setApplicationName("Puzzle Master");
+    QCoreApplication::setOrganizationName("Venemo");
+    QCoreApplication::setApplicationVersion(QString(APP_VERSION));
 
     // Printing app version
 

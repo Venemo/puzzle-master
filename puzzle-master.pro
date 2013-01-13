@@ -16,7 +16,7 @@
 #
 # Copyright (C) 2010-2011, Timur Kristóf <venemo@fedoraproject.org>
 
-QT += core gui declarative
+QT = core gui declarative
 
 TARGET = puzzle-master
 TEMPLATE = app
@@ -76,7 +76,9 @@ OTHER_FILES += \
 
 unix:!symbian {
     QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden -O3 -ffast-math
-    QMAKE_LFLAGS += -pie -rdynamic
+    !blackberry {
+        QMAKE_LFLAGS += -pie -rdynamic
+    }
     DEFINES += HAVE_OPENGL DISABLE_QMLGALLERY
     INSTALLS += target iconfile desktopfile
 
@@ -131,6 +133,33 @@ win32 {
     TARGET = PuzzleMaster
     DEFINES += HAVE_OPENGL _USE_MATH_DEFINES _CRT_SECURE_NO_WARNINGS
     RC_FILE = installables/puzzle-master.rc
+}
+blackberry {
+    message("Building Puzzle Master for BlackBerry!")
+
+    DEFINES += DISABLE_SCROLLBARS HAVE_OPENGL
+
+    QMAKE_LFLAGS += '-Wl,-rpath,\'./app/native/lib\''
+    package.target = $${TARGET}.bar
+    package.depends = $$TARGET
+    package.commands = blackberry-nativepackager \
+        -devMode -debugToken ~/MyBbToken.bar \
+        -package $${TARGET}.bar -arg -platform -arg blackberry \
+        bar-descriptor.xml $$TARGET \
+        -e $$[QT_INSTALL_LIBS]/libQtCore.so.4 lib/libQtCore.so.4 \
+        -e $$[QT_INSTALL_LIBS]/libQtGui.so.4 lib/libQtGui.so.4 \
+        -e $$[QT_INSTALL_LIBS]/libQtOpenGL.so.4 lib/libQtOpenGL.so.4 \
+        -e $$[QT_INSTALL_LIBS]/libQtNetwork.so.4 lib/libQtNetwork.so.4 \
+        -e $$[QT_INSTALL_LIBS]/libQtDeclarative.so.4 lib/libQtDeclarative.so.4 \
+        -e $$[QT_INSTALL_LIBS]/libQtScript.so.4 lib/libQtScript.so.4 \
+        -e $$[QT_INSTALL_LIBS]/libQtSvg.so.4 lib/libQtSvg.so.4 \
+        -e $$[QT_INSTALL_LIBS]/libQtSql.so.4 lib/libQtSql.so.4 \
+        -e $$[QT_INSTALL_LIBS]/libQtXmlPatterns.so.4 lib/libQtXmlPatterns.so.4 \
+        -e $$[QT_INSTALL_PLUGINS]/imageformats/libqjpeg.so plugins/imageformats/libqjpeg.so \
+        -e $$[QT_INSTALL_PLUGINS]/platforms/libblackberry.so plugins/platforms/libblackberry.so
+
+    QMAKE_EXTRA_TARGETS += package
+
 }
 
 # Features
