@@ -27,6 +27,8 @@
 
 #include "puzzleitem.h"
 
+using namespace std;
+
 inline static qreal angle(const QPointF &v)
 {
     if (v.x() == 0)
@@ -73,8 +75,10 @@ PuzzleItem::PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent)
     setFlag(QGraphicsItem::ItemStacksBehindParent, false);
     setFlag(QGraphicsItem::ItemNegativeZStacksBehindParent, false);
     setAcceptTouchEvents(true);
-#if !defined(MEEGO_EDITION_HARMATTAN) && !defined(Q_OS_SYMBIAN)
+#if !defined(MEEGO_EDITION_HARMATTAN) && !defined(Q_OS_SYMBIAN) && !defined(Q_OS_BLACKBERRY) && !defined(Q_OS_BLACKBERRY_TABLET)
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
+#else
+    setAcceptedMouseButtons(Qt::NoButton);
 #endif
 }
 

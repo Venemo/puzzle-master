@@ -185,7 +185,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setRenderHint(QPainter::SmoothPixmapTransform, false);
     view->setRenderHint(QPainter::Antialiasing, false);
     view->setRenderHint(QPainter::HighQualityAntialiasing, false);
+#if Q_OS_BLACKBERRY_TABLET
+    view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+#else
     view->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+#endif
     view->setAttribute(Qt::WA_OpaquePaintEvent);
     view->setAttribute(Qt::WA_NoSystemBackground);
     view->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);

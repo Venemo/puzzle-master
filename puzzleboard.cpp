@@ -32,12 +32,16 @@
 PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     QDeclarativeItem(parent),
     _allowRotation(true),
-    _usabilityThickness(12),
     _strokeThickness(3),
     _tolerance(5),
     _rotationTolerance(10),
     _fixedFPSTimer(0)
 {
+#if Q_OS_BLACKBERRY_TABLET
+    _usabilityThickness = 25;
+#else
+    _usabilityThickness = 12;
+#endif
 #if defined(HAVE_QACCELEROMETER)
     accelerometer = new QtMobility::QAccelerometer(this);
     connect(accelerometer, SIGNAL(readingChanged()), this, SLOT(accelerometerReadingChanged()));
@@ -137,7 +141,11 @@ void PuzzleBoard::disableFixedFPS()
 
     foreach (QGraphicsView *view, scene()->views())
     {
+#if Q_OS_BLACKBERRY_TABLET
+        view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+#else
         view->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+#endif
     }
 }
 
