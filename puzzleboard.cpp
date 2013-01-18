@@ -403,14 +403,14 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 void PuzzleBoard::shuffle()
 {
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
-    QEasingCurve easingCurve(QEasingCurve::InOutElastic);
+    QEasingCurve easingCurve(QEasingCurve::InOutExpo);
 
     foreach (PuzzleItem *item, _puzzleItems)
     {
         QSequentialAnimationGroup *seq = new QSequentialAnimationGroup(group);
         group->addAnimation(seq);
         QParallelAnimationGroup *par = new QParallelAnimationGroup(seq);
-        seq->addPause(randomInt(0, 1000));
+        seq->addPause(randomInt(0, _puzzleItems.count() / 3) * 300 + 200);
         seq->addAnimation(par);
 
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
