@@ -347,6 +347,8 @@ bool PuzzleItem::sceneEvent(QEvent *event)
 
     if (event->type() == QEvent::TouchBegin)
     {
+        //qDebug() << "touch begin for" << _puzzleCoordinates;
+
         // Touch began, there may be any number of touch points now
         _isDraggingWithTouch = true;
         QPointF midpoint = findMidpoint(touchEvent);
@@ -360,6 +362,8 @@ bool PuzzleItem::sceneEvent(QEvent *event)
     }
     else if (event->type() == QEvent::TouchEnd)
     {
+        //qDebug() << "touch end for" << _puzzleCoordinates;
+
         // Touch ended
         stopDrag();
         return true;
