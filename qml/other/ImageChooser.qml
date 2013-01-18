@@ -62,7 +62,7 @@ Panel {
     Rectangle {
         id: imageChooserTop
         height: 60
-        color: "#00000000"
+        color: "transparent"
         anchors {
             top: parent.top
             left: parent.left
@@ -189,28 +189,31 @@ Panel {
 
                 id: imagesModel
                 Component.onCompleted: {
+                    // These are the built-in images
+                    imagesModel.append({ url: ":/pics/image1.jpg" });
+                    imagesModel.append({ url: ":/pics/image2.jpg" });
+                    imagesModel.append({ url: ":/pics/image3.jpg" });
+                    imagesModel.append({ url: ":/pics/image4.jpg" });
+                    imagesModel.append({ url: ":/pics/image10.jpg" });
+                    imagesModel.append({ url: ":/pics/image6.jpg" });
+                    imagesModel.append({ url: ":/pics/image5.jpg" });
+                    imagesModel.append({ url: ":/pics/image11.jpg" });
+                    imagesModel.append({ url: ":/pics/image12.jpg" });
+                    imagesModel.append({ url: ":/pics/image13.jpg" });
+                    imagesModel.append({ url: ":/pics/image7.jpg" });
+                    imagesModel.append({ url: ":/pics/image8.jpg" });
+                    imagesModel.append({ url: ":/pics/image9.jpg" });
+                    imagesModel.append({ url: ":/pics/image14.jpg" });
+                    imagesModel.append({ url: ":/pics/image15.jpg" });
+
+                    // Set initial count
                     imagesModel.initialImageCount = imagesModel.count
+                    // Load custom images
                     var urls = appSettings.loadCustomImages()
                     for (var i = 0; i < urls.length; i++) {
                         imagesModel.insert(0, { url: urls[i] })
                     }
                 }
-
-                ListElement { url: ":/pics/image1.jpg" }
-                ListElement { url: ":/pics/image2.jpg" }
-                ListElement { url: ":/pics/image3.jpg" }
-                ListElement { url: ":/pics/image4.jpg" }
-                ListElement { url: ":/pics/image10.jpg" }
-                ListElement { url: ":/pics/image6.jpg" }
-                ListElement { url: ":/pics/image5.jpg" }
-                ListElement { url: ":/pics/image11.jpg" }
-                ListElement { url: ":/pics/image12.jpg" }
-                ListElement { url: ":/pics/image13.jpg" }
-                ListElement { url: ":/pics/image7.jpg" }
-                ListElement { url: ":/pics/image8.jpg" }
-                ListElement { url: ":/pics/image9.jpg" }
-                ListElement { url: ":/pics/image14.jpg" }
-                ListElement { url: ":/pics/image15.jpg" }
             }
             delegate: Item {
                 width: imageSelectorGrid.cellWidth
