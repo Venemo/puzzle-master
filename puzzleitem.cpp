@@ -31,8 +31,10 @@ using namespace std;
 
 inline static qreal angle(const QPointF &v)
 {
+    if (v.x() == 0 && v.y() > 0)
+        return M_PI / 2;
     if (v.x() == 0)
-        return 90;
+        return - M_PI / 2;
     if (v.x() > 0)
         return atan(v.y() / v.x());
 
@@ -49,16 +51,16 @@ inline static qreal simplifyAngle(qreal a)
     return a;
 }
 
-inline static QPointF findMidpoint(QTouchEvent *touchEvent)
+inline static QPointF findMidpoint(QTouchEvent *touchEvent, PuzzleItem *item)
 {
     QPointF midpoint;
 
     // Finding the midpoint
     foreach (const QTouchEvent::TouchPoint &touchPoint, touchEvent->touchPoints())
-        midpoint += touchPoint.pos();
+        midpoint += touchPoint.scenePos();
 
     midpoint /= touchEvent->touchPoints().count();
-    return midpoint;
+    return item->QGraphicsItem::mapFromScene(midpoint);
 }
 
 PuzzleItem::PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent)
@@ -351,7 +353,7 @@ bool PuzzleItem::sceneEvent(QEvent *event)
 
         // Touch began, there may be any number of touch points now
         _isDraggingWithTouch = true;
-        QPointF midpoint = findMidpoint(touchEvent);
+        QPointF midpoint = findMidpoint(touchEvent, this);
         startDrag(midpoint);
 
         if (touchEvent->touchPoints().count() >= 2)
@@ -370,7 +372,7 @@ bool PuzzleItem::sceneEvent(QEvent *event)
     }
     else if (event->type() == QEvent::TouchUpdate)
     {
-        QPointF midpoint = findMidpoint(touchEvent);
+        QPointF midpoint = findMidpoint(touchEvent, this);
         setCompensatedTransformOriginPoint(midpoint);
 
         // If you put one more finger onto an item, this prevents it from jumping
