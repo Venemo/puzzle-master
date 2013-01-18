@@ -139,13 +139,17 @@ blackberry {
 
     DEFINES += DISABLE_SCROLLBARS HAVE_OPENGL
 
+    # NOTE: this will bundle Qt with the app and hack the rpath to make it find Qt
     QMAKE_LFLAGS += '-Wl,-rpath,\'./app/native/lib\''
     package.target = $${TARGET}.bar
     package.depends = $$TARGET
     package.commands = blackberry-nativepackager \
+        # NOTE: you need to put your debug token here
         -devMode -debugToken ~/MyBbToken.bar \
         -package $${TARGET}.bar -arg -platform -arg blackberry \
+        # NOTE: bar-descriptor.xml and installables/puzzle-master-86.png must be in the build directory
         bar-descriptor.xml $$TARGET \
+        -e installables/puzzle-master-86.png puzzle-master-86.png \
         -e $$[QT_INSTALL_LIBS]/libQtCore.so.4 lib/libQtCore.so.4 \
         -e $$[QT_INSTALL_LIBS]/libQtGui.so.4 lib/libQtGui.so.4 \
         -e $$[QT_INSTALL_LIBS]/libQtOpenGL.so.4 lib/libQtOpenGL.so.4 \
@@ -159,7 +163,6 @@ blackberry {
         -e $$[QT_INSTALL_PLUGINS]/platforms/libblackberry.so plugins/platforms/libblackberry.so
 
     QMAKE_EXTRA_TARGETS += package
-
 }
 
 # Features
