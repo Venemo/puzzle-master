@@ -199,9 +199,9 @@ void PuzzleItem::startDrag(const QPointF &p)
 {
     if (_canMerge)
     {
+        raise();
         _dragging = true;
         _dragStart = mapToParent(p) - pos();
-        raise();
     }
     else
     {
@@ -344,11 +344,11 @@ bool PuzzleItem::sceneEvent(QEvent *event)
     if (event->type() == QEvent::TouchBegin || event->type() == QEvent::TouchUpdate || event->type() == QEvent::TouchEnd)
     {
         touchEvent = static_cast<QTouchEvent*>(event);
-        event->accept();
     }
 
     if (event->type() == QEvent::TouchBegin)
     {
+        event->accept();
         //qDebug() << "touch begin for" << _puzzleCoordinates;
 
         // Touch began, there may be any number of touch points now
@@ -357,21 +357,27 @@ bool PuzzleItem::sceneEvent(QEvent *event)
         startDrag(midpoint);
 
         if (touchEvent->touchPoints().count() >= 2)
-            startRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
+            startRotation(touchEvent->touchPoints().at(0).screenPos() - touchEvent->touchPoints().at(1).screenPos());
 
         _previousTouchPointCount = touchEvent->touchPoints().count();
         return true;
     }
     else if (event->type() == QEvent::TouchEnd)
     {
+        if (_isDraggingWithTouch)
+            event->accept();
         //qDebug() << "touch end for" << _puzzleCoordinates;
 
         // Touch ended
+        // NOTE: this will also set _isDraggingWithTouch to false
         stopDrag();
         return true;
     }
     else if (event->type() == QEvent::TouchUpdate)
     {
+        if (_isDraggingWithTouch)
+            event->accept();
+
         QPointF midpoint = findMidpoint(touchEvent, this);
         setCompensatedTransformOriginPoint(midpoint);
 
@@ -384,9 +390,9 @@ bool PuzzleItem::sceneEvent(QEvent *event)
         if (allowRotation())
         {
             if (_previousTouchPointCount < 2 && touchEvent->touchPoints().count() >= 2)
-                startRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
-            if (touchEvent->touchPoints().count() >= 2)
-                handleRotation(mapToParent(touchEvent->touchPoints().at(0).pos()) - mapToParent(touchEvent->touchPoints().at(1).pos()));
+                startRotation(touchEvent->touchPoints().at(0).screenPos() - touchEvent->touchPoints().at(1).screenPos());
+            else if (touchEvent->touchPoints().count() >= 2)
+                handleRotation(touchEvent->touchPoints().at(0).screenPos() - touchEvent->touchPoints().at(1).screenPos());
         }
 
         checkMergeableSiblings(midpoint);
