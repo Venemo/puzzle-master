@@ -147,9 +147,9 @@ blackberry {
         # NOTE: you need to put your debug token here
         -devMode -debugToken ~/MyBbToken.bar \
         -package $${TARGET}.bar -arg -platform -arg blackberry \
-        # NOTE: bar-descriptor.xml and installables/puzzle-master-86.png must be in the build directory
+        # NOTE: bar-descriptor.xml and installables/puzzle-master-playbook.png must be in the build directory
         bar-descriptor.xml $$TARGET \
-        -e installables/puzzle-master-86.png puzzle-master-86.png \
+        -e installables/puzzle-master-86.png puzzle-master-playbook.png \
         -e $$[QT_INSTALL_LIBS]/libQtCore.so.4 lib/libQtCore.so.4 \
         -e $$[QT_INSTALL_LIBS]/libQtGui.so.4 lib/libQtGui.so.4 \
         -e $$[QT_INSTALL_LIBS]/libQtOpenGL.so.4 lib/libQtOpenGL.so.4 \
