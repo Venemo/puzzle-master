@@ -23,6 +23,7 @@
 
 #include "util.h"
 #include "puzzleboard.h"
+#include "puzzlepieceshape.h"
 
 class QPixmap;
 
@@ -46,6 +47,8 @@ class PuzzleItem : public QDeclarativeItem
     qreal _rotationStart;
     int _previousTouchPointCount;
 
+    friend class PuzzleBoard;
+
 public:
     explicit PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent = 0);
     virtual QPainterPath shape() const;
@@ -56,13 +59,6 @@ public:
     void removeNeighbour(PuzzleItem *piece);
     bool isNeighbourOf(const PuzzleItem *piece) const;
     QPointF centerPoint() const;
-
-    enum TabStatus {
-        LeftTab = 0x01,
-        TopTab = 0x02,
-        RightTab = 0x04,
-        BottomTab = 0x08
-    };
 
 public slots:
     inline void enableMerge() { _canMerge = true; }
@@ -86,10 +82,10 @@ protected:
     virtual bool sceneEvent(QEvent *event);
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    inline qreal leftTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::LeftTab ? 1 : 0); }
-    inline qreal topTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::TopTab ? 1 : 0); }
-    inline qreal rightTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::RightTab ? 1 : 0); }
-    inline qreal bottomTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleItem::BottomTab ? 1 : 0); }
+    inline qreal leftTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::LeftTab ? 1 : 0); }
+    inline qreal topTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::TopTab ? 1 : 0); }
+    inline qreal rightTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::RightTab ? 1 : 0); }
+    inline qreal bottomTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::BottomTab ? 1 : 0); }
     inline bool allowRotation() const { return static_cast<PuzzleBoard*>(parent())->allowRotation(); }
     inline int usabilityThickness() const { return static_cast<PuzzleBoard*>(parent())->usabilityThickness(); }
     inline int strokeThickness() const { return static_cast<PuzzleBoard*>(parent())->strokeThickness(); }
