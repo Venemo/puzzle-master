@@ -49,9 +49,9 @@ QPixmap processImage(const QString &url, int width, int height)
     return pix;
 }
 
-PuzzlePieceDescriptor createPuzzlePieceShape(int i, int j, int rows, int cols, QSize _unit, int *statuses, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance)
+PuzzlePieceShapeDescriptor createPuzzlePieceShape(int i, int j, int rows, int cols, QSize _unit, int *statuses, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance)
 {
-    PuzzlePieceDescriptor descriptor;
+    PuzzlePieceShapeDescriptor descriptor;
 
     QPainterPath rectClip;
     rectClip.addRect(tabFull - 1, tabFull - 1, _unit.width() + 1, _unit.height() + 1);

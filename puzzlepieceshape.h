@@ -15,7 +15,7 @@ enum TabStatus {
     BottomTab = 0x08
 };
 
-struct PuzzlePieceDescriptor {
+struct PuzzlePieceShapeDescriptor {
     QPainterPath shape;
     int sxCorrection;
     int syCorrection;
@@ -26,7 +26,7 @@ struct PuzzlePieceDescriptor {
 };
 
 QPixmap processImage(const QString &url, int width, int height);
-PuzzlePieceDescriptor createPuzzlePieceShape(int i, int j, int rows, int cols, QSize _unit, int *statuses, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance);
+PuzzlePieceShapeDescriptor createPuzzlePieceShape(int i, int j, int rows, int cols, QSize _unit, int *statuses, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance);
 
 }
 

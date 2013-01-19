@@ -117,7 +117,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             timer.restart();
 
             // Creating the shape of the piece
-            PuzzlePieceShape::PuzzlePieceDescriptor descriptor = PuzzlePieceShape::createPuzzlePieceShape(i, j, rows, cols, _unit, statuses, tabFull, tabSize, tabOffset, tabTolerance);
+            PuzzlePieceShape::PuzzlePieceShapeDescriptor descriptor = PuzzlePieceShape::createPuzzlePieceShape(i, j, rows, cols, _unit, statuses, tabFull, tabSize, tabOffset, tabTolerance);
             QPainterPath &clip = descriptor.shape;
             int &sxCorrection = descriptor.sxCorrection, &syCorrection = descriptor.syCorrection, &xCorrection = descriptor.xCorrection, &yCorrection = descriptor.yCorrection, &widthCorrection = descriptor.widthCorrection, &heightCorrection = descriptor.heightCorrection;
 
