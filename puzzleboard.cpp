@@ -42,10 +42,6 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
 #else
     _usabilityThickness = 12;
 #endif
-#if defined(HAVE_QACCELEROMETER)
-    accelerometer = new QtMobility::QAccelerometer(this);
-    connect(accelerometer, SIGNAL(readingChanged()), this, SLOT(accelerometerReadingChanged()));
-#endif
 }
 
 void PuzzleBoard::setNeighbours(int x, int y)
@@ -68,46 +64,6 @@ PuzzleItem *PuzzleBoard::find(const QPoint &puzzleCoordinates)
             return p;
     }
     return 0;
-}
-
-bool PuzzleBoard::isAccelerometerActive() const
-{
-#if defined(HAVE_QACCELEROMETER)
-    return accelerometer->isActive();
-#else
-    return false;
-#endif
-}
-
-void PuzzleBoard::accelerometerReadingChanged()
-{
-#if defined(HAVE_QACCELEROMETER)
-    QtMobility::QAccelerometerReading *reading = accelerometer->reading();
-#if defined(Q_WS_MAEMO_5)
-    accelerometerMovement(reading->y(), - reading->x(), reading->z());
-#elif defined(Q_OS_SYMBIAN)
-    accelerometerMovement(- reading->y(), reading->x(), reading->z());
-#elif defined(MEEGO_EDITION_HARMATTAN)
-    accelerometerMovement(- reading->y(), reading->x(), reading->z());
-#else
-    accelerometerMovement(reading->x(), reading->y(), reading->z());
-#endif
-#endif
-}
-
-void PuzzleBoard::enableAccelerometer()
-{
-#if defined(HAVE_QACCELEROMETER)
-    accelerometer->connectToBackend();
-    accelerometer->start();
-#endif
-}
-
-void PuzzleBoard::disableAccelerometer()
-{
-#if defined(HAVE_QACCELEROMETER)
-    accelerometer->stop();
-#endif
 }
 
 void PuzzleBoard::enableFixedFPS()
@@ -510,19 +466,6 @@ void PuzzleBoard::restore()
     connect(group, SIGNAL(finished()), this, SIGNAL(restoreComplete()));
     enableFixedFPS();
     group->start(QAbstractAnimation::DeleteWhenStopped);
-}
-
-void PuzzleBoard::accelerometerMovement(qreal x, qreal y, qreal z)
-{
-    Q_UNUSED(z);
-    foreach (PuzzleItem *item, _puzzleItems)
-    {
-        if (item->canMerge())
-        {
-            item->setPos(item->pos().x() - x * item->weight() / 2, item->pos().y() + y * item->weight() / 2);
-            item->verifyPosition();
-        }
-    }
 }
 
 void PuzzleBoard::enable()

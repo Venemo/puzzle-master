@@ -21,10 +21,6 @@
 
 #include <QDeclarativeItem>
 
-#if defined(HAVE_QACCELEROMETER)
-#include <QAccelerometer>
-#endif
-
 #include "util.h"
 
 class QTimer;
@@ -42,14 +38,10 @@ class PuzzleBoard : public QDeclarativeItem
     Q_PROPERTY(int tolerance READ tolerance WRITE setTolerance NOTIFY toleranceChanged)
     GENPROPERTY_F(int, _rotationTolerance, rotationTolerance, setRotationTolerance, rotationToleranceChanged)
     Q_PROPERTY(int rotationTolerance READ rotationTolerance WRITE setRotationTolerance NOTIFY rotationToleranceChanged)
-    Q_PROPERTY(bool isAccelerometerActive READ isAccelerometerActive NOTIFY isAccelerometerActiveChanged)
 
     QTimer *_fixedFPSTimer;
     QSet<PuzzleItem*> _puzzleItems;
     QHash<PuzzleItem*, QPair<QPointF, int> > _restorablePositions;
-#if defined(HAVE_QACCELEROMETER)
-    QtMobility::QAccelerometer *accelerometer;
-#endif
 
 public:
     explicit PuzzleBoard(QDeclarativeItem *parent = 0);
@@ -57,14 +49,9 @@ public:
     void setNeighbours(int x, int y);
     PuzzleItem *find(const QPoint &puzzleCoordinates);
     void removePuzzleItem(PuzzleItem *item);
-    bool isAccelerometerActive() const;
     QPixmap processImage(const QString &url);
 
-protected:
-    void accelerometerMovement(qreal x, qreal y, qreal z);
-
 signals:
-    void isAccelerometerActiveChanged();
     void toleranceChanged();
     void rotationToleranceChanged();
 
@@ -77,13 +64,10 @@ signals:
     void restoreComplete();
 
 private slots:
-    void accelerometerReadingChanged();
 
 public slots:
     Q_INVOKABLE void disable();
     Q_INVOKABLE void enable();
-    Q_INVOKABLE void enableAccelerometer();
-    Q_INVOKABLE void disableAccelerometer();
     Q_INVOKABLE void enableFixedFPS();
     Q_INVOKABLE void disableFixedFPS();
     Q_INVOKABLE void shuffle();

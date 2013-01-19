@@ -89,8 +89,8 @@ unix:!symbian {
     desktopfile.files = installables/puzzle-master.desktop
 }
 contains(MEEGO_EDITION, harmattan) {
-    # We want to use applauncherd here, and it has an accelerometer
-    DEFINES += HAVE_APPLAUNCHERD HAVE_QACCELEROMETER HAVE_SWIPELOCK MEEGO_EDITION_HARMATTAN DISABLE_SCROLLBARS
+    # We want to use applauncherd here + harmattan specifics and the touchscreen
+    DEFINES += HAVE_APPLAUNCHERD HAVE_SWIPELOCK MEEGO_EDITION_HARMATTAN DISABLE_SCROLLBARS
     # The MeeGo graphics system is better than using QGLWidget
     DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY
     # Optification is needed by the Nokia Store
@@ -101,8 +101,8 @@ contains(MEEGO_EDITION, harmattan) {
 }
 maemo5 {
     QT += dbus
-    # We want the accelerometer
-    DEFINES += HAVE_QACCELEROMETER DISABLE_ROTATION DISABLE_SCROLLBARS
+    # Disable rotation (no multitouch) and scrollbars
+    DEFINES += DISABLE_ROTATION DISABLE_SCROLLBARS
     DEFINES -= DISABLE_QMLGALLERY
     # And the weird Maemo5 paths
     target.path = /opt/puzzle-master
@@ -113,8 +113,8 @@ maemo5 {
 }
 symbian {
     QMAKE_CXXFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden -O3 -ffast-math
-    # We want the accelerometer, but not OpenGL
-    DEFINES += HAVE_QACCELEROMETER QT_NO_OPENGL APP_VERSION=\"$$VERSION\" DISABLE_SCROLLBARS
+    # No OpenGL, no scrollbars and custom appversion hack
+    DEFINES += QT_NO_OPENGL APP_VERSION=\"$$VERSION\" DISABLE_SCROLLBARS
     DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY APP_VERSION=\\\"$$VERSION\\\"
     QT -= opengl
     CONFIG += mobility
@@ -181,11 +181,6 @@ contains(DEFINES, HAVE_OPENGL) {
     # If we want QGLWidget as viewport
     QT += opengl
     DEFINES -= QT_NO_OPENGL
-}
-contains(DEFINES, HAVE_QACCELEROMETER) {
-    # Ability to enable accelerometer
-    CONFIG += mobility
-    MOBILITY += sensors
 }
 contains(DEFINES, HAVE_DEVICEINFO_CHECK) {
     # Checking for device models
