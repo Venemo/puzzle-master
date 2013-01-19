@@ -118,9 +118,7 @@ Panel {
             onClicked: {
                 menuDialog.close()
                 if (appEventHandler.showPlatformFileDialog()) {
-                    var fileUrl = appEventHandler.displayPlatformFileDialog();
-                    if (appSettings.addCustomImage(fileUrl))
-                        imagesModel.insert(0, { url: fileUrl })
+                    appEventHandler.displayPlatformFileDialog();
                 }
                 else {
                     fileSelectorDialog.open()
@@ -211,7 +209,11 @@ Panel {
                     // Load custom images
                     var urls = appSettings.loadCustomImages()
                     for (var i = 0; i < urls.length; i++) {
-                        imagesModel.insert(0, { url: urls[i] })
+                        var newurl = urls[i];
+                        if (newurl.indexOf("file://") != 0)
+                            newurl = "file://" + newurl;
+
+                        imagesModel.insert(0, { url: newurl })
                     }
                 }
             }
@@ -326,10 +328,17 @@ Panel {
         }
     }
     Connections {
-        target: fileSelectorDialog
+        target: fileSelectorDialog ? fileSelectorDialog : null
         onAccepted: {
             if (appSettings.addCustomImage(fileSelectorDialog.selectedImageUrl))
                 imagesModel.insert(0, { url: fileSelectorDialog.selectedImageUrl })
+        }
+    }
+    Connections {
+        target: appEventHandler
+        onPlatformFileDialogAccepted: {
+            if (appSettings.addCustomImage(fileUrl))
+                imagesModel.insert(0, { url: "file://" + fileUrl })
         }
     }
 }

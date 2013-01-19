@@ -20,6 +20,8 @@
 #include <QApplication>
 #include <QEvent>
 #include <QDebug>
+#include <QFile>
+#include <QAbstractEventDispatcher>
 
 #if defined(HAVE_SWIPELOCK)
 #include <X11/Xlib.h>
@@ -37,16 +39,61 @@
 #if defined(Q_WS_MAEMO_5)
 #include <QDBusConnection>
 #include <QDBusMessage>
+#endif
+
+#if defined(Q_WS_MAEMO_5)
 #include <QFileDialog>
+#endif
+
+#if defined(Q_OS_BLACKBERRY_TABLET)
+#include <bps/event.h>
+#include <bps/dialog.h>
+
+static dialog_instance_t bbDialog = 0;
+static const char *bbDialogFilters[] = { "*.jpg" };
 #endif
 
 #include "appeventhandler.h"
 
 #if defined(HAVE_SWIPELOCK)
 static Atom customRegionAtom = 0;
-unsigned int customRegion[4];
-unsigned int defaultRegion[4] = { 0, 0, 0, 0 };
+static unsigned int customRegion[4];
+static unsigned int defaultRegion[4] = { 0, 0, 0, 0 };
 #endif
+
+static AppEventHandler *appEventHandler = 0;
+static QAbstractEventDispatcher::EventFilter previousNativeEventFilter = 0;
+
+AppEventHandler *AppEventHandler::instance(QWidget *parent)
+{
+    if (!appEventHandler)
+        appEventHandler = new AppEventHandler(parent);
+
+    return appEventHandler;
+}
+
+bool AppEventHandler::nativeEventFilter(void *message)
+{
+#if defined(Q_OS_BLACKBERRY_TABLET)
+    bps_event_t * const event = static_cast<bps_event_t *>(message);
+
+    if (event && bps_event_get_domain(event) == dialog_get_domain() && dialog_event_get_selected_index(event) == 1)
+    {
+        char **filePaths = 0;
+        int pathCount;
+        if (dialog_event_get_filebrowse_filepaths(event, &filePaths, &pathCount) != BPS_SUCCESS)
+        {
+            qWarning() << "Could not get paths from native file dialog";
+            return false;
+        }
+        QString path = QFile::decodeName(filePaths[0]);
+        qDebug() << path << "selected!";
+        bps_free(filePaths);
+        emit appEventHandler->platformFileDialogAccepted(path);
+    }
+#endif
+    return previousNativeEventFilter ? previousNativeEventFilter(message) : false;
+}
 
 AppEventHandler::AppEventHandler(QWidget *parent) :
     QObject(parent)
@@ -70,7 +117,20 @@ AppEventHandler::AppEventHandler(QWidget *parent) :
     }
 #endif
 
+#if defined(Q_OS_BLACKBERRY_TABLET)
+    dialog_request_events(0);
+#endif
+
     parent->installEventFilter(this);
+    previousNativeEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(AppEventHandler::nativeEventFilter);
+}
+
+AppEventHandler::~AppEventHandler()
+{
+#if defined(Q_OS_BLACKBERRY_TABLET)
+    if (bbDialog)
+        dialog_destroy(bbDialog);
+#endif
 }
 
 bool AppEventHandler::eventFilter(QObject *obj, QEvent *event)
@@ -124,21 +184,26 @@ void AppEventHandler::displayAppSwitcher()
 
 bool AppEventHandler::showPlatformFileDialog()
 {
-#if defined(Q_WS_MAEMO_5)
+#if defined(Q_WS_MAEMO_5) || defined(Q_OS_BLACKBERRY_TABLET)
     return true;
 #else
     return false;
 #endif
 }
 
-QString AppEventHandler::displayPlatformFileDialog()
+void AppEventHandler::displayPlatformFileDialog()
 {
 #if defined(Q_WS_MAEMO_5)
     QString path = QFileDialog::getOpenFileName(static_cast<QWidget*>(parent()), QString(), "/home/user/MyDocs", "Images (*.png *.jpeg *.jpg *.gif *.bmp)");
     qDebug() << "selected path is" << path;
-    return "file://" + path;
+    emit this->platformFileDialogAccepted(path);
+#elif defined(Q_OS_BLACKBERRY)
+    if (bbDialog)
+        dialog_destroy(bbDialog);
+    dialog_create_filebrowse(&bbDialog);
+    dialog_set_filebrowse_filter(bbDialog, bbDialogFilters, 1);
+    dialog_show(bbDialog);
 #else
     qDebug() << "displayPlatformFileDialog is not implemented for the current platform";
-    return QString();
 #endif
 }

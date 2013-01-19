@@ -28,18 +28,22 @@
 class AppEventHandler : public QObject
 {
     Q_OBJECT
+    explicit AppEventHandler(QWidget *parent = 0);
 
 public:
-    explicit AppEventHandler(QWidget *parent = 0);
+    ~AppEventHandler();
+    static AppEventHandler *instance(QWidget *parent = 0);
+    static bool nativeEventFilter(void *message);
     bool eventFilter(QObject *obj, QEvent *event);
     Q_INVOKABLE bool showAppSwitcherButton();
     Q_INVOKABLE void displayAppSwitcher();
     Q_INVOKABLE bool showPlatformFileDialog();
-    Q_INVOKABLE QString displayPlatformFileDialog();
+    Q_INVOKABLE void displayPlatformFileDialog();
     
 signals:
     void windowActivated();
     void windowDeactivated();
+    void platformFileDialogAccepted(QString fileUrl);
     
 public slots:
     void adjustForPlaying();
