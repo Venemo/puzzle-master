@@ -48,7 +48,6 @@ public:
     void setNeighbours(int x, int y);
     PuzzleItem *find(const QPoint &puzzleCoordinates);
     void removePuzzleItem(PuzzleItem *item);
-    QPixmap processImage(const QString &url);
 
 signals:
     void toleranceChanged();

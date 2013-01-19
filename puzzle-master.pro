@@ -28,14 +28,16 @@ SOURCES += \
     appsettings.cpp \
     appeventhandler.cpp \
     puzzleitem.cpp \
-    puzzleboard.cpp
+    puzzleboard.cpp \
+    puzzlepieceshape.cpp
 
 HEADERS += \
     util.h \
     appsettings.h \
     appeventhandler.h \
     puzzleitem.h \
-    puzzleboard.h
+    puzzleboard.h \
+    puzzlepieceshape.h
 
 RESOURCES += \
     translations.qrc \
