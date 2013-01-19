@@ -255,7 +255,11 @@ Panel {
                     visible: index < imagesModel.count - imagesModel.initialImageCount
                     onClicked: {
                         menuDialog.close()
-                        appSettings.removeCustomImage(imagesModel.get(index).url)
+                        var newurl = imagesModel.get(index).url;
+                        if (newurl.indexOf("file://") >= 0)
+                            newurl = newurl.substring(7);
+
+                        appSettings.removeCustomImage(newurl)
                         imagesModel.remove(imagesModel.get(index))
                     }
                 }

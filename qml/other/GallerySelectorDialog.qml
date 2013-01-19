@@ -25,7 +25,7 @@ Dialog
     property string selectedImageUrl: ""
 
     onOpened: {
-        console.log("Creating folder list model");
+        console.log("Creating DocumentGalleryModel");
         if (!imageSelectorGrid.model)
             imageSelectorGrid.model = Qt.createQmlObject(" \
                 import QtQuick 1.0; \

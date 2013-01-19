@@ -108,9 +108,14 @@ bool AppSettings::addCustomImage(const QString &url)
     return false;
 }
 
-bool AppSettings::removeCustomImage(const QString &url)
+bool AppSettings::removeCustomImage(const QString &u)
 {
+    QString url = u;
     QStringList list = loadCustomImages();
+
+    // Try with the file:// prefix - some older versions saved like that
+    if (!list.contains(url))
+        url = "file://" + url;
 
     if (list.contains(url))
     {
