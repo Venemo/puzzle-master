@@ -88,7 +88,7 @@ bool AppSettings::addCustomImage(const QString &url)
 {
     QStringList list = loadCustomImages();
 
-    if (!list.contains(url))
+    if (!list.contains(url) && QFile::exists(url))
     {
         qDebug() << "adding custom image" << url;
         list.append(url);
@@ -98,10 +98,12 @@ bool AppSettings::addCustomImage(const QString &url)
         setCustomImageListData(array);
         return true;
     }
-    else
+    else if (list.contains(url))
     {
         emit customImageAlreadyAdded(url);
     }
+
+    qDebug() << "not adding custom image" << url << QFile::exists(url);
 
     return false;
 }
