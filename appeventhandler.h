@@ -19,7 +19,9 @@
 #ifndef APPEVENTHANDLER_H
 #define APPEVENTHANDLER_H
 
-#include <QWidget>
+#include <QDeclarativeView>
+
+class QTimer;
 
 // This class handles platform differences and native events.
 // It contains all the hacks necessary to make the app work on multiple platforms.
@@ -28,8 +30,10 @@ class AppEventHandler : public QObject
 {
     Q_OBJECT
 
+    QTimer *_fixedFPSTimer;
+
 public:
-    explicit AppEventHandler(QWidget *parent = 0);
+    explicit AppEventHandler(QDeclarativeView *parent = 0);
     ~AppEventHandler();
     static bool nativeEventFilter(void *message);
     bool eventFilter(QObject *obj, QEvent *event);
@@ -46,6 +50,8 @@ signals:
 public slots:
     void adjustForPlaying();
     void adjustForUi();
+    Q_INVOKABLE void enableFixedFPS();
+    Q_INVOKABLE void disableFixedFPS();
     
 };
 

@@ -34,8 +34,7 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     _allowRotation(true),
     _strokeThickness(3),
     _tolerance(5),
-    _rotationTolerance(10),
-    _fixedFPSTimer(0)
+    _rotationTolerance(10)
 {
 #if Q_OS_BLACKBERRY_TABLET
     _usabilityThickness = 25;
@@ -64,45 +63,6 @@ PuzzleItem *PuzzleBoard::find(const QPoint &puzzleCoordinates)
             return p;
     }
     return 0;
-}
-
-void PuzzleBoard::enableFixedFPS()
-{
-    if (_fixedFPSTimer)
-    {
-        _fixedFPSTimer->stop();
-        _fixedFPSTimer->deleteLater();
-    }
-
-    _fixedFPSTimer = new QTimer(this);
-    _fixedFPSTimer->setInterval(20);
-
-    foreach (QGraphicsView *view, scene()->views())
-    {
-        view->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
-        connect(_fixedFPSTimer, SIGNAL(timeout()), view->viewport(), SLOT(update()));
-    }
-
-    _fixedFPSTimer->start();
-}
-
-void PuzzleBoard::disableFixedFPS()
-{
-    if (_fixedFPSTimer)
-    {
-        _fixedFPSTimer->stop();
-        _fixedFPSTimer->deleteLater();
-        _fixedFPSTimer = 0;
-    }
-
-    foreach (QGraphicsView *view, scene()->views())
-    {
-#if Q_OS_BLACKBERRY_TABLET
-        view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-#else
-        view->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
-#endif
-    }
 }
 
 QPixmap PuzzleBoard::processImage(const QString &url)
@@ -392,9 +352,7 @@ void PuzzleBoard::shuffle()
     }
 
     connect(group, SIGNAL(finished()), this, SLOT(enable()));
-    connect(group, SIGNAL(finished()), this, SLOT(disableFixedFPS()));
     connect(group, SIGNAL(finished()), this, SIGNAL(gameStarted()));
-    enableFixedFPS();
     group->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
@@ -424,12 +382,11 @@ void PuzzleBoard::assemble()
         group->addAnimation(rotateAnimation);
     }
 
-    connect(group, SIGNAL(finished()), this, SLOT(disableFixedFPS()));
     if (_puzzleItems.count() == 1)
         connect(group, SIGNAL(finished()), this, SIGNAL(gameWon()));
     else
         connect(group, SIGNAL(finished()), this, SIGNAL(assembleComplete()));
-    enableFixedFPS();
+
     group->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
@@ -461,10 +418,8 @@ void PuzzleBoard::restore()
         group->addAnimation(rotateAnimation);
     }
 
-    connect(group, SIGNAL(finished()), this, SLOT(disableFixedFPS()));
     connect(group, SIGNAL(finished()), this, SLOT(enable()));
     connect(group, SIGNAL(finished()), this, SIGNAL(restoreComplete()));
-    enableFixedFPS();
     group->start(QAbstractAnimation::DeleteWhenStopped);
 }
 

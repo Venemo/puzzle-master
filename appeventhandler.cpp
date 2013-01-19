@@ -16,12 +16,14 @@
 //
 // Copyright (C) 2010-2011, Timur Kristóf <venemo@fedoraproject.org>
 
+#include <QDeclarativeView>
 #include <QDesktopWidget>
 #include <QApplication>
 #include <QEvent>
 #include <QDebug>
 #include <QFile>
 #include <QAbstractEventDispatcher>
+#include <QTimer>
 
 #if defined(HAVE_SWIPELOCK) && !defined(Q_WS_X11)
 #error What were you thinking? Swipe lock only works on MeeGo & X11
@@ -94,8 +96,9 @@ bool AppEventHandler::nativeEventFilter(void *message)
     return previousNativeEventFilter ? previousNativeEventFilter(message) : false;
 }
 
-AppEventHandler::AppEventHandler(QWidget *parent) :
-    QObject(parent)
+AppEventHandler::AppEventHandler(QDeclarativeView *parent)
+    : QObject(parent)
+    , _fixedFPSTimer(0)
 {
     // Tell the static funtion to care about this instance
     appEventHandlers.append(this);
@@ -226,5 +229,41 @@ void AppEventHandler::displayPlatformFileDialog()
     dialog_show(bbDialog);
 #else
     qDebug() << "displayPlatformFileDialog is not implemented for the current platform";
+#endif
+}
+
+void AppEventHandler::enableFixedFPS()
+{
+    if (_fixedFPSTimer)
+    {
+        _fixedFPSTimer->stop();
+        _fixedFPSTimer->deleteLater();
+    }
+
+    _fixedFPSTimer = new QTimer(this);
+    _fixedFPSTimer->setInterval(20);
+
+    QDeclarativeView *view = static_cast<QDeclarativeView*>(parent());
+    view->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
+    connect(_fixedFPSTimer, SIGNAL(timeout()), view->viewport(), SLOT(update()));
+
+    _fixedFPSTimer->start();
+}
+
+void AppEventHandler::disableFixedFPS()
+{
+    if (_fixedFPSTimer)
+    {
+        _fixedFPSTimer->stop();
+        _fixedFPSTimer->deleteLater();
+        _fixedFPSTimer = 0;
+    }
+
+    QDeclarativeView *view = static_cast<QDeclarativeView*>(parent());
+
+#if Q_OS_BLACKBERRY_TABLET
+    view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+#else
+    view->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
 #endif
 }

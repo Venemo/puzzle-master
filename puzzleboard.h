@@ -39,7 +39,6 @@ class PuzzleBoard : public QDeclarativeItem
     GENPROPERTY_F(int, _rotationTolerance, rotationTolerance, setRotationTolerance, rotationToleranceChanged)
     Q_PROPERTY(int rotationTolerance READ rotationTolerance WRITE setRotationTolerance NOTIFY rotationToleranceChanged)
 
-    QTimer *_fixedFPSTimer;
     QSet<PuzzleItem*> _puzzleItems;
     QHash<PuzzleItem*, QPair<QPointF, int> > _restorablePositions;
 
@@ -68,8 +67,6 @@ private slots:
 public slots:
     Q_INVOKABLE void disable();
     Q_INVOKABLE void enable();
-    Q_INVOKABLE void enableFixedFPS();
-    Q_INVOKABLE void disableFixedFPS();
     Q_INVOKABLE void shuffle();
     Q_INVOKABLE void assemble();
     Q_INVOKABLE void restore();
