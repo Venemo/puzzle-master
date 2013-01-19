@@ -330,8 +330,12 @@ Panel {
     Connections {
         target: fileSelectorDialog ? fileSelectorDialog : null
         onAccepted: {
-            if (appSettings.addCustomImage(fileSelectorDialog.selectedImageUrl))
-                imagesModel.insert(0, { url: fileSelectorDialog.selectedImageUrl })
+            var newurl = fileSelectorDialog.selectedImageUrl;
+            if (newurl.indexOf("file://") >= 0)
+                newurl = newurl.substring(7);
+
+            if (appSettings.addCustomImage(newurl))
+                imagesModel.insert(0, { url: "file://" + newurl })
         }
     }
     Connections {
