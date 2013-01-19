@@ -21,18 +21,16 @@
 
 #include <QWidget>
 
-#if defined(HAVE_SWIPELOCK) && !defined(Q_WS_X11)
-#error What were you thinking? Swipe lock only works on MeeGo & X11
-#endif
+// This class handles platform differences and native events.
+// It contains all the hacks necessary to make the app work on multiple platforms.
 
 class AppEventHandler : public QObject
 {
     Q_OBJECT
-    explicit AppEventHandler(QWidget *parent = 0);
 
 public:
+    explicit AppEventHandler(QWidget *parent = 0);
     ~AppEventHandler();
-    static AppEventHandler *instance(QWidget *parent = 0);
     static bool nativeEventFilter(void *message);
     bool eventFilter(QObject *obj, QEvent *event);
     Q_INVOKABLE bool showAppSwitcherButton();

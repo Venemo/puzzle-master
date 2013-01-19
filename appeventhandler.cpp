@@ -23,6 +23,10 @@
 #include <QFile>
 #include <QAbstractEventDispatcher>
 
+#if defined(HAVE_SWIPELOCK) && !defined(Q_WS_X11)
+#error What were you thinking? Swipe lock only works on MeeGo & X11
+#endif
+
 #if defined(HAVE_SWIPELOCK)
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -61,20 +65,14 @@ static unsigned int customRegion[4];
 static unsigned int defaultRegion[4] = { 0, 0, 0, 0 };
 #endif
 
-static AppEventHandler *appEventHandler = 0;
+static QList<AppEventHandler*> appEventHandlers;
 static QAbstractEventDispatcher::EventFilter previousNativeEventFilter = 0;
-
-AppEventHandler *AppEventHandler::instance(QWidget *parent)
-{
-    if (!appEventHandler)
-        appEventHandler = new AppEventHandler(parent);
-
-    return appEventHandler;
-}
 
 bool AppEventHandler::nativeEventFilter(void *message)
 {
 #if defined(Q_OS_BLACKBERRY_TABLET)
+    // On BlackBerry, we get the file selector dialog results here
+
     bps_event_t * const event = static_cast<bps_event_t *>(message);
 
     if (event && bps_event_get_domain(event) == dialog_get_domain() && dialog_event_get_selected_index(event) == 1)
@@ -89,7 +87,8 @@ bool AppEventHandler::nativeEventFilter(void *message)
         QString path = QFile::decodeName(filePaths[0]);
         qDebug() << path << "selected!";
         bps_free(filePaths);
-        emit appEventHandler->platformFileDialogAccepted(path);
+        foreach (AppEventHandler *appEventHandler, appEventHandlers)
+            emit appEventHandler->platformFileDialogAccepted(path);
     }
 #endif
     return previousNativeEventFilter ? previousNativeEventFilter(message) : false;
@@ -98,7 +97,12 @@ bool AppEventHandler::nativeEventFilter(void *message)
 AppEventHandler::AppEventHandler(QWidget *parent) :
     QObject(parent)
 {
+    // Tell the static funtion to care about this instance
+    appEventHandlers.append(this);
+
 #if defined(HAVE_SWIPELOCK)
+    // On Harmattan, these are needed to enable the swipe lock
+
     if (customRegionAtom == 0)
     {
         customRegionAtom = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_CUSTOM_REGION", False);
@@ -110,6 +114,8 @@ AppEventHandler::AppEventHandler(QWidget *parent) :
 #endif
 
 #if defined(Q_OS_SYMBIAN)
+    // On Symbian, this is the way to disable automatic rotation
+
     CAknAppUi* appUi = dynamic_cast<CAknAppUi*> (CEikonEnv::Static()->AppUi());
     if (appUi)
     {
@@ -118,21 +124,28 @@ AppEventHandler::AppEventHandler(QWidget *parent) :
 #endif
 
 #if defined(Q_OS_BLACKBERRY_TABLET)
+    // On BlackBerry, this tells the platform to send us dialog events
+
     dialog_request_events(0);
 #endif
 
+    // Install the Qt event filter
     parent->installEventFilter(this);
+    // Install the native event filter
     previousNativeEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(AppEventHandler::nativeEventFilter);
 }
 
 AppEventHandler::~AppEventHandler()
 {
+    appEventHandlers.removeAll(this);
+
 #if defined(Q_OS_BLACKBERRY_TABLET)
     if (bbDialog)
         dialog_destroy(bbDialog);
 #endif
 }
 
+// This method emits some events so that the QML UI can react to them
 bool AppEventHandler::eventFilter(QObject *obj, QEvent *event)
 {
     Q_UNUSED(obj);
@@ -150,6 +163,7 @@ bool AppEventHandler::eventFilter(QObject *obj, QEvent *event)
     return false;
 }
 
+// Adjusts the window for playing the game
 void AppEventHandler::adjustForPlaying()
 {
 #if defined(HAVE_SWIPELOCK)
@@ -157,6 +171,7 @@ void AppEventHandler::adjustForPlaying()
 #endif
 }
 
+// Adjusts the window for just displaying the user interface
 void AppEventHandler::adjustForUi()
 {
 #if defined(HAVE_SWIPELOCK)
@@ -164,6 +179,7 @@ void AppEventHandler::adjustForUi()
 #endif
 }
 
+// Whether or not an app switcher button is necessary to display
 bool AppEventHandler::showAppSwitcherButton()
 {
 #if defined(Q_WS_MAEMO_5)
@@ -173,6 +189,7 @@ bool AppEventHandler::showAppSwitcherButton()
 #endif
 }
 
+// When implemented, focuses out of the app and goes to the platform app switcher
 void AppEventHandler::displayAppSwitcher()
 {
 #if defined(Q_WS_MAEMO_5)
@@ -182,22 +199,26 @@ void AppEventHandler::displayAppSwitcher()
 #endif
 }
 
+// Determines whether a platform specific file dialog should be used or the platform supports one of the QML models
 bool AppEventHandler::showPlatformFileDialog()
 {
-#if defined(Q_WS_MAEMO_5) || defined(Q_OS_BLACKBERRY_TABLET)
+#if defined(Q_WS_MAEMO_5) || defined(Q_OS_BLACKBERRY)
     return true;
 #else
     return false;
 #endif
 }
 
+// Displays the platform file selector dialog when available
 void AppEventHandler::displayPlatformFileDialog()
 {
 #if defined(Q_WS_MAEMO_5)
+    // On Maemo 5, this will show the platform file dialog
     QString path = QFileDialog::getOpenFileName(static_cast<QWidget*>(parent()), QString(), "/home/user/MyDocs", "Images (*.png *.jpeg *.jpg *.gif *.bmp)");
     qDebug() << "selected path is" << path;
     emit this->platformFileDialogAccepted(path);
 #elif defined(Q_OS_BLACKBERRY)
+    // On BlackBerry, we must use a specific API to display the platform file dialog
     if (bbDialog)
         dialog_destroy(bbDialog);
     dialog_create_filebrowse(&bbDialog);

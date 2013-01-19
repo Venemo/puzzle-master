@@ -82,7 +82,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     // Some wireup
 
-    AppEventHandler *appEventHandler = AppEventHandler::instance(view);
+    AppEventHandler *appEventHandler = new AppEventHandler(view);
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
     qsrand((uint)QTime::currentTime().msec());
     qmlRegisterType<PuzzleBoard>("net.venemo.puzzlemaster", 2, 0, "PuzzleBoard");
