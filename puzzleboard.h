@@ -25,6 +25,7 @@
 
 class QTimer;
 class QTouchEvent;
+class QGraphicsSceneMouseEvent;
 class PuzzleItem;
 
 class PuzzleBoard : public QDeclarativeItem
@@ -42,6 +43,7 @@ class PuzzleBoard : public QDeclarativeItem
     GENPROPERTY_R(QSet<PuzzleItem*>, _puzzleItems, puzzleItems)
 
     QHash<PuzzleItem*, QPair<QPointF, int> > _restorablePositions;
+    PuzzleItem *_mouseSubject;
 
 public:
     explicit PuzzleBoard(QDeclarativeItem *parent = 0);
@@ -51,6 +53,9 @@ public:
     void removePuzzleItem(PuzzleItem *item);
 
 protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *e);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     bool sceneEvent(QEvent *);
     void touchEvent(QTouchEvent*);
 

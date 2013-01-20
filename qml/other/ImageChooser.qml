@@ -246,7 +246,6 @@ Panel {
                     source: url
                     sourceSize {
                         width: imageSelectorGrid.cellWidth - 25
-                        height: imageSelectorGrid.cellHeight - 25
                     }
                 }
                 MouseArea {

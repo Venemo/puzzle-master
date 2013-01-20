@@ -65,12 +65,7 @@ PuzzleItem::PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent)
     setFlag(QGraphicsItem::ItemStacksBehindParent, false);
     setFlag(QGraphicsItem::ItemNegativeZStacksBehindParent, false);
     setAcceptTouchEvents(false);
-
-#if !defined(MEEGO_EDITION_HARMATTAN) && !defined(Q_OS_SYMBIAN) && !defined(Q_OS_BLACKBERRY) && !defined(Q_OS_BLACKBERRY_TABLET)
-    setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
-#else
     setAcceptedMouseButtons(Qt::NoButton);
-#endif
 }
 
 QPointF PuzzleItem::centerPoint() const
@@ -270,57 +265,6 @@ void PuzzleItem::setCompensatedTransformOriginPoint(const QPointF &point)
     }
 }
 
-void PuzzleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    QDeclarativeItem::mousePressEvent(event);
-    event->accept();
-
-    if (!_isDraggingWithTouch)
-    {
-        if (event->button() == Qt::LeftButton)
-        {
-            startDrag(event->pos());
-        }
-        else if (event->button() == Qt::RightButton && allowRotation())
-        {
-            _isRightButtonPressed = true;
-            setCompensatedTransformOriginPoint(centerPoint());
-            startRotation(mapToParent(event->pos()) - mapToParent(centerPoint()));
-        }
-    }
-}
-
-void PuzzleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    QDeclarativeItem::mouseReleaseEvent(event);
-    event->accept();
-
-    if (event->button() == Qt::LeftButton)
-    {
-        stopDrag();
-    }
-    else if (event->button() == Qt::RightButton)
-    {
-        _isRightButtonPressed = false;
-
-        if (_dragging)
-            _dragStart = mapToParent(event->pos()) - pos();
-    }
-}
-
-void PuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    QDeclarativeItem::mouseMoveEvent(event);
-    event->accept();
-
-    if (_isRightButtonPressed && allowRotation())
-        handleRotation(mapToParent(event->pos()) - mapToParent(centerPoint()));
-    else if (!_isDraggingWithTouch)
-        doDrag(event->pos());
-
-    checkMergeableSiblings(event->pos());
-}
-
 void PuzzleItem::verifyPosition()
 {
     PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
@@ -406,9 +350,4 @@ void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     //painter->fillPath(_fakeShape, QBrush(QColor(0, 0, 255, 130)));
     painter->drawPixmap(_strokeOffset, _stroke);
     painter->drawPixmap(_pixmapOffset, _pixmap);
-}
-
-QPainterPath PuzzleItem::shape() const
-{
-    return _fakeShape;
 }

@@ -27,6 +27,7 @@
 #include <QCoreApplication>
 #include <QTouchEvent>
 #include <QMap>
+#include <QGraphicsSceneMouseEvent>
 
 #include "puzzleboard.h"
 #include "puzzleitem.h"
@@ -51,7 +52,14 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     _usabilityThickness = 12;
 #endif
 
+#if !defined(MEEGO_EDITION_HARMATTAN) && !defined(Q_OS_SYMBIAN) && !defined(Q_OS_BLACKBERRY) && !defined(Q_OS_BLACKBERRY_TABLET)
+    setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
+#else
+    setAcceptedMouseButtons(Qt::NoButton);
+#endif
+
     setAcceptTouchEvents(true);
+    _mouseSubject = 0;
 }
 
 void PuzzleBoard::setNeighbours(int x, int y)
@@ -346,6 +354,61 @@ bool PuzzleBoard::sceneEvent(QEvent *event)
     return QDeclarativeItem::sceneEvent(event);
 }
 
+void PuzzleBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    event->accept();
+    QList<PuzzleItem*> puzzleItems = _puzzleItems.toList();
+    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemLessThan);
+    _mouseSubject = PuzzlePieceShape::findPuzzleItem(event->pos(), puzzleItems);
+
+    if (!_mouseSubject || _mouseSubject->_isDraggingWithTouch || !_mouseSubject->_canMerge)
+        return;
+
+    if (event->button() == Qt::LeftButton)
+    {
+        _mouseSubject->startDrag(_mouseSubject->mapFromParent(event->pos()));
+    }
+    else if (event->button() == Qt::RightButton && allowRotation())
+    {
+        _mouseSubject->_isRightButtonPressed = true;
+        _mouseSubject->setCompensatedTransformOriginPoint(_mouseSubject->centerPoint());
+        _mouseSubject->startRotation(event->pos() - _mouseSubject->mapToParent(_mouseSubject->centerPoint()));
+    }
+}
+
+void PuzzleBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    event->accept();
+    if (!_mouseSubject || _mouseSubject->_isDraggingWithTouch || !_mouseSubject->_canMerge)
+        return;
+
+    if (event->button() == Qt::LeftButton)
+    {
+        _mouseSubject->stopDrag();
+    }
+    else if (event->button() == Qt::RightButton)
+    {
+        _mouseSubject->_isRightButtonPressed = false;
+        _mouseSubject->_dragStart = event->pos() - _mouseSubject->pos();
+    }
+}
+
+void PuzzleBoard::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    event->accept();
+    if (!_mouseSubject || _mouseSubject->_isDraggingWithTouch || !_mouseSubject->_canMerge)
+        return;
+
+    QPointF p = _mouseSubject->mapFromParent(event->pos());
+
+    if (_mouseSubject->_isRightButtonPressed && _mouseSubject->allowRotation())
+        _mouseSubject->handleRotation(event->pos() - _mouseSubject->mapToParent(_mouseSubject->centerPoint()));
+    else
+        _mouseSubject->doDrag(p);
+
+    _mouseSubject->checkMergeableSiblings(p);
+}
+
 void PuzzleBoard::touchEvent(QTouchEvent *event)
 {
     // Determine which touch point belongs to which puzzle item.
@@ -407,7 +470,10 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         item->setCompensatedTransformOriginPoint(midPoint);
 
         if (!item->_dragging)
+        {
+            item->_isDraggingWithTouch = true;
             item->startDrag(midPoint);
+        }
         else
         {
             if (item->_previousTouchPointCount != currentTouchPointCount)

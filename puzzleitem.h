@@ -52,7 +52,6 @@ class PuzzleItem : public QDeclarativeItem
 
 public:
     explicit PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent = 0);
-    virtual QPainterPath shape() const;
     void mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition);
     void raise();
     void verifyPosition();
@@ -77,9 +76,6 @@ protected:
     void setCompensatedTransformOriginPoint(const QPointF &point);
     void checkMergeableSiblings(const QPointF &position);
     bool checkMergeability(PuzzleItem *item);
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *ev);
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *ev);
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     inline qreal leftTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::LeftTab ? 1 : 0); }
