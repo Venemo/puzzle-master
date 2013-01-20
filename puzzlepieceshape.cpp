@@ -1,10 +1,10 @@
 
 #include <QPainter>
+#include <QMap>
 
 #include "puzzleitem.h"
 #include "puzzlepieceshape.h"
 #include "util.h"
-
 
 static QPainterPath createPuzzlePieceShape(QSize _unit, int status, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance)
 {
@@ -80,6 +80,7 @@ class CreatorPrivate
     friend class Creator;
     QSize unit;
     qreal tabFull, tabSize, tabOffset, tabTolerance;
+    QMap<int, QPainterPath> shapeCache;
 };
 
 Creator::Creator(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance)
@@ -148,7 +149,17 @@ Correction Creator::getCorrectionFor(int status)
 
 QPainterPath Creator::getPuzzlePieceShape(int status)
 {
-    return createPuzzlePieceShape(_p->unit, status, _p->tabFull, _p->tabSize, _p->tabOffset, _p->tabTolerance);
+    if (!_p->shapeCache.contains(status))
+    {
+        _p->shapeCache[status] = createPuzzlePieceShape(_p->unit, status, _p->tabFull, _p->tabSize, _p->tabOffset, _p->tabTolerance);
+    }
+    //else
+    //{
+    //    qDebug() << "shape cache hit for" << status;
+    //}
+
+
+    return _p->shapeCache[status];
 }
 
 QPixmap processImage(const QString &url, int width, int height)
