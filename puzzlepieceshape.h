@@ -13,18 +13,19 @@ namespace PuzzlePieceShape
 
 enum TabStatus {
     LeftTab =         1,
-    TopTab =          2,
-    RightTab =        4,
-    BottomTab =       8,
+    LeftBlank =       2,
+    LeftBorder =      4,
 
-    LeftBlank =      16,
-    TopBlank =       32,
-    RightBlank =     64,
-    BottomBlank =   128,
+    TopTab =          8,
+    TopBlank =       16,
+    TopBorder =      32,
 
-    LeftBorder =    256,
-    TopBorder =     512,
-    RightBorder =  1024,
+    RightTab =       64,
+    RightBlank =    128,
+    RightBorder =   256,
+
+    BottomTab =     512,
+    BottomBlank =  1024,
     BottomBorder = 2048
 };
 
