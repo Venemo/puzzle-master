@@ -191,17 +191,19 @@ void PuzzleBoard::shuffle()
 
     foreach (PuzzleItem *item, _puzzleItems)
     {
+        int pauseDuration = randomInt(0, CLAMP(_puzzleItems.count() / 3, 2, 6)) * 300;
+
         QSequentialAnimationGroup *seq = new QSequentialAnimationGroup(group);
         group->addAnimation(seq);
         QParallelAnimationGroup *par = new QParallelAnimationGroup(seq);
-        seq->addPause(randomInt(0, CLAMP(_puzzleItems.count() / 3, 2, 6)) * 400 + 100);
+        seq->addPause(pauseDuration);
         seq->addAnimation(par);
 
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
         anim->setStartValue(item->pos());
         anim->setKeyValueAt(0.5, QPointF(randomInt(0, width() - _unit.width()), randomInt(0, height() - _unit.width())));
         anim->setEndValue(QPointF(randomInt(0, width() - _unit.width()), randomInt(0, height() - _unit.width())));
-        anim->setDuration(2500);
+        anim->setDuration(3000 - pauseDuration);
         anim->setEasingCurve(easingCurve);
         par->addAnimation(anim);
 
@@ -209,7 +211,7 @@ void PuzzleBoard::shuffle()
         rotateAnimation->setStartValue(item->rotation());
         rotateAnimation->setEndValue(_allowRotation ? randomInt(0, 359) : 0);
         rotateAnimation->setKeyValueAt(0.5, randomInt(0, 359));
-        rotateAnimation->setDuration(2500);
+        rotateAnimation->setDuration(3000 - pauseDuration);
         rotateAnimation->setEasingCurve(easingCurve);
         par->addAnimation(rotateAnimation);
 
