@@ -451,9 +451,30 @@ void PuzzleItem::verifyPosition()
 
 void PuzzleItem::raise()
 {
-    foreach (QGraphicsItem *item, ((QDeclarativeItem*)parent())->childItems())
-        if (item != this)
-            item->stackBefore(this);
+    PuzzleItem *maxItem = this;
+    foreach (PuzzleItem *item, static_cast<PuzzleBoard*>(parent())->puzzleItems())
+    {
+        if (item->zValue() > maxItem->zValue())
+        {
+            maxItem = item;
+        }
+    }
+    if (maxItem != this)
+    {
+        qreal max = maxItem->zValue();
+        foreach (PuzzleItem *item, static_cast<PuzzleBoard*>(parent())->puzzleItems())
+        {
+            if (item->zValue() > this->zValue())
+            {
+                item->setZValue(item->zValue() - 1);
+            }
+            else if (item != this && item->zValue() == this->zValue())
+            {
+                item->stackBefore(this);
+            }
+        }
+        setZValue(max);
+    }
 }
 
 void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

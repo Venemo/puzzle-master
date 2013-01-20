@@ -81,7 +81,7 @@ PuzzleBoard {
     }
     Panel {
         id: menuButtonPanel
-        z: 1
+        z: 200
         visible: false
         width: 80
         height: 60
@@ -105,7 +105,7 @@ PuzzleBoard {
     Dialog {
         property bool shouldReenableGame: false
 
-        z: 1
+        z: 200
         id: menuDialog
         title: qsTr("Puzzle Master")
         contentHeight: menuDialogColumn.height
@@ -213,7 +213,7 @@ PuzzleBoard {
     }
     Dialog {
         id: progressDialog
-        z: 1
+        z: 200
         title: qsTr("Please wait...")
         backgroundColor: "#99101010"
         enableBackgroundClicking: false
@@ -226,7 +226,7 @@ PuzzleBoard {
     }
     Dialog {
         id: pausedDialog
-        z: 1
+        z: 200
         title: qsTr("Game paused")
         text: qsTr("Switch back to continue it.")
         backgroundColor: "#99101010"
@@ -245,7 +245,7 @@ PuzzleBoard {
     }
     Dialog {
         id: areYouSureToSurrenderDialog
-        z: 1
+        z: 200
         title: qsTr("Are you sure?")
         text: qsTr("Do you want to give up this game?\nYou can't continue it then. Use \"Get a hint!\" if you need a clue.")
         acceptButtonText: qsTr("Yes")
@@ -258,7 +258,7 @@ PuzzleBoard {
     }
     Dialog {
         id: areYouSureToRestartDialog
-        z: 1
+        z: 200
         title: qsTr("Are you sure?")
         text: qsTr("Do you want to restart this game?")
         acceptButtonText: qsTr("Yes")
@@ -271,7 +271,7 @@ PuzzleBoard {
     }
     Dialog {
         id: failedToStartDialog
-        z: 1
+        z: 200
         enableBackgroundClicking: false
         title: qsTr("An error has occoured")
         text: qsTr("Sorry, we couldn't start the game. Please try to start it with another picture.")

@@ -38,8 +38,8 @@ class PuzzleBoard : public QDeclarativeItem
     Q_PROPERTY(int tolerance READ tolerance WRITE setTolerance NOTIFY toleranceChanged)
     GENPROPERTY_F(int, _rotationTolerance, rotationTolerance, setRotationTolerance, rotationToleranceChanged)
     Q_PROPERTY(int rotationTolerance READ rotationTolerance WRITE setRotationTolerance NOTIFY rotationToleranceChanged)
+    GENPROPERTY_R(QSet<PuzzleItem*>, _puzzleItems, puzzleItems)
 
-    QSet<PuzzleItem*> _puzzleItems;
     QHash<PuzzleItem*, QPair<QPointF, int> > _restorablePositions;
 
 public:

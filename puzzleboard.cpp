@@ -163,6 +163,8 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setWidth(px.width() + _usabilityThickness * 2 + 2);
             item->setHeight(px.height() + _usabilityThickness * 2 + 2);
             item->setTabStatus(statuses[i * rows + j]);
+            item->setZValue(i * rows + j + this->zValue() + 1);
+
             connect(item, SIGNAL(noNeighbours()), this, SLOT(assemble()));
 
             item->show();
