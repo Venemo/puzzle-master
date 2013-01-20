@@ -244,7 +244,10 @@ Panel {
                     clip: true
                     anchors.centerIn: parent
                     source: url
-                    sourceSize.width: imageSelectorGrid.cellWidth - 10
+                    sourceSize {
+                        width: imageSelectorGrid.cellWidth - 25
+                        height: imageSelectorGrid.cellHeight - 25
+                    }
                 }
                 MouseArea {
                     anchors.fill: parent
