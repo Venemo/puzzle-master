@@ -76,7 +76,7 @@ protected:
     void setCompensatedTransformOriginPoint(const QPointF &point);
     void checkMergeableSiblings(const QPointF &position);
     bool checkMergeability(PuzzleItem *item);
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
     inline qreal leftTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::LeftTab ? 1 : 0); }
     inline qreal topTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::TopTab ? 1 : 0); }

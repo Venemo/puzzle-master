@@ -339,11 +339,8 @@ void PuzzleItem::raise()
     }
 }
 
-void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    Q_UNUSED(option)
-    Q_UNUSED(widget)
-
     // Uncomment for or various debugging purposes
     //painter->drawRect(boundingRect());
     //painter->drawEllipse(mapFromScene(pos()), 10, 10);
