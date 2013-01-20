@@ -357,6 +357,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
     {
         if (p.state() == Qt::TouchPointReleased)
         {
+            //qDebug() << "released";
             foreach (PuzzleItem *item, puzzleItems)
             {
                 if (item->_grabbedTouchPointIds.contains(p.id()))
@@ -368,6 +369,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         }
         else if (p.state() == Qt::TouchPointPressed)
         {
+            //qDebug() << "pressed";
             PuzzleItem *item = PuzzlePieceShape::findPuzzleItem(p.pos(), puzzleItems);
 
             if (item)
@@ -388,7 +390,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
 
     foreach (PuzzleItem *item, puzzleItems)
     {
-        int currentTouchPointCount = item->grabbedTouchPointIds().count();
+        int currentTouchPointCount = item->_grabbedTouchPointIds.count();
         if (currentTouchPointCount == 0 || !item->_canMerge)
         {
             if (item->_dragging)
@@ -397,9 +399,9 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         }
 
         QPointF midPoint;
-        foreach (int id, item->grabbedTouchPointIds())
+        foreach (int id, item->_grabbedTouchPointIds)
             midPoint += m[id]->pos();
-        midPoint /= item->grabbedTouchPointIds().count();
+        midPoint /= currentTouchPointCount;
         midPoint = this->QGraphicsItem::mapToItem(item, midPoint);
 
         item->setCompensatedTransformOriginPoint(midPoint);
@@ -408,12 +410,12 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
             item->startDrag(midPoint);
         else
         {
-            if (item->_previousTouchPointCount != item->grabbedTouchPointIds().count())
+            if (item->_previousTouchPointCount != currentTouchPointCount)
                 item->_dragStart = mapToParent(midPoint) - pos();
             item->doDrag(midPoint);
         }
 
-        if (allowRotation() && item->grabbedTouchPointIds().count() >= 2)
+        if (allowRotation() && currentTouchPointCount >= 2)
         {
             if (item->_previousTouchPointCount < 2)
                 item->startRotation(m[item->_grabbedTouchPointIds[1]]->screenPos() - m[item->_grabbedTouchPointIds[0]]->screenPos());
