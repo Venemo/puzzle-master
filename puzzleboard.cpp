@@ -127,6 +127,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
     QPainterPathStroker stroker;
     stroker.setJoinStyle(Qt::BevelJoin);
+    int tShape = 0, tStroke = 0, tStrokePaint = 0, tShapePaint = 0, tObj = 0;
 
     for (unsigned i = 0; i < cols; i++)
     {
@@ -134,10 +135,16 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
         {
             timer.restart();
 
+            QElapsedTimer t;
+            t.start();
+
             // Creating the shape of the piece
             PuzzlePieceShape::PuzzlePieceShapeDescriptor descriptor = PuzzlePieceShape::createPuzzlePieceShape(i, j, rows, cols, _unit, statuses, tabFull, tabSize, tabOffset, tabTolerance);
             QPainterPath &clip = descriptor.shape;
             int &sxCorrection = descriptor.sxCorrection, &syCorrection = descriptor.syCorrection, &xCorrection = descriptor.xCorrection, &yCorrection = descriptor.yCorrection, &widthCorrection = descriptor.widthCorrection, &heightCorrection = descriptor.heightCorrection;
+
+            tShape += t.elapsed();
+            t.restart();
 
             // Creating the pixmap for the piece
             QPixmap px(_unit.width() + widthCorrection + 1, _unit.height() + heightCorrection + 1);
@@ -153,6 +160,9 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             p.drawPixmap(tabFull + xCorrection + sxCorrection, tabFull + yCorrection + syCorrection, pixmap, i * _unit.width() + sxCorrection, j * _unit.height() + syCorrection, _unit.width() * 2, _unit.height() * 2);
             p.end();
 
+            tShapePaint += t.elapsed();
+            t.restart();
+
             QPointF supposed(w0 + (i * _unit.width()) + sxCorrection - _usabilityThickness,
                              h0 + (j * _unit.height()) + syCorrection - _usabilityThickness);
             stroker.setWidth(_strokeThickness * 2);
@@ -163,11 +173,17 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             bigRectClip = bigRectClip.translated(xCorrection - _usabilityThickness, yCorrection - _usabilityThickness);
             QPainterPath fakeShape = (bigRectClip + clip).simplified();
 
+            tStroke += t.elapsed();
+            t.restart();
+
             QPixmap stroke(px.width() + _strokeThickness * 2, px.height() + _strokeThickness * 2);
             stroke.fill(Qt::transparent);
             p.begin(&stroke);
             p.fillPath(strokePath.translated(_strokeThickness, _strokeThickness), QBrush(QColor(255, 255, 255, 255)));
             p.end();
+
+            tStrokePaint += t.elapsed();
+            t.restart();
 
             // Creating the piece
             PuzzleItem *item = new PuzzleItem(px, this);
@@ -188,11 +204,17 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->show();
             _puzzleItems.insert(item);
 
+            tObj += t.elapsed();
+            t.restart();
+
             qDebug() << timer.elapsed() << "ms spent with generating piece" << i * rows + j + 1 << item->puzzleCoordinates();
             emit loadProgressChanged(i * rows + j + 1);
             QCoreApplication::instance()->processEvents();
         }
     }
+
+    qDebug() << "time spent" << "shapes:" << tShape << "paint shapes:" << tShapePaint << "strokes:" << tStroke << "stroke paints:" << tStrokePaint << "object instantiations:" << tObj;
+
     delete statuses;
     setNeighbours(cols, rows);
     emit loaded();
