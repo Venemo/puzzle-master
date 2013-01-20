@@ -129,6 +129,8 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     stroker.setJoinStyle(Qt::BevelJoin);
     int tShape = 0, tStroke = 0, tStrokePaint = 0, tShapePaint = 0, tObj = 0;
 
+    PuzzlePieceShape::generatePuzzlePieceStatuses(rows, cols, statuses);
+
     for (unsigned i = 0; i < cols; i++)
     {
         for (unsigned j = 0; j < rows; j++)
@@ -139,7 +141,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             t.start();
 
             // Creating the shape of the piece
-            PuzzlePieceShape::PuzzlePieceShapeDescriptor descriptor = PuzzlePieceShape::createPuzzlePieceShape(i, j, rows, cols, _unit, statuses, tabFull, tabSize, tabOffset, tabTolerance);
+            PuzzlePieceShape::PuzzlePieceShapeDescriptor descriptor = PuzzlePieceShape::createPuzzlePieceShape(_unit, statuses[i * rows + j], tabFull, tabSize, tabOffset, tabTolerance);
             QPainterPath &clip = descriptor.shape;
             int &sxCorrection = descriptor.sxCorrection, &syCorrection = descriptor.syCorrection, &xCorrection = descriptor.xCorrection, &yCorrection = descriptor.yCorrection, &widthCorrection = descriptor.widthCorrection, &heightCorrection = descriptor.heightCorrection;
 

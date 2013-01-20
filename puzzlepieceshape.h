@@ -12,10 +12,20 @@ namespace PuzzlePieceShape
 {
 
 enum TabStatus {
-    LeftTab = 0x01,
-    TopTab = 0x02,
-    RightTab = 0x04,
-    BottomTab = 0x08
+    LeftTab =         1,
+    TopTab =          2,
+    RightTab =        4,
+    BottomTab =       8,
+
+    LeftBlank =      16,
+    TopBlank =       32,
+    RightBlank =     64,
+    BottomBlank =   128,
+
+    LeftBorder =    256,
+    TopBorder =     512,
+    RightBorder =  1024,
+    BottomBorder = 2048
 };
 
 struct PuzzlePieceShapeDescriptor {
@@ -29,7 +39,8 @@ struct PuzzlePieceShapeDescriptor {
 };
 
 QPixmap processImage(const QString &url, int width, int height);
-PuzzlePieceShapeDescriptor createPuzzlePieceShape(int i, int j, int rows, int cols, QSize _unit, int *statuses, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance);
+void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses);
+PuzzlePieceShapeDescriptor createPuzzlePieceShape(QSize _unit, int status, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance);
 PuzzleItem *findPuzzleItem(QPointF p, const QList<PuzzleItem*> &puzzleItems);
 
 }
