@@ -158,7 +158,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             QPixmap stroke(px.width() + _strokeThickness * 2, px.height() + _strokeThickness * 2);
             stroke.fill(Qt::transparent);
             p.begin(&stroke);
-            p.fillPath(strokePath.translated(_strokeThickness, _strokeThickness), QBrush(QColor(75, 75, 75, 255)));
+            p.fillPath(strokePath.translated(_strokeThickness, _strokeThickness), QBrush(QColor(255, 255, 255, 255)));
             p.end();
 
             // Creating the piece

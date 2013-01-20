@@ -145,8 +145,7 @@ Panel {
             activeFocusOnPress: false
         }
     }
-    Rectangle {
-        color: "#ffffff"
+    Item {
         anchors {
             top: imageChooserTop.bottom
             bottom: parent.bottom
@@ -154,16 +153,23 @@ Panel {
             right: parent.right
         }
         clip: true
-        radius: 15
 
+        Image {
+            anchors.fill: parent
+            source: "qrc:/pics/background.jpg"
+            fillMode: Image.Tile
+        }
         Rectangle {
-            color: "#ffffff"
-            height: 15
             anchors {
-                top: parent.top
                 left: parent.left
                 right: parent.right
+                top: parent.top
             }
+            gradient: Gradient {
+                GradientStop { color: "#99000000"; position: 0.0 }
+                GradientStop { color: "#00000000"; position: 1.0 }
+            }
+            height: 70
         }
 
         GridView {
@@ -173,7 +179,7 @@ Panel {
             anchors {
                 top: parent.top
                 bottom: parent.bottom
-                topMargin: 5
+                topMargin: 15
                 bottomMargin: 5
                 horizontalCenter: parent.horizontalCenter
                 horizontalCenterOffset: - imageSelectorGridScrollBar.width / 2
@@ -221,12 +227,20 @@ Panel {
                 width: imageSelectorGrid.cellWidth
                 height: imageSelectorGrid.cellHeight
 
+                Rectangle {
+                    color: "#fff"
+                    anchors.fill: delegateImage
+                    anchors.margins: -5
+                    border.width: 3
+                    border.color: "#33000000"
+                }
+
                 Image {
                     id: delegateImage
                     asynchronous: false
                     fillMode: Image.PreserveAspectCrop
-                    width: imageSelectorGrid.cellWidth - 10
-                    height: imageSelectorGrid.cellHeight - 10
+                    width: imageSelectorGrid.cellWidth - 25
+                    height: imageSelectorGrid.cellHeight - 25
                     clip: true
                     anchors.centerIn: parent
                     source: url
@@ -235,12 +249,8 @@ Panel {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        if (pressAnimation.running || releaseAnimation.running)
-                            return;
-
-                        imageSelectorGrid.currentIndex = index
-                        pressAnimation.target = delegateImage
-                        pressAnimation.start()
+                        imageSelectorGrid.currentIndex = index;
+                        imageChooser.accepted();
                     }
                 }
                 Button {
@@ -267,26 +277,6 @@ Panel {
             onCurrentIndexChanged: {
                 imageChooser.selectedImageUrl = imagesModel.get(imageSelectorGrid.currentIndex).url
             }
-        }
-        NumberAnimation {
-            id: pressAnimation
-            target: null;
-            property: "scale";
-            from: 1
-            to: 0.95
-            duration: 40;
-            onCompleted: {
-                imageChooser.accepted()
-                releaseAnimation.start()
-            }
-        }
-        NumberAnimation {
-            id: releaseAnimation
-            target: pressAnimation.target;
-            property: "scale";
-            from: pressAnimation.to
-            to: pressAnimation.from
-            duration: pressAnimation.duration;
         }
         VerticalScrollBar {
             id: imageSelectorGridScrollBar
