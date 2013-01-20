@@ -41,6 +41,7 @@ class PuzzleItem : public QDeclarativeItem
     GENPROPERTY_S(bool, _canMerge, canMerge, setCanMerge)
     GENPROPERTY_S(qreal, _weight, weight, setWeight)
     GENPROPERTY_S(unsigned, _tabStatus, tabStatus, setTabStatus)
+    GENPROPERTY_R(QList<int>, _grabbedTouchPointIds, grabbedTouchPointIds)
 
     QPointF _dragStart;
     bool _dragging, _isDraggingWithTouch, _isRightButtonPressed;
@@ -79,7 +80,6 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *ev);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *ev);
-    virtual bool sceneEvent(QEvent *event);
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     inline qreal leftTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::LeftTab ? 1 : 0); }

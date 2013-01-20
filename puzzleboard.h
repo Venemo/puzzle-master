@@ -24,6 +24,7 @@
 #include "util.h"
 
 class QTimer;
+class QTouchEvent;
 class PuzzleItem;
 
 class PuzzleBoard : public QDeclarativeItem
@@ -48,6 +49,10 @@ public:
     void setNeighbours(int x, int y);
     PuzzleItem *find(const QPoint &puzzleCoordinates);
     void removePuzzleItem(PuzzleItem *item);
+
+protected:
+    bool sceneEvent(QEvent *);
+    void touchEvent(QTouchEvent*);
 
 signals:
     void toleranceChanged();

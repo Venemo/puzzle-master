@@ -4,6 +4,9 @@
 #include <QString>
 #include <QPixmap>
 #include <QPainterPath>
+#include <QList>
+
+class PuzzleItem;
 
 namespace PuzzlePieceShape
 {
@@ -27,6 +30,7 @@ struct PuzzlePieceShapeDescriptor {
 
 QPixmap processImage(const QString &url, int width, int height);
 PuzzlePieceShapeDescriptor createPuzzlePieceShape(int i, int j, int rows, int cols, QSize _unit, int *statuses, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance);
+PuzzleItem *findPuzzleItem(QPointF p, const QList<PuzzleItem*> &puzzleItems);
 
 }
 

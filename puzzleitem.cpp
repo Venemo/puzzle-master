@@ -51,18 +51,6 @@ inline static qreal simplifyAngle(qreal a)
     return a;
 }
 
-inline static QPointF findMidpoint(QTouchEvent *touchEvent, PuzzleItem *item)
-{
-    QPointF midpoint;
-
-    // Finding the midpoint
-    foreach (const QTouchEvent::TouchPoint &touchPoint, touchEvent->touchPoints())
-        midpoint += touchPoint.scenePos();
-
-    midpoint /= touchEvent->touchPoints().count();
-    return item->QGraphicsItem::mapFromScene(midpoint);
-}
-
 PuzzleItem::PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent)
     : QDeclarativeItem(parent),
       _canMerge(false),
@@ -76,7 +64,8 @@ PuzzleItem::PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent)
     setFlag(QGraphicsItem::ItemHasNoContents, false);
     setFlag(QGraphicsItem::ItemStacksBehindParent, false);
     setFlag(QGraphicsItem::ItemNegativeZStacksBehindParent, false);
-    setAcceptTouchEvents(true);
+    setAcceptTouchEvents(false);
+
 #if !defined(MEEGO_EDITION_HARMATTAN) && !defined(Q_OS_SYMBIAN) && !defined(Q_OS_BLACKBERRY) && !defined(Q_OS_BLACKBERRY_TABLET)
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
 #else
@@ -188,6 +177,7 @@ void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
         if (neighbours().count() == 0)
         {
             _dragging = _isDraggingWithTouch = _canMerge = false;
+            qDebug() << "puzzle solved! :)";
             emit noNeighbours();
         }
         else
@@ -329,78 +319,6 @@ void PuzzleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         doDrag(event->pos());
 
     checkMergeableSiblings(event->pos());
-}
-
-bool PuzzleItem::sceneEvent(QEvent *event)
-{
-    if (QDeclarativeItem::sceneEvent(event))
-        return true;
-
-    if (!_canMerge)
-        return false;
-
-    QTouchEvent *touchEvent = 0;
-
-    if (event->type() == QEvent::TouchBegin || event->type() == QEvent::TouchUpdate || event->type() == QEvent::TouchEnd)
-    {
-        touchEvent = static_cast<QTouchEvent*>(event);
-    }
-
-    if (event->type() == QEvent::TouchBegin)
-    {
-        event->accept();
-        //qDebug() << "touch begin for" << _puzzleCoordinates;
-
-        // Touch began, there may be any number of touch points now
-        _isDraggingWithTouch = true;
-        QPointF midpoint = findMidpoint(touchEvent, this);
-        startDrag(midpoint);
-
-        if (touchEvent->touchPoints().count() >= 2)
-            startRotation(touchEvent->touchPoints().at(0).screenPos() - touchEvent->touchPoints().at(1).screenPos());
-
-        _previousTouchPointCount = touchEvent->touchPoints().count();
-        return true;
-    }
-    else if (event->type() == QEvent::TouchEnd)
-    {
-        if (_isDraggingWithTouch)
-            event->accept();
-        //qDebug() << "touch end for" << _puzzleCoordinates;
-
-        // Touch ended
-        // NOTE: this will also set _isDraggingWithTouch to false
-        stopDrag();
-        return true;
-    }
-    else if (event->type() == QEvent::TouchUpdate)
-    {
-        if (_isDraggingWithTouch)
-            event->accept();
-
-        QPointF midpoint = findMidpoint(touchEvent, this);
-        setCompensatedTransformOriginPoint(midpoint);
-
-        // If you put one more finger onto an item, this prevents it from jumping
-        if (touchEvent->touchPoints().count() != _previousTouchPointCount)
-            _dragStart = mapToParent(midpoint) - pos();
-        else
-            doDrag(midpoint);
-
-        if (allowRotation())
-        {
-            if (_previousTouchPointCount < 2 && touchEvent->touchPoints().count() >= 2)
-                startRotation(touchEvent->touchPoints().at(0).screenPos() - touchEvent->touchPoints().at(1).screenPos());
-            else if (touchEvent->touchPoints().count() >= 2)
-                handleRotation(touchEvent->touchPoints().at(0).screenPos() - touchEvent->touchPoints().at(1).screenPos());
-        }
-
-        checkMergeableSiblings(midpoint);
-        _previousTouchPointCount = touchEvent->touchPoints().count();
-        return true;
-    }
-
-    return false;
 }
 
 void PuzzleItem::verifyPosition()

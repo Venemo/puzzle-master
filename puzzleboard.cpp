@@ -25,10 +25,18 @@
 #include <QTimer>
 #include <QElapsedTimer>
 #include <QCoreApplication>
+#include <QTouchEvent>
+#include <QMap>
 
 #include "puzzleboard.h"
 #include "puzzleitem.h"
 #include "puzzlepieceshape.h"
+
+inline static bool puzzleItemLessThan(PuzzleItem *a, PuzzleItem *b)
+{
+    // We want to order them in descending order by their z values
+    return a->zValue() > b->zValue();
+}
 
 PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     QDeclarativeItem(parent),
@@ -37,11 +45,13 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     _tolerance(5),
     _rotationTolerance(10)
 {
-#if Q_OS_BLACKBERRY_TABLET
+#if Q_OS_BLACKBERRY_TABLET || MEEGO_EDITION_HARMATTAN || Q_OS_SYMBIAN
     _usabilityThickness = 25;
 #else
     _usabilityThickness = 12;
 #endif
+
+    setAcceptTouchEvents(true);
 }
 
 void PuzzleBoard::setNeighbours(int x, int y)
@@ -228,6 +238,7 @@ void PuzzleBoard::shuffle()
 
 void PuzzleBoard::assemble()
 {
+    qDebug() << "assemble called, number of items:" << _puzzleItems.count();
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
     QEasingCurve easingCurve(QEasingCurve::OutExpo);
     _restorablePositions.clear();
@@ -320,4 +331,97 @@ void PuzzleBoard::removePuzzleItem(PuzzleItem *item)
 {
     _puzzleItems.remove(item);
     item->deleteLater();
+}
+
+bool PuzzleBoard::sceneEvent(QEvent *event)
+{
+    if (event->type() == QEvent::TouchBegin || event->type() == QEvent::TouchUpdate || event->type() == QEvent::TouchEnd)
+    {
+        QTouchEvent *te = static_cast<QTouchEvent*>(event);
+        event->accept();
+        touchEvent(te);
+        return true;
+    }
+
+    return QDeclarativeItem::sceneEvent(event);
+}
+
+void PuzzleBoard::touchEvent(QTouchEvent *event)
+{
+    // Determine which touch point belongs to which puzzle item.
+
+    QList<PuzzleItem*> puzzleItems = _puzzleItems.toList();
+    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemLessThan);
+
+    foreach (const QTouchEvent::TouchPoint &p, event->touchPoints())
+    {
+        if (p.state() == Qt::TouchPointReleased)
+        {
+            foreach (PuzzleItem *item, puzzleItems)
+            {
+                if (item->_grabbedTouchPointIds.contains(p.id()))
+                {
+                    item->_grabbedTouchPointIds.removeAll(p.id());
+                    break;
+                }
+            }
+        }
+        else if (p.state() == Qt::TouchPointPressed)
+        {
+            PuzzleItem *item = PuzzlePieceShape::findPuzzleItem(p.pos(), puzzleItems);
+
+            if (item)
+            {
+                item->_grabbedTouchPointIds.append(p.id());
+                item->raise();
+            }
+        }
+    }
+
+    // Map touch points to their IDs (so that we don't have to look them up all the time)
+
+    QMap<int, const QTouchEvent::TouchPoint*> m;
+    foreach (const QTouchEvent::TouchPoint &p, event->touchPoints())
+        m.insert(p.id(), &p);
+
+    // For each item, handle the touch points it has grabbed
+
+    foreach (PuzzleItem *item, puzzleItems)
+    {
+        int currentTouchPointCount = item->grabbedTouchPointIds().count();
+        if (currentTouchPointCount == 0 || !item->_canMerge)
+        {
+            if (item->_dragging)
+                item->stopDrag();
+            continue;
+        }
+
+        QPointF midPoint;
+        foreach (int id, item->grabbedTouchPointIds())
+            midPoint += m[id]->pos();
+        midPoint /= item->grabbedTouchPointIds().count();
+        midPoint = this->QGraphicsItem::mapToItem(item, midPoint);
+
+        item->setCompensatedTransformOriginPoint(midPoint);
+
+        if (!item->_dragging)
+            item->startDrag(midPoint);
+        else
+        {
+            if (item->_previousTouchPointCount != item->grabbedTouchPointIds().count())
+                item->_dragStart = mapToParent(midPoint) - pos();
+            item->doDrag(midPoint);
+        }
+
+        if (allowRotation() && item->grabbedTouchPointIds().count() >= 2)
+        {
+            if (item->_previousTouchPointCount < 2)
+                item->startRotation(m[item->_grabbedTouchPointIds[1]]->screenPos() - m[item->_grabbedTouchPointIds[0]]->screenPos());
+            else
+                item->handleRotation(m[item->_grabbedTouchPointIds[1]]->screenPos() - m[item->_grabbedTouchPointIds[0]]->screenPos());
+        }
+
+        item->_previousTouchPointCount = item->_grabbedTouchPointIds.count();
+        item->checkMergeableSiblings(midPoint);
+    }
 }

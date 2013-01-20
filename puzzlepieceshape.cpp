@@ -1,7 +1,9 @@
-#include "puzzlepieceshape.h"
-#include "util.h"
 
 #include <QPainter>
+
+#include "puzzleitem.h"
+#include "puzzlepieceshape.h"
+#include "util.h"
 
 namespace PuzzlePieceShape
 {
@@ -151,5 +153,18 @@ PuzzlePieceShapeDescriptor createPuzzlePieceShape(int i, int j, int rows, int co
     rectClip = rectClip.translated(xCorrection, yCorrection);
 
     return descriptor;
+}
+
+PuzzleItem *findPuzzleItem(QPointF p, const QList<PuzzleItem*> &puzzleItems)
+{
+    foreach (PuzzleItem *item, puzzleItems)
+    {
+        QPointF tr = item->mapFromParent(p);
+
+        if (item->shape().contains(tr))
+            return item;
+    }
+
+    return 0;
 }
 }
