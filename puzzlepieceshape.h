@@ -11,7 +11,8 @@ class PuzzleItem;
 namespace PuzzlePieceShape
 {
 
-enum TabStatus {
+enum TabStatus
+{
     LeftTab =         1,
     LeftBlank =       2,
     LeftBorder =      4,
@@ -29,8 +30,8 @@ enum TabStatus {
     BottomBorder = 2048
 };
 
-struct PuzzlePieceShapeDescriptor {
-    QPainterPath shape;
+struct Correction
+{
     int sxCorrection;
     int syCorrection;
     int xCorrection;
@@ -39,9 +40,19 @@ struct PuzzlePieceShapeDescriptor {
     int heightCorrection;
 };
 
+class CreatorPrivate;
+
+class Creator {
+    CreatorPrivate *_p;
+public:
+    explicit Creator(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance);
+    ~Creator();
+    Correction getCorrectionFor(int status);
+};
+
 QPixmap processImage(const QString &url, int width, int height);
 void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses);
-PuzzlePieceShapeDescriptor createPuzzlePieceShape(QSize _unit, int status, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance);
+QPainterPath createPuzzlePieceShape(QSize _unit, int status, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance);
 PuzzleItem *findPuzzleItem(QPointF p, const QList<PuzzleItem*> &puzzleItems);
 
 }

@@ -129,6 +129,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     stroker.setJoinStyle(Qt::BevelJoin);
     int tShape = 0, tStroke = 0, tStrokePaint = 0, tShapePaint = 0, tObj = 0;
 
+    PuzzlePieceShape::Creator creator(_unit, tabFull, tabSize, tabOffset, tabTolerance);
     PuzzlePieceShape::generatePuzzlePieceStatuses(rows, cols, statuses);
 
     for (unsigned i = 0; i < cols; i++)
@@ -141,9 +142,10 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             t.start();
 
             // Creating the shape of the piece
-            PuzzlePieceShape::PuzzlePieceShapeDescriptor descriptor = PuzzlePieceShape::createPuzzlePieceShape(_unit, statuses[i * rows + j], tabFull, tabSize, tabOffset, tabTolerance);
-            QPainterPath &clip = descriptor.shape;
-            int &sxCorrection = descriptor.sxCorrection, &syCorrection = descriptor.syCorrection, &xCorrection = descriptor.xCorrection, &yCorrection = descriptor.yCorrection, &widthCorrection = descriptor.widthCorrection, &heightCorrection = descriptor.heightCorrection;
+            QPainterPath clip = PuzzlePieceShape::createPuzzlePieceShape(_unit, statuses[i * rows + j], tabFull, tabSize, tabOffset, tabTolerance);
+            PuzzlePieceShape::Correction corr = creator.getCorrectionFor(statuses[i * rows + j]);
+            int &sxCorrection = corr.sxCorrection, &syCorrection = corr.syCorrection, &xCorrection = corr.xCorrection, &yCorrection = corr.yCorrection, &widthCorrection = corr.widthCorrection, &heightCorrection = corr.heightCorrection;
+            clip = clip.translated(xCorrection, yCorrection);
 
             tShape += t.elapsed();
             t.restart();

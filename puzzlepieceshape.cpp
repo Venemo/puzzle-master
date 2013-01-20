@@ -7,6 +7,78 @@
 
 namespace PuzzlePieceShape
 {
+
+class CreatorPrivate
+{
+    friend class Creator;
+    QSize unit;
+    qreal tabFull, tabSize, tabOffset, tabTolerance;
+};
+
+Creator::Creator(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance)
+{
+    _p = new CreatorPrivate();
+    _p->unit = unit;
+    _p->tabFull = tabFull;
+    _p->tabSize = tabSize;
+    _p->tabOffset = tabOffset;
+    _p->tabTolerance = tabTolerance;
+}
+
+Creator::~Creator()
+{
+    delete _p;
+}
+
+Correction Creator::getCorrectionFor(int status)
+{
+    Correction result = { 0, 0, 0, 0, 0, 0 };
+
+    // Left
+    if (status & PuzzlePieceShape::LeftBlank)
+    {
+        result.xCorrection -= _p->tabFull;
+    }
+    else if (status & PuzzlePieceShape::LeftTab)
+    {
+        result.sxCorrection -= _p->tabFull;
+        result.widthCorrection += _p->tabFull;
+    }
+    else if (status & PuzzlePieceShape::LeftBorder)
+    {
+        result.xCorrection -= _p->tabFull;
+    }
+
+    // Top
+    if (status & PuzzlePieceShape::TopBlank)
+    {
+        result.yCorrection -= _p->tabFull;
+    }
+    else if (status & PuzzlePieceShape::TopTab)
+    {
+        result.syCorrection -= _p->tabFull;
+        result.heightCorrection += _p->tabFull;
+    }
+    else if (status & PuzzlePieceShape::TopBorder)
+    {
+        result.yCorrection -= _p->tabFull;
+    }
+
+    // Right
+    if (status & PuzzlePieceShape::RightTab)
+    {
+        result.widthCorrection += _p->tabFull;
+    }
+
+    // Bottom
+    if (status & PuzzlePieceShape::BottomTab)
+    {
+        result.heightCorrection += _p->tabFull;
+    }
+
+    return result;
+}
+
 QPixmap processImage(const QString &url, int width, int height)
 {
     QString url2(url);
@@ -88,17 +160,11 @@ void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses)
     }
 }
 
-PuzzlePieceShapeDescriptor createPuzzlePieceShape(QSize _unit, int status, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance)
+QPainterPath createPuzzlePieceShape(QSize _unit, int status, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance)
 {
-    PuzzlePieceShapeDescriptor descriptor;
-
     QPainterPath rectClip;
     rectClip.addRect(tabFull - 1, tabFull - 1, _unit.width() + 1, _unit.height() + 1);
-    descriptor.shape = rectClip;
-    QPainterPath &clip = descriptor.shape;
-
-    int &sxCorrection = descriptor.sxCorrection, &syCorrection = descriptor.syCorrection, &xCorrection = descriptor.xCorrection, &yCorrection = descriptor.yCorrection, &widthCorrection = descriptor.widthCorrection, &heightCorrection = descriptor.heightCorrection;
-    sxCorrection = 0, syCorrection = 0, xCorrection = 0, yCorrection = 0, widthCorrection = 0, heightCorrection = 0;
+    QPainterPath clip = rectClip;
 
     // Left
     if (status & PuzzlePieceShape::LeftBlank)
@@ -106,19 +172,12 @@ PuzzlePieceShapeDescriptor createPuzzlePieceShape(QSize _unit, int status, qreal
         QPainterPath leftBlank;
         leftBlank.addEllipse(QPointF(tabFull + tabOffset, tabFull + _unit.height() / 2.0), tabSize, tabSize);
         clip = clip.subtracted(leftBlank);
-        xCorrection -= tabFull;
     }
     else if (status & PuzzlePieceShape::LeftTab)
     {
         QPainterPath leftTab;
         leftTab.addEllipse(QPointF(tabSize + tabTolerance, tabFull + _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
         clip = clip.united(leftTab);
-        sxCorrection -= tabFull;
-        widthCorrection += tabFull;
-    }
-    else if (status & PuzzlePieceShape::LeftBorder)
-    {
-        xCorrection -= tabFull;
     }
 
     // Top
@@ -127,19 +186,12 @@ PuzzlePieceShapeDescriptor createPuzzlePieceShape(QSize _unit, int status, qreal
         QPainterPath topBlank;
         topBlank.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + tabOffset), tabSize, tabSize);
         clip = clip.subtracted(topBlank);
-        yCorrection -= tabFull;
     }
     else if (status & PuzzlePieceShape::TopTab)
     {
         QPainterPath topTab;
         topTab.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabSize + tabTolerance), tabSize + tabTolerance, tabSize + tabTolerance);
         clip = clip.united(topTab);
-        syCorrection -= tabFull;
-        heightCorrection += tabFull;
-    }
-    else if (status & PuzzlePieceShape::TopBorder)
-    {
-        yCorrection -= tabFull;
     }
 
     // Right
@@ -148,7 +200,6 @@ PuzzlePieceShapeDescriptor createPuzzlePieceShape(QSize _unit, int status, qreal
         QPainterPath rightTab;
         rightTab.addEllipse(QPointF(tabFull + _unit.width() + tabOffset, tabFull + _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
         clip = clip.united(rightTab);
-        widthCorrection += tabFull;
     }
     else if (status & PuzzlePieceShape::RightBlank)
     {
@@ -163,7 +214,6 @@ PuzzlePieceShapeDescriptor createPuzzlePieceShape(QSize _unit, int status, qreal
         QPainterPath bottomTab;
         bottomTab.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + _unit.height() + tabOffset), tabSize + tabTolerance, tabSize + tabTolerance);
         clip = clip.united(bottomTab);
-        heightCorrection += tabFull;
     }
     else if (status & PuzzlePieceShape::BottomBlank)
     {
@@ -172,10 +222,8 @@ PuzzlePieceShapeDescriptor createPuzzlePieceShape(QSize _unit, int status, qreal
         clip = clip.subtracted(bottomBlank);
     }
 
-    clip = clip.translated(xCorrection, yCorrection).simplified();
-    rectClip = rectClip.translated(xCorrection, yCorrection);
-
-    return descriptor;
+    clip = clip.simplified();
+    return clip;
 }
 
 PuzzleItem *findPuzzleItem(QPointF p, const QList<PuzzleItem*> &puzzleItems)
