@@ -142,7 +142,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             t.start();
 
             // Creating the shape of the piece
-            QPainterPath clip = PuzzlePieceShape::createPuzzlePieceShape(_unit, statuses[i * rows + j], tabFull, tabSize, tabOffset, tabTolerance);
+            QPainterPath clip = creator.getPuzzlePieceShape(statuses[i * rows + j]);
             PuzzlePieceShape::Correction corr = creator.getCorrectionFor(statuses[i * rows + j]);
             int &sxCorrection = corr.sxCorrection, &syCorrection = corr.syCorrection, &xCorrection = corr.xCorrection, &yCorrection = corr.yCorrection, &widthCorrection = corr.widthCorrection, &heightCorrection = corr.heightCorrection;
             clip = clip.translated(xCorrection, yCorrection);

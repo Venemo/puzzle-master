@@ -5,6 +5,73 @@
 #include "puzzlepieceshape.h"
 #include "util.h"
 
+
+static QPainterPath createPuzzlePieceShape(QSize _unit, int status, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance)
+{
+    QPainterPath rectClip;
+    rectClip.addRect(tabFull - 1, tabFull - 1, _unit.width() + 1, _unit.height() + 1);
+    QPainterPath clip = rectClip;
+
+    // Left
+    if (status & PuzzlePieceShape::LeftBlank)
+    {
+        QPainterPath leftBlank;
+        leftBlank.addEllipse(QPointF(tabFull + tabOffset, tabFull + _unit.height() / 2.0), tabSize, tabSize);
+        clip = clip.subtracted(leftBlank);
+    }
+    else if (status & PuzzlePieceShape::LeftTab)
+    {
+        QPainterPath leftTab;
+        leftTab.addEllipse(QPointF(tabSize + tabTolerance, tabFull + _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
+        clip = clip.united(leftTab);
+    }
+
+    // Top
+    if (status & PuzzlePieceShape::TopBlank)
+    {
+        QPainterPath topBlank;
+        topBlank.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + tabOffset), tabSize, tabSize);
+        clip = clip.subtracted(topBlank);
+    }
+    else if (status & PuzzlePieceShape::TopTab)
+    {
+        QPainterPath topTab;
+        topTab.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabSize + tabTolerance), tabSize + tabTolerance, tabSize + tabTolerance);
+        clip = clip.united(topTab);
+    }
+
+    // Right
+    if (status & PuzzlePieceShape::RightTab)
+    {
+        QPainterPath rightTab;
+        rightTab.addEllipse(QPointF(tabFull + _unit.width() + tabOffset, tabFull + _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
+        clip = clip.united(rightTab);
+    }
+    else if (status & PuzzlePieceShape::RightBlank)
+    {
+        QPainterPath rightBlank;
+        rightBlank.addEllipse(QPointF(tabFull + _unit.width() - tabOffset, tabFull + _unit.height() / 2.0), tabSize, tabSize);
+        clip = clip.subtracted(rightBlank);
+    }
+
+    // Bottom
+    if (status & PuzzlePieceShape::BottomTab)
+    {
+        QPainterPath bottomTab;
+        bottomTab.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + _unit.height() + tabOffset), tabSize + tabTolerance, tabSize + tabTolerance);
+        clip = clip.united(bottomTab);
+    }
+    else if (status & PuzzlePieceShape::BottomBlank)
+    {
+        QPainterPath bottomBlank;
+        bottomBlank.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + _unit.height() - tabOffset), tabSize, tabSize);
+        clip = clip.subtracted(bottomBlank);
+    }
+
+    clip = clip.simplified();
+    return clip;
+}
+
 namespace PuzzlePieceShape
 {
 
@@ -77,6 +144,11 @@ Correction Creator::getCorrectionFor(int status)
     }
 
     return result;
+}
+
+QPainterPath Creator::getPuzzlePieceShape(int status)
+{
+    return createPuzzlePieceShape(_p->unit, status, _p->tabFull, _p->tabSize, _p->tabOffset, _p->tabTolerance);
 }
 
 QPixmap processImage(const QString &url, int width, int height)
@@ -158,72 +230,6 @@ void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses)
                 statuses[i * rows + j] |= PuzzlePieceShape::BottomBorder;
         }
     }
-}
-
-QPainterPath createPuzzlePieceShape(QSize _unit, int status, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance)
-{
-    QPainterPath rectClip;
-    rectClip.addRect(tabFull - 1, tabFull - 1, _unit.width() + 1, _unit.height() + 1);
-    QPainterPath clip = rectClip;
-
-    // Left
-    if (status & PuzzlePieceShape::LeftBlank)
-    {
-        QPainterPath leftBlank;
-        leftBlank.addEllipse(QPointF(tabFull + tabOffset, tabFull + _unit.height() / 2.0), tabSize, tabSize);
-        clip = clip.subtracted(leftBlank);
-    }
-    else if (status & PuzzlePieceShape::LeftTab)
-    {
-        QPainterPath leftTab;
-        leftTab.addEllipse(QPointF(tabSize + tabTolerance, tabFull + _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
-        clip = clip.united(leftTab);
-    }
-
-    // Top
-    if (status & PuzzlePieceShape::TopBlank)
-    {
-        QPainterPath topBlank;
-        topBlank.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + tabOffset), tabSize, tabSize);
-        clip = clip.subtracted(topBlank);
-    }
-    else if (status & PuzzlePieceShape::TopTab)
-    {
-        QPainterPath topTab;
-        topTab.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabSize + tabTolerance), tabSize + tabTolerance, tabSize + tabTolerance);
-        clip = clip.united(topTab);
-    }
-
-    // Right
-    if (status & PuzzlePieceShape::RightTab)
-    {
-        QPainterPath rightTab;
-        rightTab.addEllipse(QPointF(tabFull + _unit.width() + tabOffset, tabFull + _unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
-        clip = clip.united(rightTab);
-    }
-    else if (status & PuzzlePieceShape::RightBlank)
-    {
-        QPainterPath rightBlank;
-        rightBlank.addEllipse(QPointF(tabFull + _unit.width() - tabOffset, tabFull + _unit.height() / 2.0), tabSize, tabSize);
-        clip = clip.subtracted(rightBlank);
-    }
-
-    // Bottom
-    if (status & PuzzlePieceShape::BottomTab)
-    {
-        QPainterPath bottomTab;
-        bottomTab.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + _unit.height() + tabOffset), tabSize + tabTolerance, tabSize + tabTolerance);
-        clip = clip.united(bottomTab);
-    }
-    else if (status & PuzzlePieceShape::BottomBlank)
-    {
-        QPainterPath bottomBlank;
-        bottomBlank.addEllipse(QPointF(tabFull + _unit.width() / 2.0, tabFull + _unit.height() - tabOffset), tabSize, tabSize);
-        clip = clip.subtracted(bottomBlank);
-    }
-
-    clip = clip.simplified();
-    return clip;
 }
 
 PuzzleItem *findPuzzleItem(QPointF p, const QList<PuzzleItem*> &puzzleItems)

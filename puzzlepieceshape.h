@@ -48,11 +48,11 @@ public:
     explicit Creator(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance);
     ~Creator();
     Correction getCorrectionFor(int status);
+    QPainterPath getPuzzlePieceShape(int status);
 };
 
 QPixmap processImage(const QString &url, int width, int height);
 void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses);
-QPainterPath createPuzzlePieceShape(QSize _unit, int status, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance);
 PuzzleItem *findPuzzleItem(QPointF p, const QList<PuzzleItem*> &puzzleItems);
 
 }
