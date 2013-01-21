@@ -78,6 +78,19 @@ PuzzleBoard {
         source: "qrc:/pics/background.jpg"
         fillMode: Image.Tile
         z: -1
+
+        Rectangle {
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: parent.top
+            }
+            gradient: Gradient {
+                GradientStop { color: "#77000000"; position: 0.0 }
+                GradientStop { color: "#00000000"; position: 1.0 }
+            }
+            height: 70
+        }
     }
     Panel {
         id: menuButtonPanel
