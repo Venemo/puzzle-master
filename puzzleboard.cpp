@@ -129,7 +129,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     stroker.setJoinStyle(Qt::BevelJoin);
     int tShape = 0, tStroke = 0, tStrokePaint = 0, tShapePaint = 0, tObj = 0;
 
-    PuzzlePieceShape::Creator creator(_unit, tabFull, tabSize, tabOffset, tabTolerance);
+    PuzzlePieceShape::Creator creator(_unit, tabFull, tabSize, tabOffset, tabTolerance, _strokeThickness);
     PuzzlePieceShape::generatePuzzlePieceStatuses(rows, cols, statuses);
 
     for (unsigned i = 0; i < cols; i++)
@@ -169,8 +169,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
             QPointF supposed(w0 + (i * _unit.width()) + sxCorrection - _usabilityThickness,
                              h0 + (j * _unit.height()) + syCorrection - _usabilityThickness);
-            stroker.setWidth(_strokeThickness * 2);
-            QPainterPath strokePath = stroker.createStroke(clip).united(clip).simplified();
+            QPainterPath strokePath = creator.getPuzzlePieceStrokeShape(statuses[i * rows + j]);
 
             QPainterPath bigRectClip;
             bigRectClip.addRect(tabFull - 1, tabFull - 1, _unit.width() + 1 + _usabilityThickness * 2, _unit.height() + 1 + _usabilityThickness * 2);
@@ -183,7 +182,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             QPixmap stroke(px.width() + _strokeThickness * 2, px.height() + _strokeThickness * 2);
             stroke.fill(Qt::transparent);
             p.begin(&stroke);
-            p.fillPath(strokePath.translated(_strokeThickness, _strokeThickness), QBrush(QColor(255, 255, 255, 255)));
+            p.fillPath(strokePath.translated(xCorrection, yCorrection), QBrush(QColor(255, 255, 255, 255)));
             p.end();
 
             tStrokePaint += t.elapsed();

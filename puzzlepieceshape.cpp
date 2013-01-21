@@ -1,6 +1,7 @@
 
 #include <QPainter>
 #include <QMap>
+#include <QPainterPathStroker>
 
 #include "puzzleitem.h"
 #include "puzzlepieceshape.h"
@@ -80,17 +81,22 @@ class CreatorPrivate
     friend class Creator;
     QSize unit;
     qreal tabFull, tabSize, tabOffset, tabTolerance;
-    QMap<int, QPainterPath> shapeCache;
+    int strokeThickness;
+    QMap<int, QPainterPath> shapeCache, strokeShapeCache;
+    QPainterPathStroker stroker;
 };
 
-Creator::Creator(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance)
+Creator::Creator(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance, int strokeThickness)
 {
     _p = new CreatorPrivate();
+
     _p->unit = unit;
     _p->tabFull = tabFull;
     _p->tabSize = tabSize;
     _p->tabOffset = tabOffset;
     _p->tabTolerance = tabTolerance;
+    _p->strokeThickness = strokeThickness;
+    _p->stroker.setWidth(_p->strokeThickness * 2);
 }
 
 Creator::~Creator()
@@ -160,6 +166,20 @@ QPainterPath Creator::getPuzzlePieceShape(int status)
 
 
     return _p->shapeCache[status];
+}
+
+QPainterPath Creator::getPuzzlePieceStrokeShape(int status)
+{
+    if (!_p->strokeShapeCache.contains(status))
+    {
+//        QPainterPath shape = getPuzzlePieceShape(status);
+//        _p->strokeShapeCache[status] = _p->stroker.createStroke(shape).united(shape).simplified();
+        _p->strokeShapeCache[status] = createPuzzlePieceShape(
+                    QSize(_p->unit.width() + _p->strokeThickness * 2, _p->unit.height() + _p->strokeThickness * 2),
+                    status, _p->tabFull, _p->tabSize + _p->strokeThickness, _p->tabOffset - _p->strokeThickness, _p->tabTolerance);
+    }
+
+    return _p->strokeShapeCache[status];
 }
 
 QPixmap processImage(const QString &url, int width, int height)

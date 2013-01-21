@@ -45,10 +45,11 @@ class CreatorPrivate;
 class Creator {
     CreatorPrivate *_p;
 public:
-    explicit Creator(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance);
+    explicit Creator(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance, int strokeThickness);
     ~Creator();
     Correction getCorrectionFor(int status);
     QPainterPath getPuzzlePieceShape(int status);
+    QPainterPath getPuzzlePieceStrokeShape(int status);
 };
 
 QPixmap processImage(const QString &url, int width, int height);
