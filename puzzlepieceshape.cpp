@@ -333,7 +333,7 @@ PuzzleItem *findPuzzleItem(QPointF p, const QList<PuzzleItem*> &puzzleItems)
     {
         QPointF tr = item->mapFromParent(p);
 
-        if (item->shape().contains(tr))
+        if (item->fakeShape().contains(tr))
             return item;
     }
 
