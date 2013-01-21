@@ -332,8 +332,11 @@ PuzzleItem *findPuzzleItem(QPointF p, const QList<PuzzleItem*> &puzzleItems)
     foreach (PuzzleItem *item, puzzleItems)
     {
         QPointF tr = item->mapFromParent(p);
+        bool enableUsabilityImprovement = item->grabbedTouchPointIds().count();
 
-        if (item->fakeShape().contains(tr))
+        if (!enableUsabilityImprovement && item->realShape().contains(tr))
+            return item;
+        else if (enableUsabilityImprovement && item->fakeShape().contains(tr))
             return item;
     }
 

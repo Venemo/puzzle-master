@@ -345,6 +345,7 @@ void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWid
     //painter->drawRect(boundingRect());
     //painter->drawEllipse(mapFromScene(pos()), 10, 10);
     //painter->fillPath(_fakeShape, QBrush(QColor(0, 0, 255, 130)));
+    //painter->fillPath(_realShape, QBrush(QColor(0, 255, 0, 130)));
     painter->drawPixmap(_strokeOffset, _stroke);
     painter->drawPixmap(_pixmapOffset, _pixmap);
 }

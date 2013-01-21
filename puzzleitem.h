@@ -37,6 +37,7 @@ class PuzzleItem : public QDeclarativeItem
     GENPROPERTY_R(QList<PuzzleItem*>, _neighbours, neighbours)
     GENPROPERTY_S(QPixmap, _pixmap, pixmap, setPixmap)
     GENPROPERTY_S(QPixmap, _stroke, stroke, setStroke)
+    GENPROPERTY_S(QPainterPath, _realShape, realShape, setRealShape)
     GENPROPERTY_S(QPainterPath, _fakeShape, fakeShape, setFakeShape)
     GENPROPERTY_S(bool, _canMerge, canMerge, setCanMerge)
     GENPROPERTY_S(qreal, _weight, weight, setWeight)

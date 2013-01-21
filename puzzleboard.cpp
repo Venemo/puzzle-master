@@ -46,11 +46,7 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     _tolerance(5),
     _rotationTolerance(10)
 {
-#if Q_OS_BLACKBERRY_TABLET || MEEGO_EDITION_HARMATTAN || Q_OS_SYMBIAN
-    _usabilityThickness = 25;
-#else
-    _usabilityThickness = 12;
-#endif
+    _usabilityThickness = 50;
 
 #if !defined(MEEGO_EDITION_HARMATTAN) && !defined(Q_OS_SYMBIAN) && !defined(Q_OS_BLACKBERRY) && !defined(Q_OS_BLACKBERRY_TABLET)
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
@@ -198,6 +194,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setStrokeOffset(item->pixmapOffset() - QPoint(_strokeThickness, _strokeThickness));
             item->setStroke(stroke);
             item->setFakeShape(fakeShape.translated(_usabilityThickness + 1, _usabilityThickness + 1));
+            item->setRealShape(strokePath.translated(_usabilityThickness + 1, _usabilityThickness + 1));
             item->setWidth(px.width() + _usabilityThickness * 2 + 2);
             item->setHeight(px.height() + _usabilityThickness * 2 + 2);
             item->setTabStatus(statuses[i * rows + j]);
