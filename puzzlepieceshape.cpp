@@ -166,13 +166,27 @@ QPainterPath Creator::getPuzzlePieceShape(int status)
 {
     if (!_p->shapeCache.contains(status))
     {
-        _p->shapeCache[status] = createPuzzlePieceShape(_p->unit, status, _p->tabFull, _p->tabSize, _p->tabOffset, _p->tabTolerance, _p->tabSize, _p->tabOffset);
-    }
-    //else
-    //{
-    //    qDebug() << "shape cache hit for" << status;
-    //}
+        foreach (int s, _p->shapeCache.keys())
+        {
+            MatchMode m = match(s, status);
 
+            if (m == NoMatch)
+                continue;
+
+            QTransform tr;
+
+            if (m == HorizontalFlipMatch)
+                tr = tr.scale(-1.0, 1.0).translate(-_p->unit.width() - _p->tabFull * 2, 0);
+            else if (m == VerticalFlipMatch)
+                tr = tr.scale(1.0, -1.0).translate(0, - _p->unit.height() - _p->tabFull * 2);
+            else if (m == HorizontalAndVerticalFlipMatch)
+                tr = tr.scale(-1.0, -1.0).translate(-_p->unit.width() - _p->tabFull * 2, - _p->unit.height() - _p->tabFull * 2);
+
+            return _p->shapeCache[status] = tr.map(_p->shapeCache[s]);
+        }
+
+        return _p->shapeCache[status] = createPuzzlePieceShape(_p->unit, status, _p->tabFull, _p->tabSize, _p->tabOffset, _p->tabTolerance, _p->tabSize, _p->tabOffset);
+    }
 
     return _p->shapeCache[status];
 }
@@ -181,12 +195,55 @@ QPainterPath Creator::getPuzzlePieceStrokeShape(int status)
 {
     if (!_p->strokeShapeCache.contains(status))
     {
-        _p->strokeShapeCache[status] = createPuzzlePieceShape(
+        foreach (int s, _p->strokeShapeCache.keys())
+        {
+            MatchMode m = match(s, status);
+
+            if (m == NoMatch)
+                continue;
+
+            QTransform tr;
+
+            if (m == HorizontalFlipMatch)
+                tr = tr.scale(-1.0, 1.0).translate(-_p->unit.width() - _p->tabFull * 2 - _p->strokeThickness * 2, 0);
+            else if (m == VerticalFlipMatch)
+                tr = tr.scale(1.0, -1.0).translate(0, - _p->unit.height() - _p->tabFull * 2 - _p->strokeThickness * 2);
+            else if (m == HorizontalAndVerticalFlipMatch)
+                tr = tr.scale(-1.0, -1.0).translate(-_p->unit.width() - _p->tabFull * 2 - _p->strokeThickness * 2, - _p->unit.height() - _p->tabFull * 2 - _p->strokeThickness * 2);
+
+            return _p->strokeShapeCache[status] = tr.map(_p->strokeShapeCache[s]);
+        }
+
+        return _p->strokeShapeCache[status] = createPuzzlePieceShape(
                     QSize(_p->unit.width() + _p->strokeThickness * 2, _p->unit.height() + _p->strokeThickness * 2),
                     status, _p->tabFull, _p->tabSize + _p->strokeThickness, _p->tabOffset - _p->strokeThickness, _p->tabTolerance, _p->tabSize - _p->strokeThickness, _p->tabOffset + _p->strokeThickness);
     }
 
     return _p->strokeShapeCache[status];
+}
+
+MatchMode Creator::match(int status1, int status2)
+{
+    if (status1 == status2)
+        return ExactMatch;
+
+    int left1 = status1 << 29 >> 29;
+    int left2 = status2 << 29 >> 29;
+    int top1 = status1 << 26 >> 29;
+    int top2 = status2 << 26 >> 29;
+    int right1 = status1 << 23 >> 29;
+    int right2 = status2 << 23 >> 29;
+    int bottom1 = status1 << 20 >> 29;
+    int bottom2 = status2 << 20 >> 29;
+
+    if (left1 == right2 && left2 == right1 && top1 == top2 && bottom1 == bottom2)
+        return HorizontalFlipMatch;
+    if (left1 == left2 && right1 == right2 && top1 == bottom2 && bottom1 == top2)
+        return VerticalFlipMatch;
+    if (left1 == right2 && left2 == right1 && top1 == bottom2 && bottom1 == top2)
+        return HorizontalAndVerticalFlipMatch;
+
+    return NoMatch;
 }
 
 QPixmap processImage(const QString &url, int width, int height)

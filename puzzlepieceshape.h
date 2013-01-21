@@ -13,21 +13,30 @@ namespace PuzzlePieceShape
 
 enum TabStatus
 {
-    LeftTab =         1,
-    LeftBlank =       2,
-    LeftBorder =      4,
+    LeftTab =      1<<0,
+    LeftBlank =    1<<1,
+    LeftBorder =   1<<2,
 
-    TopTab =          8,
-    TopBlank =       16,
-    TopBorder =      32,
+    TopTab =       1<<3,
+    TopBlank =     1<<4,
+    TopBorder =    1<<5,
 
-    RightTab =       64,
-    RightBlank =    128,
-    RightBorder =   256,
+    RightTab =     1<<6,
+    RightBlank =   1<<7,
+    RightBorder =  1<<8,
 
-    BottomTab =     512,
-    BottomBlank =  1024,
-    BottomBorder = 2048
+    BottomTab =    1<<9,
+    BottomBlank =  1<<10,
+    BottomBorder = 1<<11
+};
+
+enum MatchMode
+{
+    NoMatch = 0,
+    ExactMatch,
+    HorizontalFlipMatch,
+    VerticalFlipMatch,
+    HorizontalAndVerticalFlipMatch
 };
 
 struct Correction
@@ -50,6 +59,7 @@ public:
     Correction getCorrectionFor(int status);
     QPainterPath getPuzzlePieceShape(int status);
     QPainterPath getPuzzlePieceStrokeShape(int status);
+    MatchMode match(int status1, int status2);
 };
 
 QPixmap processImage(const QString &url, int width, int height);
