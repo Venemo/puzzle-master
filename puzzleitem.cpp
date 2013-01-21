@@ -162,6 +162,7 @@ void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
         setSupposedPosition(QPointF(myMin<qreal>(item->supposedPosition().x(), supposedPosition().x()), myMin<qreal>(item->supposedPosition().y(), supposedPosition().y())));
         setStroke(newStroke);
         setFakeShape(_fakeShape.translated(x1, y1).united(item->_fakeShape.translated(x2, y2)).simplified());
+        setRealShape(_realShape.translated(x1, y1).united(item->_realShape.translated(x2, y2)).simplified());
         setPixmap(pix);
         setWidth(_pixmap.width() + usabilityThickness() * 2 + 2);
         setHeight(_pixmap.height() + usabilityThickness() * 2 + 2);
