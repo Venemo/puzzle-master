@@ -94,7 +94,6 @@ class CreatorPrivate
     qreal tabFull, tabSize, tabOffset, tabTolerance;
     int strokeThickness;
     QMap<int, QPainterPath> shapeCache, strokeShapeCache;
-    QPainterPathStroker stroker;
 };
 
 Creator::Creator(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance, int strokeThickness)
@@ -107,7 +106,6 @@ Creator::Creator(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qrea
     _p->tabOffset = tabOffset;
     _p->tabTolerance = tabTolerance;
     _p->strokeThickness = strokeThickness;
-    _p->stroker.setWidth(_p->strokeThickness * 2);
 }
 
 Creator::~Creator()
