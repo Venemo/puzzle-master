@@ -164,8 +164,8 @@ void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
         setFakeShape(_fakeShape.translated(x1, y1).united(item->_fakeShape.translated(x2, y2)).simplified());
         setRealShape(_realShape.translated(x1, y1).united(item->_realShape.translated(x2, y2)).simplified());
         setPixmap(pix);
-        setWidth(_pixmap.width() + usabilityThickness() * 2 + 2);
-        setHeight(_pixmap.height() + usabilityThickness() * 2 + 2);
+        setWidth(_pixmap.width() + leftTabSize() + rightTabSize());
+        setHeight(_pixmap.height() + topTabSize() + bottomTabSize());
         setPos(pos() + old00 - mapToParent(x1, y1));
         _dragStart = mapToParent(dragPosition + QPointF(x1, y1)) - pos();
         static_cast<PuzzleBoard*>(parent())->removePuzzleItem(item);

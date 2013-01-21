@@ -20,6 +20,8 @@
 #define UTIL_H
 
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
+#define MIN(x, y) ((x < y) ? (x) : (y))
+#define MAX(x, y) ((x > y) ? (x) : (y))
 
 // Simple property
 #define GENPROPERTY_S(type, pname, name, settername) \

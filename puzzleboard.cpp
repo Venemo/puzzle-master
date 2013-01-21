@@ -46,8 +46,6 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     _tolerance(5),
     _rotationTolerance(10)
 {
-    _usabilityThickness = 50;
-
 #if !defined(MEEGO_EDITION_HARMATTAN) && !defined(Q_OS_SYMBIAN) && !defined(Q_OS_BLACKBERRY) && !defined(Q_OS_BLACKBERRY_TABLET)
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
 #else
@@ -116,7 +114,8 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             h0 = (height() - pixmap.height()) / 2,
             tabSize = myMin<qreal>(_unit.width() / 6.0, _unit.height() / 6.0),
             tabOffset = tabSize * 2.0 / 3.0,
-            tabFull = tabSize + tabOffset + tabTolerance;
+            tabFull = tabSize + tabOffset + tabTolerance,
+            usabilityThickness = MIN(80, MIN(_unit.width(), _unit.height()));
 
     _tabSizes = tabOffset;
     memset(statuses, 0, rows * cols * sizeof(int));
@@ -147,10 +146,13 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             QPainterPath strokePath = creator.getPuzzlePieceStrokeShape(statuses[i * rows + j])
                     .translated(xCorrection, yCorrection);
 
+            QPainterPath realShape;
+            realShape.addRect(xCorrection + tabFull - 10, yCorrection + tabFull - 10, _unit.width() + 20, _unit.height() + 20);
+            realShape += strokePath;
+
             QPainterPath fakeShape;
-            fakeShape.addRect(tabFull - 1, tabFull - 1, _unit.width() + 1 + _usabilityThickness * 2, _unit.height() + 1 + _usabilityThickness * 2);
-            fakeShape = fakeShape.translated(xCorrection - _usabilityThickness, yCorrection - _usabilityThickness)
-                    .united(clip).simplified();
+            fakeShape.addRect(tabFull - 1, tabFull - 1, _unit.width() + 1 + usabilityThickness * 2, _unit.height() + 1 + usabilityThickness * 2);
+            fakeShape.translate(xCorrection - usabilityThickness, yCorrection - usabilityThickness);
 
             tShape += t.elapsed();
             t.restart();
@@ -182,21 +184,21 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             tPaint += t.elapsed();
             t.restart();
 
-            QPointF supposed(w0 + (i * _unit.width()) + sxCorrection - _usabilityThickness,
-                             h0 + (j * _unit.height()) + syCorrection - _usabilityThickness);
+            QPointF supposed(w0 + (i * _unit.width()) + sxCorrection - usabilityThickness,
+                             h0 + (j * _unit.height()) + syCorrection - usabilityThickness);
 
             // Creating the piece
             PuzzleItem *item = new PuzzleItem(px, this);
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(supposed);
             item->setPos(supposed);
-            item->setPixmapOffset(QPoint(_usabilityThickness + 1, _usabilityThickness + 1));
+            item->setPixmapOffset(QPoint(usabilityThickness + 1, usabilityThickness + 1));
             item->setStrokeOffset(item->pixmapOffset() - QPoint(_strokeThickness, _strokeThickness));
             item->setStroke(stroke);
-            item->setFakeShape(fakeShape.translated(_usabilityThickness + 1, _usabilityThickness + 1));
-            item->setRealShape(strokePath.translated(_usabilityThickness + 1, _usabilityThickness + 1));
-            item->setWidth(px.width() + _usabilityThickness * 2 + 2);
-            item->setHeight(px.height() + _usabilityThickness * 2 + 2);
+            item->setFakeShape(fakeShape.translated(usabilityThickness + 1, usabilityThickness + 1));
+            item->setRealShape(realShape.translated(usabilityThickness + 1, usabilityThickness + 1));
+            item->setWidth(px.width() + usabilityThickness * 2 + 2);
+            item->setHeight(px.height() + usabilityThickness * 2 + 2);
             item->setTabStatus(statuses[i * rows + j]);
             item->setZValue(i * rows + j + this->zValue() + 1);
 
