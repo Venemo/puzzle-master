@@ -160,10 +160,9 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             t.restart();
 
             // Creating the pixmap for the piece
+
             QPixmap px(_unit.width() + widthCorrection + 1, _unit.height() + heightCorrection + 1);
             px.fill(Qt::transparent);
-
-            // Painting the pixmap
             p.begin(&px);
             p.setRenderHint(QPainter::SmoothPixmapTransform);
             p.setRenderHint(QPainter::Antialiasing);
@@ -173,9 +172,14 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             p.drawPixmap(tabFull + xCorrection + sxCorrection, tabFull + yCorrection + syCorrection, pixmap, i * _unit.width() + sxCorrection, j * _unit.height() + syCorrection, _unit.width() * 2, _unit.height() * 2);
             p.end();
 
+            // Creating the stroke for the piece
+
             QPixmap stroke(px.width() + _strokeThickness * 2, px.height() + _strokeThickness * 2);
             stroke.fill(Qt::transparent);
             p.begin(&stroke);
+            p.setRenderHint(QPainter::SmoothPixmapTransform);
+            p.setRenderHint(QPainter::Antialiasing);
+            p.setRenderHint(QPainter::HighQualityAntialiasing);
             p.fillPath(strokePath, QBrush(QColor(255, 255, 255, 255)));
             p.end();
 
