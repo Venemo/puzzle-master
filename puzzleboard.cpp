@@ -127,7 +127,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
     QPainterPathStroker stroker;
     stroker.setJoinStyle(Qt::BevelJoin);
-    int tShape = 0, tStroke = 0, tStrokePaint = 0, tShapePaint = 0, tObj = 0;
+    int tShape = 0, tPaint = 0;
 
     PuzzlePieceShape::Creator creator(_unit, tabFull, tabSize, tabOffset, tabTolerance, _strokeThickness);
     PuzzlePieceShape::generatePuzzlePieceStatuses(rows, cols, statuses);
@@ -142,10 +142,19 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             t.start();
 
             // Creating the shape of the piece
-            QPainterPath clip = creator.getPuzzlePieceShape(statuses[i * rows + j]);
+
             PuzzlePieceShape::Correction corr = creator.getCorrectionFor(statuses[i * rows + j]);
             int &sxCorrection = corr.sxCorrection, &syCorrection = corr.syCorrection, &xCorrection = corr.xCorrection, &yCorrection = corr.yCorrection, &widthCorrection = corr.widthCorrection, &heightCorrection = corr.heightCorrection;
-            clip = clip.translated(xCorrection, yCorrection);
+
+            QPainterPath clip = creator.getPuzzlePieceShape(statuses[i * rows + j])
+                    .translated(xCorrection, yCorrection);;
+            QPainterPath strokePath = creator.getPuzzlePieceStrokeShape(statuses[i * rows + j])
+                    .translated(xCorrection, yCorrection);
+
+            QPainterPath fakeShape;
+            fakeShape.addRect(tabFull - 1, tabFull - 1, _unit.width() + 1 + _usabilityThickness * 2, _unit.height() + 1 + _usabilityThickness * 2);
+            fakeShape = fakeShape.translated(xCorrection - _usabilityThickness, yCorrection - _usabilityThickness)
+                    .united(clip).simplified();
 
             tShape += t.elapsed();
             t.restart();
@@ -164,29 +173,17 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             p.drawPixmap(tabFull + xCorrection + sxCorrection, tabFull + yCorrection + syCorrection, pixmap, i * _unit.width() + sxCorrection, j * _unit.height() + syCorrection, _unit.width() * 2, _unit.height() * 2);
             p.end();
 
-            tShapePaint += t.elapsed();
+            QPixmap stroke(px.width() + _strokeThickness * 2, px.height() + _strokeThickness * 2);
+            stroke.fill(Qt::transparent);
+            p.begin(&stroke);
+            p.fillPath(strokePath, QBrush(QColor(255, 255, 255, 255)));
+            p.end();
+
+            tPaint += t.elapsed();
             t.restart();
 
             QPointF supposed(w0 + (i * _unit.width()) + sxCorrection - _usabilityThickness,
                              h0 + (j * _unit.height()) + syCorrection - _usabilityThickness);
-            QPainterPath strokePath = creator.getPuzzlePieceStrokeShape(statuses[i * rows + j]);
-
-            QPainterPath bigRectClip;
-            bigRectClip.addRect(tabFull - 1, tabFull - 1, _unit.width() + 1 + _usabilityThickness * 2, _unit.height() + 1 + _usabilityThickness * 2);
-            bigRectClip = bigRectClip.translated(xCorrection - _usabilityThickness, yCorrection - _usabilityThickness);
-            QPainterPath fakeShape = (bigRectClip + clip).simplified();
-
-            tStroke += t.elapsed();
-            t.restart();
-
-            QPixmap stroke(px.width() + _strokeThickness * 2, px.height() + _strokeThickness * 2);
-            stroke.fill(Qt::transparent);
-            p.begin(&stroke);
-            p.fillPath(strokePath.translated(xCorrection, yCorrection), QBrush(QColor(255, 255, 255, 255)));
-            p.end();
-
-            tStrokePaint += t.elapsed();
-            t.restart();
 
             // Creating the piece
             PuzzleItem *item = new PuzzleItem(px, this);
@@ -207,16 +204,13 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->show();
             _puzzleItems.insert(item);
 
-            tObj += t.elapsed();
-            t.restart();
-
             qDebug() << timer.elapsed() << "ms spent with generating piece" << i * rows + j + 1 << item->puzzleCoordinates();
             emit loadProgressChanged(i * rows + j + 1);
             QCoreApplication::instance()->processEvents();
         }
     }
 
-    qDebug() << "time spent" << "shapes:" << tShape << "paint shapes:" << tShapePaint << "strokes:" << tStroke << "stroke paints:" << tStrokePaint << "object instantiations:" << tObj;
+    qDebug() << "time spent" << "creating shapes:" << tShape << "painting:" << tPaint;
 
     delete statuses;
     setNeighbours(cols, rows);
