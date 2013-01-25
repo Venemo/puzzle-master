@@ -29,7 +29,8 @@ SOURCES += \
     appeventhandler.cpp \
     puzzleitem.cpp \
     puzzleboard.cpp \
-    puzzlepieceshape.cpp
+    helpers/puzzlepieceshape.cpp \
+    helpers/imageprocessor.cpp
 
 HEADERS += \
     util.h \
@@ -37,7 +38,8 @@ HEADERS += \
     appeventhandler.h \
     puzzleitem.h \
     puzzleboard.h \
-    puzzlepieceshape.h
+    helpers/puzzlepieceshape.h \
+    helpers/imageprocessor.h
 
 RESOURCES += \
     translations.qrc \

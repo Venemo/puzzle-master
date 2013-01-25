@@ -31,7 +31,8 @@
 
 #include "puzzleboard.h"
 #include "puzzleitem.h"
-#include "puzzlepieceshape.h"
+#include "helpers/puzzlepieceshape.h"
+#include "helpers/imageprocessor.h"
 
 inline static bool puzzleItemLessThan(PuzzleItem *a, PuzzleItem *b)
 {
@@ -94,9 +95,9 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     timer.start();
 
     qDebug() << "trying to start game with" << imageUrl;
-    QPixmap pixmap = PuzzlePieceShape::processImage(imageUrl, width(), height());
+    PuzzleImages::ImageProcessor imageProcessor(imageUrl, width(), height(), rows, cols);
 
-    if (pixmap.isNull())
+    if (!imageProcessor.isValid())
     {
         qDebug() << "pixmap is null, not starting game.";
         return false;
@@ -106,12 +107,12 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     timer.restart();
 
     _allowRotation = allowRotation;
-    _unit = QSize(pixmap.width() / cols, pixmap.height() / rows);
+    _unit = imageProcessor.unit();
     QPainter p;
 
     int tabTolerance = 1, *statuses = new int[cols * rows];
-    qreal   w0 = (width() - pixmap.width()) / 2,
-            h0 = (height() - pixmap.height()) / 2,
+    qreal   w0 = (width() - imageProcessor.pixmapSize().width()) / 2,
+            h0 = (height() - imageProcessor.pixmapSize().height()) / 2,
             tabSize = myMin<qreal>(_unit.width() / 6.0, _unit.height() / 6.0),
             tabOffset = tabSize * 2.0 / 3.0,
             tabFull = tabSize + tabOffset + tabTolerance,
@@ -139,7 +140,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             // Creating the shape of the piece
 
             PuzzlePieceShape::Correction corr = creator.getCorrectionFor(statuses[i * rows + j]);
-            int &sxCorrection = corr.sxCorrection, &syCorrection = corr.syCorrection, &xCorrection = corr.xCorrection, &yCorrection = corr.yCorrection, &widthCorrection = corr.widthCorrection, &heightCorrection = corr.heightCorrection;
+            int &sxCorrection = corr.sxCorrection, &syCorrection = corr.syCorrection, &xCorrection = corr.xCorrection, &yCorrection = corr.yCorrection;
 
             QPainterPath clip = creator.getPuzzlePieceShape(statuses[i * rows + j])
                     .translated(xCorrection, yCorrection);;
@@ -159,16 +160,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
             // Creating the pixmap for the piece
 
-            QPixmap px(_unit.width() + widthCorrection + 1, _unit.height() + heightCorrection + 1);
-            px.fill(Qt::transparent);
-            p.begin(&px);
-            p.setRenderHint(QPainter::SmoothPixmapTransform);
-            p.setRenderHint(QPainter::Antialiasing);
-            p.setRenderHint(QPainter::HighQualityAntialiasing);
-            p.setClipping(true);
-            p.setClipPath(clip);
-            p.drawPixmap(tabFull + xCorrection + sxCorrection, tabFull + yCorrection + syCorrection, pixmap, i * _unit.width() + sxCorrection, j * _unit.height() + syCorrection, _unit.width() * 2, _unit.height() * 2);
-            p.end();
+            QPixmap px = imageProcessor.drawPiece(i, j, tabFull, _unit, clip, corr);
 
             // Creating the stroke for the piece
 
@@ -423,7 +415,7 @@ void PuzzleBoard::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     QPointF p = _mouseSubject->mapFromParent(event->pos());
 
-    if (_mouseSubject->_isRightButtonPressed && _mouseSubject->allowRotation())
+    if (_mouseSubject->_isRightButtonPressed && this->allowRotation())
         _mouseSubject->handleRotation(event->pos() - _mouseSubject->mapToParent(_mouseSubject->centerPoint()));
     else
         _mouseSubject->doDrag(p);

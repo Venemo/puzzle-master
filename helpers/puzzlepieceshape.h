@@ -80,7 +80,6 @@ public:
     MatchMode match(int status1, int status2);
 };
 
-QPixmap processImage(const QString &url, int width, int height);
 void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses);
 PuzzleItem *findPuzzleItem(QPointF p, const QList<PuzzleItem*> &puzzleItems);
 

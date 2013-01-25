@@ -23,7 +23,7 @@
 
 #include "util.h"
 #include "puzzleboard.h"
-#include "puzzlepieceshape.h"
+#include "helpers/puzzlepieceshape.h"
 
 class QPixmap;
 
@@ -83,7 +83,6 @@ protected:
     inline qreal topTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::TopTab ? 1 : 0); }
     inline qreal rightTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::RightTab ? 1 : 0); }
     inline qreal bottomTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::BottomTab ? 1 : 0); }
-    inline bool allowRotation() const { return static_cast<PuzzleBoard*>(parent())->allowRotation(); }
     inline int strokeThickness() const { return static_cast<PuzzleBoard*>(parent())->strokeThickness(); }
 
 };
