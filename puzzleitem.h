@@ -23,7 +23,7 @@
 
 #include "util.h"
 #include "puzzleboard.h"
-#include "helpers/puzzlepieceshape.h"
+#include "helpers/shapeprocessor.h"
 
 class QPixmap;
 
@@ -79,10 +79,10 @@ protected:
     bool checkMergeability(PuzzleItem *item);
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
-    inline qreal leftTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::LeftTab ? 1 : 0); }
-    inline qreal topTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::TopTab ? 1 : 0); }
-    inline qreal rightTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::RightTab ? 1 : 0); }
-    inline qreal bottomTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzlePieceShape::BottomTab ? 1 : 0); }
+    inline qreal leftTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleHelpers::LeftTab ? 1 : 0); }
+    inline qreal topTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleHelpers::TopTab ? 1 : 0); }
+    inline qreal rightTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleHelpers::RightTab ? 1 : 0); }
+    inline qreal bottomTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleHelpers::BottomTab ? 1 : 0); }
     inline int strokeThickness() const { return static_cast<PuzzleBoard*>(parent())->strokeThickness(); }
 
 };

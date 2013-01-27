@@ -144,18 +144,18 @@ void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
         p.end();
 
         int newStatus = 0;
-        if ((item->_supposedPosition.x() <= _supposedPosition.x() && (item->_tabStatus & PuzzlePieceShape::LeftTab))
-                || (_supposedPosition.x() <= item->_supposedPosition.x() && (_tabStatus & PuzzlePieceShape::LeftTab)))
-            newStatus |= PuzzlePieceShape::LeftTab;
-        if ((item->_supposedPosition.y() <= _supposedPosition.y() && (item->_tabStatus & PuzzlePieceShape::TopTab))
-                || (_supposedPosition.y() <= item->_supposedPosition.y() && (_tabStatus & PuzzlePieceShape::TopTab)))
-            newStatus |= PuzzlePieceShape::TopTab;
-        if ((item->_supposedPosition.x() + item->_pixmap.width() >= _supposedPosition.x() + _pixmap.width() && (item->_tabStatus & PuzzlePieceShape::RightTab))
-                || (_supposedPosition.x() + _pixmap.width() >= item->_supposedPosition.x() + item->_pixmap.width() && (_tabStatus & PuzzlePieceShape::RightTab)))
-            newStatus |= PuzzlePieceShape::RightTab;
-        if ((item->_supposedPosition.y() + item->_pixmap.height() >= _supposedPosition.y() + _pixmap.height() && (item->_tabStatus & PuzzlePieceShape::BottomTab))
-                || (_supposedPosition.y() + _pixmap.height() >= item->_supposedPosition.y() + item->_pixmap.height() && (_tabStatus & PuzzlePieceShape::BottomTab)))
-            newStatus |= PuzzlePieceShape::BottomTab;
+        if ((item->_supposedPosition.x() <= _supposedPosition.x() && (item->_tabStatus & PuzzleHelpers::LeftTab))
+                || (_supposedPosition.x() <= item->_supposedPosition.x() && (_tabStatus & PuzzleHelpers::LeftTab)))
+            newStatus |= PuzzleHelpers::LeftTab;
+        if ((item->_supposedPosition.y() <= _supposedPosition.y() && (item->_tabStatus & PuzzleHelpers::TopTab))
+                || (_supposedPosition.y() <= item->_supposedPosition.y() && (_tabStatus & PuzzleHelpers::TopTab)))
+            newStatus |= PuzzleHelpers::TopTab;
+        if ((item->_supposedPosition.x() + item->_pixmap.width() >= _supposedPosition.x() + _pixmap.width() && (item->_tabStatus & PuzzleHelpers::RightTab))
+                || (_supposedPosition.x() + _pixmap.width() >= item->_supposedPosition.x() + item->_pixmap.width() && (_tabStatus & PuzzleHelpers::RightTab)))
+            newStatus |= PuzzleHelpers::RightTab;
+        if ((item->_supposedPosition.y() + item->_pixmap.height() >= _supposedPosition.y() + _pixmap.height() && (item->_tabStatus & PuzzleHelpers::BottomTab))
+                || (_supposedPosition.y() + _pixmap.height() >= item->_supposedPosition.y() + item->_pixmap.height() && (_tabStatus & PuzzleHelpers::BottomTab)))
+            newStatus |= PuzzleHelpers::BottomTab;
 
         setTabStatus(newStatus);
         setPuzzleCoordinates(QPoint(myMin<int>(item->puzzleCoordinates().x(), puzzleCoordinates().x()), myMin<int>(item->puzzleCoordinates().y(), puzzleCoordinates().y())));

@@ -29,7 +29,7 @@ SOURCES += \
     appeventhandler.cpp \
     puzzleitem.cpp \
     puzzleboard.cpp \
-    helpers/puzzlepieceshape.cpp \
+    helpers/shapeprocessor.cpp \
     helpers/imageprocessor.cpp
 
 HEADERS += \
@@ -38,7 +38,7 @@ HEADERS += \
     appeventhandler.h \
     puzzleitem.h \
     puzzleboard.h \
-    helpers/puzzlepieceshape.h \
+    helpers/shapeprocessor.h \
     helpers/imageprocessor.h
 
 RESOURCES += \

@@ -26,7 +26,7 @@
 
 class PuzzleItem;
 
-namespace PuzzlePieceShape
+namespace PuzzleHelpers
 {
 
 enum TabStatus
@@ -67,13 +67,15 @@ struct Correction
     int heightCorrection;
 };
 
-class CreatorPrivate;
+class ShapeProcessorPrivate;
 
-class Creator {
-    CreatorPrivate *_p;
+class ShapeProcessor {
+    ShapeProcessorPrivate *_p;
+
 public:
-    explicit Creator(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance, int strokeThickness);
-    ~Creator();
+    explicit ShapeProcessor(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance, int strokeThickness);
+    ~ShapeProcessor();
+
     Correction getCorrectionFor(int status);
     QPainterPath getPuzzlePieceShape(int status);
     QPainterPath getPuzzlePieceStrokeShape(int status);

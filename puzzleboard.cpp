@@ -31,7 +31,7 @@
 
 #include "puzzleboard.h"
 #include "puzzleitem.h"
-#include "helpers/puzzlepieceshape.h"
+#include "helpers/shapeprocessor.h"
 #include "helpers/imageprocessor.h"
 
 inline static bool puzzleItemLessThan(PuzzleItem *a, PuzzleItem *b)
@@ -95,7 +95,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     timer.start();
 
     qDebug() << "trying to start game with" << imageUrl;
-    PuzzleImages::ImageProcessor imageProcessor(imageUrl, width(), height(), rows, cols);
+    PuzzleHelpers::ImageProcessor imageProcessor(imageUrl, width(), height(), rows, cols);
 
     if (!imageProcessor.isValid())
     {
@@ -125,8 +125,8 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     stroker.setJoinStyle(Qt::BevelJoin);
     int tShape = 0, tPaint = 0;
 
-    PuzzlePieceShape::Creator creator(_unit, tabFull, tabSize, tabOffset, tabTolerance, _strokeThickness);
-    PuzzlePieceShape::generatePuzzlePieceStatuses(rows, cols, statuses);
+    PuzzleHelpers::ShapeProcessor shapeProcessor(_unit, tabFull, tabSize, tabOffset, tabTolerance, _strokeThickness);
+    PuzzleHelpers::generatePuzzlePieceStatuses(rows, cols, statuses);
 
     for (unsigned i = 0; i < cols; i++)
     {
@@ -139,12 +139,12 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
             // Creating the shape of the piece
 
-            PuzzlePieceShape::Correction corr = creator.getCorrectionFor(statuses[i * rows + j]);
+            PuzzleHelpers::Correction corr = shapeProcessor.getCorrectionFor(statuses[i * rows + j]);
             int &sxCorrection = corr.sxCorrection, &syCorrection = corr.syCorrection, &xCorrection = corr.xCorrection, &yCorrection = corr.yCorrection;
 
-            QPainterPath clip = creator.getPuzzlePieceShape(statuses[i * rows + j])
+            QPainterPath clip = shapeProcessor.getPuzzlePieceShape(statuses[i * rows + j])
                     .translated(xCorrection, yCorrection);;
-            QPainterPath strokePath = creator.getPuzzlePieceStrokeShape(statuses[i * rows + j])
+            QPainterPath strokePath = shapeProcessor.getPuzzlePieceStrokeShape(statuses[i * rows + j])
                     .translated(xCorrection, yCorrection);
 
             QPainterPath realShape;
@@ -373,7 +373,7 @@ void PuzzleBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
     event->accept();
     QList<PuzzleItem*> puzzleItems = _puzzleItems.toList();
     qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemLessThan);
-    _mouseSubject = PuzzlePieceShape::findPuzzleItem(event->pos(), puzzleItems);
+    _mouseSubject = PuzzleHelpers::findPuzzleItem(event->pos(), puzzleItems);
 
     if (!_mouseSubject || _mouseSubject->_isDraggingWithTouch || !_mouseSubject->_canMerge)
         return;
@@ -447,7 +447,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         else if (p.state() == Qt::TouchPointPressed)
         {
             //qDebug() << "pressed";
-            PuzzleItem *item = PuzzlePieceShape::findPuzzleItem(p.pos(), puzzleItems);
+            PuzzleItem *item = PuzzleHelpers::findPuzzleItem(p.pos(), puzzleItems);
 
             if (item)
             {

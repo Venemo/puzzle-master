@@ -3,9 +3,10 @@
 
 #include <QString>
 #include <QPixmap>
-#include "puzzlepieceshape.h"
+#include "helpers/imageprocessor.h"
+#include "helpers/shapeprocessor.h"
 
-namespace PuzzleImages
+namespace PuzzleHelpers
 {
 
 class ImageProcessorPrivate;
@@ -21,7 +22,7 @@ public:
     bool isValid();
     QSize unit();
     QSize pixmapSize();
-    QPixmap drawPiece(int i, int j, int tabFull, const QSize &unit, const QPainterPath &shape, const PuzzlePieceShape::Correction &corr);
+    QPixmap drawPiece(int i, int j, int tabFull, const QSize &unit, const QPainterPath &shape, const PuzzleHelpers::Correction &corr);
     QPixmap drawStroke();
 
 };

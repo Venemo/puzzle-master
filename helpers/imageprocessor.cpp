@@ -19,7 +19,7 @@
 #include <QPainter>
 #include "imageprocessor.h"
 
-namespace PuzzleImages
+namespace PuzzleHelpers
 {
 
 class ImageProcessorPrivate
@@ -101,7 +101,7 @@ QSize ImageProcessor::pixmapSize()
     return _p->pixmap.size();
 }
 
-QPixmap ImageProcessor::drawPiece(int i, int j, int tabFull, const QSize &unit, const QPainterPath &shape, const PuzzlePieceShape::Correction &corr)
+QPixmap ImageProcessor::drawPiece(int i, int j, int tabFull, const QSize &unit, const QPainterPath &shape, const PuzzleHelpers::Correction &corr)
 {
     QPainter p;
     QPixmap px(unit.width() + corr.widthCorrection + 1, unit.height() + corr.heightCorrection + 1);
