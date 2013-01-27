@@ -9,6 +9,12 @@
 namespace PuzzleHelpers
 {
 
+struct GameDescriptor
+{
+    QSize viewportSize, pixmapSize, unitSize;
+    int rows, cols, tabSize, tabOffset, tabFull, tabTolerance, strokeThickness, usabilityThickness;
+};
+
 class ImageProcessorPrivate;
 
 class ImageProcessor
@@ -16,12 +22,11 @@ class ImageProcessor
     ImageProcessorPrivate *_p;
 
 public:
-    explicit ImageProcessor(const QString &url, int width, int height, int rows, int cols);
+    explicit ImageProcessor(const QString &url, const QSize &viewportSize, int rows, int cols);
     ~ImageProcessor();
 
     bool isValid();
-    QSize unit();
-    QSize pixmapSize();
+    const GameDescriptor &descriptor();
     QPixmap drawPiece(int i, int j, int tabFull, const QSize &unit, const QPainterPath &shape, const PuzzleHelpers::Correction &corr);
     QPixmap drawStroke();
 

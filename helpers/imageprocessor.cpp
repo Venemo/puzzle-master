@@ -18,6 +18,7 @@
 
 #include <QPainter>
 #include "imageprocessor.h"
+#include "util.h"
 
 namespace PuzzleHelpers
 {
@@ -26,7 +27,7 @@ class ImageProcessorPrivate
 {
     friend class ImageProcessor;
     QPixmap pixmap;
-    QSize unit;
+    GameDescriptor descriptor;
     QPixmap processImage(const QString &url, int width, int height);
 };
 
@@ -74,11 +75,21 @@ QPixmap ImageProcessorPrivate::processImage(const QString &url, int width, int h
     return pix;
 }
 
-ImageProcessor::ImageProcessor(const QString &url, int width, int height, int rows, int cols)
+ImageProcessor::ImageProcessor(const QString &url, const QSize &viewportSize, int rows, int cols)
 {
     _p = new ImageProcessorPrivate();
-    _p->pixmap = _p->processImage(url, width, height);
-    _p->unit = QSize(_p->pixmap.width() / cols, _p->pixmap.height() / rows);
+    _p->pixmap = _p->processImage(url, viewportSize.width(), viewportSize.height());
+    _p->descriptor.rows = rows;
+    _p->descriptor.cols = cols;
+    _p->descriptor.viewportSize = viewportSize;
+    _p->descriptor.pixmapSize = _p->pixmap.size();
+    _p->descriptor.unitSize = QSize(_p->pixmap.width() / cols, _p->pixmap.height() / rows);
+    _p->descriptor.tabSize = MIN(_p->descriptor.unitSize.width() / 6.0, _p->descriptor.unitSize.height() / 6.0);
+    _p->descriptor.tabOffset = _p->descriptor.tabSize * 2.0 / 3.0;
+    _p->descriptor.tabTolerance = 1;
+    _p->descriptor.tabFull = _p->descriptor.tabSize + _p->descriptor.tabOffset + _p->descriptor.tabTolerance;
+    _p->descriptor.strokeThickness = 2;
+    _p->descriptor.usabilityThickness = MIN(80, MIN(_p->descriptor.unitSize.width(), _p->descriptor.unitSize.height()));
 }
 
 ImageProcessor::~ImageProcessor()
@@ -91,14 +102,9 @@ bool ImageProcessor::isValid()
     return !_p->pixmap.isNull();
 }
 
-QSize ImageProcessor::unit()
+const GameDescriptor &ImageProcessor::descriptor()
 {
-    return _p->unit;
-}
-
-QSize ImageProcessor::pixmapSize()
-{
-    return _p->pixmap.size();
+    return _p->descriptor;
 }
 
 QPixmap ImageProcessor::drawPiece(int i, int j, int tabFull, const QSize &unit, const QPainterPath &shape, const PuzzleHelpers::Correction &corr)
