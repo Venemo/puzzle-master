@@ -151,7 +151,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
             // Creating the pixmap for the piece
 
-            QPixmap px = imageProcessor.drawPiece(i, j, desc.tabFull, desc.unitSize, clip, corr);
+            QPixmap px = imageProcessor.drawPiece(i, j, clip, corr);
 
             // Creating the stroke for the piece
 

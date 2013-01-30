@@ -27,7 +27,7 @@ public:
 
     bool isValid();
     const GameDescriptor &descriptor();
-    QPixmap drawPiece(int i, int j, int tabFull, const QSize &unit, const QPainterPath &shape, const PuzzleHelpers::Correction &corr);
+    QPixmap drawPiece(int i, int j, const QPainterPath &shape, const PuzzleHelpers::Correction &corr);
     QPixmap drawStroke();
 
 };

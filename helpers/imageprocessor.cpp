@@ -107,18 +107,28 @@ const GameDescriptor &ImageProcessor::descriptor()
     return _p->descriptor;
 }
 
-QPixmap ImageProcessor::drawPiece(int i, int j, int tabFull, const QSize &unit, const QPainterPath &shape, const PuzzleHelpers::Correction &corr)
+QPixmap ImageProcessor::drawPiece(int i, int j, const QPainterPath &shape, const PuzzleHelpers::Correction &corr)
 {
     QPainter p;
-    QPixmap px(unit.width() + corr.widthCorrection + 1, unit.height() + corr.heightCorrection + 1);
+    QPixmap px(_p->descriptor.unitSize.width() + corr.widthCorrection + 1,
+               _p->descriptor.unitSize.height() + corr.heightCorrection + 1);
     px.fill(Qt::transparent);
+
     p.begin(&px);
     p.setRenderHint(QPainter::SmoothPixmapTransform);
     p.setRenderHint(QPainter::Antialiasing);
     p.setRenderHint(QPainter::HighQualityAntialiasing);
     p.setClipping(true);
     p.setClipPath(shape);
-    p.drawPixmap(tabFull + corr.xCorrection + corr.sxCorrection, tabFull + corr.yCorrection + corr.syCorrection, _p->pixmap, i * unit.width() + corr.sxCorrection, j * unit.height() + corr.syCorrection, unit.width() * 2, unit.height() * 2);
+
+    p.drawPixmap(_p->descriptor.tabFull + corr.xCorrection + corr.sxCorrection,
+                 _p->descriptor.tabFull + corr.yCorrection + corr.syCorrection,
+                 _p->pixmap,
+                 i * _p->descriptor.unitSize.width() + corr.sxCorrection,
+                 j * _p->descriptor.unitSize.height() + corr.syCorrection,
+                 _p->descriptor.unitSize.width() * 2,
+                 _p->descriptor.unitSize.height() * 2);
+
     p.end();
     return px;
 }
