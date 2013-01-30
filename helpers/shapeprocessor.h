@@ -23,49 +23,12 @@
 #include <QPixmap>
 #include <QPainterPath>
 #include <QList>
+#include "helpers/helpertypes.h"
 
 class PuzzleItem;
 
 namespace PuzzleHelpers
 {
-
-enum TabStatus
-{
-    LeftTab =      1<<0,
-    LeftBlank =    1<<1,
-    LeftBorder =   1<<2,
-
-    TopTab =       1<<3,
-    TopBlank =     1<<4,
-    TopBorder =    1<<5,
-
-    RightTab =     1<<6,
-    RightBlank =   1<<7,
-    RightBorder =  1<<8,
-
-    BottomTab =    1<<9,
-    BottomBlank =  1<<10,
-    BottomBorder = 1<<11
-};
-
-enum MatchMode
-{
-    NoMatch = 0,
-    ExactMatch,
-    HorizontalFlipMatch,
-    VerticalFlipMatch,
-    HorizontalAndVerticalFlipMatch
-};
-
-struct Correction
-{
-    int sxCorrection;
-    int syCorrection;
-    int xCorrection;
-    int yCorrection;
-    int widthCorrection;
-    int heightCorrection;
-};
 
 class ShapeProcessorPrivate;
 
@@ -73,7 +36,7 @@ class ShapeProcessor {
     ShapeProcessorPrivate *_p;
 
 public:
-    explicit ShapeProcessor(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance, int strokeThickness);
+    explicit ShapeProcessor(const GameDescriptor &descriptor);
     ~ShapeProcessor();
 
     Correction getCorrectionFor(int status);

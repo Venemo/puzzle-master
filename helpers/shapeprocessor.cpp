@@ -113,16 +113,16 @@ class ShapeProcessorPrivate
     QMap<int, QPainterPath> shapeCache, strokeShapeCache;
 };
 
-ShapeProcessor::ShapeProcessor(QSize unit, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance, int strokeThickness)
+ShapeProcessor::ShapeProcessor(const GameDescriptor &descriptor)
 {
     _p = new ShapeProcessorPrivate();
 
-    _p->unit = unit;
-    _p->tabFull = tabFull;
-    _p->tabSize = tabSize;
-    _p->tabOffset = tabOffset;
-    _p->tabTolerance = tabTolerance;
-    _p->strokeThickness = strokeThickness;
+    _p->unit = descriptor.unitSize;
+    _p->tabFull = descriptor.tabFull;
+    _p->tabSize = descriptor.tabSize;
+    _p->tabOffset = descriptor.tabOffset;
+    _p->tabTolerance = descriptor.tabTolerance;
+    _p->strokeThickness = descriptor.strokeThickness;
 }
 
 ShapeProcessor::~ShapeProcessor()

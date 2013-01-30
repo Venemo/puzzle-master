@@ -39,7 +39,8 @@ HEADERS += \
     puzzleitem.h \
     puzzleboard.h \
     helpers/shapeprocessor.h \
-    helpers/imageprocessor.h
+    helpers/imageprocessor.h \
+    helpers/helpertypes.h
 
 RESOURCES += \
     translations.qrc \

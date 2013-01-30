@@ -3,17 +3,10 @@
 
 #include <QString>
 #include <QPixmap>
-#include "helpers/imageprocessor.h"
-#include "helpers/shapeprocessor.h"
+#include "helpers/helpertypes.h"
 
 namespace PuzzleHelpers
 {
-
-struct GameDescriptor
-{
-    QSize viewportSize, pixmapSize, unitSize;
-    int rows, cols, tabSize, tabOffset, tabFull, tabTolerance, strokeThickness, usabilityThickness;
-};
 
 class ImageProcessorPrivate;
 

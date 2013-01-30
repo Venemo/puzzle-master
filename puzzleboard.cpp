@@ -116,7 +116,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     _unit = desc.unitSize;
     memset(statuses, 0, rows * cols * sizeof(int));
 
-    PuzzleHelpers::ShapeProcessor shapeProcessor(desc.unitSize, desc.tabFull, desc.tabSize, desc.tabOffset, desc.tabTolerance, _strokeThickness);
+    PuzzleHelpers::ShapeProcessor shapeProcessor(desc);
     PuzzleHelpers::generatePuzzlePieceStatuses(rows, cols, statuses);
 
     for (unsigned i = 0; i < cols; i++)
