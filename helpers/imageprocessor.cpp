@@ -75,7 +75,7 @@ QPixmap ImageProcessorPrivate::processImage(const QString &url, int width, int h
     return pix;
 }
 
-ImageProcessor::ImageProcessor(const QString &url, const QSize &viewportSize, int rows, int cols)
+ImageProcessor::ImageProcessor(const QString &url, const QSize &viewportSize, int rows, int cols, int strokeThickness)
 {
     _p = new ImageProcessorPrivate();
     _p->pixmap = _p->processImage(url, viewportSize.width(), viewportSize.height());
@@ -88,7 +88,7 @@ ImageProcessor::ImageProcessor(const QString &url, const QSize &viewportSize, in
     _p->descriptor.tabOffset = _p->descriptor.tabSize * 2.0 / 3.0;
     _p->descriptor.tabTolerance = 1;
     _p->descriptor.tabFull = _p->descriptor.tabSize + _p->descriptor.tabOffset + _p->descriptor.tabTolerance;
-    _p->descriptor.strokeThickness = 2;
+    _p->descriptor.strokeThickness = strokeThickness;
     _p->descriptor.usabilityThickness = MIN(80, MIN(_p->descriptor.unitSize.width(), _p->descriptor.unitSize.height()));
 }
 
@@ -143,7 +143,7 @@ QPixmap ImageProcessor::drawStroke(const QPainterPath &strokeShape, const QSize 
     p.setRenderHint(QPainter::SmoothPixmapTransform, true);
     p.setRenderHint(QPainter::Antialiasing, true);
     p.setRenderHint(QPainter::HighQualityAntialiasing, true);
-    p.fillPath(strokeShape, QBrush(QColor(255, 255, 255, 180)));
+    p.fillPath(strokeShape, QBrush(QColor(255, 255, 255, 255)));
     p.end();
 
     return stroke;

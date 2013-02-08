@@ -43,7 +43,6 @@ inline static bool puzzleItemLessThan(PuzzleItem *a, PuzzleItem *b)
 PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     QDeclarativeItem(parent),
     _allowRotation(true),
-    _strokeThickness(3),
     _tolerance(5),
     _rotationTolerance(10)
 {
@@ -55,6 +54,7 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
 
     setAcceptTouchEvents(true);
     _mouseSubject = 0;
+    _strokeThickness = 3;
 }
 
 void PuzzleBoard::setNeighbours(int x, int y)
@@ -95,7 +95,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     timer.start();
 
     qDebug() << "trying to start game with" << imageUrl;
-    PuzzleHelpers::ImageProcessor imageProcessor(imageUrl, QSize(width(), height()), rows, cols);
+    PuzzleHelpers::ImageProcessor imageProcessor(imageUrl, QSize(width(), height()), rows, cols, _strokeThickness);
 
     if (!imageProcessor.isValid())
     {
@@ -114,6 +114,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     _allowRotation = allowRotation;
     _tabSizes = desc.tabOffset;
     _unit = desc.unitSize;
+
     memset(statuses, 0, rows * cols * sizeof(int));
 
     PuzzleHelpers::ShapeProcessor shapeProcessor(desc);

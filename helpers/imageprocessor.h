@@ -15,7 +15,7 @@ class ImageProcessor
     ImageProcessorPrivate *_p;
 
 public:
-    explicit ImageProcessor(const QString &url, const QSize &viewportSize, int rows, int cols);
+    explicit ImageProcessor(const QString &url, const QSize &viewportSize, int rows, int cols, int strokeThickness);
     ~ImageProcessor();
 
     bool isValid();
