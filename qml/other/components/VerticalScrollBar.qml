@@ -25,7 +25,7 @@ VerticalSlider {
     property bool visibleWhen: true
 
     id: verticalScrollBar
-    width: visible ? 40 : 0
+    width: visibleWhen ? 40 : 0
     visible: visibleWhen && flickable.contentHeight > flickable.height
     maxValue: flickable.contentHeight - flickable.height
     minValue: 0
