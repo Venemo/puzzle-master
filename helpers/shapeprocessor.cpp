@@ -202,7 +202,10 @@ QPainterPath ShapeProcessor::getPuzzlePieceShape(int status)
             return _p->shapeCache[status] = tr.map(_p->shapeCache[s]);
         }
 
-        return _p->shapeCache[status] = createPuzzleShape(_p->unit, status, _p->tabFull, _p->tabSize, _p->tabOffset, _p->tabTolerance, _p->tabSize, _p->tabOffset);
+        return _p->shapeCache[status] =
+                createPuzzleShape(
+                    _p->unit,
+                    status, _p->tabFull, _p->tabSize, _p->tabOffset, _p->tabTolerance, _p->tabSize, _p->tabOffset);
     }
 
     return _p->shapeCache[status];
@@ -231,7 +234,8 @@ QPainterPath ShapeProcessor::getPuzzlePieceStrokeShape(int status)
             return _p->strokeShapeCache[status] = tr.map(_p->strokeShapeCache[s]);
         }
 
-        return _p->strokeShapeCache[status] = createPuzzleShape(
+        return _p->strokeShapeCache[status] =
+                createPuzzleShape(
                     QSize(_p->unit.width() + _p->strokeThickness * 2, _p->unit.height() + _p->strokeThickness * 2),
                     status, _p->tabFull, _p->tabSize + _p->strokeThickness, _p->tabOffset - _p->strokeThickness, _p->tabTolerance, _p->tabSize - _p->strokeThickness, _p->tabOffset + _p->strokeThickness);
     }
