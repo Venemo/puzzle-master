@@ -21,7 +21,7 @@ public:
     bool isValid();
     const GameDescriptor &descriptor();
     QPixmap drawPiece(int i, int j, const QPainterPath &shape, const PuzzleHelpers::Correction &corr);
-    QPixmap drawStroke();
+    QPixmap drawStroke(const QPainterPath &strokeShape, const QSize &pxSize);
 
 };
 }

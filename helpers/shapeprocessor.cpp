@@ -35,7 +35,7 @@
 // blankSize - size of blanks
 // blankOffset - offset of blanks
 // ----------
-static QPainterPath createPuzzleHelpers(QSize unit, int status, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance, qreal blankSize, qreal blankOffset)
+static QPainterPath createPuzzleShape(QSize unit, int status, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance, qreal blankSize, qreal blankOffset)
 {
     QPainterPath rectClip;
     rectClip.addRect(tabFull - 1, tabFull - 1, unit.width() + 1, unit.height() + 1);
@@ -202,7 +202,7 @@ QPainterPath ShapeProcessor::getPuzzlePieceShape(int status)
             return _p->shapeCache[status] = tr.map(_p->shapeCache[s]);
         }
 
-        return _p->shapeCache[status] = createPuzzleHelpers(_p->unit, status, _p->tabFull, _p->tabSize, _p->tabOffset, _p->tabTolerance, _p->tabSize, _p->tabOffset);
+        return _p->shapeCache[status] = createPuzzleShape(_p->unit, status, _p->tabFull, _p->tabSize, _p->tabOffset, _p->tabTolerance, _p->tabSize, _p->tabOffset);
     }
 
     return _p->shapeCache[status];
@@ -231,7 +231,7 @@ QPainterPath ShapeProcessor::getPuzzlePieceStrokeShape(int status)
             return _p->strokeShapeCache[status] = tr.map(_p->strokeShapeCache[s]);
         }
 
-        return _p->strokeShapeCache[status] = createPuzzleHelpers(
+        return _p->strokeShapeCache[status] = createPuzzleShape(
                     QSize(_p->unit.width() + _p->strokeThickness * 2, _p->unit.height() + _p->strokeThickness * 2),
                     status, _p->tabFull, _p->tabSize + _p->strokeThickness, _p->tabOffset - _p->strokeThickness, _p->tabTolerance, _p->tabSize - _p->strokeThickness, _p->tabOffset + _p->strokeThickness);
     }

@@ -133,6 +133,8 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             PuzzleHelpers::Correction corr = shapeProcessor.getCorrectionFor(statuses[i * rows + j]);
             int &sxCorrection = corr.sxCorrection, &syCorrection = corr.syCorrection, &xCorrection = corr.xCorrection, &yCorrection = corr.yCorrection;
 
+            // Create shapes
+
             QPainterPath clip = shapeProcessor.getPuzzlePieceShape(statuses[i * rows + j])
                     .translated(xCorrection, yCorrection);;
             QPainterPath strokePath = shapeProcessor.getPuzzlePieceStrokeShape(statuses[i * rows + j])
@@ -149,21 +151,10 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             tShape += t.elapsed();
             t.restart();
 
-            // Creating the pixmap for the piece
+            // Paint pixmaps
 
             QPixmap px = imageProcessor.drawPiece(i, j, clip, corr);
-
-            // Creating the stroke for the piece
-
-            QPainter p;
-            QPixmap stroke(px.width() + _strokeThickness * 2, px.height() + _strokeThickness * 2);
-            stroke.fill(Qt::transparent);
-            p.begin(&stroke);
-            p.setRenderHint(QPainter::SmoothPixmapTransform);
-            p.setRenderHint(QPainter::Antialiasing);
-            p.setRenderHint(QPainter::HighQualityAntialiasing);
-            p.fillPath(strokePath, QBrush(QColor(255, 255, 255, 255)));
-            p.end();
+            QPixmap stroke = imageProcessor.drawStroke(strokePath, px.size());
 
             tPaint += t.elapsed();
             t.restart();
@@ -176,7 +167,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(supposed);
             item->setPos(supposed);
-            item->setPixmapOffset(QPoint(desc.usabilityThickness + 1, desc.usabilityThickness + 1));
+            item->setPixmapOffset(QPoint(desc.usabilityThickness, desc.usabilityThickness));
             item->setStrokeOffset(item->pixmapOffset() - QPoint(_strokeThickness, _strokeThickness));
             item->setStroke(stroke);
             item->setFakeShape(fakeShape.translated(desc.usabilityThickness + 1, desc.usabilityThickness + 1));

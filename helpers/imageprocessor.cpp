@@ -133,4 +133,20 @@ QPixmap ImageProcessor::drawPiece(int i, int j, const QPainterPath &shape, const
     return px;
 }
 
+QPixmap ImageProcessor::drawStroke(const QPainterPath &strokeShape, const QSize &pxSize)
+{
+    QPainter p;
+    QPixmap stroke(pxSize.width() + _p->descriptor.strokeThickness * 2,
+                   pxSize.height() + _p->descriptor.strokeThickness * 2);
+    stroke.fill(Qt::transparent);
+    p.begin(&stroke);
+    p.setRenderHint(QPainter::SmoothPixmapTransform, true);
+    p.setRenderHint(QPainter::Antialiasing, true);
+    p.setRenderHint(QPainter::HighQualityAntialiasing, true);
+    p.fillPath(strokeShape, QBrush(QColor(255, 255, 255, 180)));
+    p.end();
+
+    return stroke;
+}
+
 }
