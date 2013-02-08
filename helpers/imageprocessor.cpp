@@ -85,7 +85,7 @@ ImageProcessor::ImageProcessor(const QString &url, const QSize &viewportSize, in
     _p->descriptor.pixmapSize = _p->pixmap.size();
     _p->descriptor.unitSize = QSize(_p->pixmap.width() / cols, _p->pixmap.height() / rows);
     _p->descriptor.tabSize = MIN(_p->descriptor.unitSize.width() / 6.0, _p->descriptor.unitSize.height() / 6.0);
-    _p->descriptor.tabOffset = _p->descriptor.tabSize * 2.0 / 3.0;
+    _p->descriptor.tabOffset = _p->descriptor.tabSize * 0.55;
     _p->descriptor.tabTolerance = 1;
     _p->descriptor.tabFull = _p->descriptor.tabSize + _p->descriptor.tabOffset + _p->descriptor.tabTolerance;
     _p->descriptor.strokeThickness = strokeThickness;
