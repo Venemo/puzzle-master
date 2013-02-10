@@ -109,7 +109,7 @@ class ShapeProcessorPrivate
     friend class ShapeProcessor;
     QSize unit;
     qreal tabFull, tabSize, tabOffset, tabTolerance;
-    int strokeThickness;
+    int strokeThickness, shapeRequests, shapeCacheHits;
     QMap<int, QPainterPath> shapeCache, strokeShapeCache;
 };
 
@@ -123,10 +123,16 @@ ShapeProcessor::ShapeProcessor(const GameDescriptor &descriptor)
     _p->tabOffset = descriptor.tabOffset;
     _p->tabTolerance = descriptor.tabTolerance;
     _p->strokeThickness = descriptor.strokeThickness;
+
+    _p->shapeRequests = 0;
+    _p->shapeCacheHits = 0;
 }
 
 ShapeProcessor::~ShapeProcessor()
 {
+    qDebug() << Q_FUNC_INFO << "total shape requests:" << _p->shapeRequests
+             << "served from cache:" << _p->shapeCacheHits
+             << "(" << (((qreal)_p->shapeCacheHits / (qreal)_p->shapeRequests) * 100) << "%)";
     delete _p;
 }
 
@@ -181,6 +187,8 @@ Correction ShapeProcessor::getCorrectionFor(int status)
 
 QPainterPath ShapeProcessor::getPuzzlePieceShape(int status)
 {
+    _p->shapeRequests++;
+
     if (!_p->shapeCache.contains(status))
     {
         foreach (int s, _p->shapeCache.keys())
@@ -189,6 +197,8 @@ QPainterPath ShapeProcessor::getPuzzlePieceShape(int status)
 
             if (m == NoMatch)
                 continue;
+
+            // Found a shape which matches, but needs transforming
 
             QTransform tr;
 
@@ -199,8 +209,11 @@ QPainterPath ShapeProcessor::getPuzzlePieceShape(int status)
             else if (m == HorizontalAndVerticalFlipMatch)
                 tr = tr.scale(-1.0, -1.0).translate(-_p->unit.width() - _p->tabFull * 2, - _p->unit.height() - _p->tabFull * 2);
 
+            _p->shapeCacheHits++;
             return _p->shapeCache[status] = tr.map(_p->shapeCache[s]);
         }
+
+        // No match in the cache, need to generate a new shape
 
         return _p->shapeCache[status] =
                 createPuzzleShape(
@@ -208,11 +221,16 @@ QPainterPath ShapeProcessor::getPuzzlePieceShape(int status)
                     status, _p->tabFull, _p->tabSize, _p->tabOffset, _p->tabTolerance, _p->tabSize, _p->tabOffset);
     }
 
+    // Found an exact match in the cache
+
+    _p->shapeCacheHits++;
     return _p->shapeCache[status];
 }
 
 QPainterPath ShapeProcessor::getPuzzlePieceStrokeShape(int status)
 {
+    _p->shapeRequests++;
+
     if (!_p->strokeShapeCache.contains(status))
     {
         foreach (int s, _p->strokeShapeCache.keys())
@@ -221,6 +239,8 @@ QPainterPath ShapeProcessor::getPuzzlePieceStrokeShape(int status)
 
             if (m == NoMatch)
                 continue;
+
+            // Found a shape which matches, but needs transforming
 
             QTransform tr;
 
@@ -231,8 +251,11 @@ QPainterPath ShapeProcessor::getPuzzlePieceStrokeShape(int status)
             else if (m == HorizontalAndVerticalFlipMatch)
                 tr = tr.scale(-1.0, -1.0).translate(-_p->unit.width() - _p->tabFull * 2 - _p->strokeThickness * 2, - _p->unit.height() - _p->tabFull * 2 - _p->strokeThickness * 2);
 
+            _p->shapeCacheHits++;
             return _p->strokeShapeCache[status] = tr.map(_p->strokeShapeCache[s]);
         }
+
+        // No match in the cache, need to generate a new shape
 
         return _p->strokeShapeCache[status] =
                 createPuzzleShape(
@@ -240,6 +263,9 @@ QPainterPath ShapeProcessor::getPuzzlePieceStrokeShape(int status)
                     status, _p->tabFull, _p->tabSize + _p->strokeThickness, _p->tabOffset - _p->strokeThickness, _p->tabTolerance, _p->tabSize - _p->strokeThickness, _p->tabOffset + _p->strokeThickness);
     }
 
+    // Found an exact match in the cache
+
+    _p->shapeCacheHits++;
     return _p->strokeShapeCache[status];
 }
 
