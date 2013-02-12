@@ -130,9 +130,6 @@ ShapeProcessor::ShapeProcessor(const GameDescriptor &descriptor)
 
 ShapeProcessor::~ShapeProcessor()
 {
-    qDebug() << Q_FUNC_INFO << "total shape requests:" << _p->shapeRequests
-             << "served from cache:" << _p->shapeCacheHits
-             << "(" << (((qreal)_p->shapeCacheHits / (qreal)_p->shapeRequests) * 100) << "%)";
     delete _p;
 }
 
@@ -291,6 +288,19 @@ MatchMode ShapeProcessor::match(int status1, int status2)
         return HorizontalAndVerticalFlipMatch;
 
     return NoMatch;
+}
+
+void ShapeProcessor::resetPerfCounters()
+{
+    _p->shapeRequests = 0;
+    _p->shapeCacheHits = 0;
+}
+
+void ShapeProcessor::printPerfCounters() const
+{
+    qDebug() << Q_FUNC_INFO << "total shape requests:" << _p->shapeRequests
+              << "served from cache:" << _p->shapeCacheHits
+              << "(" << (((qreal)_p->shapeCacheHits / (qreal)_p->shapeRequests) * 100) << "%)";
 }
 
 void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses)

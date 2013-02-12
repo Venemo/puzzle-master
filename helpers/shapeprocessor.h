@@ -43,6 +43,8 @@ public:
     QPainterPath getPuzzlePieceShape(int status);
     QPainterPath getPuzzlePieceStrokeShape(int status);
     MatchMode match(int status1, int status2);
+    void printPerfCounters() const;
+    void resetPerfCounters();
 };
 
 void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses);

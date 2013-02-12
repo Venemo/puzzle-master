@@ -117,7 +117,18 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
     memset(statuses, 0, rows * cols * sizeof(int));
 
-    PuzzleHelpers::ShapeProcessor shapeProcessor(desc);
+    static unsigned previousRows = rows, previousCols = cols;
+    static PuzzleHelpers::ShapeProcessor *shapeProcessor = new PuzzleHelpers::ShapeProcessor(desc);
+
+    if (previousRows != rows || previousCols != cols)
+    {
+        delete shapeProcessor;
+        shapeProcessor = new PuzzleHelpers::ShapeProcessor(desc);
+    }
+
+    previousRows = rows;
+    previousCols = cols;
+    shapeProcessor->resetPerfCounters();
     PuzzleHelpers::generatePuzzlePieceStatuses(rows, cols, statuses);
 
     for (unsigned i = 0; i < cols; i++)
@@ -131,14 +142,14 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
             // Creating the shape of the piece
 
-            PuzzleHelpers::Correction corr = shapeProcessor.getCorrectionFor(statuses[i * rows + j]);
+            PuzzleHelpers::Correction corr = shapeProcessor->getCorrectionFor(statuses[i * rows + j]);
             int &sxCorrection = corr.sxCorrection, &syCorrection = corr.syCorrection, &xCorrection = corr.xCorrection, &yCorrection = corr.yCorrection;
 
             // Create shapes
 
-            QPainterPath clip = shapeProcessor.getPuzzlePieceShape(statuses[i * rows + j])
+            QPainterPath clip = shapeProcessor->getPuzzlePieceShape(statuses[i * rows + j])
                     .translated(xCorrection, yCorrection);;
-            QPainterPath strokePath = shapeProcessor.getPuzzlePieceStrokeShape(statuses[i * rows + j])
+            QPainterPath strokePath = shapeProcessor->getPuzzlePieceStrokeShape(statuses[i * rows + j])
                     .translated(xCorrection, yCorrection);
 
             QPainterPath realShape;
@@ -190,6 +201,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     }
 
     qDebug() << "time spent" << "creating shapes:" << tShape << "painting:" << tPaint;
+    shapeProcessor->printPerfCounters();
 
     delete statuses;
     setNeighbours(cols, rows);
