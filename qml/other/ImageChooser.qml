@@ -330,14 +330,14 @@ Panel {
             if (newurl.indexOf("file://") >= 0)
                 newurl = newurl.substring(7);
 
-            if (appSettings.addCustomImage(newurl))
+            if (appSettings.addCustomImage(decodeURI(newurl)))
                 imagesModel.insert(0, { url: "file://" + newurl })
         }
     }
     Connections {
         target: appEventHandler
         onPlatformFileDialogAccepted: {
-            if (appSettings.addCustomImage(fileUrl))
+            if (appSettings.addCustomImage(decodeURI(fileUrl)))
                 imagesModel.insert(0, { url: "file://" + fileUrl })
         }
     }
