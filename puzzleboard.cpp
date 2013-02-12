@@ -461,7 +461,21 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
 
         QPointF midPoint;
         foreach (int id, item->_grabbedTouchPointIds)
-            midPoint += m[id]->pos();
+        {
+            if (m.contains(id))
+            {
+                midPoint += m[id]->pos();
+            }
+            else
+            {
+                QDebug d = qDebug();
+                d << Q_FUNC_INFO << "Touchscreen glitch:" << "grabbed touch point id not present among the ids of the touch event (" << event->touchPoints().count() << "total):" << id << "all ids:";
+                foreach (int v, m.keys())
+                    d << v;
+
+                item->_grabbedTouchPointIds.removeAll(id);
+            }
+        }
         midPoint /= currentTouchPointCount;
         midPoint = this->QGraphicsItem::mapToItem(item, midPoint);
 
@@ -488,6 +502,10 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         }
 
         item->_previousTouchPointCount = item->_grabbedTouchPointIds.count();
+
+        // this is the only method call here which can delete items
+        // TODO: move it out of this loop and create another loop with guarded pointers,
+        //       or some other way to see if they have been deleted.
         item->checkMergeableSiblings(midPoint);
     }
 }
