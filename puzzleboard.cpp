@@ -501,10 +501,6 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         }
 
         item->_previousTouchPointCount = item->_grabbedTouchPointIds.count();
-
-        // this is the only method call here which can delete items
-        // TODO: move it out of this loop and create another loop with guarded pointers,
-        //       or some other way to see if they have been deleted.
         item->checkMergeableSiblings(midPoint);
     }
 }
