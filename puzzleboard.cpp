@@ -414,6 +414,8 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
     QList<PuzzleItem*> puzzleItems = _puzzleItems.toList();
     qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemLessThan);
 
+    // Iterate through the touch points in the event and assign them to an item
+
     foreach (const QTouchEvent::TouchPoint &p, event->touchPoints())
     {
         if (p.state() == Qt::TouchPointReleased)
@@ -451,6 +453,12 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
 
     foreach (PuzzleItem *item, puzzleItems)
     {
+        // Remove all non-existent touch points (they might exist on a glitchy touchscreen)
+        foreach (int id, item->_grabbedTouchPointIds)
+            if (!m.contains(id))
+                item->_grabbedTouchPointIds.removeAll(id);
+
+        // Examine the current touch point count and decide what to do
         int currentTouchPointCount = item->_grabbedTouchPointIds.count();
         if (currentTouchPointCount == 0 || !item->_canMerge)
         {
@@ -459,28 +467,18 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
             continue;
         }
 
+        // Calculate the midpoint of the item
         QPointF midPoint;
         foreach (int id, item->_grabbedTouchPointIds)
-        {
             if (m.contains(id))
-            {
                 midPoint += m[id]->pos();
-            }
-            else
-            {
-                QDebug d = qDebug();
-                d << Q_FUNC_INFO << "Touchscreen glitch:" << "grabbed touch point id not present among the ids of the touch event (" << event->touchPoints().count() << "total):" << id << "all ids:";
-                foreach (int v, m.keys())
-                    d << v;
-
-                item->_grabbedTouchPointIds.removeAll(id);
-            }
-        }
         midPoint /= currentTouchPointCount;
         midPoint = this->QGraphicsItem::mapToItem(item, midPoint);
 
+        // Set the transform origin point to the midpoint
         item->setCompensatedTransformOriginPoint(midPoint);
 
+        // Perform dragging
         if (!item->_dragging)
         {
             item->_isDraggingWithTouch = true;
@@ -493,6 +491,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
             item->doDrag(midPoint);
         }
 
+        // Perform rotation
         if (allowRotation() && currentTouchPointCount >= 2)
         {
             if (item->_previousTouchPointCount < 2)
