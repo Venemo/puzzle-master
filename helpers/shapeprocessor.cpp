@@ -30,10 +30,10 @@
 // status - flags of TabStatus values that describe the shape of this puzzle piece
 // tabFull - the full size of tabs including stroke, offset, tolerance
 // tabSize - size of tabs
-// tabOffset - offset of tabs
-// tabTolerance - extra size to the tabs (so that merging works flawlessly)
+// tabOffset - offset of tabs (meaning: how far away they are from the edge of the piece)
+// tabTolerance - extra size to the tabs (so that merging works flawlessly, without visual artifacts)
 // blankSize - size of blanks
-// blankOffset - offset of blanks
+// blankOffset - offset of blanks (meaning: how far away they are from the edge of the piece)
 // ----------
 static QPainterPath createPuzzleShape(QSize unit, int status, qreal tabFull, qreal tabSize, qreal tabOffset, qreal tabTolerance, qreal blankSize, qreal blankOffset)
 {
