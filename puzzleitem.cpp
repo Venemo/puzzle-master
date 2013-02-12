@@ -170,6 +170,9 @@ void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
         _dragStart = mapToParent(dragPosition + QPointF(x1, y1)) - pos();
         static_cast<PuzzleBoard*>(parent())->removePuzzleItem(item);
 
+        foreach (int id, item->_grabbedTouchPointIds)
+            this->_grabbedTouchPointIds.append(id);
+
         if (neighbours().count() == 0)
         {
             _dragging = _isDraggingWithTouch = _canMerge = false;
