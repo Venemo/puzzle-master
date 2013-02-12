@@ -117,17 +117,16 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
     memset(statuses, 0, rows * cols * sizeof(int));
 
-    static unsigned previousRows = rows, previousCols = cols;
+    static unsigned previousRows = rows, previousCols = cols, previousPixmapW = desc.pixmapSize.width(), previousPixmapH = desc.pixmapSize.height();
     static PuzzleHelpers::ShapeProcessor *shapeProcessor = new PuzzleHelpers::ShapeProcessor(desc);
 
-    if (previousRows != rows || previousCols != cols)
+    if (previousRows != rows || previousCols != cols || previousPixmapW != desc.pixmapSize.width() || previousPixmapH != desc.pixmapSize.height())
     {
         delete shapeProcessor;
         shapeProcessor = new PuzzleHelpers::ShapeProcessor(desc);
     }
 
-    previousRows = rows;
-    previousCols = cols;
+    previousRows = rows, previousCols = cols, previousPixmapW = desc.pixmapSize.width(), previousPixmapH = desc.pixmapSize.height();
     shapeProcessor->resetPerfCounters();
     PuzzleHelpers::generatePuzzlePieceStatuses(rows, cols, statuses);
 
