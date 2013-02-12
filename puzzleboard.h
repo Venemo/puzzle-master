@@ -46,7 +46,7 @@ class PuzzleBoard : public QDeclarativeItem
 
 public:
     explicit PuzzleBoard(QDeclarativeItem *parent = 0);
-    Q_INVOKABLE bool startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowRotation);
+    Q_INVOKABLE bool startGame(const QString &imageUrl, int rows, int cols, bool allowRotation);
     void setNeighbours(int x, int y);
     PuzzleItem *find(const QPoint &puzzleCoordinates);
     void removePuzzleItem(PuzzleItem *item);

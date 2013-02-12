@@ -79,7 +79,7 @@ PuzzleItem *PuzzleBoard::find(const QPoint &puzzleCoordinates)
     return 0;
 }
 
-bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned cols, bool allowRotation)
+bool PuzzleBoard::startGame(const QString &imageUrl, int rows, int cols, bool allowRotation)
 {
     emit loadProgressChanged(0);
     deleteAllPieces();
@@ -117,7 +117,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
 
     memset(statuses, 0, rows * cols * sizeof(int));
 
-    static unsigned previousRows = rows, previousCols = cols, previousPixmapW = desc.pixmapSize.width(), previousPixmapH = desc.pixmapSize.height();
+    static int previousRows = rows, previousCols = cols, previousPixmapW = desc.pixmapSize.width(), previousPixmapH = desc.pixmapSize.height();
     static PuzzleHelpers::ShapeProcessor *shapeProcessor = new PuzzleHelpers::ShapeProcessor(desc);
 
     if (previousRows != rows || previousCols != cols || previousPixmapW != desc.pixmapSize.width() || previousPixmapH != desc.pixmapSize.height())
@@ -130,9 +130,9 @@ bool PuzzleBoard::startGame(const QString &imageUrl, unsigned rows, unsigned col
     shapeProcessor->resetPerfCounters();
     PuzzleHelpers::generatePuzzlePieceStatuses(rows, cols, statuses);
 
-    for (unsigned i = 0; i < cols; i++)
+    for (int i = 0; i < cols; i++)
     {
-        for (unsigned j = 0; j < rows; j++)
+        for (int j = 0; j < rows; j++)
         {
             timer.restart();
 
