@@ -91,6 +91,7 @@ Dialog
                         wrapMode: Text.WrapAnywhere
                         font.pixelSize: 17
                         anchors.centerIn: parent
+                        activeFocusOnPress: false
                     }
                 }
                 TextEdit {
@@ -98,6 +99,7 @@ Dialog
                     visible: imageItem.status == Image.Error
                     color: "#ffffff"
                     anchors.centerIn: parent
+                    activeFocusOnPress: false
                 }
                 MouseArea {
                     anchors.fill: parent
