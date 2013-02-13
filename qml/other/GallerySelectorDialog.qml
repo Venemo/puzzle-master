@@ -37,7 +37,7 @@ Dialog
                     properties: [ 'url' ]; \
                     sortProperties: [ '-dateTaken' ]; \
                     autoUpdate: true; \
-                }", imageSelectorGrid, "FolderListModelSnippet.qml");
+                }", imageSelectorGrid, "DocumentGalleryModelSnippet.qml");
     }
 
     id: fileSelectorDialog
@@ -74,6 +74,14 @@ Dialog
                 sourceSize.width: imageSelectorGrid.cellWidth - 10
                 anchors.centerIn: parent
             }
+            TextEdit {
+                activeFocusOnPress: false
+                color: "#fff"
+                text: "..."
+                font.pixelSize: imageSelectorGrid.cellHeight / 3
+                anchors.centerIn: imageItem
+                visible: imageItem.status == Image.Loading
+            }
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
@@ -83,8 +91,8 @@ Dialog
             }
         }
         highlight: Rectangle {
-            color: "#538312"
-            radius: 5
+            color: "#a909a7"
+            radius: 2
         }
     }
 }
