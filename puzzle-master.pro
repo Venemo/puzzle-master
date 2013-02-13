@@ -84,7 +84,7 @@ unix:!symbian {
     !blackberry {
         QMAKE_LFLAGS += -pie -rdynamic
     }
-    DEFINES += HAVE_OPENGL DISABLE_QMLGALLERY
+    DEFINES += HAVE_OPENGL DISABLE_QMLGALLERY FORCE_PLATFORM_FILE_DIALOG
     INSTALLS += target iconfile desktopfile
 
     target.path = /usr/bin
@@ -97,7 +97,7 @@ contains(MEEGO_EDITION, harmattan) {
     # We want to use applauncherd here + harmattan specifics and the touchscreen
     DEFINES += HAVE_APPLAUNCHERD HAVE_SWIPELOCK MEEGO_EDITION_HARMATTAN DISABLE_SCROLLBARS
     # The MeeGo graphics system is better than using QGLWidget
-    DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY
+    DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY FORCE_PLATFORM_FILE_DIALOG
     # Optification is needed by the Nokia Store
     target.path = /opt/puzzle-master
     INSTALLS += splash
@@ -120,7 +120,7 @@ symbian {
     QMAKE_CXXFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden -O3 -ffast-math
     # No OpenGL, no scrollbars and custom appversion hack
     DEFINES += QT_NO_OPENGL APP_VERSION=\"$$VERSION\" DISABLE_SCROLLBARS
-    DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY APP_VERSION=\\\"$$VERSION\\\"
+    DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY FORCE_PLATFORM_FILE_DIALOG APP_VERSION=\\\"$$VERSION\\\"
     QT -= opengl
     CONFIG += mobility
     MOBILITY += systeminfo
@@ -136,7 +136,7 @@ symbian {
 }
 win32 {
     TARGET = PuzzleMaster
-    DEFINES += HAVE_OPENGL _USE_MATH_DEFINES _CRT_SECURE_NO_WARNINGS
+    DEFINES += HAVE_OPENGL FORCE_PLATFORM_FILE_DIALOG _USE_MATH_DEFINES _CRT_SECURE_NO_WARNINGS
     RC_FILE = installables/puzzle-master.rc
 }
 blackberry {

@@ -47,7 +47,7 @@
 #include <QDBusMessage>
 #endif
 
-#if defined(Q_WS_MAEMO_5)
+#if defined(FORCE_PLATFORM_FILE_DIALOG) || defined(Q_WS_MAEMO_5)
 #include <QFileDialog>
 #endif
 
@@ -205,7 +205,7 @@ void AppEventHandler::displayAppSwitcher()
 // Determines whether a platform specific file dialog should be used or the platform supports one of the QML models
 bool AppEventHandler::showPlatformFileDialog()
 {
-#if defined(Q_WS_MAEMO_5) || defined(Q_OS_BLACKBERRY)
+#if defined(Q_WS_MAEMO_5) || defined(Q_OS_BLACKBERRY) || defined(FORCE_PLATFORM_FILE_DIALOG)
     return true;
 #else
     return false;
@@ -215,18 +215,18 @@ bool AppEventHandler::showPlatformFileDialog()
 // Displays the platform file selector dialog when available
 void AppEventHandler::displayPlatformFileDialog()
 {
-#if defined(Q_WS_MAEMO_5)
-    // On Maemo 5, this will show the platform file dialog
-    QString path = QFileDialog::getOpenFileName(static_cast<QWidget*>(parent()), QString(), "/home/user/MyDocs", "Images (*.png *.jpeg *.jpg *.gif *.bmp)");
-    qDebug() << "selected path is" << path;
-    emit this->platformFileDialogAccepted(path);
-#elif defined(Q_OS_BLACKBERRY)
+#if defined(Q_OS_BLACKBERRY)
     // On BlackBerry, we must use a specific API to display the platform file dialog
     if (bbDialog)
         dialog_destroy(bbDialog);
     dialog_create_filebrowse(&bbDialog);
     dialog_set_filebrowse_filter(bbDialog, bbDialogFilters, 1);
     dialog_show(bbDialog);
+#elif defined(FORCE_PLATFORM_FILE_DIALOG)
+    // Where there is no platform-specific dialog to use, fallback to good old QFileDialog
+    QString path = QFileDialog::getOpenFileName(static_cast<QWidget*>(parent()), QString(), "/home/user/MyDocs", "Images (*.png *.jpeg *.jpg *.gif *.bmp)");
+    qDebug() << "selected path is" << path;
+    emit this->platformFileDialogAccepted(path);
 #else
     qDebug() << "displayPlatformFileDialog is not implemented for the current platform";
 #endif
