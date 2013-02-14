@@ -170,21 +170,21 @@ bool PuzzleBoard::startGame(const QString &imageUrl, int rows, int cols, bool al
             tPaint += t.elapsed();
             t.restart();
 
-            QPointF supposed(w0 + (i * desc.unitSize.width()) + sxCorrection - desc.usabilityThickness,
-                             h0 + (j * desc.unitSize.height()) + syCorrection - desc.usabilityThickness);
+            QPointF supposed(w0 + (i * desc.unitSize.width()) + sxCorrection,
+                             h0 + (j * desc.unitSize.height()) + syCorrection);
 
             // Creating the piece
             PuzzleItem *item = new PuzzleItem(px, this);
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(supposed);
             item->setPos(supposed);
-            item->setPixmapOffset(QPoint(desc.usabilityThickness, desc.usabilityThickness));
+            item->setPixmapOffset(QPoint(0, 0));
             item->setStrokeOffset(item->pixmapOffset() - QPoint(_strokeThickness, _strokeThickness));
             item->setStroke(stroke);
-            item->setFakeShape(fakeShape.translated(desc.usabilityThickness + 1, desc.usabilityThickness + 1));
-            item->setRealShape(realShape.translated(desc.usabilityThickness + 1, desc.usabilityThickness + 1));
-            item->setWidth(px.width() + desc.usabilityThickness * 2 + 2);
-            item->setHeight(px.height() + desc.usabilityThickness * 2 + 2);
+            item->setFakeShape(fakeShape);
+            item->setRealShape(realShape);
+            item->setWidth(px.width());
+            item->setHeight(px.height());
             item->setTabStatus(statuses[i * rows + j]);
             item->setZValue(i * rows + j + this->zValue() + 1);
 
