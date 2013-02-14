@@ -108,8 +108,8 @@ bool PuzzleBoard::startGame(const QString &imageUrl, int rows, int cols, bool al
 
     const PuzzleHelpers::GameDescriptor &desc = imageProcessor.descriptor();
     int *statuses = new int[cols * rows], tShape = 0, tPaint = 0;
-    qreal   w0 = (width() - desc.pixmapSize.width()) / 2,
-            h0 = (height() - desc.pixmapSize.height()) / 2;
+    qreal   w0 = (width() - desc.cols * desc.unitSize.width()) / 2,
+            h0 = (height() - desc.rows * desc.unitSize.height()) / 2;
 
     _allowRotation = allowRotation;
     _tabSizes = desc.tabOffset;
