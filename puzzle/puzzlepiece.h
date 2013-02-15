@@ -20,6 +20,7 @@
 #define PUZZLEPIECE_H
 
 #include <QObject>
+#include <QSet>
 
 #include "util.h"
 #include "puzzleboard.h"
@@ -37,21 +38,23 @@ class PuzzlePiece : public QObject
     GENPROPERTY_S(QPointF, _pos, pos, setPos)
     GENPROPERTY_S(qreal, _rotation, rotation, setRotation)
     GENPROPERTY_S(int, _zValue, zValue, setZValue)
+    GENPROPERTY_S(QPointF, _dragStart, dragStart, setDragStart)
     GENPROPERTY_S(QPointF, _transformOriginPoint, transformOriginPoint, setTransformOriginPoint)
 
     GENPROPERTY_S(QPoint, _puzzleCoordinates, puzzleCoordinates, setPuzzleCoordinates)
     GENPROPERTY_S(QPointF, _supposedPosition, supposedPosition, setSupposedPosition)
     GENPROPERTY_R(QSet<PuzzlePiece*>, _neighbours, neighbours)
     GENPROPERTY_S(unsigned, _tabStatus, tabStatus, setTabStatus)
-    GENPROPERTY_R(QList<int>, _grabbedTouchPointIds, grabbedTouchPointIds)
+    GENPROPERTY_R(QSet<int>, _grabbedTouchPointIds, grabbedTouchPointIds)
 
-    QPointF _dragStart;
-    bool _dragging, _isDraggingWithTouch, _isRightButtonPressed;
+
+    GENPROPERTY_R(bool, _dragging, dragging)
+    GENPROPERTY_S(bool, _isRightButtonPressed, isRightButtonPressed, setIsRightButtonPressed)
+    GENPROPERTY_R(bool, _isDraggingWithTouch, isDraggingWithTouch)
+    GENPROPERTY_S(int, _previousTouchPointCount, previousTouchPointCount, setPreviousTouchPointCount)
+
     qreal _rotationStart;
-    int _previousTouchPointCount;
     QList<PuzzlePiecePrimitive*> _primitives;
-
-    friend class PuzzleBoard;
 
 public:
     explicit PuzzlePiece(PuzzleBoard *parent = 0);
@@ -67,17 +70,21 @@ public:
     QPointF mapFromParent(const QPointF &p) const;
     QPointF mapToItem(const PuzzlePiece *item, const QPointF &p) const;
 
-signals:
-    void noNeighbours();
-
-protected:
-    void startDrag(const QPointF &pos);
+    void startDrag(const QPointF &pos, bool touch = false);
     void stopDrag();
     void doDrag(const QPointF &pos);
     void startRotation(const QPointF &vector);
     void handleRotation(const QPointF &vector);
     void setCompensatedTransformOriginPoint(const QPointF &point);
     void checkMergeableSiblings();
+
+    void grabTouchPoint(int id) { _grabbedTouchPointIds.insert(id); }
+    void ungrabTouchPoint(int id) { _grabbedTouchPointIds.remove(id); }
+
+signals:
+    void noNeighbours();
+
+protected:
     bool checkMergeability(PuzzlePiece *item);
 };
 

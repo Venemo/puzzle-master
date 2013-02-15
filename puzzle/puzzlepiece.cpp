@@ -53,8 +53,8 @@ PuzzlePiece::PuzzlePiece(PuzzleBoard *parent)
     , _rotation(0)
     , _zValue(0)
     , _dragging(false)
-    , _isDraggingWithTouch(false)
     , _isRightButtonPressed(false)
+    , _isDraggingWithTouch(false)
     , _previousTouchPointCount(0)
 {
 }
@@ -99,7 +99,7 @@ void PuzzlePiece::mergeIfPossible(PuzzlePiece *item)
 
     // Grab the touch points of the other item
     foreach (int id, item->_grabbedTouchPointIds)
-        this->_grabbedTouchPointIds.append(id);
+        this->_grabbedTouchPointIds.insert(id);
 
     // See if the puzzle is solved
     if (neighbours().count() == 0)
@@ -110,11 +110,12 @@ void PuzzlePiece::mergeIfPossible(PuzzlePiece *item)
     }
 }
 
-void PuzzlePiece::startDrag(const QPointF &p)
+void PuzzlePiece::startDrag(const QPointF &p, bool touch)
 {
     raise();
     _dragging = true;
     _dragStart = mapToParent(p) - pos();
+    _isDraggingWithTouch = touch;
 }
 
 void PuzzlePiece::stopDrag()

@@ -384,7 +384,7 @@ void PuzzleBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
     qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemAscLessThan);
     _mouseSubject = PuzzleHelpers::findPuzzleItem(event->pos(), puzzleItems);
 
-    if (!_enabled || !_mouseSubject || _mouseSubject->_isDraggingWithTouch)
+    if (!_enabled || !_mouseSubject || _mouseSubject->isDraggingWithTouch())
         return;
 
     if (event->button() == Qt::LeftButton)
@@ -393,7 +393,7 @@ void PuzzleBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
     else if (event->button() == Qt::RightButton && allowRotation())
     {
-        _mouseSubject->_isRightButtonPressed = true;
+        _mouseSubject->setIsRightButtonPressed(true);
         _mouseSubject->setCompensatedTransformOriginPoint(_mouseSubject->centerPoint());
         _mouseSubject->startRotation(event->pos() - _mouseSubject->mapToParent(_mouseSubject->centerPoint()));
     }
@@ -402,7 +402,7 @@ void PuzzleBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void PuzzleBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     event->accept();
-    if (!_mouseSubject || _mouseSubject->_isDraggingWithTouch)
+    if (!_mouseSubject || _mouseSubject->isDraggingWithTouch())
         return;
 
     if (event->button() == Qt::LeftButton)
@@ -411,20 +411,20 @@ void PuzzleBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     }
     else if (event->button() == Qt::RightButton)
     {
-        _mouseSubject->_isRightButtonPressed = false;
-        _mouseSubject->_dragStart = event->pos() - _mouseSubject->pos();
+        _mouseSubject->setIsRightButtonPressed(false);
+        _mouseSubject->startDrag(event->pos());
     }
 }
 
 void PuzzleBoard::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     event->accept();
-    if (!_enabled || !_mouseSubject || _mouseSubject->_isDraggingWithTouch)
+    if (!_enabled || !_mouseSubject || _mouseSubject->isDraggingWithTouch())
         return;
 
     QPointF p = _mouseSubject->mapFromParent(event->pos());
 
-    if (_mouseSubject->_isRightButtonPressed && this->allowRotation())
+    if (_mouseSubject->isRightButtonPressed() && this->allowRotation())
         _mouseSubject->handleRotation(event->pos() - _mouseSubject->mapToParent(_mouseSubject->centerPoint()));
     else
         _mouseSubject->doDrag(p);
@@ -454,11 +454,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
             //qDebug() << "released";
             foreach (PuzzlePiece *item, puzzleItems)
             {
-                if (item->_grabbedTouchPointIds.contains(p.id()))
-                {
-                    item->_grabbedTouchPointIds.removeAll(p.id());
-                    break;
-                }
+                item->ungrabTouchPoint(p.id());
             }
         }
         else if (p.state() == Qt::TouchPointPressed)
@@ -468,7 +464,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
 
             if (item)
             {
-                item->_grabbedTouchPointIds.append(p.id());
+                item->grabTouchPoint(p.id());
                 item->raise();
             }
         }
@@ -479,22 +475,22 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
     foreach (PuzzlePiece *item, puzzleItems)
     {
         // Remove all non-existent touch points (they might exist on a glitchy touchscreen)
-        foreach (int id, item->_grabbedTouchPointIds)
+        foreach (int id, item->grabbedTouchPointIds())
             if (!m.contains(id))
-                item->_grabbedTouchPointIds.removeAll(id);
+                item->ungrabTouchPoint(id);
 
         // Examine the current touch point count and decide what to do
-        int currentTouchPointCount = item->_grabbedTouchPointIds.count();
+        int currentTouchPointCount = item->grabbedTouchPointIds().count();
         if (currentTouchPointCount == 0)
         {
-            if (item->_dragging)
+            if (item->dragging())
                 item->stopDrag();
             continue;
         }
 
         // Calculate the midpoint of the item
         QPointF midPoint;
-        foreach (int id, item->_grabbedTouchPointIds)
+        foreach (int id, item->grabbedTouchPointIds())
             if (m.contains(id))
                 midPoint += m[id]->pos();
         midPoint /= currentTouchPointCount;
@@ -504,29 +500,28 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         item->setCompensatedTransformOriginPoint(midPoint);
 
         // Perform dragging
-        if (!item->_dragging)
+        if (!item->dragging())
         {
-            item->_isDraggingWithTouch = true;
-            item->startDrag(midPoint);
+            item->startDrag(midPoint, true);
         }
         else
         {
-            if (item->_previousTouchPointCount != currentTouchPointCount)
-                item->_dragStart = mapToParent(midPoint) - pos();
+            if (item->previousTouchPointCount() != currentTouchPointCount)
+                item->startDrag(mapToParent(midPoint) - pos(), true);
             item->doDrag(midPoint);
         }
 
         // Perform rotation
         if (allowRotation() && currentTouchPointCount >= 2)
         {
-            if (item->_previousTouchPointCount < 2)
-                item->startRotation(m[item->_grabbedTouchPointIds[1]]->screenPos() - m[item->_grabbedTouchPointIds[0]]->screenPos());
+            if (item->previousTouchPointCount() < 2)
+                item->startRotation(m[*(++item->grabbedTouchPointIds().begin())]->screenPos() - m[*(item->grabbedTouchPointIds().begin())]->screenPos());
             else
-                item->handleRotation(m[item->_grabbedTouchPointIds[1]]->screenPos() - m[item->_grabbedTouchPointIds[0]]->screenPos());
+                item->handleRotation(m[*(++item->grabbedTouchPointIds().begin())]->screenPos() - m[*(item->grabbedTouchPointIds().begin())]->screenPos());
         }
 
         // Save previous touch point count
-        item->_previousTouchPointCount = item->_grabbedTouchPointIds.count();
+        item->setPreviousTouchPointCount(item->grabbedTouchPointIds().count());
         // Check mergeable neighbours of the piece
         item->checkMergeableSiblings();
     }
@@ -551,11 +546,11 @@ void PuzzleBoard::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWi
         painter->setTransform(transform);
 
         // Draw the strokes first
-        foreach (PuzzlePiecePrimitive *p, piece->_primitives)
+        foreach (PuzzlePiecePrimitive *p, piece->primitives())
             painter->drawPixmap(p->strokeOffset(), p->stroke());
 
         // Draw the actual pixmaps
-        foreach (PuzzlePiecePrimitive *p, piece->_primitives)
+        foreach (PuzzlePiecePrimitive *p, piece->primitives())
             painter->drawPixmap(p->pixmapOffset(), p->pixmap());
     }
 
