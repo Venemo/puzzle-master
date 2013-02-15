@@ -434,6 +434,9 @@ void PuzzleBoard::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void PuzzleBoard::touchEvent(QTouchEvent *event)
 {
+    if (!_enabled)
+        return;
+
     // Determine which touch point belongs to which puzzle item.
 
     QList<PuzzlePiece*> puzzleItems = _puzzleItems.toList();
