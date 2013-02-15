@@ -25,7 +25,7 @@
 #include <QList>
 #include "helpers/helpertypes.h"
 
-class PuzzleItem;
+class PuzzlePiece;
 
 namespace PuzzleHelpers
 {
@@ -48,7 +48,7 @@ public:
 };
 
 void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses);
-PuzzleItem *findPuzzleItem(QPointF p, const QList<PuzzleItem*> &puzzleItems);
+PuzzlePiece *findPuzzleItem(QPointF p, const QList<PuzzlePiece*> &puzzleItems);
 
 }
 

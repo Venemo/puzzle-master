@@ -30,15 +30,20 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include "puzzleboard.h"
-#include "puzzleitem.h"
 #include "helpers/shapeprocessor.h"
 #include "helpers/imageprocessor.h"
 #include "puzzle/puzzlepieceprimitive.h"
+#include "puzzle/puzzlepiece.h"
 
-inline static bool puzzleItemLessThan(PuzzleItem *a, PuzzleItem *b)
+inline static bool puzzleItemLessThan(PuzzlePiece *a, PuzzlePiece *b)
 {
     // We want to order them in descending order by their z values
     return a->zValue() > b->zValue();
+}
+inline static bool puzzleItemAscLessThan(PuzzlePiece *a, PuzzlePiece *b)
+{
+    // We want to order them in ascending order by their z values
+    return a->zValue() < b->zValue();
 }
 
 PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
@@ -52,6 +57,7 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
 #else
     setAcceptedMouseButtons(Qt::NoButton);
 #endif
+    setFlag(QGraphicsItem::ItemHasNoContents, false);
 
     setAcceptTouchEvents(true);
     _mouseSubject = 0;
@@ -60,7 +66,7 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
 
 void PuzzleBoard::setNeighbours(int x, int y)
 {
-    foreach (PuzzleItem *p, _puzzleItems)
+    foreach (PuzzlePiece *p, _puzzleItems)
     {
         if (p->puzzleCoordinates().x() != x - 1)
             p->addNeighbour(find(p->puzzleCoordinates() + QPoint(1, 0)));
@@ -70,9 +76,9 @@ void PuzzleBoard::setNeighbours(int x, int y)
     }
 }
 
-PuzzleItem *PuzzleBoard::find(const QPoint &puzzleCoordinates)
+PuzzlePiece *PuzzleBoard::find(const QPoint &puzzleCoordinates)
 {
-    foreach (PuzzleItem *p, _puzzleItems)
+    foreach (PuzzlePiece *p, _puzzleItems)
     {
         if (p->puzzleCoordinates() == puzzleCoordinates)
             return p;
@@ -184,19 +190,15 @@ bool PuzzleBoard::startGame(const QString &imageUrl, int rows, int cols, bool al
             primitive->setRealShape(realShape);
 
             // Creating the piece item
-            PuzzleItem *item = new PuzzleItem(this);
+            PuzzlePiece *item = new PuzzlePiece(this);
             item->addPrimitive(primitive, QPointF(0, 0));
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(supposed);
             item->setPos(supposed);
-            item->setWidth(px.width());
-            item->setHeight(px.height());
             item->setTabStatus(statuses[i * rows + j]);
             item->setZValue(i * rows + j + this->zValue() + 1);
 
             connect(item, SIGNAL(noNeighbours()), this, SLOT(assemble()));
-
-            item->show();
             _puzzleItems.insert(item);
 
             qDebug() << timer.elapsed() << "ms spent with generating piece" << i * rows + j + 1 << item->puzzleCoordinates();
@@ -226,7 +228,7 @@ void PuzzleBoard::shuffle()
     easingCurve.setPeriod(3);
     easingCurve.setAmplitude(2.2);
 
-    foreach (PuzzleItem *item, _puzzleItems)
+    foreach (PuzzlePiece *item, _puzzleItems)
     {
         int pauseDuration = randomInt(0, maxExplosions) * 350;
 
@@ -269,7 +271,7 @@ void PuzzleBoard::assemble()
     _restorablePositions.clear();
     disable();
 
-    foreach (PuzzleItem *item, _puzzleItems)
+    foreach (PuzzlePiece *item, _puzzleItems)
     {
         _restorablePositions[item] = QPair<QPointF, int>(item->pos(), item->rotation());
 
@@ -307,7 +309,7 @@ void PuzzleBoard::restore()
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
     QEasingCurve easingCurve(QEasingCurve::InExpo);
 
-    foreach (PuzzleItem *item, _puzzleItems)
+    foreach (PuzzlePiece *item, _puzzleItems)
     {
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
         anim->setStartValue(item->pos());
@@ -331,18 +333,12 @@ void PuzzleBoard::restore()
 
 void PuzzleBoard::enable()
 {
-    foreach (PuzzleItem *item, _puzzleItems)
-    {
-        item->enableMerge();
-    }
+    setEnabled(true);
 }
 
 void PuzzleBoard::disable()
 {
-    foreach (PuzzleItem *item, _puzzleItems)
-    {
-        item->disableMerge();
-    }
+    setEnabled(false);
 }
 
 void PuzzleBoard::deleteAllPieces()
@@ -352,7 +348,7 @@ void PuzzleBoard::deleteAllPieces()
     _restorablePositions.clear();
 }
 
-void PuzzleBoard::removePuzzleItem(PuzzleItem *item)
+void PuzzleBoard::removePuzzleItem(PuzzlePiece *item)
 {
     _puzzleItems.remove(item);
     item->deleteLater();
@@ -374,11 +370,11 @@ bool PuzzleBoard::sceneEvent(QEvent *event)
 void PuzzleBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     event->accept();
-    QList<PuzzleItem*> puzzleItems = _puzzleItems.toList();
+    QList<PuzzlePiece*> puzzleItems = _puzzleItems.toList();
     qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemLessThan);
     _mouseSubject = PuzzleHelpers::findPuzzleItem(event->pos(), puzzleItems);
 
-    if (!_mouseSubject || _mouseSubject->_isDraggingWithTouch || !_mouseSubject->_canMerge)
+    if (!_enabled || !_mouseSubject || _mouseSubject->_isDraggingWithTouch)
         return;
 
     if (event->button() == Qt::LeftButton)
@@ -396,7 +392,7 @@ void PuzzleBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void PuzzleBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     event->accept();
-    if (!_mouseSubject || _mouseSubject->_isDraggingWithTouch || !_mouseSubject->_canMerge)
+    if (!_mouseSubject || _mouseSubject->_isDraggingWithTouch)
         return;
 
     if (event->button() == Qt::LeftButton)
@@ -413,7 +409,7 @@ void PuzzleBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void PuzzleBoard::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     event->accept();
-    if (!_mouseSubject || _mouseSubject->_isDraggingWithTouch || !_mouseSubject->_canMerge)
+    if (!_enabled || !_mouseSubject || _mouseSubject->_isDraggingWithTouch)
         return;
 
     QPointF p = _mouseSubject->mapFromParent(event->pos());
@@ -430,7 +426,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
 {
     // Determine which touch point belongs to which puzzle item.
 
-    QList<PuzzleItem*> puzzleItems = _puzzleItems.toList();
+    QList<PuzzlePiece*> puzzleItems = _puzzleItems.toList();
     qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemLessThan);
 
     // Iterate through the touch points in the event and assign them to an item
@@ -440,7 +436,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         if (p.state() == Qt::TouchPointReleased)
         {
             //qDebug() << "released";
-            foreach (PuzzleItem *item, puzzleItems)
+            foreach (PuzzlePiece *item, puzzleItems)
             {
                 if (item->_grabbedTouchPointIds.contains(p.id()))
                 {
@@ -452,7 +448,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         else if (p.state() == Qt::TouchPointPressed)
         {
             //qDebug() << "pressed";
-            PuzzleItem *item = PuzzleHelpers::findPuzzleItem(p.pos(), puzzleItems);
+            PuzzlePiece *item = PuzzleHelpers::findPuzzleItem(p.pos(), puzzleItems);
 
             if (item)
             {
@@ -470,7 +466,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
 
     // For each item, handle the touch points it has grabbed
 
-    foreach (PuzzleItem *item, puzzleItems)
+    foreach (PuzzlePiece *item, puzzleItems)
     {
         // Remove all non-existent touch points (they might exist on a glitchy touchscreen)
         foreach (int id, item->_grabbedTouchPointIds)
@@ -479,7 +475,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
 
         // Examine the current touch point count and decide what to do
         int currentTouchPointCount = item->_grabbedTouchPointIds.count();
-        if (currentTouchPointCount == 0 || !item->_canMerge)
+        if (currentTouchPointCount == 0)
         {
             if (item->_dragging)
                 item->stopDrag();
@@ -492,7 +488,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
             if (m.contains(id))
                 midPoint += m[id]->pos();
         midPoint /= currentTouchPointCount;
-        midPoint = this->QGraphicsItem::mapToItem(item, midPoint);
+        midPoint = item->mapFromParent(midPoint);
 
         // Set the transform origin point to the midpoint
         item->setCompensatedTransformOriginPoint(midPoint);
@@ -522,4 +518,40 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         item->_previousTouchPointCount = item->_grabbedTouchPointIds.count();
         item->checkMergeableSiblings();
     }
+
+    update();
+}
+
+void PuzzleBoard::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+{
+    QTransform originalTransform = painter->transform();
+    QList<PuzzlePiece*> puzzleItems = _puzzleItems.toList();
+    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemAscLessThan);
+
+    foreach (PuzzlePiece *piece, puzzleItems)
+    {
+        QPointF p = piece->mapToParent(QPointF(0, 0));
+        QTransform transform =
+                QTransform::fromTranslate(p.x(), p.y())
+                .rotate(piece->rotation());
+
+        painter->setTransform(transform);
+
+        // Uncomment for or various debugging purposes
+
+        //painter->drawRect(boundingRect());
+        //painter->drawEllipse(mapFromScene(pos()), 10, 10);
+        //painter->fillPath(_fakeShape, QBrush(QColor(0, 0, 255, 130)));
+        //painter->fillPath(_realShape, QBrush(QColor(0, 255, 0, 130)));
+        //painter->fillRect(QRectF(0, 0, this->width(), this->height()), QBrush(QColor(255, 0, 0, 130)));
+
+        // Draw the strokes first
+        foreach (PuzzlePiecePrimitive *p, piece->_primitives)
+            painter->drawPixmap(p->strokeOffset(), p->stroke());
+
+        // Draw the actual pixmaps
+        foreach (PuzzlePiecePrimitive *p, piece->_primitives)
+            painter->drawPixmap(p->pixmapOffset(), p->pixmap());
+    }
+    painter->setTransform(originalTransform);
 }

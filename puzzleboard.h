@@ -26,11 +26,12 @@
 class QTimer;
 class QTouchEvent;
 class QGraphicsSceneMouseEvent;
-class PuzzleItem;
+class PuzzlePiece;
 
 class PuzzleBoard : public QDeclarativeItem
 {
     Q_OBJECT
+    GENPROPERTY_S(bool, _enabled, enabled, setEnabled)
     GENPROPERTY_R(bool, _allowRotation, allowRotation)
     GENPROPERTY_R(int, _strokeThickness, strokeThickness)
     GENPROPERTY_R(QSize, _unit, unit)
@@ -39,17 +40,17 @@ class PuzzleBoard : public QDeclarativeItem
     Q_PROPERTY(int tolerance READ tolerance WRITE setTolerance NOTIFY toleranceChanged)
     GENPROPERTY_F(int, _rotationTolerance, rotationTolerance, setRotationTolerance, rotationToleranceChanged)
     Q_PROPERTY(int rotationTolerance READ rotationTolerance WRITE setRotationTolerance NOTIFY rotationToleranceChanged)
-    GENPROPERTY_R(QSet<PuzzleItem*>, _puzzleItems, puzzleItems)
+    GENPROPERTY_R(QSet<PuzzlePiece*>, _puzzleItems, puzzleItems)
 
-    QHash<PuzzleItem*, QPair<QPointF, int> > _restorablePositions;
-    PuzzleItem *_mouseSubject;
+    QHash<PuzzlePiece*, QPair<QPointF, int> > _restorablePositions;
+    PuzzlePiece *_mouseSubject;
 
 public:
     explicit PuzzleBoard(QDeclarativeItem *parent = 0);
     Q_INVOKABLE bool startGame(const QString &imageUrl, int rows, int cols, bool allowRotation);
     void setNeighbours(int x, int y);
-    PuzzleItem *find(const QPoint &puzzleCoordinates);
-    void removePuzzleItem(PuzzleItem *item);
+    PuzzlePiece *find(const QPoint &puzzleCoordinates);
+    void removePuzzleItem(PuzzlePiece *item);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
@@ -57,6 +58,7 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     bool sceneEvent(QEvent *);
     void touchEvent(QTouchEvent*);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
 signals:
     void toleranceChanged();

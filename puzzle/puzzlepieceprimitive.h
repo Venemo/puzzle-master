@@ -26,7 +26,7 @@
 
 #include "util.h"
 
-class PuzzleItem;
+class PuzzlePiece;
 
 class PuzzlePiecePrimitive : public QObject
 {
@@ -39,7 +39,7 @@ class PuzzlePiecePrimitive : public QObject
     GENPROPERTY_S(QPainterPath, _fakeShape, fakeShape, setFakeShape)
 
 public:
-    explicit PuzzlePiecePrimitive(PuzzleItem *parent = 0);
+    explicit PuzzlePiecePrimitive(PuzzlePiece *parent = 0);
     
 signals:
     

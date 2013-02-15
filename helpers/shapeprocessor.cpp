@@ -21,7 +21,7 @@
 #include <QPainterPathStroker>
 
 #include "puzzle/puzzlepieceprimitive.h"
-#include "puzzleitem.h"
+#include "puzzle/puzzlepiece.h"
 #include "shapeprocessor.h"
 #include "util.h"
 
@@ -341,9 +341,9 @@ void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses)
     }
 }
 
-PuzzleItem *findPuzzleItem(QPointF p, const QList<PuzzleItem*> &puzzleItems)
+PuzzlePiece *findPuzzleItem(QPointF p, const QList<PuzzlePiece*> &puzzleItems)
 {
-    foreach (PuzzleItem *item, puzzleItems)
+    foreach (PuzzlePiece *item, puzzleItems)
     {
         QPointF tr = item->mapFromParent(p);
         bool enableUsabilityImprovement = item->grabbedTouchPointIds().count();
