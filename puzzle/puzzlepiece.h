@@ -60,7 +60,6 @@ public:
     void verifyPosition();
     void addNeighbour(PuzzlePiece *piece);
     void removeNeighbour(PuzzlePiece *piece);
-    bool isNeighbourOf(const PuzzlePiece *piece) const;
     QPointF centerPoint() const;
     void addPrimitive(PuzzlePiecePrimitive *primitive, const QPointF &correction);
     inline const QList<PuzzlePiecePrimitive*> &primitives() const { return _primitives; }

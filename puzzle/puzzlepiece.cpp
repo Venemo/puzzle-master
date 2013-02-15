@@ -81,13 +81,6 @@ void PuzzlePiece::removeNeighbour(PuzzlePiece *piece)
     piece->_neighbours.remove(this);
 }
 
-bool PuzzlePiece::isNeighbourOf(const PuzzlePiece *piece) const
-{
-    if (piece->neighbours().contains((PuzzlePiece*)this) && this->neighbours().contains((PuzzlePiece*)piece))
-        return true;
-    return false;
-}
-
 void PuzzlePiece::mergeIfPossible(PuzzlePiece *item)
 {
     // Add the neighbours of the other item to this item
