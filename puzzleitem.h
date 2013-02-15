@@ -25,20 +25,14 @@
 #include "puzzleboard.h"
 #include "helpers/shapeprocessor.h"
 
-class QPixmap;
+class PuzzlePiecePrimitive;
 
 class PuzzleItem : public QDeclarativeItem
 {
     Q_OBJECT
     GENPROPERTY_S(QPoint, _puzzleCoordinates, puzzleCoordinates, setPuzzleCoordinates)
     GENPROPERTY_S(QPointF, _supposedPosition, supposedPosition, setSupposedPosition)
-    GENPROPERTY_S(QPoint, _pixmapOffset, pixmapOffset, setPixmapOffset)
-    GENPROPERTY_S(QPoint, _strokeOffset, strokeOffset, setStrokeOffset)
     GENPROPERTY_R(QList<PuzzleItem*>, _neighbours, neighbours)
-    GENPROPERTY_S(QPixmap, _pixmap, pixmap, setPixmap)
-    GENPROPERTY_S(QPixmap, _stroke, stroke, setStroke)
-    GENPROPERTY_S(QPainterPath, _realShape, realShape, setRealShape)
-    GENPROPERTY_S(QPainterPath, _fakeShape, fakeShape, setFakeShape)
     GENPROPERTY_S(bool, _canMerge, canMerge, setCanMerge)
     GENPROPERTY_S(qreal, _weight, weight, setWeight)
     GENPROPERTY_S(unsigned, _tabStatus, tabStatus, setTabStatus)
@@ -48,11 +42,12 @@ class PuzzleItem : public QDeclarativeItem
     bool _dragging, _isDraggingWithTouch, _isRightButtonPressed;
     qreal _rotationStart;
     int _previousTouchPointCount;
+    QList<PuzzlePiecePrimitive*> _primitives;
 
     friend class PuzzleBoard;
 
 public:
-    explicit PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent = 0);
+    explicit PuzzleItem(PuzzleBoard *parent = 0);
     void mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition);
     void raise();
     void verifyPosition();
@@ -60,6 +55,8 @@ public:
     void removeNeighbour(PuzzleItem *piece);
     bool isNeighbourOf(const PuzzleItem *piece) const;
     QPointF centerPoint() const;
+    void addPrimitive(PuzzlePiecePrimitive *primitive, const QPointF &correction);
+    inline const QList<PuzzlePiecePrimitive*> &primitives() const { return _primitives; }
 
 public slots:
     inline void enableMerge() { _canMerge = true; }
@@ -78,13 +75,6 @@ protected:
     void checkMergeableSiblings(const QPointF &position);
     bool checkMergeability(PuzzleItem *item);
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-
-    inline qreal leftTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleHelpers::LeftTab ? 1 : 0); }
-    inline qreal topTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleHelpers::TopTab ? 1 : 0); }
-    inline qreal rightTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleHelpers::RightTab ? 1 : 0); }
-    inline qreal bottomTabSize() const { return static_cast<PuzzleBoard*>(parent())->tabSizes() * (_tabStatus & PuzzleHelpers::BottomTab ? 1 : 0); }
-    inline int strokeThickness() const { return static_cast<PuzzleBoard*>(parent())->strokeThickness(); }
-
 };
 
 #endif // PUZZLEPIECE_H

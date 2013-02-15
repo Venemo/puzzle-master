@@ -26,6 +26,7 @@
 #include <cmath>
 
 #include "puzzleitem.h"
+#include "puzzle/puzzlepieceprimitive.h"
 
 using namespace std;
 
@@ -51,7 +52,7 @@ inline static qreal simplifyAngle(qreal a)
     return a;
 }
 
-PuzzleItem::PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent)
+PuzzleItem::PuzzleItem(PuzzleBoard *parent)
     : QDeclarativeItem(parent),
       _canMerge(false),
       _weight(randomInt(100, 950) / 1000.0),
@@ -60,7 +61,6 @@ PuzzleItem::PuzzleItem(const QPixmap &pixmap, PuzzleBoard *parent)
       _isRightButtonPressed(false),
       _previousTouchPointCount(0)
 {
-    setPixmap(pixmap);
     setFlag(QGraphicsItem::ItemHasNoContents, false);
     setFlag(QGraphicsItem::ItemStacksBehindParent, false);
     setFlag(QGraphicsItem::ItemNegativeZStacksBehindParent, false);
@@ -102,77 +102,69 @@ bool PuzzleItem::isNeighbourOf(const PuzzleItem *piece) const
     return false;
 }
 
-void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition)
+void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &)
 {
     if (isNeighbourOf(item) && _canMerge && item->_canMerge)
     {
         item->_canMerge = _canMerge = false;
 
+        // Add the neighbours of the other item to this item
         foreach (PuzzleItem *n, item->neighbours())
         {
             item->removeNeighbour(n);
             this->addNeighbour(n);
         }
 
-        QPointF positionVector = item->supposedPosition() - supposedPosition();
-        QPointF old00 = mapToParent(0, 0);
+        // Add the other items' primitives to this item
+        foreach (PuzzlePiecePrimitive *pr, item->_primitives)
+            this->addPrimitive(pr, item->supposedPosition() - this->supposedPosition());
+        item->_primitives.clear();
 
-        int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
-        if (positionVector.x() >= 0)
-            x2 = positionVector.x();
-        else
-            x1 = - positionVector.x();
-        if (positionVector.y() >= 0)
-            y2 = positionVector.y();
-        else
-            y1 = - positionVector.y();
+        // Translate the offset of all primitives so that all offsets are nonnegative
+        QPointF allDiff(0, 0);
+        foreach (PuzzlePiecePrimitive *pr, this->_primitives)
+        {
+            QPointF diff(0, 0);
+            if (pr->pixmapOffset().x() < 0)
+                diff += QPointF(- pr->pixmapOffset().x(), 0);
+            if (pr->pixmapOffset().y() < 0)
+                diff += QPointF(0, - pr->pixmapOffset().y());
 
-        QPixmap pix(myMax<int>(x1 + pixmap().width(), x2 + item->pixmap().width()),
-                    myMax<int>(y1 + pixmap().height(), y2 + item->pixmap().height())),
-                newStroke(pix.width() + strokeThickness() * 2, pix.height() + strokeThickness() * 2);
-        pix.fill(Qt::transparent);
-        newStroke.fill(Qt::transparent);
+            qDebug() << pr->pixmapOffset() << diff;
+            allDiff += diff;
 
-        QPainter p;
-        p.begin(&pix);
-        p.drawPixmap(x1, y1, pixmap());
-        p.drawPixmap(x2, y2, item->pixmap());
-        p.end();
-        p.begin(&newStroke);
-        p.drawPixmap(x1, y1, _stroke);
-        p.drawPixmap(x2, y2, item->_stroke);
-        p.end();
-
-        int newStatus = 0;
-        if ((item->_supposedPosition.x() <= _supposedPosition.x() && (item->_tabStatus & PuzzleHelpers::LeftTab))
-                || (_supposedPosition.x() <= item->_supposedPosition.x() && (_tabStatus & PuzzleHelpers::LeftTab)))
-            newStatus |= PuzzleHelpers::LeftTab;
-        if ((item->_supposedPosition.y() <= _supposedPosition.y() && (item->_tabStatus & PuzzleHelpers::TopTab))
-                || (_supposedPosition.y() <= item->_supposedPosition.y() && (_tabStatus & PuzzleHelpers::TopTab)))
-            newStatus |= PuzzleHelpers::TopTab;
-        if ((item->_supposedPosition.x() + item->_pixmap.width() >= _supposedPosition.x() + _pixmap.width() && (item->_tabStatus & PuzzleHelpers::RightTab))
-                || (_supposedPosition.x() + _pixmap.width() >= item->_supposedPosition.x() + item->_pixmap.width() && (_tabStatus & PuzzleHelpers::RightTab)))
-            newStatus |= PuzzleHelpers::RightTab;
-        if ((item->_supposedPosition.y() + item->_pixmap.height() >= _supposedPosition.y() + _pixmap.height() && (item->_tabStatus & PuzzleHelpers::BottomTab))
-                || (_supposedPosition.y() + _pixmap.height() >= item->_supposedPosition.y() + item->_pixmap.height() && (_tabStatus & PuzzleHelpers::BottomTab)))
-            newStatus |= PuzzleHelpers::BottomTab;
-
-        setTabStatus(newStatus);
-        setPuzzleCoordinates(QPoint(myMin<int>(item->puzzleCoordinates().x(), puzzleCoordinates().x()), myMin<int>(item->puzzleCoordinates().y(), puzzleCoordinates().y())));
-        setSupposedPosition(QPointF(myMin<qreal>(item->supposedPosition().x(), supposedPosition().x()), myMin<qreal>(item->supposedPosition().y(), supposedPosition().y())));
-        setStroke(newStroke);
-        setFakeShape(_fakeShape.translated(x1, y1).united(item->_fakeShape.translated(x2, y2)).simplified());
-        setRealShape(_realShape.translated(x1, y1).united(item->_realShape.translated(x2, y2)).simplified());
-        setPixmap(pix);
-        setWidth(_pixmap.width() + leftTabSize() + rightTabSize());
-        setHeight(_pixmap.height() + topTabSize() + bottomTabSize());
-        setPos(pos() + old00 - mapToParent(x1, y1));
-        _dragStart = mapToParent(dragPosition + QPointF(x1, y1)) - pos();
+            foreach (PuzzlePiecePrimitive *prr, this->_primitives)
+            {
+                prr->setPixmapOffset(prr->pixmapOffset() + diff);
+                prr->setStrokeOffset(prr->strokeOffset() + diff);
+            }
+        }
+        setPos(pos() - allDiff);
+        _dragStart += allDiff;
         static_cast<PuzzleBoard*>(parent())->removePuzzleItem(item);
 
+        // Calculate the new width and height of this item
+        int nw = 0, nh = 0;
+        foreach (PuzzlePiecePrimitive *pr, this->_primitives)
+        {
+            int w = pr->pixmap().width() + pr->pixmapOffset().x(), h = pr->pixmap().height() + pr->pixmapOffset().y();
+            if (w > nw)
+                nw = w;
+            if (h > nh)
+                nh = h;
+        }
+        setWidth(nw);
+        setHeight(nh);
+
+        // Calculate the new position and puzzle coordinates of this item
+        setPuzzleCoordinates(QPoint(myMin<int>(item->puzzleCoordinates().x(), puzzleCoordinates().x()), myMin<int>(item->puzzleCoordinates().y(), puzzleCoordinates().y())));
+        setSupposedPosition(QPointF(myMin<qreal>(item->supposedPosition().x(), supposedPosition().x()), myMin<qreal>(item->supposedPosition().y(), supposedPosition().y())));
+
+        // Grab the touch points of the other item
         foreach (int id, item->_grabbedTouchPointIds)
             this->_grabbedTouchPointIds.append(id);
 
+        // See if the puzzle is solved
         if (neighbours().count() == 0)
         {
             _dragging = _isDraggingWithTouch = _canMerge = false;
@@ -233,28 +225,15 @@ void PuzzleItem::checkMergeableSiblings(const QPointF &position)
 bool PuzzleItem::checkMergeability(PuzzleItem *p)
 {
     PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
-    qreal rotationDiff = abs(simplifyAngle(p->rotation() - rotation())), px = 0, py = 0;
+    qreal rotationDiff = abs(simplifyAngle(p->rotation() - rotation()));
 
-    // Horizontal
-    if (p->_puzzleCoordinates.x() > _puzzleCoordinates.x())
-        px += p->_pixmapOffset.x() + p->leftTabSize();
-    else if (p->_puzzleCoordinates.x() < _puzzleCoordinates.x())
-        px += p->_pixmapOffset.x() + p->_pixmap.width() - p->rightTabSize();
-    else
-        px += p->_pixmapOffset.x() + myMin<int>(_pixmap.width() - leftTabSize() - rightTabSize(), p->_pixmap.width() - p->leftTabSize() - p->rightTabSize()) / 2 + p->leftTabSize();
+    // Check rotation difference
+    if (rotationDiff > board->rotationTolerance())
+        return false;
 
-    // Vertical
-    if (p->puzzleCoordinates().y() > _puzzleCoordinates.y())
-        py += p->_pixmapOffset.y() + p->topTabSize();
-    else if (p->puzzleCoordinates().y() < _puzzleCoordinates.y())
-        py += p->_pixmapOffset.y() + p->_pixmap.height() - p->bottomTabSize();
-    else
-        py += p->_pixmapOffset.y() + myMin<int>(_pixmap.height() - topTabSize() - bottomTabSize(), p->_pixmap.height() - p->topTabSize() - p->bottomTabSize()) / 2 + p->topTabSize();
-
-    QPointF diff = - _supposedPosition + p->_supposedPosition + QPointF(px, py) - p->QGraphicsItem::mapToItem(this, QPointF(px, py));
+    QPointF diff = (this->supposedPosition() - p->supposedPosition()) - this->QGraphicsItem::mapToItem(p, QPointF(0, 0));
     qreal distance = sqrt(diff.x() * diff.x() + diff.y() * diff.y());
-
-    return distance < board->tolerance() && rotationDiff < board->rotationTolerance();
+    return distance < board->tolerance();
 }
 
 void PuzzleItem::setCompensatedTransformOriginPoint(const QPointF &point)
@@ -343,14 +322,32 @@ void PuzzleItem::raise()
     }
 }
 
+void PuzzleItem::addPrimitive(PuzzlePiecePrimitive *p, const QPointF &corr)
+{
+    if (_primitives.contains(p))
+        return;
+
+    p->setParent(this);
+    p->setPixmapOffset(p->pixmapOffset() + corr);
+    p->setStrokeOffset(p->strokeOffset() + corr);
+    _primitives.append(p);
+}
+
 void PuzzleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     // Uncomment for or various debugging purposes
+
     //painter->drawRect(boundingRect());
     //painter->drawEllipse(mapFromScene(pos()), 10, 10);
     //painter->fillPath(_fakeShape, QBrush(QColor(0, 0, 255, 130)));
     //painter->fillPath(_realShape, QBrush(QColor(0, 255, 0, 130)));
     //painter->fillRect(QRectF(0, 0, this->width(), this->height()), QBrush(QColor(255, 0, 0, 130)));
-    painter->drawPixmap(_strokeOffset, _stroke);
-    painter->drawPixmap(_pixmapOffset, _pixmap);
+
+    // Draw the strokes first
+    foreach (PuzzlePiecePrimitive *p, _primitives)
+        painter->drawPixmap(p->strokeOffset(), p->stroke());
+
+    // Draw the actual pixmaps
+    foreach (PuzzlePiecePrimitive *p, _primitives)
+        painter->drawPixmap(p->pixmapOffset(), p->pixmap());
 }

@@ -33,6 +33,7 @@
 #include "puzzleitem.h"
 #include "helpers/shapeprocessor.h"
 #include "helpers/imageprocessor.h"
+#include "puzzle/puzzlepieceprimitive.h"
 
 inline static bool puzzleItemLessThan(PuzzleItem *a, PuzzleItem *b)
 {
@@ -173,16 +174,21 @@ bool PuzzleBoard::startGame(const QString &imageUrl, int rows, int cols, bool al
             QPointF supposed(w0 + (i * desc.unitSize.width()) + sxCorrection,
                              h0 + (j * desc.unitSize.height()) + syCorrection);
 
-            // Creating the piece
-            PuzzleItem *item = new PuzzleItem(px, this);
+            // Create the puzzle piece primitive
+            PuzzlePiecePrimitive *primitive = new PuzzlePiecePrimitive();
+            primitive->setPixmap(px);
+            primitive->setStroke(stroke);
+            primitive->setPixmapOffset(QPoint(0, 0));
+            primitive->setStrokeOffset(primitive->pixmapOffset() - QPoint(_strokeThickness, _strokeThickness));
+            primitive->setFakeShape(fakeShape);
+            primitive->setRealShape(realShape);
+
+            // Creating the piece item
+            PuzzleItem *item = new PuzzleItem(this);
+            item->addPrimitive(primitive, QPointF(0, 0));
             item->setPuzzleCoordinates(QPoint(i, j));
             item->setSupposedPosition(supposed);
             item->setPos(supposed);
-            item->setPixmapOffset(QPoint(0, 0));
-            item->setStrokeOffset(item->pixmapOffset() - QPoint(_strokeThickness, _strokeThickness));
-            item->setStroke(stroke);
-            item->setFakeShape(fakeShape);
-            item->setRealShape(realShape);
             item->setWidth(px.width());
             item->setHeight(px.height());
             item->setTabStatus(statuses[i * rows + j]);

@@ -20,6 +20,7 @@
 #include <QMap>
 #include <QPainterPathStroker>
 
+#include "puzzle/puzzlepieceprimitive.h"
 #include "puzzleitem.h"
 #include "shapeprocessor.h"
 #include "util.h"
@@ -347,10 +348,15 @@ PuzzleItem *findPuzzleItem(QPointF p, const QList<PuzzleItem*> &puzzleItems)
         QPointF tr = item->mapFromParent(p);
         bool enableUsabilityImprovement = item->grabbedTouchPointIds().count();
 
-        if (!enableUsabilityImprovement && item->realShape().contains(tr))
-            return item;
-        else if (enableUsabilityImprovement && item->fakeShape().contains(tr))
-            return item;
+        foreach (const PuzzlePiecePrimitive *pr, item->primitives())
+        {
+            QPointF pt = tr - pr->pixmapOffset();
+
+            if (!enableUsabilityImprovement && pr->realShape().contains(pt))
+                return item;
+            else if (enableUsabilityImprovement && pr->fakeShape().contains(pt))
+                return item;
+        }
     }
 
     return 0;

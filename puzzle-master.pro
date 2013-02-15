@@ -30,7 +30,8 @@ SOURCES += \
     puzzleitem.cpp \
     puzzleboard.cpp \
     helpers/shapeprocessor.cpp \
-    helpers/imageprocessor.cpp
+    helpers/imageprocessor.cpp \
+    puzzle/puzzlepieceprimitive.cpp
 
 HEADERS += \
     util.h \
@@ -40,7 +41,8 @@ HEADERS += \
     puzzleboard.h \
     helpers/shapeprocessor.h \
     helpers/imageprocessor.h \
-    helpers/helpertypes.h
+    helpers/helpertypes.h \
+    puzzle/puzzlepieceprimitive.h
 
 RESOURCES += \
     translations.qrc \
