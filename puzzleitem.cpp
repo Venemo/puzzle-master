@@ -104,52 +104,48 @@ bool PuzzleItem::isNeighbourOf(const PuzzleItem *piece) const
 
 void PuzzleItem::mergeIfPossible(PuzzleItem *item)
 {
-    if (isNeighbourOf(item) && _canMerge && item->_canMerge)
+    item->_canMerge = _canMerge = false;
+
+    // Add the neighbours of the other item to this item
+    foreach (PuzzleItem *n, item->neighbours())
     {
-        item->_canMerge = _canMerge = false;
-
-        // Add the neighbours of the other item to this item
-        foreach (PuzzleItem *n, item->neighbours())
-        {
-            item->removeNeighbour(n);
-            this->addNeighbour(n);
-        }
-
-        // Add the other items' primitives to this item
-        foreach (PuzzlePiecePrimitive *pr, item->_primitives)
-            this->addPrimitive(pr, item->supposedPosition() - this->supposedPosition());
-        item->_primitives.clear();
-
-        static_cast<PuzzleBoard*>(parent())->removePuzzleItem(item);
-
-        // Grab the touch points of the other item
-        foreach (int id, item->_grabbedTouchPointIds)
-            this->_grabbedTouchPointIds.append(id);
-
-        // See if the puzzle is solved
-        if (neighbours().count() == 0)
-        {
-            _dragging = _isDraggingWithTouch = _canMerge = false;
-            qDebug() << "puzzle solved! :)";
-            emit noNeighbours();
-        }
-        else
-            _canMerge = true;
+        item->removeNeighbour(n);
+        this->addNeighbour(n);
     }
+
+    // Add the other items' primitives to this item
+    foreach (PuzzlePiecePrimitive *pr, item->_primitives)
+        this->addPrimitive(pr, item->supposedPosition() - this->supposedPosition());
+    item->_primitives.clear();
+
+    static_cast<PuzzleBoard*>(parent())->removePuzzleItem(item);
+
+    // Grab the touch points of the other item
+    foreach (int id, item->_grabbedTouchPointIds)
+        this->_grabbedTouchPointIds.append(id);
+
+    // See if the puzzle is solved
+    if (neighbours().count() == 0)
+    {
+        _dragging = _isDraggingWithTouch = _canMerge = false;
+        qDebug() << "puzzle solved! :)";
+        emit noNeighbours();
+    }
+    else
+        _canMerge = true;
 }
 
 void PuzzleItem::startDrag(const QPointF &p)
 {
-    if (_canMerge)
-    {
-        raise();
-        _dragging = true;
-        _dragStart = mapToParent(p) - pos();
-    }
-    else
+    if (!_canMerge)
     {
         stopDrag();
+        return;
     }
+
+    raise();
+    _dragging = true;
+    _dragStart = mapToParent(p) - pos();
 }
 
 void PuzzleItem::stopDrag()
@@ -260,28 +256,18 @@ void PuzzleItem::raise()
 {
     PuzzleItem *maxItem = this;
     foreach (PuzzleItem *item, static_cast<PuzzleBoard*>(parent())->puzzleItems())
-    {
         if (item->zValue() > maxItem->zValue())
-        {
             maxItem = item;
-        }
-    }
-    if (maxItem != this)
-    {
-        qreal max = maxItem->zValue();
-        foreach (PuzzleItem *item, static_cast<PuzzleBoard*>(parent())->puzzleItems())
-        {
-            if (item->zValue() > this->zValue())
-            {
-                item->setZValue(item->zValue() - 1);
-            }
-            else if (item != this && item->zValue() == this->zValue())
-            {
-                item->stackBefore(this);
-            }
-        }
-        setZValue(max);
-    }
+
+    if (maxItem == this)
+        return;
+
+    qreal max = maxItem->zValue();
+    foreach (PuzzleItem *item, static_cast<PuzzleBoard*>(parent())->puzzleItems())
+        if (item->zValue() > this->zValue())
+            item->setZValue(item->zValue() - 1);
+
+    setZValue(max);
 }
 
 void PuzzleItem::addPrimitive(PuzzlePiecePrimitive *p, const QPointF &corr)
