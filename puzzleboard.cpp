@@ -62,6 +62,10 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     setAcceptTouchEvents(true);
     _mouseSubject = 0;
     _strokeThickness = 3;
+
+    _autoRepainter = new QTimer();
+    _autoRepainter->setInterval(20);
+    connect(_autoRepainter, SIGNAL(timeout()), this, SLOT(updateItem()));
 }
 
 void PuzzleBoard::setNeighbours(int x, int y)
@@ -258,6 +262,8 @@ void PuzzleBoard::shuffle()
             item->raise();
     }
 
+    enableAutoRepaint();
+    connect(group, SIGNAL(finished()), this, SLOT(disableAutoRepaint()));
     connect(group, SIGNAL(finished()), this, SLOT(enable()));
     connect(group, SIGNAL(finished()), this, SIGNAL(gameStarted()));
     group->start(QAbstractAnimation::DeleteWhenStopped);
@@ -295,6 +301,8 @@ void PuzzleBoard::assemble()
     else
         connect(group, SIGNAL(finished()), this, SIGNAL(assembleComplete()));
 
+    enableAutoRepaint();
+    connect(group, SIGNAL(finished()), this, SLOT(disableAutoRepaint()));
     group->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
@@ -326,6 +334,8 @@ void PuzzleBoard::restore()
         group->addAnimation(rotateAnimation);
     }
 
+    enableAutoRepaint();
+    connect(group, SIGNAL(finished()), this, SLOT(disableAutoRepaint()));
     connect(group, SIGNAL(finished()), this, SLOT(enable()));
     connect(group, SIGNAL(finished()), this, SIGNAL(restoreComplete()));
     group->start(QAbstractAnimation::DeleteWhenStopped);

@@ -20,6 +20,7 @@
 #define PUZZLEBOARD_H
 
 #include <QDeclarativeItem>
+#include <QTimer>
 
 #include "util.h"
 
@@ -44,6 +45,7 @@ class PuzzleBoard : public QDeclarativeItem
 
     QHash<PuzzlePiece*, QPair<QPointF, int> > _restorablePositions;
     PuzzlePiece *_mouseSubject;
+    QTimer *_autoRepainter;
 
 public:
     explicit PuzzleBoard(QDeclarativeItem *parent = 0);
@@ -73,6 +75,9 @@ signals:
     void restoreComplete();
 
 private slots:
+    void enableAutoRepaint() { _autoRepainter->start(); }
+    void disableAutoRepaint() { _autoRepainter->stop(); }
+    void updateItem() { this->update(); }
 
 public slots:
     Q_INVOKABLE void disable();
