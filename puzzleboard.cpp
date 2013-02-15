@@ -244,8 +244,8 @@ void PuzzleBoard::shuffle()
 
         QPropertyAnimation *anim = new QPropertyAnimation(item, "pos", group);
         anim->setStartValue(item->pos());
-        anim->setKeyValueAt(0.5, QPointF(randomInt(0, width() - _unit.width()), randomInt(0, height() - _unit.width())));
-        anim->setEndValue(QPointF(randomInt(0, width() - _unit.width()), randomInt(0, height() - _unit.width())));
+        anim->setKeyValueAt(0.5, QPointF(randomInt(_unit.width(), width() - _unit.width()), randomInt(_unit.height(), height() - _unit.height())));
+        anim->setEndValue(QPointF(randomInt(_unit.width(), width() - _unit.width()), randomInt(_unit.height(), height() - _unit.height())));
         anim->setDuration(maxDuration - pauseDuration);
         anim->setEasingCurve(easingCurve);
         par->addAnimation(anim);
