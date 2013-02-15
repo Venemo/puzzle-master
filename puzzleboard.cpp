@@ -35,7 +35,7 @@
 #include "puzzle/puzzlepieceprimitive.h"
 #include "puzzle/puzzlepiece.h"
 
-inline static bool puzzleItemLessThan(PuzzlePiece *a, PuzzlePiece *b)
+inline static bool puzzleItemDescLessThan(PuzzlePiece *a, PuzzlePiece *b)
 {
     // We want to order them in descending order by their z values
     return a->zValue() > b->zValue();
@@ -381,7 +381,7 @@ void PuzzleBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     event->accept();
     QList<PuzzlePiece*> puzzleItems = _puzzleItems.toList();
-    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemLessThan);
+    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemAscLessThan);
     _mouseSubject = PuzzleHelpers::findPuzzleItem(event->pos(), puzzleItems);
 
     if (!_enabled || !_mouseSubject || _mouseSubject->_isDraggingWithTouch)
@@ -441,7 +441,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
     // Determine which touch point belongs to which puzzle item.
 
     QList<PuzzlePiece*> puzzleItems = _puzzleItems.toList();
-    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemLessThan);
+    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemAscLessThan);
 
     // Iterate through the touch points in the event and assign them to an item
 
@@ -529,35 +529,30 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
                 item->handleRotation(m[item->_grabbedTouchPointIds[1]]->screenPos() - m[item->_grabbedTouchPointIds[0]]->screenPos());
         }
 
+        // Save previous touch point count
         item->_previousTouchPointCount = item->_grabbedTouchPointIds.count();
+        // Check mergeable neighbours of the piece
         item->checkMergeableSiblings();
     }
 
+    // Schedule a repaint
     update();
 }
 
 void PuzzleBoard::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+    // Save the original transform of the painter
     QTransform originalTransform = painter->transform();
+    // Order the puzzle pieces by z value (ascending)
     QList<PuzzlePiece*> puzzleItems = _puzzleItems.toList();
     qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemAscLessThan);
 
+    // Draw the pieces
     foreach (PuzzlePiece *piece, puzzleItems)
     {
         QPointF p = piece->mapToParent(QPointF(0, 0));
-        QTransform transform =
-                QTransform::fromTranslate(p.x(), p.y())
-                .rotate(piece->rotation());
-
+        QTransform transform = QTransform::fromTranslate(p.x(), p.y()).rotate(piece->rotation());
         painter->setTransform(transform);
-
-        // Uncomment for or various debugging purposes
-
-        //painter->drawRect(boundingRect());
-        //painter->drawEllipse(mapFromScene(pos()), 10, 10);
-        //painter->fillPath(_fakeShape, QBrush(QColor(0, 0, 255, 130)));
-        //painter->fillPath(_realShape, QBrush(QColor(0, 255, 0, 130)));
-        //painter->fillRect(QRectF(0, 0, this->width(), this->height()), QBrush(QColor(255, 0, 0, 130)));
 
         // Draw the strokes first
         foreach (PuzzlePiecePrimitive *p, piece->_primitives)
@@ -567,5 +562,7 @@ void PuzzleBoard::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWi
         foreach (PuzzlePiecePrimitive *p, piece->_primitives)
             painter->drawPixmap(p->pixmapOffset(), p->pixmap());
     }
+
+    // Restore the original transform of the painter
     painter->setTransform(originalTransform);
 }
