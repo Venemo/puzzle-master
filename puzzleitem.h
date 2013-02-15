@@ -32,7 +32,7 @@ class PuzzleItem : public QDeclarativeItem
     Q_OBJECT
     GENPROPERTY_S(QPoint, _puzzleCoordinates, puzzleCoordinates, setPuzzleCoordinates)
     GENPROPERTY_S(QPointF, _supposedPosition, supposedPosition, setSupposedPosition)
-    GENPROPERTY_R(QList<PuzzleItem*>, _neighbours, neighbours)
+    GENPROPERTY_R(QSet<PuzzleItem*>, _neighbours, neighbours)
     GENPROPERTY_S(bool, _canMerge, canMerge, setCanMerge)
     GENPROPERTY_S(qreal, _weight, weight, setWeight)
     GENPROPERTY_S(unsigned, _tabStatus, tabStatus, setTabStatus)

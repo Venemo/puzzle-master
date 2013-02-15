@@ -75,24 +75,17 @@ QPointF PuzzleItem::centerPoint() const
 
 void PuzzleItem::addNeighbour(PuzzleItem *piece)
 {
-    if (piece != this)
-    {
-        if (!_neighbours.contains(piece))
-            _neighbours.append(piece);
-        if (!piece->_neighbours.contains(this))
-            piece->_neighbours.append(this);
-    }
+    if (piece == this)
+        return;
+
+    this->_neighbours.insert(piece);
+    piece->_neighbours.insert(this);
 }
 
 void PuzzleItem::removeNeighbour(PuzzleItem *piece)
 {
-    if (piece != this)
-    {
-        if (_neighbours.contains(piece))
-            _neighbours.removeAll(piece);
-        if (piece->_neighbours.contains(this))
-            piece->_neighbours.removeAll(this);
-    }
+    this->_neighbours.remove(piece);
+    piece->_neighbours.remove(this);
 }
 
 bool PuzzleItem::isNeighbourOf(const PuzzleItem *piece) const
