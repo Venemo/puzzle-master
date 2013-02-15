@@ -441,12 +441,14 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
     // Determine which touch point belongs to which puzzle item.
 
     QList<PuzzlePiece*> puzzleItems = _puzzleItems.toList();
-    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemAscLessThan);
+    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemDescLessThan);
 
     // Iterate through the touch points in the event and assign them to an item
 
+    QMap<int, const QTouchEvent::TouchPoint*> m;
     foreach (const QTouchEvent::TouchPoint &p, event->touchPoints())
     {
+        m.insert(p.id(), &p);
         if (p.state() == Qt::TouchPointReleased)
         {
             //qDebug() << "released";
@@ -471,12 +473,6 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
             }
         }
     }
-
-    // Map touch points to their IDs (so that we don't have to look them up all the time)
-
-    QMap<int, const QTouchEvent::TouchPoint*> m;
-    foreach (const QTouchEvent::TouchPoint &p, event->touchPoints())
-        m.insert(p.id(), &p);
 
     // For each item, handle the touch points it has grabbed
 
