@@ -430,6 +430,7 @@ void PuzzleBoard::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         _mouseSubject->doDrag(p);
 
     _mouseSubject->checkMergeableSiblings();
+    update();
 }
 
 void PuzzleBoard::touchEvent(QTouchEvent *event)
