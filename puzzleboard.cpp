@@ -423,7 +423,7 @@ void PuzzleBoard::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     else
         _mouseSubject->doDrag(p);
 
-    _mouseSubject->checkMergeableSiblings(p);
+    _mouseSubject->checkMergeableSiblings();
 }
 
 void PuzzleBoard::touchEvent(QTouchEvent *event)
@@ -520,6 +520,6 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         }
 
         item->_previousTouchPointCount = item->_grabbedTouchPointIds.count();
-        item->checkMergeableSiblings(midPoint);
+        item->checkMergeableSiblings();
     }
 }

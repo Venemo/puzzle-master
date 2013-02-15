@@ -102,7 +102,7 @@ bool PuzzleItem::isNeighbourOf(const PuzzleItem *piece) const
     return false;
 }
 
-void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &)
+void PuzzleItem::mergeIfPossible(PuzzleItem *item)
 {
     if (isNeighbourOf(item) && _canMerge && item->_canMerge)
     {
@@ -120,45 +120,7 @@ void PuzzleItem::mergeIfPossible(PuzzleItem *item, const QPointF &)
             this->addPrimitive(pr, item->supposedPosition() - this->supposedPosition());
         item->_primitives.clear();
 
-        // Translate the offset of all primitives so that all offsets are nonnegative
-        QPointF allDiff(0, 0);
-        foreach (PuzzlePiecePrimitive *pr, this->_primitives)
-        {
-            QPointF diff(0, 0);
-            if (pr->pixmapOffset().x() < 0)
-                diff += QPointF(- pr->pixmapOffset().x(), 0);
-            if (pr->pixmapOffset().y() < 0)
-                diff += QPointF(0, - pr->pixmapOffset().y());
-
-            qDebug() << pr->pixmapOffset() << diff;
-            allDiff += diff;
-
-            foreach (PuzzlePiecePrimitive *prr, this->_primitives)
-            {
-                prr->setPixmapOffset(prr->pixmapOffset() + diff);
-                prr->setStrokeOffset(prr->strokeOffset() + diff);
-            }
-        }
-        setPos(pos() - allDiff);
-        _dragStart += allDiff;
         static_cast<PuzzleBoard*>(parent())->removePuzzleItem(item);
-
-        // Calculate the new width and height of this item
-        int nw = 0, nh = 0;
-        foreach (PuzzlePiecePrimitive *pr, this->_primitives)
-        {
-            int w = pr->pixmap().width() + pr->pixmapOffset().x(), h = pr->pixmap().height() + pr->pixmapOffset().y();
-            if (w > nw)
-                nw = w;
-            if (h > nh)
-                nh = h;
-        }
-        setWidth(nw);
-        setHeight(nh);
-
-        // Calculate the new position and puzzle coordinates of this item
-        setPuzzleCoordinates(QPoint(myMin<int>(item->puzzleCoordinates().x(), puzzleCoordinates().x()), myMin<int>(item->puzzleCoordinates().y(), puzzleCoordinates().y())));
-        setSupposedPosition(QPointF(myMin<qreal>(item->supposedPosition().x(), supposedPosition().x()), myMin<qreal>(item->supposedPosition().y(), supposedPosition().y())));
 
         // Grab the touch points of the other item
         foreach (int id, item->_grabbedTouchPointIds)
@@ -214,12 +176,12 @@ void PuzzleItem::handleRotation(const QPointF &v)
     setRotation(simplifyAngle(a));
 }
 
-void PuzzleItem::checkMergeableSiblings(const QPointF &position)
+void PuzzleItem::checkMergeableSiblings()
 {
     if (_canMerge)
         foreach (PuzzleItem *p, neighbours())
             if (checkMergeability(p) || p->checkMergeability(this))
-                mergeIfPossible(p, position);
+                mergeIfPossible(p);
 }
 
 bool PuzzleItem::checkMergeability(PuzzleItem *p)

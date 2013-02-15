@@ -48,7 +48,7 @@ class PuzzleItem : public QDeclarativeItem
 
 public:
     explicit PuzzleItem(PuzzleBoard *parent = 0);
-    void mergeIfPossible(PuzzleItem *item, const QPointF &dragPosition);
+    void mergeIfPossible(PuzzleItem *item);
     void raise();
     void verifyPosition();
     void addNeighbour(PuzzleItem *piece);
@@ -72,7 +72,7 @@ protected:
     void startRotation(const QPointF &vector);
     void handleRotation(const QPointF &vector);
     void setCompensatedTransformOriginPoint(const QPointF &point);
-    void checkMergeableSiblings(const QPointF &position);
+    void checkMergeableSiblings();
     bool checkMergeability(PuzzleItem *item);
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 };
