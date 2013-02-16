@@ -381,7 +381,7 @@ void PuzzleBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     event->accept();
     QList<PuzzlePiece*> puzzleItems = _puzzleItems.toList();
-    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemAscLessThan);
+    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemDescLessThan);
     _mouseSubject = PuzzleHelpers::findPuzzleItem(event->pos(), puzzleItems);
 
     if (!_enabled || !_mouseSubject || _mouseSubject->isDraggingWithTouch())
@@ -397,6 +397,8 @@ void PuzzleBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
         _mouseSubject->setTransformOriginPoint(_mouseSubject->centerPoint());
         _mouseSubject->startRotation(event->pos() - _mouseSubject->mapToParent(_mouseSubject->centerPoint()));
     }
+
+    update();
 }
 
 void PuzzleBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -412,7 +414,7 @@ void PuzzleBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     else if (event->button() == Qt::RightButton)
     {
         _mouseSubject->setIsRightButtonPressed(false);
-        _mouseSubject->startDrag(event->pos());
+        _mouseSubject->startDrag(_mouseSubject->mapFromParent(event->pos()));
     }
 }
 
