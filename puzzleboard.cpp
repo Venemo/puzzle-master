@@ -394,7 +394,7 @@ void PuzzleBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
     else if (event->button() == Qt::RightButton && allowRotation())
     {
         _mouseSubject->setIsRightButtonPressed(true);
-        _mouseSubject->setCompensatedTransformOriginPoint(_mouseSubject->centerPoint());
+        _mouseSubject->setTransformOriginPoint(_mouseSubject->centerPoint());
         _mouseSubject->startRotation(event->pos() - _mouseSubject->mapToParent(_mouseSubject->centerPoint()));
     }
 }
@@ -497,7 +497,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         midPoint = item->mapFromParent(midPoint);
 
         // Set the transform origin point to the midpoint
-        item->setCompensatedTransformOriginPoint(midPoint);
+        item->setTransformOriginPoint(midPoint);
 
         // Perform dragging
         if (!item->dragging())

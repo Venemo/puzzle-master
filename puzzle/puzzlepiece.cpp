@@ -161,12 +161,12 @@ bool PuzzlePiece::checkMergeability(PuzzlePiece *p)
     return distance < board->tolerance();
 }
 
-void PuzzlePiece::setCompensatedTransformOriginPoint(const QPointF &point)
+void PuzzlePiece::setTransformOriginPoint(const QPointF &point)
 {
     if (transformOriginPoint() != point)
     {
         QPointF compensation = mapToParent(QPointF(0, 0));
-        setTransformOriginPoint(point);
+        _transformOriginPoint = point;
         compensation -= mapToParent(QPointF(0, 0));
         setPos(pos() + compensation);
         _dragStart -= compensation;

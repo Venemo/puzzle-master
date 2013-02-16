@@ -39,7 +39,7 @@ class PuzzlePiece : public QObject
     GENPROPERTY_S(QPointF, _pos, pos, setPos)
     GENPROPERTY_S(QPointF, _supposedPosition, supposedPosition, setSupposedPosition)
     GENPROPERTY_S(QPointF, _dragStart, dragStart, setDragStart)
-    GENPROPERTY_S(QPointF, _transformOriginPoint, transformOriginPoint, setTransformOriginPoint)
+    GENPROPERTY_R(QPointF, _transformOriginPoint, transformOriginPoint)
     GENPROPERTY_S(qreal, _rotation, rotation, setRotation)
     GENPROPERTY_S(int, _zValue, zValue, setZValue)
     GENPROPERTY_S(int, _previousTouchPointCount, previousTouchPointCount, setPreviousTouchPointCount)
@@ -71,7 +71,7 @@ public:
     void doDrag(const QPointF &pos);
     void startRotation(const QPointF &vector);
     void handleRotation(const QPointF &vector);
-    void setCompensatedTransformOriginPoint(const QPointF &point);
+    void setTransformOriginPoint(const QPointF &point);
     void checkMergeableSiblings();
 
     void grabTouchPoint(int id) { _grabbedTouchPointIds.insert(id); }
