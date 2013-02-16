@@ -62,6 +62,7 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     setAcceptTouchEvents(true);
     _mouseSubject = 0;
     _strokeThickness = 3;
+    _enabled = false;
 
     _autoRepainter = new QTimer();
     _autoRepainter->setInterval(20);
@@ -94,6 +95,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, int rows, int cols, bool al
 {
     emit loadProgressChanged(0);
     deleteAllPieces();
+    disable();
     QCoreApplication::instance()->processEvents();
 
     if (height() == 0 || height() == 0)
