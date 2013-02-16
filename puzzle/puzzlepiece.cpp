@@ -22,7 +22,6 @@
 #include "puzzlepiece.h"
 #include "puzzle/puzzlepieceprimitive.h"
 
-
 using namespace std;
 
 inline static qreal angle(const QPointF &v)
@@ -49,13 +48,12 @@ inline static qreal simplifyAngle(qreal a)
 
 PuzzlePiece::PuzzlePiece(PuzzleBoard *parent)
     : QObject(parent)
-    , _pos(QPointF(0, 0))
     , _rotation(0)
     , _zValue(0)
+    , _previousTouchPointCount(0)
     , _dragging(false)
     , _isRightButtonPressed(false)
     , _isDraggingWithTouch(false)
-    , _previousTouchPointCount(0)
 {
 }
 
@@ -249,7 +247,7 @@ void PuzzlePiece::addPrimitive(PuzzlePiecePrimitive *p, const QPointF &corr)
     p->setParent(this);
     p->setPixmapOffset(p->pixmapOffset() + corr);
     p->setStrokeOffset(p->strokeOffset() + corr);
-    _primitives.append(p);
+    _primitives.insert(p);
 }
 
 QPointF PuzzlePiece::mapToParent(const QPointF &p0) const

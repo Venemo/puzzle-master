@@ -35,26 +35,23 @@ class PuzzlePiece : public QObject
     Q_PROPERTY(qreal rotation READ rotation WRITE setRotation)
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
 
+    GENPROPERTY_S(QPoint, _puzzleCoordinates, puzzleCoordinates, setPuzzleCoordinates)
     GENPROPERTY_S(QPointF, _pos, pos, setPos)
-    GENPROPERTY_S(qreal, _rotation, rotation, setRotation)
-    GENPROPERTY_S(int, _zValue, zValue, setZValue)
+    GENPROPERTY_S(QPointF, _supposedPosition, supposedPosition, setSupposedPosition)
     GENPROPERTY_S(QPointF, _dragStart, dragStart, setDragStart)
     GENPROPERTY_S(QPointF, _transformOriginPoint, transformOriginPoint, setTransformOriginPoint)
-
-    GENPROPERTY_S(QPoint, _puzzleCoordinates, puzzleCoordinates, setPuzzleCoordinates)
-    GENPROPERTY_S(QPointF, _supposedPosition, supposedPosition, setSupposedPosition)
-    GENPROPERTY_R(QSet<PuzzlePiece*>, _neighbours, neighbours)
+    GENPROPERTY_S(qreal, _rotation, rotation, setRotation)
+    GENPROPERTY_S(int, _zValue, zValue, setZValue)
+    GENPROPERTY_S(int, _previousTouchPointCount, previousTouchPointCount, setPreviousTouchPointCount)
     GENPROPERTY_S(unsigned, _tabStatus, tabStatus, setTabStatus)
-    GENPROPERTY_R(QSet<int>, _grabbedTouchPointIds, grabbedTouchPointIds)
-
-
     GENPROPERTY_R(bool, _dragging, dragging)
     GENPROPERTY_S(bool, _isRightButtonPressed, isRightButtonPressed, setIsRightButtonPressed)
     GENPROPERTY_R(bool, _isDraggingWithTouch, isDraggingWithTouch)
-    GENPROPERTY_S(int, _previousTouchPointCount, previousTouchPointCount, setPreviousTouchPointCount)
+    GENPROPERTY_R(QSet<PuzzlePiece*>, _neighbours, neighbours)
+    GENPROPERTY_R(QSet<int>, _grabbedTouchPointIds, grabbedTouchPointIds)
+    GENPROPERTY_R(QSet<PuzzlePiecePrimitive*>, _primitives, primitives)
 
     qreal _rotationStart;
-    QList<PuzzlePiecePrimitive*> _primitives;
 
 public:
     explicit PuzzlePiece(PuzzleBoard *parent = 0);
@@ -65,7 +62,6 @@ public:
     void removeNeighbour(PuzzlePiece *piece);
     QPointF centerPoint() const;
     void addPrimitive(PuzzlePiecePrimitive *primitive, const QPointF &correction);
-    inline const QList<PuzzlePiecePrimitive*> &primitives() const { return _primitives; }
     QPointF mapToParent(const QPointF &p) const;
     QPointF mapFromParent(const QPointF &p) const;
     QPointF mapToItem(const PuzzlePiece *item, const QPointF &p) const;
