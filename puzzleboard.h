@@ -75,11 +75,11 @@ signals:
     void restoreComplete();
 
 private slots:
-    void enableAutoRepaint() { _autoRepainter->start(); }
-    void disableAutoRepaint() { _autoRepainter->stop(); }
     void updateItem() { this->update(); }
 
 public slots:
+    void enableAutoRepaint() { _autoRepainter->start(); }
+    void disableAutoRepaint() { _autoRepainter->stop(); }
     Q_INVOKABLE void disable();
     Q_INVOKABLE void enable();
     Q_INVOKABLE void shuffle();

@@ -118,8 +118,7 @@ void PuzzlePiece::startDrag(const QPointF &p, bool touch)
 
 void PuzzlePiece::stopDrag()
 {
-    _dragging = false;
-    _isDraggingWithTouch = false;
+    _dragging = _isDraggingWithTouch = false;
     verifyPosition();
 }
 
@@ -175,50 +174,70 @@ void PuzzlePiece::setTransformOriginPoint(const QPointF &point)
 
 void PuzzlePiece::verifyPosition()
 {
-    // TODO: reimplement this method
+    // If the current PuzzlePiece doesn't contain any primitives, return
 
-//    PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
-//    qreal a = rotation();
-//    QPointF p1 = mapToScene(QPointF(0, 0)),
-//            p2 = mapToScene(QPointF(width(), 0)),
-//            p3 = mapToScene(QPointF(0, height())),
-//            p4 = mapToScene(QPointF(width(), height())),
-//            p(myMin<qreal>(myMin<qreal>(p1.x(), p2.x()), myMin<qreal>(p3.x(), p4.x())), myMin<qreal>(myMin<qreal>(p1.y(), p2.y()), myMin<qreal>(p3.y(), p4.y())));
+    if (!_primitives.count())
+        return;
 
-//    if (a >= 0 && a < 90)
-//        a = 90 - a;
-//    else if (a >= 90 && a < 180)
-//        a = a - 90;
-//    else if (a >= 180 && a < 270)
-//        a = a - 180;
-//    else
-//        a = a - 270;
+    // Find the topleft and bottomright points of this PuzzlePiece
+    // according to the PuzzlePiecePrimitive instances it contains
 
-//    a = a * M_PI / 180.0;
+    PuzzlePiecePrimitive *ppp = *(_primitives.begin());
+    qreal x1, y1, x2, y2;
+    x1 = ppp->pixmapOffset().x();
+    y1 = ppp->pixmapOffset().y();
+    x2 = ppp->pixmapOffset().x() + ppp->pixmap().width();
+    y2 = ppp->pixmapOffset().y() + ppp->pixmap().height();
 
-//    qreal   w = boundingRect().height() * cos(a) + boundingRect().width() * sin(a),
-//            h = boundingRect().width() * cos(a) + boundingRect().height() * sin(a),
-//            maxX = board->width() - w / 2,
-//            minX = - w / 2,
-//            maxY = board->height() - h / 2,
-//            minY = - h / 2;
+    foreach (const PuzzlePiecePrimitive* pp, _primitives)
+    {
+        // Find the top-left point of this puzzle piece
+        if (pp->pixmapOffset().x() < x1)
+            x1 = pp->pixmapOffset().x();
+        if (pp->pixmapOffset().y() < y1)
+            y1 = pp->pixmapOffset().y();
+        // Find the bottom-right point of this puzzle piece
+        if (pp->pixmapOffset().x() + pp->pixmap().width() > x2)
+            x2 = pp->pixmapOffset().x() + pp->pixmap().width();
+        if (pp->pixmapOffset().x() + pp->pixmap().height() > y2)
+            y2 = pp->pixmapOffset().y() + pp->pixmap().height();
+    }
 
-//    if (p.x() > maxX || p.x() < minX || p.y() > maxY || p.y() < minY)
-//    {
-//        QPointF newPos = QPointF(CLAMP(p.x(), minX + 40, maxX - 40), CLAMP(p.y(), minY + 40, maxY - 40)) + pos() - p;
+    // Find out the coordinates in the parent's coordinate system
 
-//        _dragging = false;
-//        _isDraggingWithTouch = false;
-//        _canMerge = false;
+    PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
+    QPointF p1 = mapToParent(QPointF(x1, y1)), // top left point (in piece coordinates)
+            p2 = mapToParent(QPointF(x2, y1)), // top right point (in piece coordinates)
+            p3 = mapToParent(QPointF(x1, y2)), // bottom left point (in piece coordinates)
+            p4 = mapToParent(QPointF(x2, y2)), // bottom right point (in piece coordinates)
+            // top left of "bounding rect" (in parent coordinates)
+            p(myMin<qreal>(myMin<qreal>(p1.x(), p2.x()), myMin<qreal>(p3.x(), p4.x())), myMin<qreal>(myMin<qreal>(p1.y(), p2.y()), myMin<qreal>(p3.y(), p4.y()))),
+            // bottom right of "bounding rect" (in parent coordinates)
+            q(myMax<qreal>(myMax<qreal>(p1.x(), p2.x()), myMax<qreal>(p3.x(), p4.x())), myMax<qreal>(myMax<qreal>(p1.y(), p2.y()), myMax<qreal>(p3.y(), p4.y())));
 
-//        QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", this);
-//        connect(anim, SIGNAL(finished()), this, SLOT(enableMerge()));
+    qreal   w = q.x() - p.x(),
+            h = q.y() - p.y(),
+            maxX = board->width() - w / 2,
+            minX = - w / 2,
+            maxY = board->height() - h / 2,
+            minY = - h / 2;
 
-//        anim->setEndValue(newPos);
-//        anim->setDuration(150);
-//        anim->setEasingCurve(QEasingCurve(QEasingCurve::OutBounce));
-//        anim->start(QAbstractAnimation::DeleteWhenStopped);
-//    }
+    if (p.x() > maxX || p.x() < minX || p.y() > maxY || p.y() < minY)
+    {
+        QPointF newPos = QPointF(CLAMP(p.x(), minX + 40, maxX - 40), CLAMP(p.y(), minY + 40, maxY - 40)) + pos() - p;
+        QPropertyAnimation *anim = new QPropertyAnimation(this, "pos", this);
+
+        anim->setEndValue(newPos);
+        anim->setDuration(150);
+        anim->setEasingCurve(QEasingCurve(QEasingCurve::OutBounce));
+
+        board->enableAutoRepaint();
+        connect(anim, SIGNAL(finished()), board, SLOT(disableAutoRepaint()));
+        anim->start(QAbstractAnimation::DeleteWhenStopped);
+
+        // TODO: handle the case when two such animations are running simultaneously (regarding auto repaint)
+        // TODO: disable movement of this piece until the animation is progressing.
+    }
 }
 
 void PuzzlePiece::raise()

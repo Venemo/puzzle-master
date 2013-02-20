@@ -57,7 +57,6 @@ public:
     explicit PuzzlePiece(PuzzleBoard *parent = 0);
     void mergeIfPossible(PuzzlePiece *item);
     void raise();
-    void verifyPosition();
     void addNeighbour(PuzzlePiece *piece);
     void removeNeighbour(PuzzlePiece *piece);
     QPointF centerPoint() const;
@@ -81,6 +80,7 @@ signals:
     void noNeighbours();
 
 protected:
+    void verifyPosition();
     bool checkMergeability(PuzzlePiece *item);
 };
 
