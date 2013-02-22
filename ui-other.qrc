@@ -13,7 +13,6 @@
         <file>qml/other/ImageChooser.qml</file>
         <file>qml/other/GameBoard.qml</file>
         <file>qml/other/OptionsDialog.qml</file>
-        <file>qml/other/FileSelectorDialog.qml</file>
         <file>qml/other/GallerySelectorDialog.qml</file>
         <file>qml/other/components/MenuButton.qml</file>
         <file>qml/other/components/style/PurpleButtonStyle.qml</file>

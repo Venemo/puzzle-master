@@ -171,15 +171,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QSize initialSize = QApplication::desktop()->screenGeometry(view).size();
     qDebug() << "initial size is" << initialSize;
 
-    // Checking storage location
-
-    QString picturesFolder = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
-    if (!picturesFolder.startsWith('/'))
-        picturesFolder = QString("file:///") + picturesFolder;
-    else
-        picturesFolder = QString("file://") + picturesFolder;
-    qDebug() << "pictures location is" << picturesFolder;
-
     // Setting up the view
 
     view->setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing);
@@ -203,7 +194,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("allowGalleryModel", allowGalleryModel);
     view->rootContext()->setContextProperty("appVersion", QString(APP_VERSION));
     view->rootContext()->setContextProperty("appEventHandler", appEventHandler);
-    view->rootContext()->setContextProperty("picturesFolder", picturesFolder);
 
     qDebug() << Q_FUNC_INFO << "initialization took" << timer->elapsed() << "ms";
     timer->restart();

@@ -48,10 +48,6 @@ Panel {
                 selectorComponent = Qt.createComponent("GallerySelectorDialog.qml")
             }
             if (selectorComponent === null || selectorComponent.status === Component.Error || selectorComponent.status === Component.Null) {
-                console.log("ImageChooser: trying to load FileSelectorDialog")
-                selectorComponent = Qt.createComponent("FileSelectorDialog.qml")
-            }
-            if (selectorComponent === null || selectorComponent.status === Component.Error || selectorComponent.status === Component.Null) {
                 console.log("Nor FileSelectorDialog neither GallerySelectorDialog could be loaded! Adding custom images will not be possible.")
             }
             else {
