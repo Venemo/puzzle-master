@@ -490,9 +490,10 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
 
         // Examine the current touch point count and decide what to do
         int currentTouchPointCount = item->grabbedTouchPointIds().count();
-        if (currentTouchPointCount == 0 && item->dragging())
+        if (currentTouchPointCount == 0)
         {
-            item->stopDrag();
+            if (item->dragging())
+                item->stopDrag();
             continue;
         }
 
