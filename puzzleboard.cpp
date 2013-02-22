@@ -64,6 +64,7 @@ PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
     _strokeThickness = 3;
     _enabled = false;
 
+    _autoRepaintRequests = 0;
     _autoRepainter = new QTimer();
     _autoRepainter->setInterval(20);
     connect(_autoRepainter, SIGNAL(timeout()), this, SLOT(updateItem()));
@@ -532,6 +533,22 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
 
     // Schedule a repaint
     update();
+}
+
+void PuzzleBoard::enableAutoRepaint()
+{
+    _autoRepaintRequests++;
+
+    if (!_autoRepainter->isActive())
+        _autoRepainter->start();
+}
+
+void PuzzleBoard::disableAutoRepaint()
+{
+    _autoRepaintRequests--;
+
+    if (_autoRepaintRequests && _autoRepainter->isActive())
+        QTimer::singleShot(2000, _autoRepainter, SLOT(stop()));
 }
 
 void PuzzleBoard::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

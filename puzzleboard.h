@@ -46,6 +46,7 @@ class PuzzleBoard : public QDeclarativeItem
     QHash<PuzzlePiece*, QPair<QPointF, int> > _restorablePositions;
     PuzzlePiece *_mouseSubject;
     QTimer *_autoRepainter;
+    int _autoRepaintRequests;
 
 public:
     explicit PuzzleBoard(QDeclarativeItem *parent = 0);
@@ -78,8 +79,8 @@ private slots:
     void updateItem() { this->update(); }
 
 public slots:
-    void enableAutoRepaint() { _autoRepainter->start(); }
-    void disableAutoRepaint() { _autoRepainter->stop(); }
+    void enableAutoRepaint();
+    void disableAutoRepaint();
     Q_INVOKABLE void disable();
     Q_INVOKABLE void enable();
     Q_INVOKABLE void shuffle();
