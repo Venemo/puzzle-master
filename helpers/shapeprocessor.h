@@ -48,7 +48,6 @@ public:
 };
 
 void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses);
-PuzzlePiece *findPuzzleItem(QPointF p, const QList<PuzzlePiece*> &puzzleItems);
 
 }
 

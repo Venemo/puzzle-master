@@ -31,6 +31,27 @@
 #include "helpers/imageprocessor.h"
 #include "helpers/shapeprocessor.h"
 
+static PuzzlePiece *findPuzzleItem(QPointF p, const QList<PuzzlePiece*> &puzzleItems)
+{
+    foreach (PuzzlePiece *item, puzzleItems)
+    {
+        QPointF tr = item->mapFromParent(p);
+        bool enableUsabilityImprovement = item->grabbedTouchPointIds().count();
+
+        foreach (const PuzzlePiecePrimitive *pr, item->primitives())
+        {
+            QPointF pt = tr - pr->pixmapOffset();
+
+            if (!enableUsabilityImprovement && pr->realShape().contains(pt))
+                return item;
+            else if (enableUsabilityImprovement && pr->fakeShape().contains(pt))
+                return item;
+        }
+    }
+
+    return 0;
+}
+
 PuzzleGame::PuzzleGame(QObject *parent)
     : QObject(parent)
     , _allowRotation(true)
@@ -348,7 +369,7 @@ void PuzzleGame::handleMousePress(Qt::MouseButton button, QPointF pos)
 {
     QList<PuzzlePiece*> puzzleItems = _puzzleItems.toList();
     qSort(puzzleItems.begin(), puzzleItems.end(), PuzzlePiece::puzzleItemDescLessThan);
-    _mouseSubject = PuzzleHelpers::findPuzzleItem(pos, puzzleItems);
+    _mouseSubject = findPuzzleItem(pos, puzzleItems);
 
     if (!_enabled || !_mouseSubject || _mouseSubject->isDraggingWithTouch())
         return;
@@ -427,7 +448,7 @@ void PuzzleGame::handleTouchEvent(QTouchEvent *event)
         else if (p.state() == Qt::TouchPointPressed)
         {
             //qDebug() << "pressed";
-            PuzzlePiece *item = PuzzleHelpers::findPuzzleItem(p.pos(), puzzleItems);
+            PuzzlePiece *item = findPuzzleItem(p.pos(), puzzleItems);
 
             if (item)
             {

@@ -21,8 +21,6 @@
 #include <QPainterPathStroker>
 #include <QDebug>
 
-#include "puzzle/puzzlepieceprimitive.h"
-#include "puzzle/puzzlepiece.h"
 #include "shapeprocessor.h"
 #include "util.h"
 
@@ -342,24 +340,4 @@ void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses)
     }
 }
 
-PuzzlePiece *findPuzzleItem(QPointF p, const QList<PuzzlePiece*> &puzzleItems)
-{
-    foreach (PuzzlePiece *item, puzzleItems)
-    {
-        QPointF tr = item->mapFromParent(p);
-        bool enableUsabilityImprovement = item->grabbedTouchPointIds().count();
-
-        foreach (const PuzzlePiecePrimitive *pr, item->primitives())
-        {
-            QPointF pt = tr - pr->pixmapOffset();
-
-            if (!enableUsabilityImprovement && pr->realShape().contains(pt))
-                return item;
-            else if (enableUsabilityImprovement && pr->fakeShape().contains(pt))
-                return item;
-        }
-    }
-
-    return 0;
-}
 }
