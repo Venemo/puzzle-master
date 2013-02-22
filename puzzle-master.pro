@@ -49,7 +49,7 @@ HEADERS += \
 RESOURCES += \
     translations.qrc \
     pics-original.qrc \
-    ui-other.qrc \
+    ui-default-qt4.qrc \
     background.qrc
 
 TRANSLATIONS += \
@@ -63,22 +63,22 @@ TRANSLATIONS += \
     translations/puzzle-master_fi_FI.ts
 
 OTHER_FILES += \
-    qml/other/components/Panel.qml \
-    qml/other/components/Dialog.qml \
-    qml/other/components/Button.qml \
-    qml/other/components/Slider.qml \
-    qml/other/components/style/ButtonStyle.qml \
-    qml/other/components/style/GreenButtonStyle.qml \
-    qml/other/components/style/RedButtonStyle.qml \
-    qml/other/AppWindow.qml \
-    qml/other/ImageChooser.qml \
-    qml/other/GameBoard.qml \
-    qml/other/OptionsDialog.qml \
-    qml/other/GallerySelectorDialog.qml \
-    qml/other/components/VerticalSlider.qml \
-    qml/other/components/VerticalScrollBar.qml \
-    qml/other/components/MenuButton.qml \
-    qml/other/components/style/PurpleButtonStyle.qml
+    qml/default-qt4/components/Panel.qml \
+    qml/default-qt4/components/Dialog.qml \
+    qml/default-qt4/components/Button.qml \
+    qml/default-qt4/components/Slider.qml \
+    qml/default-qt4/components/style/ButtonStyle.qml \
+    qml/default-qt4/components/style/GreenButtonStyle.qml \
+    qml/default-qt4/components/style/RedButtonStyle.qml \
+    qml/default-qt4/AppWindow.qml \
+    qml/default-qt4/ImageChooser.qml \
+    qml/default-qt4/GameBoard.qml \
+    qml/default-qt4/OptionsDialog.qml \
+    qml/default-qt4/GallerySelectorDialog.qml \
+    qml/default-qt4/components/VerticalSlider.qml \
+    qml/default-qt4/components/VerticalScrollBar.qml \
+    qml/default-qt4/components/MenuButton.qml \
+    qml/default-qt4/components/style/PurpleButtonStyle.qml
 
 # Platforms
 

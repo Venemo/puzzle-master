@@ -198,7 +198,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qDebug() << Q_FUNC_INFO << "initialization took" << timer->elapsed() << "ms";
     timer->restart();
 
-    view->setSource(QUrl("qrc:/qml/other/AppWindow.qml"));
+    view->setSource(QUrl("qrc:/qml/default-qt4/AppWindow.qml"));
     view->setWindowTitle(QObject::tr("Puzzle Master"));
     view->showFullScreen();
 
