@@ -53,6 +53,7 @@ class PuzzlePiece : public QObject
     GENPROPERTY_R(QSet<PuzzlePiecePrimitive*>, _primitives, primitives)
 
     qreal _rotationStart;
+    QPointF _topLeft, _bottomRight;
 
 public:
     explicit PuzzlePiece(PuzzleBoard *parent = 0);

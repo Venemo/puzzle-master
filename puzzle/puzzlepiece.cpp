@@ -60,9 +60,7 @@ PuzzlePiece::PuzzlePiece(PuzzleBoard *parent)
 
 QPointF PuzzlePiece::centerPoint() const
 {
-    // TODO
-    return QPointF();
-    //return QPointF(width() / 2.0, height() / 2.0);
+    return (_topLeft + _bottomRight) / 2;
 }
 
 void PuzzlePiece::addNeighbour(PuzzlePiece *piece)
@@ -186,37 +184,13 @@ void PuzzlePiece::verifyPosition()
     if (!_primitives.count())
         return;
 
-    // Find the topleft and bottomright points of this PuzzlePiece
-    // according to the PuzzlePiecePrimitive instances it contains
-
-    PuzzlePiecePrimitive *ppp = *(_primitives.begin());
-    qreal x1, y1, x2, y2;
-    x1 = ppp->pixmapOffset().x();
-    y1 = ppp->pixmapOffset().y();
-    x2 = ppp->pixmapOffset().x() + ppp->pixmap().width();
-    y2 = ppp->pixmapOffset().y() + ppp->pixmap().height();
-
-    foreach (const PuzzlePiecePrimitive* pp, _primitives)
-    {
-        // Find the top-left point of this puzzle piece
-        if (pp->pixmapOffset().x() < x1)
-            x1 = pp->pixmapOffset().x();
-        if (pp->pixmapOffset().y() < y1)
-            y1 = pp->pixmapOffset().y();
-        // Find the bottom-right point of this puzzle piece
-        if (pp->pixmapOffset().x() + pp->pixmap().width() > x2)
-            x2 = pp->pixmapOffset().x() + pp->pixmap().width();
-        if (pp->pixmapOffset().x() + pp->pixmap().height() > y2)
-            y2 = pp->pixmapOffset().y() + pp->pixmap().height();
-    }
-
     // Find out the coordinates in the parent's coordinate system
 
     PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
-    QPointF p1 = mapToParent(QPointF(x1, y1)), // top left point (in piece coordinates)
-            p2 = mapToParent(QPointF(x2, y1)), // top right point (in piece coordinates)
-            p3 = mapToParent(QPointF(x1, y2)), // bottom left point (in piece coordinates)
-            p4 = mapToParent(QPointF(x2, y2)), // bottom right point (in piece coordinates)
+    QPointF p1 = mapToParent(QPointF(_topLeft.x(),     _topLeft.y())), // top left point (in piece coordinates)
+            p2 = mapToParent(QPointF(_bottomRight.x(), _topLeft.y())), // top right point (in piece coordinates)
+            p3 = mapToParent(QPointF(_topLeft.x(),     _bottomRight.y())), // bottom left point (in piece coordinates)
+            p4 = mapToParent(QPointF(_bottomRight.x(), _bottomRight.y())), // bottom right point (in piece coordinates)
             // top left of "bounding rect" (in parent coordinates)
             p(myMin<qreal>(myMin<qreal>(p1.x(), p2.x()), myMin<qreal>(p3.x(), p4.x())), myMin<qreal>(myMin<qreal>(p1.y(), p2.y()), myMin<qreal>(p3.y(), p4.y()))),
             // bottom right of "bounding rect" (in parent coordinates)
@@ -273,6 +247,33 @@ void PuzzlePiece::addPrimitive(PuzzlePiecePrimitive *p, const QPointF &corr)
     p->setPixmapOffset(p->pixmapOffset() + corr);
     p->setStrokeOffset(p->strokeOffset() + corr);
     _primitives.insert(p);
+
+    // Find the topleft and bottomright points of this PuzzlePiece
+    // according to the PuzzlePiecePrimitive instances it contains
+
+    PuzzlePiecePrimitive *ppp = *(_primitives.begin());
+    qreal x1, y1, x2, y2;
+    x1 = ppp->pixmapOffset().x();
+    y1 = ppp->pixmapOffset().y();
+    x2 = ppp->pixmapOffset().x() + ppp->pixmap().width();
+    y2 = ppp->pixmapOffset().y() + ppp->pixmap().height();
+
+    foreach (const PuzzlePiecePrimitive* pp, _primitives)
+    {
+        // Find the top-left point of this puzzle piece
+        if (pp->pixmapOffset().x() < x1)
+            x1 = pp->pixmapOffset().x();
+        if (pp->pixmapOffset().y() < y1)
+            y1 = pp->pixmapOffset().y();
+        // Find the bottom-right point of this puzzle piece
+        if (pp->pixmapOffset().x() + pp->pixmap().width() > x2)
+            x2 = pp->pixmapOffset().x() + pp->pixmap().width();
+        if (pp->pixmapOffset().x() + pp->pixmap().height() > y2)
+            y2 = pp->pixmapOffset().y() + pp->pixmap().height();
+    }
+
+    _topLeft = QPointF(x1, y1);
+    _bottomRight = QPointF(x2, y2);
 }
 
 QPointF PuzzlePiece::mapToParent(const QPointF &p0) const
