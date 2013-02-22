@@ -481,7 +481,7 @@ void PuzzleGame::handleTouchEvent(QTouchEvent *event)
         // Perform rotation
         if (allowRotation() && currentTouchPointCount >= 2)
         {
-            if (item->previousTouchPointCount() < 2)
+            if (item->previousTouchPointCount() < 2 || item->previousTouchPointCount() != currentTouchPointCount)
                 item->startRotation(m[*(++item->grabbedTouchPointIds().begin())]->screenPos() - m[*(item->grabbedTouchPointIds().begin())]->screenPos());
             else
                 item->handleRotation(m[*(++item->grabbedTouchPointIds().begin())]->screenPos() - m[*(item->grabbedTouchPointIds().begin())]->screenPos());

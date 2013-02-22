@@ -112,7 +112,7 @@ void PuzzlePiece::mergeIfPossible(PuzzlePiece *item)
 
     // Grab the touch points of the other item
     foreach (int id, item->_grabbedTouchPointIds)
-        this->_grabbedTouchPointIds.insert(id);
+        this->_grabbedTouchPointIds.append(id);
 
     // See if the puzzle is solved
     if (neighbours().count() == 0)
@@ -309,4 +309,15 @@ QPointF PuzzlePiece::mapFromParent(const QPointF &p0) const
 QPointF PuzzlePiece::mapToItem(const PuzzlePiece *item, const QPointF &p) const
 {
     return item->mapFromParent(this->mapToParent(p));
+}
+
+void PuzzlePiece::grabTouchPoint(int id)
+{
+    if (!_grabbedTouchPointIds.contains(id))
+        _grabbedTouchPointIds.append(id);
+}
+
+void PuzzlePiece::ungrabTouchPoint(int id)
+{
+    _grabbedTouchPointIds.removeAll(id);
 }

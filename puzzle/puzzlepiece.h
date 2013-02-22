@@ -48,8 +48,8 @@ class PuzzlePiece : public QObject
     GENPROPERTY_R(bool, _isDraggingWithTouch, isDraggingWithTouch)
     GENPROPERTY_S(bool, _isEnabled, isEnabled, setIsEnabled)
     GENPROPERTY_R(QSet<PuzzlePiece*>, _neighbours, neighbours)
-    GENPROPERTY_R(QSet<int>, _grabbedTouchPointIds, grabbedTouchPointIds)
     GENPROPERTY_R(QSet<PuzzlePiecePrimitive*>, _primitives, primitives)
+    GENPROPERTY_R(QList<int>, _grabbedTouchPointIds, grabbedTouchPointIds)
 
     qreal _rotationStart;
     QPointF _topLeft, _bottomRight;
@@ -74,8 +74,8 @@ public:
     void setTransformOriginPoint(const QPointF &point);
     void checkMergeableSiblings();
 
-    void grabTouchPoint(int id) { _grabbedTouchPointIds.insert(id); }
-    void ungrabTouchPoint(int id) { _grabbedTouchPointIds.remove(id); }
+    void grabTouchPoint(int id);
+    void ungrabTouchPoint(int id);
 
     static bool puzzleItemDescLessThan(PuzzlePiece *a, PuzzlePiece *b);
     static bool puzzleItemAscLessThan(PuzzlePiece *a, PuzzlePiece *b);
