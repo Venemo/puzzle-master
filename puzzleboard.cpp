@@ -417,7 +417,11 @@ void PuzzleBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     else if (event->button() == Qt::RightButton)
     {
         _mouseSubject->setIsRightButtonPressed(false);
-        _mouseSubject->startDrag(_mouseSubject->mapFromParent(event->pos()));
+
+        if (_mouseSubject->dragging())
+            _mouseSubject->startDrag(_mouseSubject->mapFromParent(event->pos()));
+        else
+            _mouseSubject->stopDrag();
     }
 }
 
@@ -486,10 +490,9 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
 
         // Examine the current touch point count and decide what to do
         int currentTouchPointCount = item->grabbedTouchPointIds().count();
-        if (currentTouchPointCount == 0)
+        if (currentTouchPointCount == 0 && item->dragging())
         {
-            if (item->dragging())
-                item->stopDrag();
+            item->stopDrag();
             continue;
         }
 
