@@ -37,44 +37,40 @@ PuzzleBoard {
     property bool waitForHint: false
 
     id: gameBoard
-    //tolerance: (- appSettings.snapDifficulty + 3) * 7
-    //rotationTolerance: (- appSettings.snapDifficulty + 3) * 9
+    game.tolerance: (- appSettings.snapDifficulty + 3) * 7
+    game.rotationTolerance: (- appSettings.snapDifficulty + 3) * 9
     z: 0
     onVisibleChanged: {
         menuButtonPanel.visible = false
         gameBoard.game.deleteAllPieces()
         appEventHandler.adjustForUi()
     }
-
-    Connections {
-        target: gameBoard.game
-        onLoadProgressChanged: {
-            if (progress > 0)
-                progressDialog.text = qsTr("Creating puzzle piece %1 of %2").arg(progress).arg(appSettings.rows * appSettings.columns)
-            else
-                progressDialog.text = qsTr("The selected image is being processed.")
-        }
-        onLoaded: {
-            appEventHandler.adjustForPlaying()
-            progressDialog.close()
-        }
-        onGameStarted: {
-            menuDialog.shouldReenableGame = true
-            menuButtonPanel.open()
-        }
-        onGameWon: {
-            appEventHandler.adjustForUi()
-            menuButtonPanel.close()
-        }
-        onRestoreComplete: {
-            menuDialog.shouldReenableGame = true
-            gameBoard.isHintDisplayed = false
-            gameBoard.waitForHint = false
-        }
-        onAssembleComplete: {
-            gameBoard.isHintDisplayed = true
-            gameBoard.waitForHint = false
-        }
+    game.onLoadProgressChanged: {
+        if (progress > 0)
+            progressDialog.text = qsTr("Creating puzzle piece %1 of %2").arg(progress).arg(appSettings.rows * appSettings.columns)
+        else
+            progressDialog.text = qsTr("The selected image is being processed.")
+    }
+    game.onLoaded: {
+        appEventHandler.adjustForPlaying()
+        progressDialog.close()
+    }
+    game.onGameStarted: {
+        menuDialog.shouldReenableGame = true
+        menuButtonPanel.open()
+    }
+    game.onGameWon: {
+        appEventHandler.adjustForUi()
+        menuButtonPanel.close()
+    }
+    game.onRestoreComplete: {
+        menuDialog.shouldReenableGame = true
+        gameBoard.isHintDisplayed = false
+        gameBoard.waitForHint = false
+    }
+    game.onAssembleComplete: {
+        gameBoard.isHintDisplayed = true
+        gameBoard.waitForHint = false
     }
 
     Image {

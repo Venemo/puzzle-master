@@ -33,7 +33,7 @@ class PuzzlePiece;
 class PuzzleBoardItem : public QDeclarativeItem
 {
     Q_OBJECT
-    Q_PROPERTY(QObject* game READ game NOTIFY gameChanged)
+    Q_PROPERTY(PuzzleGame* game READ game NOTIFY gameChanged)
 
     QTimer *_autoRepainter;
     int _autoRepaintRequests;

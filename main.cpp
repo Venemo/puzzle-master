@@ -43,6 +43,7 @@
 #include "puzzleboarditem.h"
 #include "appsettings.h"
 #include "appeventhandler.h"
+#include "puzzle/puzzlegame.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -86,6 +87,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
     qsrand((uint)QTime::currentTime().msec());
     qmlRegisterType<PuzzleBoardItem>("net.venemo.puzzlemaster", 2, 0, "PuzzleBoard");
+    qmlRegisterUncreatableType<PuzzleGame>("net.venemo.puzzlemaster", 2, 0, "PuzzleGame", "This type should not be used from QML.");
     qmlRegisterType<AppSettings>("net.venemo.puzzlemaster", 2, 0, "AppSettings");
 
     // Checking for translations
