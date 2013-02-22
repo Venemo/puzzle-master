@@ -17,11 +17,14 @@
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
 #include <QPainter>
-#include "imageprocessor.h"
+#include "puzzle/creation/imageprocessor.h"
 #include "util.h"
 
-namespace PuzzleHelpers
+namespace Puzzle
 {
+namespace Creation
+{
+
 
 class ImageProcessorPrivate
 {
@@ -107,7 +110,7 @@ const GameDescriptor &ImageProcessor::descriptor()
     return _p->descriptor;
 }
 
-QPixmap ImageProcessor::drawPiece(int i, int j, const QPainterPath &shape, const PuzzleHelpers::Correction &corr)
+QPixmap ImageProcessor::drawPiece(int i, int j, const QPainterPath &shape, const Puzzle::Creation::Correction &corr)
 {
     QPainter p;
     QPixmap px(_p->descriptor.unitSize.width() + corr.widthCorrection + 1,
@@ -149,4 +152,5 @@ QPixmap ImageProcessor::drawStroke(const QPainterPath &strokeShape, const QSize 
     return stroke;
 }
 
+}
 }

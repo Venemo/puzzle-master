@@ -19,7 +19,9 @@
 #ifndef HELPERTYPES_H
 #define HELPERTYPES_H
 
-namespace PuzzleHelpers
+namespace Puzzle
+{
+namespace Creation
 {
 
 enum TabStatus
@@ -70,6 +72,7 @@ class ImageProcessor;
 
 class ShapeProcessor;
 
+}
 }
 
 #endif // HELPERTYPES_H

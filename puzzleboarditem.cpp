@@ -23,8 +23,6 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include "puzzleboarditem.h"
-#include "helpers/shapeprocessor.h"
-#include "helpers/imageprocessor.h"
 #include "puzzle/puzzlepieceprimitive.h"
 #include "puzzle/puzzlepiece.h"
 #include "puzzle/puzzlegame.h"

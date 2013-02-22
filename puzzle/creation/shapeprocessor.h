@@ -23,11 +23,11 @@
 #include <QPixmap>
 #include <QPainterPath>
 #include <QList>
-#include "helpers/helpertypes.h"
+#include "puzzle/creation/helpertypes.h"
 
-class PuzzlePiece;
-
-namespace PuzzleHelpers
+namespace Puzzle
+{
+namespace Creation
 {
 
 class ShapeProcessorPrivate;
@@ -49,6 +49,7 @@ public:
 
 void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses);
 
+}
 }
 
 #endif // PUZZLEPIECESHAPE_H

@@ -28,8 +28,8 @@ SOURCES += \
     appsettings.cpp \
     appeventhandler.cpp \
     puzzleboarditem.cpp \
-    helpers/shapeprocessor.cpp \
-    helpers/imageprocessor.cpp \
+    puzzle/creation/shapeprocessor.cpp \
+    puzzle/creation/imageprocessor.cpp \
     puzzle/puzzlepieceprimitive.cpp \
     puzzle/puzzlepiece.cpp \
     puzzle/puzzlegame.cpp
@@ -39,9 +39,9 @@ HEADERS += \
     appsettings.h \
     appeventhandler.h \
     puzzleboarditem.h \
-    helpers/shapeprocessor.h \
-    helpers/imageprocessor.h \
-    helpers/helpertypes.h \
+    puzzle/creation/shapeprocessor.h \
+    puzzle/creation/imageprocessor.h \
+    puzzle/creation/helpertypes.h \
     puzzle/puzzlepieceprimitive.h \
     puzzle/puzzlepiece.h \
     puzzle/puzzlegame.h

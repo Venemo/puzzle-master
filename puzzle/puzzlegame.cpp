@@ -28,8 +28,8 @@
 #include "puzzle/puzzlegame.h"
 #include "puzzle/puzzlepiece.h"
 #include "puzzlepieceprimitive.h"
-#include "helpers/imageprocessor.h"
-#include "helpers/shapeprocessor.h"
+#include "puzzle/creation/imageprocessor.h"
+#include "puzzle/creation/shapeprocessor.h"
 
 static PuzzlePiece *findPuzzleItem(QPointF p, const QList<PuzzlePiece*> &puzzleItems)
 {
@@ -102,7 +102,7 @@ bool PuzzleGame::startGame(const QString &imageUrl, int rows, int cols, bool all
     timer.start();
 
     qDebug() << "trying to start game with" << imageUrl;
-    PuzzleHelpers::ImageProcessor imageProcessor(imageUrl, QSize(width(), height()), rows, cols, _strokeThickness);
+    Puzzle::Creation::ImageProcessor imageProcessor(imageUrl, QSize(width(), height()), rows, cols, _strokeThickness);
 
     if (!imageProcessor.isValid())
     {
@@ -113,7 +113,7 @@ bool PuzzleGame::startGame(const QString &imageUrl, int rows, int cols, bool all
     qDebug() << timer.elapsed() << "ms spent with processing the image";
     timer.restart();
 
-    const PuzzleHelpers::GameDescriptor &desc = imageProcessor.descriptor();
+    const Puzzle::Creation::GameDescriptor &desc = imageProcessor.descriptor();
     int *statuses = new int[cols * rows], tShape = 0, tPaint = 0;
     qreal   w0 = (width() - desc.cols * desc.unitSize.width()) / 2,
             h0 = (height() - desc.rows * desc.unitSize.height()) / 2;
@@ -125,17 +125,17 @@ bool PuzzleGame::startGame(const QString &imageUrl, int rows, int cols, bool all
     memset(statuses, 0, rows * cols * sizeof(int));
 
     static int previousRows = rows, previousCols = cols, previousPixmapW = desc.pixmapSize.width(), previousPixmapH = desc.pixmapSize.height();
-    static PuzzleHelpers::ShapeProcessor *shapeProcessor = new PuzzleHelpers::ShapeProcessor(desc);
+    static Puzzle::Creation::ShapeProcessor *shapeProcessor = new Puzzle::Creation::ShapeProcessor(desc);
 
     if (previousRows != rows || previousCols != cols || previousPixmapW != desc.pixmapSize.width() || previousPixmapH != desc.pixmapSize.height())
     {
         delete shapeProcessor;
-        shapeProcessor = new PuzzleHelpers::ShapeProcessor(desc);
+        shapeProcessor = new Puzzle::Creation::ShapeProcessor(desc);
     }
 
     previousRows = rows, previousCols = cols, previousPixmapW = desc.pixmapSize.width(), previousPixmapH = desc.pixmapSize.height();
     shapeProcessor->resetPerfCounters();
-    PuzzleHelpers::generatePuzzlePieceStatuses(rows, cols, statuses);
+    Puzzle::Creation::generatePuzzlePieceStatuses(rows, cols, statuses);
 
     for (int i = 0; i < cols; i++)
     {
@@ -148,7 +148,7 @@ bool PuzzleGame::startGame(const QString &imageUrl, int rows, int cols, bool all
 
             // Creating the shape of the piece
 
-            PuzzleHelpers::Correction corr = shapeProcessor->getCorrectionFor(statuses[i * rows + j]);
+            Puzzle::Creation::Correction corr = shapeProcessor->getCorrectionFor(statuses[i * rows + j]);
             int &sxCorrection = corr.sxCorrection, &syCorrection = corr.syCorrection, &xCorrection = corr.xCorrection, &yCorrection = corr.yCorrection;
 
             // Create shapes

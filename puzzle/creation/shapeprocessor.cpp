@@ -21,7 +21,7 @@
 #include <QPainterPathStroker>
 #include <QDebug>
 
-#include "shapeprocessor.h"
+#include "puzzle/creation/shapeprocessor.h"
 #include "util.h"
 
 // This function generates puzzle piece shapes.
@@ -42,13 +42,13 @@ static QPainterPath createPuzzleShape(QSize unit, int status, qreal tabFull, qre
     QPainterPath clip = rectClip;
 
     // Left
-    if (status & PuzzleHelpers::LeftBlank)
+    if (status & Puzzle::Creation::LeftBlank)
     {
         QPainterPath leftBlank;
         leftBlank.addEllipse(QPointF(tabFull + blankOffset, tabFull + unit.height() / 2.0), blankSize, blankSize);
         clip = clip.subtracted(leftBlank);
     }
-    else if (status & PuzzleHelpers::LeftTab)
+    else if (status & Puzzle::Creation::LeftTab)
     {
         QPainterPath leftTab;
         leftTab.addEllipse(QPointF(tabSize + tabTolerance, tabFull + unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
@@ -56,13 +56,13 @@ static QPainterPath createPuzzleShape(QSize unit, int status, qreal tabFull, qre
     }
 
     // Top
-    if (status & PuzzleHelpers::TopBlank)
+    if (status & Puzzle::Creation::TopBlank)
     {
         QPainterPath topBlank;
         topBlank.addEllipse(QPointF(tabFull + unit.width() / 2.0, tabFull + blankOffset), blankSize, blankSize);
         clip = clip.subtracted(topBlank);
     }
-    else if (status & PuzzleHelpers::TopTab)
+    else if (status & Puzzle::Creation::TopTab)
     {
         QPainterPath topTab;
         topTab.addEllipse(QPointF(tabFull + unit.width() / 2.0, tabSize + tabTolerance), tabSize + tabTolerance, tabSize + tabTolerance);
@@ -70,13 +70,13 @@ static QPainterPath createPuzzleShape(QSize unit, int status, qreal tabFull, qre
     }
 
     // Right
-    if (status & PuzzleHelpers::RightTab)
+    if (status & Puzzle::Creation::RightTab)
     {
         QPainterPath rightTab;
         rightTab.addEllipse(QPointF(tabFull + unit.width() + tabOffset, tabFull + unit.height() / 2.0), tabSize + tabTolerance, tabSize + tabTolerance);
         clip = clip.united(rightTab);
     }
-    else if (status & PuzzleHelpers::RightBlank)
+    else if (status & Puzzle::Creation::RightBlank)
     {
         QPainterPath rightBlank;
         rightBlank.addEllipse(QPointF(tabFull + unit.width() - blankOffset, tabFull + unit.height() / 2.0), blankSize, blankSize);
@@ -84,13 +84,13 @@ static QPainterPath createPuzzleShape(QSize unit, int status, qreal tabFull, qre
     }
 
     // Bottom
-    if (status & PuzzleHelpers::BottomTab)
+    if (status & Puzzle::Creation::BottomTab)
     {
         QPainterPath bottomTab;
         bottomTab.addEllipse(QPointF(tabFull + unit.width() / 2.0, tabFull + unit.height() + tabOffset), tabSize + tabTolerance, tabSize + tabTolerance);
         clip = clip.united(bottomTab);
     }
-    else if (status & PuzzleHelpers::BottomBlank)
+    else if (status & Puzzle::Creation::BottomBlank)
     {
         QPainterPath bottomBlank;
         bottomBlank.addEllipse(QPointF(tabFull + unit.width() / 2.0, tabFull + unit.height() - blankOffset), blankSize, blankSize);
@@ -101,7 +101,9 @@ static QPainterPath createPuzzleShape(QSize unit, int status, qreal tabFull, qre
     return clip;
 }
 
-namespace PuzzleHelpers
+namespace Puzzle
+{
+namespace Creation
 {
 
 class ShapeProcessorPrivate
@@ -138,43 +140,43 @@ Correction ShapeProcessor::getCorrectionFor(int status)
     Correction result = { 0, 0, 0, 0, 0, 0 };
 
     // Left
-    if (status & PuzzleHelpers::LeftBlank)
+    if (status & Puzzle::Creation::LeftBlank)
     {
         result.xCorrection -= _p->tabFull;
     }
-    else if (status & PuzzleHelpers::LeftTab)
+    else if (status & Puzzle::Creation::LeftTab)
     {
         result.sxCorrection -= _p->tabFull;
         result.widthCorrection += _p->tabFull;
     }
-    else if (status & PuzzleHelpers::LeftBorder)
+    else if (status & Puzzle::Creation::LeftBorder)
     {
         result.xCorrection -= _p->tabFull;
     }
 
     // Top
-    if (status & PuzzleHelpers::TopBlank)
+    if (status & Puzzle::Creation::TopBlank)
     {
         result.yCorrection -= _p->tabFull;
     }
-    else if (status & PuzzleHelpers::TopTab)
+    else if (status & Puzzle::Creation::TopTab)
     {
         result.syCorrection -= _p->tabFull;
         result.heightCorrection += _p->tabFull;
     }
-    else if (status & PuzzleHelpers::TopBorder)
+    else if (status & Puzzle::Creation::TopBorder)
     {
         result.yCorrection -= _p->tabFull;
     }
 
     // Right
-    if (status & PuzzleHelpers::RightTab)
+    if (status & Puzzle::Creation::RightTab)
     {
         result.widthCorrection += _p->tabFull;
     }
 
     // Bottom
-    if (status & PuzzleHelpers::BottomTab)
+    if (status & Puzzle::Creation::BottomTab)
     {
         result.heightCorrection += _p->tabFull;
     }
@@ -310,34 +312,35 @@ void generatePuzzlePieceStatuses(unsigned rows, unsigned cols, int *statuses)
         for (unsigned j = 0; j < rows; j++)
         {
             // Left
-            if (i > 0 && statuses[(i - 1) * rows + j] & PuzzleHelpers::RightTab)
-                statuses[i * rows + j] |= PuzzleHelpers::LeftBlank;
+            if (i > 0 && statuses[(i - 1) * rows + j] & Puzzle::Creation::RightTab)
+                statuses[i * rows + j] |= Puzzle::Creation::LeftBlank;
             else if (i > 0)
-                statuses[i * rows + j] |= PuzzleHelpers::LeftTab;
+                statuses[i * rows + j] |= Puzzle::Creation::LeftTab;
             else
-                statuses[i * rows + j] |= PuzzleHelpers::LeftBorder;
+                statuses[i * rows + j] |= Puzzle::Creation::LeftBorder;
 
             // Top
-            if (j > 0 && statuses[i * rows + j - 1] & PuzzleHelpers::BottomTab)
-                statuses[i * rows + j] |= PuzzleHelpers::TopBlank;
+            if (j > 0 && statuses[i * rows + j - 1] & Puzzle::Creation::BottomTab)
+                statuses[i * rows + j] |= Puzzle::Creation::TopBlank;
             else if (j > 0)
-                statuses[i * rows + j] |= PuzzleHelpers::TopTab;
+                statuses[i * rows + j] |= Puzzle::Creation::TopTab;
             else
-                statuses[i * rows + j] |= PuzzleHelpers::TopBorder;
+                statuses[i * rows + j] |= Puzzle::Creation::TopBorder;
 
             // Right
             if (i < cols - 1)
-                statuses[i * rows + j] |= randomInt(0, 1) ? PuzzleHelpers::RightTab : PuzzleHelpers::RightBlank;
+                statuses[i * rows + j] |= randomInt(0, 1) ? Puzzle::Creation::RightTab : Puzzle::Creation::RightBlank;
             else
-                statuses[i * rows + j] |= PuzzleHelpers::RightBorder;
+                statuses[i * rows + j] |= Puzzle::Creation::RightBorder;
 
             // Bottom
             if (j < rows - 1)
-                statuses[i * rows + j] |= randomInt(0, 1) ? PuzzleHelpers::BottomTab : PuzzleHelpers::BottomBlank;
+                statuses[i * rows + j] |= randomInt(0, 1) ? Puzzle::Creation::BottomTab : Puzzle::Creation::BottomBlank;
             else
-                statuses[i * rows + j] |= PuzzleHelpers::BottomBorder;
+                statuses[i * rows + j] |= Puzzle::Creation::BottomBorder;
         }
     }
 }
 
+}
 }
