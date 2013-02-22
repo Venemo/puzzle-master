@@ -47,6 +47,7 @@ class PuzzlePiece : public QObject
     GENPROPERTY_R(bool, _dragging, dragging)
     GENPROPERTY_S(bool, _isRightButtonPressed, isRightButtonPressed, setIsRightButtonPressed)
     GENPROPERTY_R(bool, _isDraggingWithTouch, isDraggingWithTouch)
+    GENPROPERTY_S(bool, _isEnabled, isEnabled, setIsEnabled)
     GENPROPERTY_R(QSet<PuzzlePiece*>, _neighbours, neighbours)
     GENPROPERTY_R(QSet<int>, _grabbedTouchPointIds, grabbedTouchPointIds)
     GENPROPERTY_R(QSet<PuzzlePiecePrimitive*>, _primitives, primitives)
@@ -82,6 +83,11 @@ signals:
 protected:
     void verifyPosition();
     bool checkMergeability(PuzzlePiece *item);
+
+protected slots:
+    void enable() { _isEnabled = true; }
+    void disable() { _isEnabled = false; }
+
 };
 
 #endif // PUZZLEPIECE_H

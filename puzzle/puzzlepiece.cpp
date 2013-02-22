@@ -54,6 +54,7 @@ PuzzlePiece::PuzzlePiece(PuzzleBoard *parent)
     , _dragging(false)
     , _isRightButtonPressed(false)
     , _isDraggingWithTouch(false)
+    , _isEnabled(true)
 {
 }
 
@@ -124,6 +125,9 @@ void PuzzlePiece::stopDrag()
 
 void PuzzlePiece::doDrag(const QPointF &position)
 {
+    if (!_isEnabled)
+        return;
+
     if (_dragging)
         setPos(mapToParent(position) - _dragStart);
 }
@@ -135,6 +139,9 @@ void PuzzlePiece::startRotation(const QPointF &vector)
 
 void PuzzlePiece::handleRotation(const QPointF &v)
 {
+    if (!_isEnabled)
+        return;
+
     qreal a = angle(v) * 180 / M_PI - _rotationStart;
     setRotation(simplifyAngle(a));
 }
@@ -232,11 +239,10 @@ void PuzzlePiece::verifyPosition()
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutBounce));
 
         board->enableAutoRepaint();
+        this->disable();
         connect(anim, SIGNAL(finished()), board, SLOT(disableAutoRepaint()));
+        connect(anim, SIGNAL(finished()), this, SLOT(enable()));
         anim->start(QAbstractAnimation::DeleteWhenStopped);
-
-        // TODO: handle the case when two such animations are running simultaneously (regarding auto repaint)
-        // TODO: disable movement of this piece until the animation is progressing.
     }
 }
 
