@@ -27,22 +27,24 @@ SOURCES += \
     main.cpp \
     appsettings.cpp \
     appeventhandler.cpp \
-    puzzleboard.cpp \
+    puzzleboarditem.cpp \
     helpers/shapeprocessor.cpp \
     helpers/imageprocessor.cpp \
     puzzle/puzzlepieceprimitive.cpp \
-    puzzle/puzzlepiece.cpp
+    puzzle/puzzlepiece.cpp \
+    puzzle/puzzlegame.cpp
 
 HEADERS += \
     util.h \
     appsettings.h \
     appeventhandler.h \
-    puzzleboard.h \
+    puzzleboarditem.h \
     helpers/shapeprocessor.h \
     helpers/imageprocessor.h \
     helpers/helpertypes.h \
     puzzle/puzzlepieceprimitive.h \
-    puzzle/puzzlepiece.h
+    puzzle/puzzlepiece.h \
+    puzzle/puzzlegame.h
 
 RESOURCES += \
     translations.qrc \

@@ -40,7 +40,7 @@
 #include <QSystemDeviceInfo>
 #endif
 
-#include "puzzleboard.h"
+#include "puzzleboarditem.h"
 #include "appsettings.h"
 #include "appeventhandler.h"
 
@@ -85,7 +85,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     AppEventHandler *appEventHandler = new AppEventHandler(view);
     QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
     qsrand((uint)QTime::currentTime().msec());
-    qmlRegisterType<PuzzleBoard>("net.venemo.puzzlemaster", 2, 0, "PuzzleBoard");
+    qmlRegisterType<PuzzleBoardItem>("net.venemo.puzzlemaster", 2, 0, "PuzzleBoard");
     qmlRegisterType<AppSettings>("net.venemo.puzzlemaster", 2, 0, "AppSettings");
 
     // Checking for translations

@@ -16,61 +16,33 @@
 //
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
-#include <QGraphicsView>
-#include <QGraphicsScene>
-#include <QPainter>
-#include <QPropertyAnimation>
+#include <QTouchEvent>
+#include <QDebug>
+#include <QCoreApplication>
+#include <QElapsedTimer>
+#include <QTimer>
 #include <QParallelAnimationGroup>
 #include <QSequentialAnimationGroup>
-#include <QTimer>
-#include <QElapsedTimer>
-#include <QCoreApplication>
-#include <QTouchEvent>
-#include <QMap>
-#include <QGraphicsSceneMouseEvent>
+#include <QPropertyAnimation>
 
-#include "puzzleboard.h"
-#include "helpers/shapeprocessor.h"
-#include "helpers/imageprocessor.h"
-#include "puzzle/puzzlepieceprimitive.h"
+#include "puzzle/puzzlegame.h"
 #include "puzzle/puzzlepiece.h"
+#include "puzzlepieceprimitive.h"
+#include "helpers/imageprocessor.h"
+#include "helpers/shapeprocessor.h"
 
-inline static bool puzzleItemDescLessThan(PuzzlePiece *a, PuzzlePiece *b)
+PuzzleGame::PuzzleGame(QObject *parent)
+    : QObject(parent)
+    , _allowRotation(true)
+    , _tolerance(5)
+    , _rotationTolerance(10)
 {
-    // We want to order them in descending order by their z values
-    return a->zValue() > b->zValue();
-}
-inline static bool puzzleItemAscLessThan(PuzzlePiece *a, PuzzlePiece *b)
-{
-    // We want to order them in ascending order by their z values
-    return a->zValue() < b->zValue();
-}
-
-PuzzleBoard::PuzzleBoard(QDeclarativeItem *parent) :
-    QDeclarativeItem(parent),
-    _allowRotation(true),
-    _tolerance(5),
-    _rotationTolerance(10)
-{
-#if !defined(MEEGO_EDITION_HARMATTAN) && !defined(Q_OS_SYMBIAN) && !defined(Q_OS_BLACKBERRY) && !defined(Q_OS_BLACKBERRY_TABLET)
-    setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
-#else
-    setAcceptedMouseButtons(Qt::NoButton);
-#endif
-    setFlag(QGraphicsItem::ItemHasNoContents, false);
-
-    setAcceptTouchEvents(true);
     _mouseSubject = 0;
     _strokeThickness = 3;
     _enabled = false;
-
-    _autoRepaintRequests = 0;
-    _autoRepainter = new QTimer();
-    _autoRepainter->setInterval(20);
-    connect(_autoRepainter, SIGNAL(timeout()), this, SLOT(updateItem()));
 }
 
-void PuzzleBoard::setNeighbours(int x, int y)
+void PuzzleGame::setNeighbours(int x, int y)
 {
     foreach (PuzzlePiece *p, _puzzleItems)
     {
@@ -82,7 +54,7 @@ void PuzzleBoard::setNeighbours(int x, int y)
     }
 }
 
-PuzzlePiece *PuzzleBoard::find(const QPoint &puzzleCoordinates)
+PuzzlePiece *PuzzleGame::find(const QPoint &puzzleCoordinates)
 {
     foreach (PuzzlePiece *p, _puzzleItems)
     {
@@ -92,7 +64,7 @@ PuzzlePiece *PuzzleBoard::find(const QPoint &puzzleCoordinates)
     return 0;
 }
 
-bool PuzzleBoard::startGame(const QString &imageUrl, int rows, int cols, bool allowRotation)
+bool PuzzleGame::startGame(const QString &imageUrl, int rows, int cols, bool allowRotation)
 {
     emit loadProgressChanged(0);
     deleteAllPieces();
@@ -101,7 +73,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, int rows, int cols, bool al
 
     if (height() == 0 || height() == 0)
     {
-        qDebug() << "The size of this PuzzleBoard item is not okay, not starting game.";
+        qDebug() << "The size of this PuzzleBoardItem item is not okay, not starting game.";
         return false;
     }
 
@@ -203,7 +175,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, int rows, int cols, bool al
             item->setSupposedPosition(supposed);
             item->setPos(supposed);
             item->setTabStatus(statuses[i * rows + j]);
-            item->setZValue(i * rows + j + this->zValue() + 1);
+            item->setZValue(i * rows + j + 1);
 
             connect(item, SIGNAL(noNeighbours()), this, SLOT(assemble()));
             _puzzleItems.insert(item);
@@ -226,7 +198,7 @@ bool PuzzleBoard::startGame(const QString &imageUrl, int rows, int cols, bool al
     return true;
 }
 
-void PuzzleBoard::shuffle()
+void PuzzleGame::shuffle()
 {
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
     QEasingCurve easingCurve(QEasingCurve::OutElastic);
@@ -265,14 +237,14 @@ void PuzzleBoard::shuffle()
             item->raise();
     }
 
-    enableAutoRepaint();
-    connect(group, SIGNAL(finished()), this, SLOT(disableAutoRepaint()));
+    emit this->animationStarting();
+    connect(group, SIGNAL(finished()), this, SIGNAL(animationStopped()));
     connect(group, SIGNAL(finished()), this, SLOT(enable()));
     connect(group, SIGNAL(finished()), this, SIGNAL(gameStarted()));
     group->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void PuzzleBoard::assemble()
+void PuzzleGame::assemble()
 {
     qDebug() << "assemble called, number of items:" << _puzzleItems.count();
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
@@ -304,12 +276,12 @@ void PuzzleBoard::assemble()
     else
         connect(group, SIGNAL(finished()), this, SIGNAL(assembleComplete()));
 
-    enableAutoRepaint();
-    connect(group, SIGNAL(finished()), this, SLOT(disableAutoRepaint()));
+    emit this->animationStarting();
+    connect(group, SIGNAL(finished()), this, SIGNAL(animationStopped()));
     group->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void PuzzleBoard::restore()
+void PuzzleGame::restore()
 {
     if (_restorablePositions.count() != _puzzleItems.count())
     {
@@ -337,112 +309,93 @@ void PuzzleBoard::restore()
         group->addAnimation(rotateAnimation);
     }
 
-    enableAutoRepaint();
-    connect(group, SIGNAL(finished()), this, SLOT(disableAutoRepaint()));
+    emit this->animationStarting();
+    connect(group, SIGNAL(finished()), this, SIGNAL(animationStopped()));
     connect(group, SIGNAL(finished()), this, SLOT(enable()));
     connect(group, SIGNAL(finished()), this, SIGNAL(restoreComplete()));
     group->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void PuzzleBoard::enable()
+void PuzzleGame::enable()
 {
     setEnabled(true);
 }
 
-void PuzzleBoard::disable()
+void PuzzleGame::disable()
 {
     setEnabled(false);
 }
 
-void PuzzleBoard::deleteAllPieces()
+void PuzzleGame::deleteAllPieces()
 {
     qDeleteAll(_puzzleItems);
     _puzzleItems.clear();
     _restorablePositions.clear();
 }
 
-void PuzzleBoard::removePuzzleItem(PuzzlePiece *item)
+void PuzzleGame::removePuzzleItem(PuzzlePiece *item)
 {
     _puzzleItems.remove(item);
     item->deleteLater();
 }
 
-bool PuzzleBoard::sceneEvent(QEvent *event)
+void PuzzleGame::handleMousePress(Qt::MouseButton button, QPointF pos)
 {
-    if (event->type() == QEvent::TouchBegin || event->type() == QEvent::TouchUpdate || event->type() == QEvent::TouchEnd)
-    {
-        QTouchEvent *te = static_cast<QTouchEvent*>(event);
-        event->accept();
-        touchEvent(te);
-        return true;
-    }
-
-    return QDeclarativeItem::sceneEvent(event);
-}
-
-void PuzzleBoard::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    event->accept();
     QList<PuzzlePiece*> puzzleItems = _puzzleItems.toList();
-    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemDescLessThan);
-    _mouseSubject = PuzzleHelpers::findPuzzleItem(event->pos(), puzzleItems);
+    qSort(puzzleItems.begin(), puzzleItems.end(), PuzzlePiece::puzzleItemDescLessThan);
+    _mouseSubject = PuzzleHelpers::findPuzzleItem(pos, puzzleItems);
 
     if (!_enabled || !_mouseSubject || _mouseSubject->isDraggingWithTouch())
         return;
 
-    if (event->button() == Qt::LeftButton)
+    if (button == Qt::LeftButton)
     {
-        _mouseSubject->startDrag(_mouseSubject->mapFromParent(event->pos()));
+        _mouseSubject->startDrag(_mouseSubject->mapFromParent(pos));
     }
-    else if (event->button() == Qt::RightButton && allowRotation())
+    else if (button == Qt::RightButton && allowRotation())
     {
         _mouseSubject->setIsRightButtonPressed(true);
         _mouseSubject->setTransformOriginPoint(_mouseSubject->centerPoint());
-        _mouseSubject->startRotation(event->pos() - _mouseSubject->mapToParent(_mouseSubject->centerPoint()));
+        _mouseSubject->startRotation(pos - _mouseSubject->mapToParent(_mouseSubject->centerPoint()));
     }
-
-    update();
 }
 
-void PuzzleBoard::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void PuzzleGame::handleMouseRelease(Qt::MouseButton button, QPointF pos)
 {
-    event->accept();
     if (!_mouseSubject || _mouseSubject->isDraggingWithTouch())
         return;
 
-    if (event->button() == Qt::LeftButton)
+    if (button == Qt::LeftButton)
     {
         _mouseSubject->stopDrag();
     }
-    else if (event->button() == Qt::RightButton)
+    else if (button == Qt::RightButton)
     {
         _mouseSubject->setIsRightButtonPressed(false);
 
         if (_mouseSubject->dragging())
-            _mouseSubject->startDrag(_mouseSubject->mapFromParent(event->pos()));
+            _mouseSubject->startDrag(_mouseSubject->mapFromParent(pos));
         else
             _mouseSubject->stopDrag();
     }
 }
 
-void PuzzleBoard::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void PuzzleGame::handleMouseMove(QPointF pos)
 {
-    event->accept();
     if (!_enabled || !_mouseSubject || _mouseSubject->isDraggingWithTouch())
         return;
 
-    QPointF p = _mouseSubject->mapFromParent(event->pos());
+    QPointF p = _mouseSubject->mapFromParent(pos);
 
     if (_mouseSubject->isRightButtonPressed() && this->allowRotation())
-        _mouseSubject->handleRotation(event->pos() - _mouseSubject->mapToParent(_mouseSubject->centerPoint()));
+        _mouseSubject->handleRotation(pos - _mouseSubject->mapToParent(_mouseSubject->centerPoint()));
     else
         _mouseSubject->doDrag(p);
 
     _mouseSubject->checkMergeableSiblings();
-    update();
 }
 
-void PuzzleBoard::touchEvent(QTouchEvent *event)
+void PuzzleGame::handleTouchEvent(QTouchEvent *event)
 {
     if (!_enabled)
         return;
@@ -450,7 +403,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
     // Determine which touch point belongs to which puzzle item.
 
     QList<PuzzlePiece*> puzzleItems = _puzzleItems.toList();
-    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemDescLessThan);
+    qSort(puzzleItems.begin(), puzzleItems.end(), PuzzlePiece::puzzleItemDescLessThan);
 
     // Iterate through the touch points in the event and assign them to an item
 
@@ -516,7 +469,7 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         else
         {
             if (item->previousTouchPointCount() != currentTouchPointCount)
-                item->startDrag(mapToParent(midPoint) - pos(), true);
+                item->startDrag(item->mapToParent(midPoint), true);
             item->doDrag(midPoint);
         }
 
@@ -534,51 +487,5 @@ void PuzzleBoard::touchEvent(QTouchEvent *event)
         // Check mergeable neighbours of the piece
         item->checkMergeableSiblings();
     }
-
-    // Schedule a repaint
-    update();
 }
 
-void PuzzleBoard::enableAutoRepaint()
-{
-    _autoRepaintRequests++;
-
-    if (!_autoRepainter->isActive())
-        _autoRepainter->start();
-}
-
-void PuzzleBoard::disableAutoRepaint()
-{
-    _autoRepaintRequests--;
-
-    if (_autoRepaintRequests && _autoRepainter->isActive())
-        QTimer::singleShot(2000, _autoRepainter, SLOT(stop()));
-}
-
-void PuzzleBoard::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
-{
-    // Save the original transform of the painter
-    QTransform originalTransform = painter->transform();
-    // Order the puzzle pieces by z value (ascending)
-    QList<PuzzlePiece*> puzzleItems = _puzzleItems.toList();
-    qSort(puzzleItems.begin(), puzzleItems.end(), puzzleItemAscLessThan);
-
-    // Draw the pieces
-    foreach (PuzzlePiece *piece, puzzleItems)
-    {
-        QPointF p = piece->mapToParent(QPointF(0, 0));
-        QTransform transform = QTransform::fromTranslate(p.x(), p.y()).rotate(piece->rotation());
-        painter->setTransform(transform);
-
-        // Draw the strokes first
-        foreach (PuzzlePiecePrimitive *p, piece->primitives())
-            painter->drawPixmap(p->strokeOffset(), p->stroke());
-
-        // Draw the actual pixmaps
-        foreach (PuzzlePiecePrimitive *p, piece->primitives())
-            painter->drawPixmap(p->pixmapOffset(), p->pixmap());
-    }
-
-    // Restore the original transform of the painter
-    painter->setTransform(originalTransform);
-}

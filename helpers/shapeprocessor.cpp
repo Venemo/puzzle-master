@@ -19,6 +19,7 @@
 #include <QPainter>
 #include <QMap>
 #include <QPainterPathStroker>
+#include <QDebug>
 
 #include "puzzle/puzzlepieceprimitive.h"
 #include "puzzle/puzzlepiece.h"

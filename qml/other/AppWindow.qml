@@ -44,9 +44,9 @@ Rectangle {
         id: gameBoard
         visible: false
         anchors.fill: parent
-        onGameWon: {
-            gameWonDialog.open()
-        }
+//        onGameWon: {
+//            gameWonDialog.open()
+//        }
     }
     ImageChooser {
         property bool shouldStartGame: false

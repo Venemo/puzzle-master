@@ -23,11 +23,10 @@
 #include <QSet>
 
 #include "util.h"
-#include "puzzleboard.h"
 #include "helpers/shapeprocessor.h"
 
 class PuzzlePiecePrimitive;
-class PuzzleBoard;
+class PuzzleGame;
 
 class PuzzlePiece : public QObject
 {
@@ -56,7 +55,7 @@ class PuzzlePiece : public QObject
     QPointF _topLeft, _bottomRight;
 
 public:
-    explicit PuzzlePiece(PuzzleBoard *parent = 0);
+    explicit PuzzlePiece(PuzzleGame *parent = 0);
     void mergeIfPossible(PuzzlePiece *item);
     void raise();
     void addNeighbour(PuzzlePiece *piece);
@@ -77,6 +76,9 @@ public:
 
     void grabTouchPoint(int id) { _grabbedTouchPointIds.insert(id); }
     void ungrabTouchPoint(int id) { _grabbedTouchPointIds.remove(id); }
+
+    static bool puzzleItemDescLessThan(PuzzlePiece *a, PuzzlePiece *b);
+    static bool puzzleItemAscLessThan(PuzzlePiece *a, PuzzlePiece *b);
 
 signals:
     void noNeighbours();

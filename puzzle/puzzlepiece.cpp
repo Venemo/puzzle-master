@@ -17,9 +17,11 @@
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
 #include <QPropertyAnimation>
+#include <QDebug>
 #include <cmath>
 
-#include "puzzlepiece.h"
+#include "puzzle/puzzlepiece.h"
+#include "puzzle/puzzlegame.h"
 #include "puzzle/puzzlepieceprimitive.h"
 
 using namespace std;
@@ -46,7 +48,21 @@ inline static qreal simplifyAngle(qreal a)
     return a;
 }
 
-PuzzlePiece::PuzzlePiece(PuzzleBoard *parent)
+// Used for ordering puzzle pieces in descending order
+bool PuzzlePiece::puzzleItemDescLessThan(PuzzlePiece *a, PuzzlePiece *b)
+{
+    // We want to order them in descending order by their z values
+    return a->zValue() > b->zValue();
+}
+
+// Used for ordering puzzle pieces in ascending order
+bool PuzzlePiece::puzzleItemAscLessThan(PuzzlePiece *a, PuzzlePiece *b)
+{
+    // We want to order them in ascending order by their z values
+    return a->zValue() < b->zValue();
+}
+
+PuzzlePiece::PuzzlePiece(PuzzleGame *parent)
     : QObject(parent)
     , _rotation(0)
     , _zValue(0)
@@ -92,7 +108,7 @@ void PuzzlePiece::mergeIfPossible(PuzzlePiece *item)
         this->addPrimitive(pr, item->supposedPosition() - this->supposedPosition());
     item->_primitives.clear();
 
-    static_cast<PuzzleBoard*>(parent())->removePuzzleItem(item);
+    static_cast<PuzzleGame*>(parent())->removePuzzleItem(item);
 
     // Grab the touch points of the other item
     foreach (int id, item->_grabbedTouchPointIds)
@@ -153,7 +169,7 @@ void PuzzlePiece::checkMergeableSiblings()
 
 bool PuzzlePiece::checkMergeability(PuzzlePiece *p)
 {
-    PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
+    PuzzleGame *board = static_cast<PuzzleGame*>(parent());
     qreal rotationDiff = abs(simplifyAngle(p->rotation() - rotation()));
 
     // Check rotation difference
@@ -186,7 +202,7 @@ void PuzzlePiece::verifyPosition()
 
     // Find out the coordinates in the parent's coordinate system
 
-    PuzzleBoard *board = static_cast<PuzzleBoard*>(parent());
+    PuzzleGame *board = static_cast<PuzzleGame*>(parent());
     QPointF p1 = mapToParent(QPointF(_topLeft.x(),     _topLeft.y())), // top left point (in piece coordinates)
             p2 = mapToParent(QPointF(_bottomRight.x(), _topLeft.y())), // top right point (in piece coordinates)
             p3 = mapToParent(QPointF(_topLeft.x(),     _bottomRight.y())), // bottom left point (in piece coordinates)
@@ -212,9 +228,7 @@ void PuzzlePiece::verifyPosition()
         anim->setDuration(150);
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutBounce));
 
-        board->enableAutoRepaint();
         this->disable();
-        connect(anim, SIGNAL(finished()), board, SLOT(disableAutoRepaint()));
         connect(anim, SIGNAL(finished()), this, SLOT(enable()));
         anim->start(QAbstractAnimation::DeleteWhenStopped);
     }
@@ -223,7 +237,7 @@ void PuzzlePiece::verifyPosition()
 void PuzzlePiece::raise()
 {
     PuzzlePiece *maxItem = this;
-    foreach (PuzzlePiece *item, static_cast<PuzzleBoard*>(parent())->puzzleItems())
+    foreach (PuzzlePiece *item, static_cast<PuzzleGame*>(parent())->puzzleItems())
         if (item->zValue() > maxItem->zValue())
             maxItem = item;
 
@@ -231,7 +245,7 @@ void PuzzlePiece::raise()
         return;
 
     qreal max = maxItem->zValue();
-    foreach (PuzzlePiece *item, static_cast<PuzzleBoard*>(parent())->puzzleItems())
+    foreach (PuzzlePiece *item, static_cast<PuzzleGame*>(parent())->puzzleItems())
         if (item->zValue() > this->zValue())
             item->setZValue(item->zValue() - 1);
 

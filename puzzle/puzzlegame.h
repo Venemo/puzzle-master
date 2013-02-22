@@ -16,25 +16,28 @@
 //
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
-#ifndef PUZZLEBOARD_H
-#define PUZZLEBOARD_H
+#ifndef PUZZLEGAME_H
+#define PUZZLEGAME_H
 
-#include <QDeclarativeItem>
-#include <QTimer>
+#include <QObject>
+#include <QSize>
+#include <QPoint>
+#include <QPointF>
+#include <QSet>
 
 #include "util.h"
 
-class QTimer;
 class QTouchEvent;
-class QGraphicsSceneMouseEvent;
 class PuzzlePiece;
 
-class PuzzleBoard : public QDeclarativeItem
+class PuzzleGame : public QObject
 {
     Q_OBJECT
     GENPROPERTY_S(bool, _enabled, enabled, setEnabled)
     GENPROPERTY_R(bool, _allowRotation, allowRotation)
     GENPROPERTY_R(int, _strokeThickness, strokeThickness)
+    GENPROPERTY_S(int, _width, width, setWidth)
+    GENPROPERTY_S(int, _height, height, setHeight)
     GENPROPERTY_R(QSize, _unit, unit)
     GENPROPERTY_R(qreal, _tabSizes, tabSizes)
     GENPROPERTY_F(int, _tolerance, tolerance, setTolerance, toleranceChanged)
@@ -45,28 +48,25 @@ class PuzzleBoard : public QDeclarativeItem
 
     QHash<PuzzlePiece*, QPair<QPointF, int> > _restorablePositions;
     PuzzlePiece *_mouseSubject;
-    QTimer *_autoRepainter;
-    int _autoRepaintRequests;
 
 public:
-    explicit PuzzleBoard(QDeclarativeItem *parent = 0);
+    explicit PuzzleGame(QObject *parent = 0);
     Q_INVOKABLE bool startGame(const QString &imageUrl, int rows, int cols, bool allowRotation);
     void setNeighbours(int x, int y);
     PuzzlePiece *find(const QPoint &puzzleCoordinates);
     void removePuzzleItem(PuzzlePiece *item);
 
-protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *e);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
-    bool sceneEvent(QEvent *);
-    void touchEvent(QTouchEvent*);
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-
+    void handleMousePress(Qt::MouseButton button, QPointF pos);
+    void handleMouseRelease(Qt::MouseButton button, QPointF pos);
+    void handleMouseMove(QPointF pos);
+    void handleTouchEvent(QTouchEvent *event);
+    
 signals:
     void toleranceChanged();
     void rotationToleranceChanged();
 
+    void animationStarting();
+    void animationStopped();
     void gameStarted();
     void gameWon();
     void loaded();
@@ -74,19 +74,15 @@ signals:
     void shuffleComplete();
     void assembleComplete();
     void restoreComplete();
-
-private slots:
-    void updateItem() { this->update(); }
-
+    
 public slots:
-    void enableAutoRepaint();
-    void disableAutoRepaint();
     Q_INVOKABLE void disable();
     Q_INVOKABLE void enable();
     Q_INVOKABLE void shuffle();
     Q_INVOKABLE void assemble();
     Q_INVOKABLE void restore();
     Q_INVOKABLE void deleteAllPieces();
+
 };
 
-#endif // PUZZLEBOARD_H
+#endif // PUZZLEGAME_H

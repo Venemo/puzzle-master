@@ -37,40 +37,44 @@ PuzzleBoard {
     property bool waitForHint: false
 
     id: gameBoard
-    tolerance: (- appSettings.snapDifficulty + 3) * 7
-    rotationTolerance: (- appSettings.snapDifficulty + 3) * 9
+    //tolerance: (- appSettings.snapDifficulty + 3) * 7
+    //rotationTolerance: (- appSettings.snapDifficulty + 3) * 9
     z: 0
-    onLoadProgressChanged: {
-        if (progress > 0)
-            progressDialog.text = qsTr("Creating puzzle piece %1 of %2").arg(progress).arg(appSettings.rows * appSettings.columns)
-        else
-            progressDialog.text = qsTr("The selected image is being processed.")
-    }
-    onLoaded: {
-        appEventHandler.adjustForPlaying()
-        progressDialog.close()
-    }
-    onGameStarted: {
-        menuDialog.shouldReenableGame = true
-        menuButtonPanel.open()
-    }
-    onGameWon: {
-        appEventHandler.adjustForUi()
-        menuButtonPanel.close()
-    }
     onVisibleChanged: {
         menuButtonPanel.visible = false
-        gameBoard.deleteAllPieces()
+        gameBoard.game.deleteAllPieces()
         appEventHandler.adjustForUi()
     }
-    onRestoreComplete: {
-        menuDialog.shouldReenableGame = true
-        gameBoard.isHintDisplayed = false
-        gameBoard.waitForHint = false
-    }
-    onAssembleComplete: {
-        gameBoard.isHintDisplayed = true
-        gameBoard.waitForHint = false
+
+    Connections {
+        target: gameBoard.game
+        onLoadProgressChanged: {
+            if (progress > 0)
+                progressDialog.text = qsTr("Creating puzzle piece %1 of %2").arg(progress).arg(appSettings.rows * appSettings.columns)
+            else
+                progressDialog.text = qsTr("The selected image is being processed.")
+        }
+        onLoaded: {
+            appEventHandler.adjustForPlaying()
+            progressDialog.close()
+        }
+        onGameStarted: {
+            menuDialog.shouldReenableGame = true
+            menuButtonPanel.open()
+        }
+        onGameWon: {
+            appEventHandler.adjustForUi()
+            menuButtonPanel.close()
+        }
+        onRestoreComplete: {
+            menuDialog.shouldReenableGame = true
+            gameBoard.isHintDisplayed = false
+            gameBoard.waitForHint = false
+        }
+        onAssembleComplete: {
+            gameBoard.isHintDisplayed = true
+            gameBoard.waitForHint = false
+        }
     }
 
     Image {
@@ -125,12 +129,12 @@ PuzzleBoard {
         contentWidth: menuDialogColumn.width
         onOpened: {
             appEventHandler.adjustForUi()
-            gameBoard.disable()
+            gameBoard.game.disable()
         }
         onClosed: {
             appEventHandler.adjustForPlaying()
             if (menuDialog.shouldReenableGame)
-                gameBoard.enable()
+                gameBoard.game.enable()
         }
         content: Column {
             id: menuDialogColumn
@@ -144,13 +148,13 @@ PuzzleBoard {
                         if (gameBoard.isHintDisplayed) {
                             gameBoard.waitForHint = true
                             menuDialog.close()
-                            gameBoard.restore()
+                            gameBoard.game.restore()
                         }
                         else {
                             menuDialog.shouldReenableGame = false
                             gameBoard.waitForHint = true
                             menuDialog.close()
-                            gameBoard.assemble()
+                            gameBoard.game.assemble()
                         }
                     }
                 }
@@ -231,7 +235,7 @@ PuzzleBoard {
         backgroundColor: "#99101010"
         enableBackgroundClicking: false
         onOpened: {
-            if (!gameBoard.startGame(decodeURI(imageChooser.selectedImageUrl), appSettings.rows, appSettings.columns, allowRotation)) {
+            if (!gameBoard.game.startGame(decodeURI(imageChooser.selectedImageUrl), appSettings.rows, appSettings.columns, allowRotation)) {
                 progressDialog.close()
                 failedToStartDialog.open()
             }
