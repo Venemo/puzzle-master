@@ -45,6 +45,9 @@ PuzzleBoard {
         gameBoard.game.deleteAllPieces()
         appEventHandler.adjustForUi()
     }
+    game.onGameAboutToBeWon: {
+        menuButtonPanel.close()
+    }
     game.onLoadProgressChanged: {
         if (progress > 0)
             progressDialog.text = qsTr("Creating puzzle piece %1 of %2").arg(progress).arg(appSettings.rows * appSettings.columns)

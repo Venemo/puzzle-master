@@ -69,6 +69,7 @@ signals:
     void animationStopped();
     void gameStarted();
     void gameWon();
+    void gameAboutToBeWon();
     void loaded();
     void loadProgressChanged(int progress);
     void shuffleComplete();

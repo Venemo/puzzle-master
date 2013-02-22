@@ -272,9 +272,14 @@ void PuzzleGame::assemble()
     }
 
     if (_puzzleItems.count() == 1)
+    {
+        emit this->gameAboutToBeWon();
         connect(group, SIGNAL(finished()), this, SIGNAL(gameWon()));
+    }
     else
+    {
         connect(group, SIGNAL(finished()), this, SIGNAL(assembleComplete()));
+    }
 
     emit this->animationStarting();
     connect(group, SIGNAL(finished()), this, SIGNAL(animationStopped()));
