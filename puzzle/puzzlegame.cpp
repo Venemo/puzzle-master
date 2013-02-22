@@ -474,7 +474,7 @@ void PuzzleGame::handleTouchEvent(QTouchEvent *event)
         else
         {
             if (item->previousTouchPointCount() != currentTouchPointCount)
-                item->startDrag(item->mapToParent(midPoint), true);
+                item->startDrag(item->mapToParent(midPoint) - item->pos(), true);
             item->doDrag(midPoint);
         }
 
