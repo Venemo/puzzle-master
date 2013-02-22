@@ -32,7 +32,8 @@ SOURCES += \
     puzzle/creation/imageprocessor.cpp \
     puzzle/puzzlepieceprimitive.cpp \
     puzzle/puzzlepiece.cpp \
-    puzzle/puzzlegame.cpp
+    puzzle/puzzlegame.cpp \
+    util.cpp
 
 HEADERS += \
     util.h \
