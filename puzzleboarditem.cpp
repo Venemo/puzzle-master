@@ -21,6 +21,7 @@
 #include <QSGSimpleTextureNode>
 #include <QSGTransformNode>
 #include <QSGTexture>
+#include <QTimer>
 
 #include "puzzleboarditem.h"
 #include "puzzle/puzzlepiece.h"
@@ -32,8 +33,10 @@ PuzzleBoardItem::PuzzleBoardItem(QQuickItem *parent)
     : QQuickItem(parent)
 {
     _game = new PuzzleGame(this);
+    _autoUpdater = new QTimer(this);
     _clearNodes = false;
     _previousPuzzlePieces = 0;
+    _autoUpdateRequests = 0;
 
     connect(this, SIGNAL(widthChanged()), this, SLOT(updateGame()));
     connect(this, SIGNAL(heightChanged()), this, SLOT(updateGame()));
@@ -41,15 +44,36 @@ PuzzleBoardItem::PuzzleBoardItem(QQuickItem *parent)
     connect(_game, SIGNAL(gameStarted()), this, SLOT(update()));
     connect(_game, SIGNAL(loaded()), this, SLOT(onGameLoaded()));
     connect(_game, SIGNAL(loadProgressChanged(int)), this, SLOT(update()));
+    connect(_game, SIGNAL(animationStarting()), this, SLOT(enableAutoUpdate()));
+    connect(_game, SIGNAL(animationStopped()), this, SLOT(disableAutoUpdate()));
+    connect(_autoUpdater, SIGNAL(timeout()), this, SLOT(update()));
 
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
     setFlag(QQuickItem::ItemHasContents, true);
+
+    _autoUpdater->setInterval(20);
 }
 
 PuzzleBoardItem::~PuzzleBoardItem()
 {
     qDeleteAll(_textures);
     _textures.clear();
+}
+
+void PuzzleBoardItem::enableAutoUpdate()
+{
+    _autoUpdateRequests++;
+
+    if (!_autoUpdater->isActive())
+        _autoUpdater->start();
+}
+
+void PuzzleBoardItem::disableAutoUpdate()
+{
+    _autoUpdateRequests--;
+
+    if (_autoUpdateRequests == 0 && _autoUpdater->isActive())
+        QTimer::singleShot(2000, _autoUpdater, SLOT(stop()));
 }
 
 void PuzzleBoardItem::updateGame()

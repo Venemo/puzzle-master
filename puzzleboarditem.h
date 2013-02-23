@@ -27,6 +27,7 @@
 class QSGTexture;
 class QSGSimpleTextureNode;
 class QSGTransformNode;
+class QTimer;
 class PuzzlePiece;
 class PuzzlePiecePrimitive;
 
@@ -40,9 +41,10 @@ class PuzzleBoardItem : public QQuickItem
     QMap<const PuzzlePiecePrimitive*, QSGSimpleTextureNode*> _strokeTextureNodes;
     QList<QSGTexture*> _textures;
     PuzzleGame *_game;
+    QTimer *_autoUpdater;
 
     bool _clearNodes, _zOrderChanged;
-    int _previousPuzzlePieces;
+    int _previousPuzzlePieces, _autoUpdateRequests;
 
 public:
     explicit PuzzleBoardItem(QQuickItem *parent = 0);
@@ -61,6 +63,8 @@ protected slots:
     void clearNodes();
     void onGameLoaded();
     void onZOrderChanged();
+    void enableAutoUpdate();
+    void disableAutoUpdate();
 
 signals:
     void gameChanged();
