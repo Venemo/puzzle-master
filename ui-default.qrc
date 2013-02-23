@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/default/components/Button.qml</file>
+        <file>qml/default/components/Dialog.qml</file>
+        <file>qml/default/components/Slider.qml</file>
+        <file>qml/default/components/VerticalSlider.qml</file>
+        <file>qml/default/components/Panel.qml</file>
+        <file>qml/default/components/VerticalScrollBar.qml</file>
+        <file>qml/default/components/style/ButtonStyle.qml</file>
+        <file>qml/default/components/style/GreenButtonStyle.qml</file>
+        <file>qml/default/components/style/RedButtonStyle.qml</file>
+        <file>qml/default/AppWindow.qml</file>
+        <file>qml/default/ImageChooser.qml</file>
+        <file>qml/default/GameBoard.qml</file>
+        <file>qml/default/OptionsDialog.qml</file>
+        <file>qml/default/GallerySelectorDialog.qml</file>
+        <file>qml/default/components/MenuButton.qml</file>
+        <file>qml/default/components/style/PurpleButtonStyle.qml</file>
+    </qresource>
+</RCC>

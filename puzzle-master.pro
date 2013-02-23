@@ -16,13 +16,6 @@
 #
 # Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
-QT = core gui declarative
-
-TARGET = puzzle-master
-TEMPLATE = app
-VERSION = 2.1.93
-DEFINES += APP_VERSION=\\\"$$VERSION\\\"
-
 SOURCES += \
     helpers/util.cpp \
     helpers/appsettings.cpp \
@@ -32,7 +25,9 @@ SOURCES += \
     puzzle/puzzlepieceprimitive.cpp \
     puzzle/puzzlepiece.cpp \
     puzzle/puzzlegame.cpp \
+    main.cpp \
     main_qt4.cpp \
+    puzzleboarditem.cpp \
     puzzleboarditem_qt4.cpp
 
 HEADERS += \
@@ -45,12 +40,42 @@ HEADERS += \
     puzzle/puzzlepieceprimitive.h \
     puzzle/puzzlepiece.h \
     puzzle/puzzlegame.h \
+    puzzleboarditem.h \
     puzzleboarditem_qt4.h
+
+QT = core
+
+lessThan(QT_MAJOR_VERSION, 5) {
+    lessThan(QT_MAJOR_VERSION, 4) | lessThan(QT_MINOR_VERSION, 7) {
+        error(IRC Chatter requires Qt 4.7 or newer but Qt $$[QT_VERSION] was detected.)
+    }
+    message(Puzzle Master is building on Qt 4)
+    QT += gui declarative
+    SOURCES -= \
+        main.cpp \
+        puzzleboarditem.cpp
+    HEADERS -= \
+        puzzleboarditem.h
+} else {
+    message(Puzzle Master is building on Qt 5)
+    QT += quick
+    SOURCES -= \
+        main_qt4.cpp \
+        puzzleboarditem_qt4.cpp
+    HEADERS -= \
+        puzzleboarditem_qt4.h
+}
+
+TARGET = puzzle-master
+TEMPLATE = app
+VERSION = 2.1.93
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 RESOURCES += \
     translations.qrc \
     pics-original.qrc \
     ui-default-qt4.qrc \
+    ui-default.qrc \
     background.qrc
 
 TRANSLATIONS += \
@@ -62,6 +87,8 @@ TRANSLATIONS += \
     translations/puzzle-master_he_IL.ts \
     translations/puzzle-master_tr_TR.ts \
     translations/puzzle-master_fi_FI.ts
+
+# Qt4 default UI
 
 OTHER_FILES += \
     qml/default-qt4/components/Panel.qml \
@@ -80,6 +107,26 @@ OTHER_FILES += \
     qml/default-qt4/components/VerticalScrollBar.qml \
     qml/default-qt4/components/MenuButton.qml \
     qml/default-qt4/components/style/PurpleButtonStyle.qml
+
+# Qt5 default UI
+
+OTHER_FILES += \
+    qml/default/components/Panel.qml \
+    qml/default/components/Dialog.qml \
+    qml/default/components/Button.qml \
+    qml/default/components/Slider.qml \
+    qml/default/components/style/ButtonStyle.qml \
+    qml/default/components/style/GreenButtonStyle.qml \
+    qml/default/components/style/RedButtonStyle.qml \
+    qml/default/AppWindow.qml \
+    qml/default/ImageChooser.qml \
+    qml/default/GameBoard.qml \
+    qml/default/OptionsDialog.qml \
+    qml/default/GallerySelectorDialog.qml \
+    qml/default/components/VerticalSlider.qml \
+    qml/default/components/VerticalScrollBar.qml \
+    qml/default/components/MenuButton.qml \
+    qml/default/components/style/PurpleButtonStyle.qml
 
 # Platforms
 

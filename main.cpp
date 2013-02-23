@@ -16,35 +16,18 @@
 //
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-#error Please use the Qt5 version of this file.
-#endif
-
-#include <QApplication>
-#include <QDeclarativeView>
-#include <QDeclarativeEngine>
-#include <QDeclarativeContext>
 #include <QSettings>
 #include <QLibraryInfo>
-#include <QDesktopWidget>
-#include <QFile>
-#include <QTranslator>
-#include <QDesktopServices>
 #include <QElapsedTimer>
+#include <QGuiApplication>
+#include <QQuickView>
+#include <QScreen>
+#include <QQmlContext>
+#include <QQmlEngine>
+#include <QDebug>
+#include <qqml.h>
 
-#if defined(HAVE_OPENGL)
-#include <QGLWidget>
-#endif
-
-#if defined(HAVE_APPLAUNCHERD)
-#include <MDeclarativeCache>
-#endif
-
-#if defined (HAVE_DEVICEINFO) || defined (Q_OS_SYMBIAN)
-#include <QSystemDeviceInfo>
-#endif
-
-#include "puzzleboarditem_qt4.h"
+#include "puzzleboarditem.h"
 #include "helpers/appsettings.h"
 #include "helpers/appeventhandler.h"
 #include "puzzle/puzzlegame.h"
@@ -58,10 +41,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     // Some settings
 
-#if Q_OS_BLACKBERRY
-    QCoreApplication::addLibraryPath("app/native/lib");
-    QCoreApplication::addLibraryPath("app/native/plugins");
-#endif
     QCoreApplication::addLibraryPath("./plugins");
     QCoreApplication::setApplicationName("Puzzle Master");
     QCoreApplication::setOrganizationName("Venemo");
@@ -71,21 +50,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     qDebug() << "Welcome to Puzzle Master! App version is" << QString(APP_VERSION);
 
-    // Initializing QApplication and QDeclarativeView
+    // Initializing app and view
 
-    QApplication *app;
-    QDeclarativeView *view;
-
-    // Using applauncherd when available
-
-#if defined(HAVE_APPLAUNCHERD)
-    qDebug() << "Puzzle Master is using MDeclarativeCache";
-    app = MDeclarativeCache::qApplication(argc, argv);
-    view = MDeclarativeCache::qDeclarativeView();
-#else
-    app = new QApplication(argc, argv);
-    view = new QDeclarativeView();
-#endif
+    QGuiApplication *app = new QGuiApplication(argc, argv);
+    QQuickView *view = new QQuickView();
 
     // Some wireup
 
@@ -98,37 +66,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     loadTranslations();
 
-    // Checking for OpenGL support
-
-#if defined(HAVE_OPENGL)
-    qDebug() << "Puzzle Master is using a QGLWidget viewport";
-    QGLWidget *glWidget = new QGLWidget(QGLFormat(QGL::DoubleBuffer), view);
-    view->setViewport(glWidget);
-#endif
-
     // Checking for rotation and touchscreen support
 
     bool allowRotation = true, allowScrollbars = true;
-
-#if defined (HAVE_DEVICEINFO_CHECK)
-    QtMobility::QSystemDeviceInfo *info = new QtMobility::QSystemDeviceInfo();
-    qDebug() << "Puzzle Master is running on... Manufacturer:" << info->manufacturer() << "Model:" << info->model() << "Product name:" << info->productName();
-    qDebug() << "Input method type is" << info->inputMethodType();
-    allowRotation = (info->inputMethodType() & QtMobility::QSystemDeviceInfo::MultiTouch) || (info->inputMethodType() & QtMobility::QSystemDeviceInfo::Mouse);
-    allowScrollbars = !(info->inputMethodType() & QtMobility::QSystemDeviceInfo::MultiTouch) && !(info->inputMethodType() & QtMobility::QSystemDeviceInfo::SingleTouch);
-    delete info;
-#endif
-
-#if defined (Q_OS_SYMBIAN)
-    QtMobility::QSystemDeviceInfo *info = new QtMobility::QSystemDeviceInfo();
-    if (info->manufacturer() == "Nokia" && info->model() == "N8-00")
-        allowRotation = false;
-    else if (QSysInfo::symbianVersion() < QSysInfo::SV_SF_3)
-        allowRotation = false;
-    else
-        allowRotation = true;
-    delete info;
-#endif
 
 #if defined(DISABLE_ROTATION)
     allowRotation = false;
@@ -151,26 +91,12 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     // Checking the size
 
-    QSize initialSize = QApplication::desktop()->screenGeometry(view).size();
+    QSize initialSize = view->screen()->size();
     qDebug() << "initial size is" << initialSize;
 
     // Setting up the view
 
-    view->setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing);
-    view->setOptimizationFlag(QGraphicsView::DontSavePainterState);
-    view->setRenderHint(QPainter::SmoothPixmapTransform, false);
-    view->setRenderHint(QPainter::Antialiasing, false);
-    view->setRenderHint(QPainter::HighQualityAntialiasing, false);
-#if Q_OS_BLACKBERRY_TABLET
-    view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-#else
-    view->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
-#endif
-    view->setAttribute(Qt::WA_OpaquePaintEvent);
-    view->setAttribute(Qt::WA_NoSystemBackground);
-    view->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
-    view->viewport()->setAttribute(Qt::WA_NoSystemBackground);
-    view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    view->setResizeMode(QQuickView::SizeRootObjectToView);
     view->rootContext()->setContextProperty("initialSize", initialSize);
     view->rootContext()->setContextProperty("allowRotation", allowRotation);
     view->rootContext()->setContextProperty("allowScrollbars", allowScrollbars);
@@ -181,8 +107,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qDebug() << Q_FUNC_INFO << "initialization took" << timer->elapsed() << "ms";
     timer->restart();
 
-    view->setSource(QUrl("qrc:/qml/default-qt4/AppWindow.qml"));
-    view->setWindowTitle(QObject::tr("Puzzle Master"));
+    view->setSource(QUrl("qrc:/qml/default/AppWindow.qml"));
+    view->setTitle(QObject::tr("Puzzle Master"));
     view->showFullScreen();
 
     qDebug() << Q_FUNC_INFO << "setting the qml source took" << timer->elapsed() << "ms";

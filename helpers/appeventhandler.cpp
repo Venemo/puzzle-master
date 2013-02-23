@@ -72,8 +72,11 @@ static unsigned int customRegion[4];
 static unsigned int defaultRegion[4] = { 0, 0, 0, 0 };
 #endif
 
-static QList<AppEventHandler*> appEventHandlers;
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 static QAbstractEventDispatcher::EventFilter previousNativeEventFilter = 0;
+#endif
+
+static QList<AppEventHandler*> appEventHandlers;
 
 bool AppEventHandler::nativeEventFilter(void *message)
 {
@@ -98,7 +101,12 @@ bool AppEventHandler::nativeEventFilter(void *message)
             emit appEventHandler->platformFileDialogAccepted(path);
     }
 #endif
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     return previousNativeEventFilter ? previousNativeEventFilter(message) : false;
+#else
+    Q_UNUSED(message)
+    return false;
+#endif
 }
 
 AppEventHandler::AppEventHandler(QObject *parent)
@@ -132,14 +140,15 @@ AppEventHandler::AppEventHandler(QObject *parent)
 
 #if defined(Q_OS_BLACKBERRY_TABLET)
     // On BlackBerry, this tells the platform to send us dialog events
-
     dialog_request_events(0);
 #endif
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     // Install the Qt event filter
     parent->installEventFilter(this);
     // Install the native event filter
     previousNativeEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(AppEventHandler::nativeEventFilter);
+#endif
 }
 
 AppEventHandler::~AppEventHandler()
