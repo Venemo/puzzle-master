@@ -46,6 +46,7 @@ class PuzzleBoardItem : public QQuickItem
 
 public:
     explicit PuzzleBoardItem(QQuickItem *parent = 0);
+    virtual ~PuzzleBoardItem();
     PuzzleGame *game() { return _game; }
 
 protected:

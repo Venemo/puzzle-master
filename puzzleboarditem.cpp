@@ -45,6 +45,12 @@ PuzzleBoardItem::PuzzleBoardItem(QQuickItem *parent)
     setFlag(QQuickItem::ItemHasContents, true);
 }
 
+PuzzleBoardItem::~PuzzleBoardItem()
+{
+    qDeleteAll(_textures);
+    _textures.clear();
+}
+
 void PuzzleBoardItem::updateGame()
 {
     _game->setWidth(this->width());
