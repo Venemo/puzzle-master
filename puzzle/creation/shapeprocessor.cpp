@@ -22,7 +22,7 @@
 #include <QDebug>
 
 #include "puzzle/creation/shapeprocessor.h"
-#include "util.h"
+#include "helpers/util.h"
 
 // This function generates puzzle piece shapes.
 // ----------

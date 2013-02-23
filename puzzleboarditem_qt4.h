@@ -16,6 +16,10 @@
 //
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
+#if QT_VERSION >= 0x050000
+#error Please use the Qt5 version of this file.
+#endif
+
 #ifndef PUZZLEBOARDITEM_H
 #define PUZZLEBOARDITEM_H
 

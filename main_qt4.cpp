@@ -16,6 +16,10 @@
 //
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
+#if QT_VERSION >= 0x050000
+#error Please use the Qt5 version of this file.
+#endif
+
 #include <QApplication>
 #include <QDeclarativeView>
 #include <QDeclarativeEngine>
@@ -40,7 +44,7 @@
 #include <QSystemDeviceInfo>
 #endif
 
-#include "puzzleboarditem.h"
+#include "puzzleboarditem_qt4.h"
 #include "helpers/appsettings.h"
 #include "helpers/appeventhandler.h"
 #include "puzzle/puzzlegame.h"

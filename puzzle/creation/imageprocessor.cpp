@@ -18,7 +18,7 @@
 
 #include <QPainter>
 #include "puzzle/creation/imageprocessor.h"
-#include "util.h"
+#include "helpers/util.h"
 
 namespace Puzzle
 {

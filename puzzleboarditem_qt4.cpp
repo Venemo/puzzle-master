@@ -22,7 +22,7 @@
 #include <QMap>
 #include <QGraphicsSceneMouseEvent>
 
-#include "puzzleboarditem.h"
+#include "puzzleboarditem_qt4.h"
 #include "puzzle/puzzlepieceprimitive.h"
 #include "puzzle/puzzlepiece.h"
 #include "puzzle/puzzlegame.h"
