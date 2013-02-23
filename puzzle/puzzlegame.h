@@ -83,6 +83,8 @@ public slots:
     Q_INVOKABLE void assemble();
     Q_INVOKABLE void restore();
     Q_INVOKABLE void deleteAllPieces();
+    void emitAnimationStarting() { emit this->animationStarting(); }
+    void emitAnimationStopped() { emit this->animationStopped(); }
 
 };
 

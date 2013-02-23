@@ -228,8 +228,10 @@ void PuzzlePiece::verifyPosition()
         anim->setDuration(150);
         anim->setEasingCurve(QEasingCurve(QEasingCurve::OutBounce));
 
+        board->emitAnimationStarting();
         this->disable();
         connect(anim, SIGNAL(finished()), this, SLOT(enable()));
+        connect(anim, SIGNAL(finished()), board, SLOT(emitAnimationStopped()));
         anim->start(QAbstractAnimation::DeleteWhenStopped);
     }
 }
