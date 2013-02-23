@@ -34,6 +34,16 @@ public:
     explicit PuzzleBoardItem(QQuickItem *parent = 0);
     PuzzleGame *game() { return _game; }
 
+protected:
+    QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void touchEvent(QTouchEvent *event);
+
+protected slots:
+    void updateGame();
+
 signals:
     void gameChanged();
 

@@ -22,4 +22,45 @@ PuzzleBoardItem::PuzzleBoardItem(QQuickItem *parent)
     : QQuickItem(parent)
 {
     _game = new PuzzleGame(this);
+
+    connect(this, SIGNAL(widthChanged()), this, SLOT(updateGame()));
+    connect(this, SIGNAL(heightChanged()), this, SLOT(updateGame()));
+}
+
+void PuzzleBoardItem::updateGame()
+{
+    _game->setWidth(this->width());
+    _game->setHeight(this->height());
+}
+
+void PuzzleBoardItem::mousePressEvent(QMouseEvent *event)
+{
+    event->accept();
+    _game->handleMousePress(event->button(), event->pos());
+    update();
+}
+
+void PuzzleBoardItem::mouseReleaseEvent(QMouseEvent *event)
+{
+    event->accept();
+    _game->handleMouseRelease(event->button(), event->pos());
+}
+
+void PuzzleBoardItem::mouseMoveEvent(QMouseEvent *event)
+{
+    event->accept();
+    _game->handleMouseMove(event->pos());
+    update();
+}
+
+void PuzzleBoardItem::touchEvent(QTouchEvent *event)
+{
+    event->accept();
+    _game->handleTouchEvent(event);
+    update();
+}
+
+QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *, UpdatePaintNodeData *)
+{
+    return 0;
 }
