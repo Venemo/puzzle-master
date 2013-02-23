@@ -198,6 +198,8 @@ bool PuzzleGame::startGame(const QString &imageUrl, int rows, int cols, bool all
             item->setTabStatus(statuses[i * rows + j]);
             item->setZValue(i * rows + j + 1);
 
+            item->setTransformOriginPoint(QPointF(randomInt(0, desc.unitSize.width()), randomInt(0, desc.unitSize.height())));
+
             connect(item, SIGNAL(noNeighbours()), this, SLOT(assemble()));
             _puzzleItems.insert(item);
 
@@ -254,7 +256,7 @@ void PuzzleGame::shuffle()
         rotateAnimation->setEasingCurve(easingCurve);
         par->addAnimation(rotateAnimation);
 
-        if (randomInt(0, 1))
+        if (randomInt(0, 2))
             item->raise();
     }
 
