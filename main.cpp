@@ -33,6 +33,7 @@
 #include "puzzle/puzzlegame.h"
 
 extern void loadTranslations();
+QQuickView *view;
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -53,7 +54,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     // Initializing app and view
 
     QGuiApplication *app = new QGuiApplication(argc, argv);
-    QQuickView *view = new QQuickView();
+    view = new QQuickView();
 
     // Some wireup
 

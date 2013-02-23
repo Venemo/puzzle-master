@@ -20,14 +20,24 @@
 #define PUZZLEBOARDITEM_H
 
 #include <QQuickItem>
+#include <QMap>
 
 #include "puzzle/puzzlegame.h"
+
+class QSGTexture;
+class QSGSimpleTextureNode;
+class QSGTransformNode;
+class PuzzlePiece;
+class PuzzlePiecePrimitive;
 
 class PuzzleBoardItem : public QQuickItem
 {
     Q_OBJECT
     Q_PROPERTY(PuzzleGame* game READ game NOTIFY gameChanged)
 
+    QMap<PuzzlePiece*, QSGTransformNode*> _transformNodes;
+    QMap<const PuzzlePiecePrimitive*, QSGSimpleTextureNode*> _pieceTextureNodes;
+    QMap<const PuzzlePiecePrimitive*, QSGSimpleTextureNode*> _strokeTextureNodes;
     PuzzleGame *_game;
 
 public:
