@@ -231,39 +231,3 @@ void AppEventHandler::displayPlatformFileDialog()
     qDebug() << "displayPlatformFileDialog is not implemented for the current platform";
 #endif
 }
-
-void AppEventHandler::enableFixedFPS()
-{
-    if (_fixedFPSTimer)
-    {
-        _fixedFPSTimer->stop();
-        _fixedFPSTimer->deleteLater();
-    }
-
-    _fixedFPSTimer = new QTimer(this);
-    _fixedFPSTimer->setInterval(20);
-
-    QDeclarativeView *view = static_cast<QDeclarativeView*>(parent());
-    view->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
-    connect(_fixedFPSTimer, SIGNAL(timeout()), view->viewport(), SLOT(update()));
-
-    _fixedFPSTimer->start();
-}
-
-void AppEventHandler::disableFixedFPS()
-{
-    if (_fixedFPSTimer)
-    {
-        _fixedFPSTimer->stop();
-        _fixedFPSTimer->deleteLater();
-        _fixedFPSTimer = 0;
-    }
-
-    QDeclarativeView *view = static_cast<QDeclarativeView*>(parent());
-
-#if Q_OS_BLACKBERRY_TABLET
-    view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-#else
-    view->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
-#endif
-}

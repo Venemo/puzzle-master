@@ -50,8 +50,6 @@ signals:
 public slots:
     void adjustForPlaying();
     void adjustForUi();
-    Q_INVOKABLE void enableFixedFPS();
-    Q_INVOKABLE void disableFixedFPS();
     
 };
 
