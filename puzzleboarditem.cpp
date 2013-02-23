@@ -37,9 +37,10 @@ PuzzleBoardItem::PuzzleBoardItem(QQuickItem *parent)
 
     connect(this, SIGNAL(widthChanged()), this, SLOT(updateGame()));
     connect(this, SIGNAL(heightChanged()), this, SLOT(updateGame()));
-    connect(_game, SIGNAL(gameStarted()), this, SLOT(update()));
-    connect(_game, SIGNAL(loadProgressChanged(int)), this, SLOT(update()));
     connect(this, SIGNAL(visibleChanged()), this, SLOT(clearNodes()));
+    connect(_game, SIGNAL(gameStarted()), this, SLOT(update()));
+    connect(_game, SIGNAL(loaded()), this, SLOT(onGameLoaded()));
+    connect(_game, SIGNAL(loadProgressChanged(int)), this, SLOT(update()));
 
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
     setFlag(QQuickItem::ItemHasContents, true);
@@ -82,6 +83,20 @@ void PuzzleBoardItem::touchEvent(QTouchEvent *event)
     event->accept();
     _game->handleTouchEvent(event);
     update();
+}
+
+void PuzzleBoardItem::onGameLoaded()
+{
+    foreach (PuzzlePiece *piece, _game->puzzleItems())
+    {
+        connect(piece, SIGNAL(zValueChanged()), this, SLOT(onZOrderChanged()));
+    }
+}
+
+void PuzzleBoardItem::onZOrderChanged()
+{
+    // This will make the updatePaintNode() method rearrange the pieces
+    _zOrderChanged = true;
 }
 
 void PuzzleBoardItem::clearNodes()
@@ -144,15 +159,39 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
             {
                 // Create a new transform node
                 // (Child nodes will be appended to it later)
-                _transformNodes[piece] = new QSGTransformNode();
-                _transformNodes[piece]->setFlag(QSGNode::OwnedByParent);
+                QSGTransformNode *trn = new QSGTransformNode();
+                trn->setFlag(QSGNode::OwnedByParent);
+                mainNode->appendChildNode(trn);
+                _transformNodes[piece] = trn;
+
+                // Create child nodes for its primitives if they don't exist yet
+                foreach (const PuzzlePiecePrimitive *pr, piece->primitives())
+                {
+                    QSGTexture *strokeTex = view->createTextureFromImage(pr->stroke().toImage());
+                    QSGSimpleTextureNode *strokeNode = new QSGSimpleTextureNode();
+                    strokeNode->setRect(pr->strokeOffset().x(), pr->strokeOffset().y(), pr->stroke().width(), pr->stroke().height());
+                    strokeNode->setTexture(strokeTex);
+                    strokeNode->setFlag(QSGNode::OwnedByParent);
+                    _strokeTextureNodes[pr] = strokeNode;
+                    _textures.append(strokeTex);
+                    trn->appendChildNode(strokeNode);
+
+                    QSGTexture *pieceTex = view->createTextureFromImage(pr->pixmap().toImage());
+                    QSGSimpleTextureNode *pieceNode = new QSGSimpleTextureNode();
+                    pieceNode->setRect(pr->pixmapOffset().x(), pr->pixmapOffset().y(), pr->pixmap().width(), pr->pixmap().height());
+                    pieceNode->setTexture(pieceTex);
+                    pieceNode->setFlag(QSGNode::OwnedByParent);
+                    _pieceTextureNodes[pr] = pieceNode;
+                    _textures.append(pieceTex);
+                    trn->appendChildNode(pieceNode);
+                }
             }
         }
     }
 
-    // TODO: optimize out this if the order of the pieces hasn't changed
-    // Remove all child nodes from the main node
-    mainNode->removeAllChildNodes();
+    // Only rearrange the transform nodes if the Z value of a puzzle piece has changed
+    if (_zOrderChanged)
+        mainNode->removeAllChildNodes();
 
     foreach (PuzzlePiece *piece, puzzleItems)
     {
@@ -163,35 +202,15 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
         // Find the transform node of this puzzle piece
         QSGTransformNode *trn = _transformNodes[piece];
         trn->setMatrix(QMatrix4x4(transform));
-        mainNode->appendChildNode(trn);
 
-        // Create child nodes for its primitives if they don't exist yet
-        foreach (const PuzzlePiecePrimitive *pr, piece->primitives())
-        {
-            if (!_pieceTextureNodes.contains(pr))
-            {
-                QSGTexture *pieceTex = view->createTextureFromImage(pr->pixmap().toImage());
-                QSGSimpleTextureNode *pieceNode = new QSGSimpleTextureNode();
-                pieceNode->setRect(pr->pixmapOffset().x(), pr->pixmapOffset().y(), pr->pixmap().width(), pr->pixmap().height());
-                pieceNode->setTexture(pieceTex);
-                pieceNode->setFlag(QSGNode::OwnedByParent);
-                _pieceTextureNodes[pr] = pieceNode;
-                _textures.append(pieceTex);
-            }
+        // Only rearrange the transform nodes if the Z value of a puzzle piece has changed
+        if (_zOrderChanged)
+            mainNode->appendChildNode(trn);
 
-            if (!_strokeTextureNodes.contains(pr))
-            {
-                QSGTexture *strokeTex = view->createTextureFromImage(pr->stroke().toImage());
-                QSGSimpleTextureNode *strokeNode = new QSGSimpleTextureNode();
-                strokeNode->setRect(pr->strokeOffset().x(), pr->strokeOffset().y(), pr->stroke().width(), pr->stroke().height());
-                strokeNode->setTexture(strokeTex);
-                strokeNode->setFlag(QSGNode::OwnedByParent);
-                _strokeTextureNodes[pr] = strokeNode;
-                _textures.append(strokeTex);
-            }
-        }
-
-        // TODO: optimize this out if the primitives of the piece haven't changed
+        // If the piece count didn't change then the primitives of each piece didn't change either
+        // therefore it is not necessary to adjust them here.
+        if (_previousPuzzlePieces == puzzleItems.count())
+            continue;
 
         // Remove all child nodes (so that they can be readded in the correct order)
         trn->removeAllChildNodes();
@@ -213,6 +232,7 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
         }
     }
 
+    _zOrderChanged = false;
     _previousPuzzlePieces = puzzleItems.count();
     return mainNode;
 }

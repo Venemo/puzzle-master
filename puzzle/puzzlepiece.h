@@ -40,7 +40,7 @@ class PuzzlePiece : public QObject
     GENPROPERTY_S(QPointF, _dragStart, dragStart, setDragStart)
     GENPROPERTY_R(QPointF, _transformOriginPoint, transformOriginPoint)
     GENPROPERTY_S(qreal, _rotation, rotation, setRotation)
-    GENPROPERTY_S(int, _zValue, zValue, setZValue)
+    GENPROPERTY_F(int, _zValue, zValue, setZValue, zValueChanged)
     GENPROPERTY_S(int, _previousTouchPointCount, previousTouchPointCount, setPreviousTouchPointCount)
     GENPROPERTY_S(unsigned, _tabStatus, tabStatus, setTabStatus)
     GENPROPERTY_R(bool, _dragging, dragging)
@@ -82,6 +82,7 @@ public:
 
 signals:
     void noNeighbours();
+    void zValueChanged();
 
 protected:
     void verifyPosition();

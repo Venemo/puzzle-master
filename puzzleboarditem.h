@@ -41,7 +41,7 @@ class PuzzleBoardItem : public QQuickItem
     QList<QSGTexture*> _textures;
     PuzzleGame *_game;
 
-    bool _clearNodes;
+    bool _clearNodes, _zOrderChanged;
     int _previousPuzzlePieces;
 
 public:
@@ -59,6 +59,8 @@ protected:
 protected slots:
     void updateGame();
     void clearNodes();
+    void onGameLoaded();
+    void onZOrderChanged();
 
 signals:
     void gameChanged();
