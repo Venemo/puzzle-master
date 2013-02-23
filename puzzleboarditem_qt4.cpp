@@ -102,7 +102,7 @@ void PuzzleBoardItem::disableAutoRepaint()
 {
     _autoRepaintRequests--;
 
-    if (_autoRepaintRequests && _autoRepainter->isActive())
+    if (_autoRepaintRequests == 0 && _autoRepainter->isActive())
         QTimer::singleShot(2000, _autoRepainter, SLOT(stop()));
 }
 
