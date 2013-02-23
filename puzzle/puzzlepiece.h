@@ -22,7 +22,7 @@
 #include <QObject>
 #include <QSet>
 
-#include "util.h"
+#include "helpers/util.h"
 #include "puzzle/creation/shapeprocessor.h"
 
 class PuzzlePiecePrimitive;

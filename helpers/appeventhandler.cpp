@@ -59,7 +59,7 @@ static dialog_instance_t bbDialog = 0;
 static const char *bbDialogFilters[] = { "*.jpg" };
 #endif
 
-#include "appeventhandler.h"
+#include "helpers/appeventhandler.h"
 
 #if defined(HAVE_SWIPELOCK)
 static Atom customRegionAtom = 0;

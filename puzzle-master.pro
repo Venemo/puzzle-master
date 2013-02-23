@@ -24,21 +24,21 @@ VERSION = 2.1.93
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += \
-    main.cpp \
-    appsettings.cpp \
-    appeventhandler.cpp \
+    helpers/util.cpp \
+    helpers/appsettings.cpp \
+    helpers/appeventhandler.cpp \
     puzzleboarditem.cpp \
     puzzle/creation/shapeprocessor.cpp \
     puzzle/creation/imageprocessor.cpp \
     puzzle/puzzlepieceprimitive.cpp \
     puzzle/puzzlepiece.cpp \
     puzzle/puzzlegame.cpp \
-    util.cpp
+    main.cpp
 
 HEADERS += \
-    util.h \
-    appsettings.h \
-    appeventhandler.h \
+    helpers/util.h \
+    helpers/appsettings.h \
+    helpers/appeventhandler.h \
     puzzleboarditem.h \
     puzzle/creation/shapeprocessor.h \
     puzzle/creation/imageprocessor.h \

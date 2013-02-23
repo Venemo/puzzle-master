@@ -24,7 +24,7 @@
 #include <QByteArray>
 #include <QStringList>
 
-#include "util.h"
+#include "helpers/util.h"
 
 // Setting property
 #define SETTINGPROPERTY(type, name, settername, signalname, settingKey, defaultValue) \

@@ -41,8 +41,8 @@
 #endif
 
 #include "puzzleboarditem.h"
-#include "appsettings.h"
-#include "appeventhandler.h"
+#include "helpers/appsettings.h"
+#include "helpers/appeventhandler.h"
 #include "puzzle/puzzlegame.h"
 
 extern void loadTranslations();

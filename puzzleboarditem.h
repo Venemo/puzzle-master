@@ -21,7 +21,6 @@
 
 #include <QDeclarativeItem>
 
-#include "util.h"
 #include "puzzle/puzzlegame.h"
 
 class QTimer;
