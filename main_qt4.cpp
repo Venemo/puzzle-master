@@ -16,10 +16,6 @@
 //
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-#error Please use the Qt5 version of this file.
-#endif
-
 #include <QApplication>
 #include <QDeclarativeView>
 #include <QDeclarativeEngine>
