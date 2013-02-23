@@ -1,4 +1,4 @@
-
+﻿
 // This file is part of Puzzle Master, a fun and addictive jigsaw puzzle game.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,19 @@
 //
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
-#include <QDeclarativeView>
-#include <QDesktopWidget>
-#include <QApplication>
 #include <QEvent>
 #include <QDebug>
 #include <QFile>
 #include <QAbstractEventDispatcher>
 #include <QTimer>
+
+#if QT_VERSION < 0x050000
+#include <QWidget>
+#include <QApplication>
+#include <QDesktopWidget>
+#elif FORCE_PLATFORM_FILE_DIALOG
+#include <QWidget>
+#endif
 
 #if defined(HAVE_SWIPELOCK) && !defined(Q_WS_X11)
 #error What were you thinking? Swipe lock only works on MeeGo & X11
@@ -96,9 +101,8 @@ bool AppEventHandler::nativeEventFilter(void *message)
     return previousNativeEventFilter ? previousNativeEventFilter(message) : false;
 }
 
-AppEventHandler::AppEventHandler(QDeclarativeView *parent)
+AppEventHandler::AppEventHandler(QObject *parent)
     : QObject(parent)
-    , _fixedFPSTimer(0)
 {
     // Tell the static funtion to care about this instance
     appEventHandlers.append(this);

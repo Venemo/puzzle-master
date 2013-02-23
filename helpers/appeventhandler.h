@@ -19,7 +19,7 @@
 #ifndef APPEVENTHANDLER_H
 #define APPEVENTHANDLER_H
 
-#include <QDeclarativeView>
+#include <QObject>
 
 class QTimer;
 
@@ -30,10 +30,8 @@ class AppEventHandler : public QObject
 {
     Q_OBJECT
 
-    QTimer *_fixedFPSTimer;
-
 public:
-    explicit AppEventHandler(QDeclarativeView *parent = 0);
+    explicit AppEventHandler(QObject *parent = 0);
     ~AppEventHandler();
     static bool nativeEventFilter(void *message);
     bool eventFilter(QObject *obj, QEvent *event);
