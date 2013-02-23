@@ -41,6 +41,9 @@ QPixmap ImageProcessorPrivate::processImage(const QString &url, int width, int h
         url2.remove("file:///");
     else
         url2.remove("file://");
+    url2 = url2.replace(QString("qrc:/"), QString(":/"));
+
+
     QPixmap pix(url2);
 
     if (pix.isNull())
