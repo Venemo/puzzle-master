@@ -32,12 +32,14 @@ PuzzleBoardItem::PuzzleBoardItem(QQuickItem *parent)
     : QQuickItem(parent)
 {
     _game = new PuzzleGame(this);
-    _cleanNodes = false;
+    _clearNodes = false;
+    _previousPuzzlePieces = 0;
 
     connect(this, SIGNAL(widthChanged()), this, SLOT(updateGame()));
     connect(this, SIGNAL(heightChanged()), this, SLOT(updateGame()));
     connect(_game, SIGNAL(gameStarted()), this, SLOT(update()));
     connect(_game, SIGNAL(loadProgressChanged(int)), this, SLOT(update()));
+    connect(this, SIGNAL(visibleChanged()), this, SLOT(clearNodes()));
 
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
     setFlag(QQuickItem::ItemHasContents, true);
@@ -76,9 +78,30 @@ void PuzzleBoardItem::touchEvent(QTouchEvent *event)
     update();
 }
 
+void PuzzleBoardItem::clearNodes()
+{
+    // At the next update, delete all the SG nodes
+    _clearNodes = true;
+    update();
+}
+
 QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData *)
 {
-    // Create the main node if not existing yet
+    // If all the nodes need to be cleared, delete the main node
+    // Since all the others have OwnedByParent they will be deleted too.
+    if (_clearNodes && mainNode)
+    {
+        delete mainNode;
+        mainNode = 0;
+        qDeleteAll(_textures);
+        _textures.clear();
+        _transformNodes.clear();
+        _pieceTextureNodes.clear();
+        _strokeTextureNodes.clear();
+        _clearNodes = false;
+    }
+
+    // Create the main node if it doesn't exist yet
     if (!mainNode)
     {
         mainNode = new QSGNode();
@@ -89,39 +112,54 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
     QList<PuzzlePiece*> puzzleItems = _game->puzzleItems().toList();
     qSort(puzzleItems.begin(), puzzleItems.end(), PuzzlePiece::puzzleItemAscLessThan);
 
-    // Remove all child nodes from the main node
-    mainNode->removeAllChildNodes();
-
-    // Iterate through the previously known puzzle pieces
-    foreach (PuzzlePiece *piece, _transformNodes.keys())
+    // If the number of pieces has changed
+    if (_previousPuzzlePieces != puzzleItems.count())
     {
-        // If the piece no longer exists in the game, remove the node
-        if (!puzzleItems.contains(piece))
+        // Check for removed puzzle pieces
+        foreach (PuzzlePiece *piece, _transformNodes.keys())
         {
-            QSGTransformNode *trn = _transformNodes[piece];
-            _transformNodes.remove(piece);
+            // If the piece no longer exists in the game, remove the node
+            if (!puzzleItems.contains(piece))
+            {
+                QSGTransformNode *trn = _transformNodes[piece];
+                _transformNodes.remove(piece);
+                mainNode->removeChildNode(trn);
 
-            qDebug() << "removing transform node for" << piece->puzzleCoordinates();
-            trn->removeAllChildNodes();
-            delete trn;
+                // Remove its child nodes, those will be appended to another transform node
+                trn->removeAllChildNodes();
+                delete trn;
+            }
+        }
+
+        // Check for newly added puzzle pieces
+        foreach (PuzzlePiece *piece, puzzleItems)
+        {
+            if (!_transformNodes.contains(piece))
+            {
+                // Create a new transform node
+                // (Child nodes will be appended to it later)
+                _transformNodes[piece] = new QSGTransformNode();
+                _transformNodes[piece]->setFlag(QSGNode::OwnedByParent);
+            }
         }
     }
 
+    // TODO: optimize out this if the order of the pieces hasn't changed
+    // Remove all child nodes from the main node
+    mainNode->removeAllChildNodes();
+
     foreach (PuzzlePiece *piece, puzzleItems)
     {
+        // Calculate the transformation of this puzzle piece
         QPointF p = piece->mapToParent(QPointF(0, 0));
         QTransform transform = QTransform::fromTranslate(p.x(), p.y()).rotate(piece->rotation());
 
-        if (!_transformNodes.contains(piece))
-        {
-            _transformNodes[piece] = new QSGTransformNode();
-            _transformNodes[piece]->setFlag(QSGNode::OwnedByParent);
-        }
-
+        // Find the transform node of this puzzle piece
         QSGTransformNode *trn = _transformNodes[piece];
         trn->setMatrix(QMatrix4x4(transform));
         mainNode->appendChildNode(trn);
 
+        // Create child nodes for its primitives if they don't exist yet
         foreach (const PuzzlePiecePrimitive *pr, piece->primitives())
         {
             if (!_pieceTextureNodes.contains(pr))
@@ -132,6 +170,7 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
                 pieceNode->setTexture(pieceTex);
                 pieceNode->setFlag(QSGNode::OwnedByParent);
                 _pieceTextureNodes[pr] = pieceNode;
+                _textures.append(pieceTex);
             }
 
             if (!_strokeTextureNodes.contains(pr))
@@ -142,11 +181,16 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
                 strokeNode->setTexture(strokeTex);
                 strokeNode->setFlag(QSGNode::OwnedByParent);
                 _strokeTextureNodes[pr] = strokeNode;
+                _textures.append(strokeTex);
             }
         }
 
+        // TODO: optimize this out if the primitives of the piece haven't changed
+
+        // Remove all child nodes (so that they can be readded in the correct order)
         trn->removeAllChildNodes();
 
+        // Update the stroke nodes and append them
         foreach (const PuzzlePiecePrimitive *pr, piece->primitives())
         {
             QSGSimpleTextureNode *strokeNode = _strokeTextureNodes[pr];
@@ -154,6 +198,7 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
             trn->appendChildNode(strokeNode);
         }
 
+        // Update the piece nodes and append them
         foreach (const PuzzlePiecePrimitive *pr, piece->primitives())
         {
             QSGSimpleTextureNode *pieceNode = _pieceTextureNodes[pr];
@@ -162,5 +207,6 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
         }
     }
 
+    _previousPuzzlePieces = puzzleItems.count();
     return mainNode;
 }

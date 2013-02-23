@@ -38,7 +38,11 @@ class PuzzleBoardItem : public QQuickItem
     QMap<PuzzlePiece*, QSGTransformNode*> _transformNodes;
     QMap<const PuzzlePiecePrimitive*, QSGSimpleTextureNode*> _pieceTextureNodes;
     QMap<const PuzzlePiecePrimitive*, QSGSimpleTextureNode*> _strokeTextureNodes;
+    QList<QSGTexture*> _textures;
     PuzzleGame *_game;
+
+    bool _clearNodes;
+    int _previousPuzzlePieces;
 
 public:
     explicit PuzzleBoardItem(QQuickItem *parent = 0);
@@ -53,6 +57,7 @@ protected:
 
 protected slots:
     void updateGame();
+    void clearNodes();
 
 signals:
     void gameChanged();
