@@ -137,6 +137,9 @@ bool PuzzleGame::startGame(const QString &imageUrl, int rows, int cols, bool all
     shapeProcessor->resetPerfCounters();
     Puzzle::Creation::generatePuzzlePieceStatuses(rows, cols, statuses);
 
+    emit this->newGameStarting();
+    QCoreApplication::instance()->processEvents();
+
     for (int i = 0; i < cols; i++)
     {
         for (int j = 0; j < rows; j++)

@@ -75,6 +75,7 @@ signals:
     void shuffleComplete();
     void assembleComplete();
     void restoreComplete();
+    void newGameStarting();
     
 public slots:
     Q_INVOKABLE void disable();

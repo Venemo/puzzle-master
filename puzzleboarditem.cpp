@@ -41,6 +41,7 @@ PuzzleBoardItem::PuzzleBoardItem(QQuickItem *parent)
     connect(this, SIGNAL(widthChanged()), this, SLOT(updateGame()));
     connect(this, SIGNAL(heightChanged()), this, SLOT(updateGame()));
     connect(this, SIGNAL(visibleChanged()), this, SLOT(clearNodes()));
+    connect(this, SIGNAL(newGameStarting()), this, SLOT(clearNodes()));
     connect(_game, SIGNAL(gameStarted()), this, SLOT(update()));
     connect(_game, SIGNAL(loaded()), this, SLOT(onGameLoaded()));
     connect(_game, SIGNAL(loadProgressChanged(int)), this, SLOT(update()));
@@ -73,7 +74,10 @@ void PuzzleBoardItem::disableAutoUpdate()
     _autoUpdateRequests--;
 
     if (_autoUpdateRequests == 0 && _autoUpdater->isActive())
-        QTimer::singleShot(2000, _autoUpdater, SLOT(stop()));
+    {
+        _autoUpdater->stop();
+        update();
+    }
 }
 
 void PuzzleBoardItem::updateGame()
@@ -86,7 +90,8 @@ void PuzzleBoardItem::mousePressEvent(QMouseEvent *event)
 {
     event->accept();
     _game->handleMousePress(event->button(), event->pos());
-    update();
+    if (!_autoUpdater->isActive())
+        update();
 }
 
 void PuzzleBoardItem::mouseReleaseEvent(QMouseEvent *event)
@@ -99,14 +104,16 @@ void PuzzleBoardItem::mouseMoveEvent(QMouseEvent *event)
 {
     event->accept();
     _game->handleMouseMove(event->pos());
-    update();
+    if (!_autoUpdater->isActive())
+        update();
 }
 
 void PuzzleBoardItem::touchEvent(QTouchEvent *event)
 {
     event->accept();
     _game->handleTouchEvent(event);
-    update();
+    if (!_autoUpdater->isActive())
+        update();
 }
 
 void PuzzleBoardItem::onGameLoaded()
@@ -136,9 +143,13 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
     // Since all the others have OwnedByParent they will be deleted too.
     if (_clearNodes && mainNode)
     {
-        delete mainNode;
-        mainNode = 0;
+        foreach (QSGTransformNode *trn, _transformNodes.values())
+        {
+            mainNode->removeChildNode(trn);
+        }
+
         qDeleteAll(_textures);
+        qDeleteAll(_transformNodes.values());
         _textures.clear();
         _transformNodes.clear();
         _pieceTextureNodes.clear();
@@ -161,6 +172,7 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
     if (_previousPuzzlePieces != puzzleItems.count())
     {
         // Check for removed puzzle pieces
+        // IDEA: PuzzlePiece should have a signal for this and then we would only need to iterate through the removed pieces
         foreach (PuzzlePiece *piece, _transformNodes.keys())
         {
             // If the piece no longer exists in the game, remove the node
@@ -177,6 +189,7 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
         }
 
         // Check for newly added puzzle pieces
+        // IDEA: PuzzleGame should have a signal for this and we would only need to iterate through the added pieces
         foreach (PuzzlePiece *piece, puzzleItems)
         {
             if (!_transformNodes.contains(piece))
@@ -216,6 +229,15 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
     // Only rearrange the transform nodes if the Z value of a puzzle piece has changed
     if (_zOrderChanged)
         mainNode->removeAllChildNodes();
+
+    // IDEA: first iterate through only the elements whose transformation is changed
+    //       for this, we need a signal in PuzzleGame (called pieceTransformationChanged) which tells which elements are changed
+
+    // IDEA: then iterate through the items whose primitives are changed
+    //       for this, we need a signal in PuzzlePiece (called primitivesChanged)
+
+    // IDEA: then iterate through the items to rearrange their Z values, if necessary
+    //       in this case, the sorting is also only needed when the Z values changed
 
     foreach (PuzzlePiece *piece, puzzleItems)
     {
