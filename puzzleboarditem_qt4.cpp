@@ -63,7 +63,8 @@ bool PuzzleBoardItem::sceneEvent(QEvent *event)
         QTouchEvent *te = static_cast<QTouchEvent*>(event);
         event->accept();
         _game->handleTouchEvent(te);
-        update();
+        if (!_autoRepainter->isActive())
+            update();
         return true;
     }
 
@@ -74,7 +75,8 @@ void PuzzleBoardItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     event->accept();
     _game->handleMousePress(event->button(), event->pos());
-    update();
+    if (!_autoRepainter->isActive())
+        update();
 }
 
 void PuzzleBoardItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -87,7 +89,8 @@ void PuzzleBoardItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     event->accept();
     _game->handleMouseMove(event->pos());
-    update();
+    if (!_autoRepainter->isActive())
+        update();
 }
 
 void PuzzleBoardItem::enableAutoRepaint()
@@ -103,7 +106,7 @@ void PuzzleBoardItem::disableAutoRepaint()
     _autoRepaintRequests--;
 
     if (_autoRepaintRequests == 0 && _autoRepainter->isActive())
-        QTimer::singleShot(2000, _autoRepainter, SLOT(stop()));
+        _autoRepainter->stop();
 }
 
 void PuzzleBoardItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
