@@ -106,7 +106,10 @@ void PuzzleBoardItem::disableAutoRepaint()
     _autoRepaintRequests--;
 
     if (_autoRepaintRequests == 0 && _autoRepainter->isActive())
+    {
         _autoRepainter->stop();
+        update();
+    }
 }
 
 void PuzzleBoardItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
