@@ -27,6 +27,7 @@
 #include <QTranslator>
 #include <QDesktopServices>
 #include <QElapsedTimer>
+#include <QDebug>
 
 #if defined(HAVE_OPENGL)
 #include <QGLWidget>

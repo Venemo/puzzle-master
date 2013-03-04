@@ -16,6 +16,8 @@
 #
 # Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
+QT = core
+
 SOURCES += \
     helpers/util.cpp \
     helpers/appsettings.cpp \
@@ -24,11 +26,7 @@ SOURCES += \
     puzzle/creation/imageprocessor.cpp \
     puzzle/puzzlepieceprimitive.cpp \
     puzzle/puzzlepiece.cpp \
-    puzzle/puzzlegame.cpp \
-    main.cpp \
-    main_qt4.cpp \
-    puzzleboarditem.cpp \
-    puzzleboarditem_qt4.cpp
+    puzzle/puzzlegame.cpp
 
 HEADERS += \
     helpers/util.h \
@@ -39,31 +37,31 @@ HEADERS += \
     puzzle/creation/helpertypes.h \
     puzzle/puzzlepieceprimitive.h \
     puzzle/puzzlepiece.h \
-    puzzle/puzzlegame.h \
-    puzzleboarditem.h \
-    puzzleboarditem_qt4.h
-
-QT = core
+    puzzle/puzzlegame.h
 
 lessThan(QT_MAJOR_VERSION, 5) {
     lessThan(QT_MAJOR_VERSION, 4) | lessThan(QT_MINOR_VERSION, 7) {
-        error(IRC Chatter requires Qt 4.7 or newer but Qt $$[QT_VERSION] was detected.)
+        error(Puzzle Master requires Qt 4.7 or newer but Qt $$[QT_VERSION] was detected.)
     }
     message(Puzzle Master is building on Qt 4)
     QT += gui declarative
-    SOURCES -= \
-        main.cpp \
-        puzzleboarditem.cpp
-    HEADERS -= \
-        puzzleboarditem.h
+    SOURCES += \
+        main_qt4.cpp \
+        puzzleboarditem_qt4.cpp
+    HEADERS += \
+        puzzleboarditem_qt4.h
+    RESOURCES += \
+        ui-default-qt4.qrc
 } else {
     message(Puzzle Master is building on Qt 5)
     QT += quick
-    SOURCES -= \
-        main_qt4.cpp \
-        puzzleboarditem_qt4.cpp
-    HEADERS -= \
-        puzzleboarditem_qt4.h
+    SOURCES += \
+        main.cpp \
+        puzzleboarditem.cpp
+    HEADERS += \
+        puzzleboarditem.h
+    RESOURCES += \
+        ui-default.qrc
 }
 
 TARGET = puzzle-master
@@ -74,8 +72,6 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 RESOURCES += \
     translations.qrc \
     pics-original.qrc \
-    ui-default-qt4.qrc \
-    ui-default.qrc \
     background.qrc
 
 TRANSLATIONS += \
