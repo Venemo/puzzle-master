@@ -61,13 +61,7 @@ QStringList AppSettings::loadCustomImages()
 
     foreach (const QString &url, list)
     {
-        QString url2(url);
-        if (url.contains(QRegExp("/[A-Za-z]:/")))
-            url2.remove("file:///");
-        else
-            url2.remove("file://");
-
-        if (!QFile::exists(url) && !QFile::exists(url2))
+        if (!QFile::exists(url))
         {
             qDebug() << "removing saved custom image" << url << "because it doesn't exist";
             list.removeAll(url);
@@ -108,14 +102,9 @@ bool AppSettings::addCustomImage(const QString &url)
     return false;
 }
 
-bool AppSettings::removeCustomImage(const QString &u)
+bool AppSettings::removeCustomImage(const QString &url)
 {
-    QString url = u;
     QStringList list = loadCustomImages();
-
-    // Try with the file:// prefix - some older versions saved like that
-    if (!list.contains(url))
-        url = "file://" + url;
 
     if (list.contains(url))
     {

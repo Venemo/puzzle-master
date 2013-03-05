@@ -26,7 +26,7 @@ Panel {
         imageChooser.close()
     }
 
-    property string selectedImageUrl: ""
+    property string selectedImagePath: ""
     property int columnNumber: 3
     property variant fileSelectorDialog: null
 
@@ -190,32 +190,28 @@ Panel {
                 id: imagesModel
                 Component.onCompleted: {
                     // These are the built-in images
-                    imagesModel.append({ url: ":/pics/image1.jpg" });
-                    imagesModel.append({ url: ":/pics/image2.jpg" });
-                    imagesModel.append({ url: ":/pics/image3.jpg" });
-                    imagesModel.append({ url: ":/pics/image4.jpg" });
-                    imagesModel.append({ url: ":/pics/image10.jpg" });
-                    imagesModel.append({ url: ":/pics/image6.jpg" });
-                    imagesModel.append({ url: ":/pics/image5.jpg" });
-                    imagesModel.append({ url: ":/pics/image11.jpg" });
-                    imagesModel.append({ url: ":/pics/image12.jpg" });
-                    imagesModel.append({ url: ":/pics/image13.jpg" });
-                    imagesModel.append({ url: ":/pics/image7.jpg" });
-                    imagesModel.append({ url: ":/pics/image8.jpg" });
-                    imagesModel.append({ url: ":/pics/image9.jpg" });
-                    imagesModel.append({ url: ":/pics/image14.jpg" });
-                    imagesModel.append({ url: ":/pics/image15.jpg" });
+                    imagesModel.append({ path: ":/pics/image1.jpg" });
+                    imagesModel.append({ path: ":/pics/image2.jpg" });
+                    imagesModel.append({ path: ":/pics/image3.jpg" });
+                    imagesModel.append({ path: ":/pics/image4.jpg" });
+                    imagesModel.append({ path: ":/pics/image10.jpg" });
+                    imagesModel.append({ path: ":/pics/image6.jpg" });
+                    imagesModel.append({ path: ":/pics/image5.jpg" });
+                    imagesModel.append({ path: ":/pics/image11.jpg" });
+                    imagesModel.append({ path: ":/pics/image12.jpg" });
+                    imagesModel.append({ path: ":/pics/image13.jpg" });
+                    imagesModel.append({ path: ":/pics/image7.jpg" });
+                    imagesModel.append({ path: ":/pics/image8.jpg" });
+                    imagesModel.append({ path: ":/pics/image9.jpg" });
+                    imagesModel.append({ path: ":/pics/image14.jpg" });
+                    imagesModel.append({ path: ":/pics/image15.jpg" });
 
                     // Set initial count
-                    imagesModel.initialImageCount = imagesModel.count
+                    imagesModel.initialImageCount = imagesModel.count;
                     // Load custom images
-                    var urls = appSettings.loadCustomImages()
-                    for (var i = 0; i < urls.length; i++) {
-                        var newurl = urls[i];
-                        if (newurl.indexOf("file://") != 0)
-                            newurl = "file://" + newurl;
-
-                        imagesModel.insert(0, { url: newurl })
+                    var paths = appSettings.loadCustomImages();
+                    for (var i = 0; i < paths.length; i++) {
+                        imagesModel.insert(0, { path: paths[i] });
                     }
                 }
             }
@@ -239,7 +235,7 @@ Panel {
                     height: imageSelectorGrid.cellHeight - 25
                     clip: true
                     anchors.centerIn: parent
-                    source: url
+                    source: appWindow.pathToUrl(path)
                     sourceSize {
                         width: imageSelectorGrid.cellWidth - 25
                     }
@@ -262,18 +258,15 @@ Panel {
                     }
                     visible: index < imagesModel.count - imagesModel.initialImageCount
                     onClicked: {
-                        var newurl = imagesModel.get(index).url;
-                        if (newurl.indexOf("file://") >= 0) {
-                            newurl = newurl.substring(7);
-                        }
-
-                        appSettings.removeCustomImage(decodeURI(newurl));
+                        var selected = imagesModel.get(index);
+                        appSettings.removeCustomImage(decodeURI(selected.path));
                         imagesModel.remove(index);
                     }
                 }
             }
             onCurrentIndexChanged: {
-                imageChooser.selectedImageUrl = imagesModel.get(imageSelectorGrid.currentIndex).url
+                var selected = imagesModel.get(imageSelectorGrid.currentIndex);
+                imageChooser.selectedImagePath = selected.path;
             }
         }
         VerticalScrollBar {
@@ -322,19 +315,15 @@ Panel {
     Connections {
         target: fileSelectorDialog ? fileSelectorDialog : null
         onAccepted: {
-            var newurl = fileSelectorDialog.selectedImageUrl;
-            if (newurl.indexOf("file://") >= 0)
-                newurl = newurl.substring(7);
-
-            if (appSettings.addCustomImage(decodeURI(newurl)))
-                imagesModel.insert(0, { url: "file://" + newurl })
+            if (appSettings.addCustomImage(decodeURI(fileSelectorDialog.selectedImagePath)))
+                imagesModel.insert(0, { path: fileSelectorDialog.selectedImagePath })
         }
     }
     Connections {
         target: appEventHandler
         onPlatformFileDialogAccepted: {
             if (appSettings.addCustomImage(decodeURI(fileUrl)))
-                imagesModel.insert(0, { url: "file://" + fileUrl })
+                imagesModel.insert(0, { path: fileUrl })
         }
     }
 }

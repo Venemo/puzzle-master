@@ -36,15 +36,7 @@ class ImageProcessorPrivate
 
 QPixmap ImageProcessorPrivate::processImage(const QString &url, int width, int height)
 {
-    QString url2(url);
-    if (url.contains(QRegExp("/[A-Za-z]:/")))
-        url2.remove("file:///");
-    else
-        url2.remove("file://");
-    url2 = url2.replace(QString("qrc:/"), QString(":/"));
-
-
-    QPixmap pix(url2);
+    QPixmap pix(url);
 
     if (pix.isNull())
         return pix;

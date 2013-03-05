@@ -25,6 +25,22 @@ Rectangle {
     width: initialSize.width
     height: initialSize.height
     color: "#000"
+    id: appWindow
+
+    function pathToUrl(path) {
+        var newurl = path;
+        if (newurl.indexOf("file://") !== 0 && newurl[0] !== ':') {
+            if (newurl[0] !== '/') {
+                newurl = '/' + newurl;
+            }
+            newurl = "file://" + newurl;
+        }
+        if (newurl[0] === ':') {
+            newurl = "qrc" + newurl;
+        }
+
+        return newurl;
+    }
 
     RedButtonStyle {
         id: redButtonStyle
