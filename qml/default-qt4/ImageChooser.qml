@@ -322,8 +322,8 @@ Panel {
     Connections {
         target: appEventHandler
         onPlatformFileDialogAccepted: {
-            if (appSettings.addCustomImage(decodeURI(fileUrl)))
-                imagesModel.insert(0, { path: fileUrl })
+            if (appSettings.addCustomImage(decodeURI(filePath)))
+                imagesModel.insert(0, { path: filePath })
         }
     }
 }

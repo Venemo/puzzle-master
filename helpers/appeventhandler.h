@@ -43,7 +43,7 @@ public:
 signals:
     void windowActivated();
     void windowDeactivated();
-    void platformFileDialogAccepted(QString fileUrl);
+    void platformFileDialogAccepted(QString filePath);
     
 public slots:
     void adjustForPlaying();
