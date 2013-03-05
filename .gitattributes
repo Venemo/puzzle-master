@@ -1,0 +1,21 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Source code files must always be normalized
+*.h text
+*.c text
+*.cpp text
+*.pro text
+*.qrc text
+*.qml text
+*.js text
+*.glsl text
+*.html text
+*.css text
+
+# Other text files to be normalized
+*.xml text
+*.md text
+*.txt text
+*.ts text
+*.desktop text
