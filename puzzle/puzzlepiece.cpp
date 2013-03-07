@@ -212,12 +212,15 @@ void PuzzlePiece::verifyPosition()
             // bottom right of "bounding rect" (in parent coordinates)
             q(myMax<qreal>(myMax<qreal>(p1.x(), p2.x()), myMax<qreal>(p3.x(), p4.x())), myMax<qreal>(myMax<qreal>(p1.y(), p2.y()), myMax<qreal>(p3.y(), p4.y())));
 
+    int primitiveWidth = (*_primitives.begin())->pixmap().width();
+    int primitiveHeight = (*_primitives.begin())->pixmap().height();
+
     qreal   w = q.x() - p.x(),
             h = q.y() - p.y(),
-            maxX = board->width() - w / 2,
-            minX = - w / 2,
-            maxY = board->height() - h / 2,
-            minY = - h / 2;
+            maxX = board->width() - primitiveWidth / 2,
+            minX = - w + primitiveWidth / 2,
+            maxY = board->height() - primitiveHeight / 2,
+            minY = - h + primitiveHeight / 2;
 
     if (p.x() > maxX || p.x() < minX || p.y() > maxY || p.y() < minY)
     {
