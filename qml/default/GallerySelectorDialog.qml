@@ -22,7 +22,7 @@ import "./components"
 
 Dialog
 {
-    property string selectedImageUrl: ""
+    property string selectedImagePath: ""
 
     onOpened: {
         console.log("Creating DocumentGalleryModel");
@@ -34,7 +34,7 @@ Dialog
                 DocumentGalleryModel { \
                     id: picsModel; \
                     rootType: DocumentGallery.Image; \
-                    properties: [ 'url' ]; \
+                    properties: [ 'url', 'filePath' ]; \
                     sortProperties: [ '-dateTaken' ]; \
                     autoUpdate: true; \
                 }", imageSelectorGrid, "DocumentGalleryModelSnippet.qml");
@@ -85,8 +85,8 @@ Dialog
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    fileSelectorDialog.selectedImageUrl = url
-                    imageSelectorGrid.currentIndex = index
+                    fileSelectorDialog.selectedImagePath = filePath;
+                    imageSelectorGrid.currentIndex = index;
                 }
             }
         }
