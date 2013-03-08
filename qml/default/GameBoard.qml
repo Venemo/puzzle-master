@@ -234,7 +234,7 @@ PuzzleBoard {
         backgroundColor: "#99101010"
         enableBackgroundClicking: false
         onOpened: {
-            if (!gameBoard.game.startGame(decodeURI(imageChooser.selectedImageUrl), appSettings.rows, appSettings.columns, allowRotation)) {
+            if (!gameBoard.game.startGame(decodeURI(imageChooser.selectedImagePath), appSettings.rows, appSettings.columns, allowRotation)) {
                 progressDialog.close()
                 failedToStartDialog.open()
             }
