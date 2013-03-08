@@ -36,9 +36,9 @@ Supported platforms
 
 ### Mobile ###
 
-* MeeGo 1.2 Harmattan (Nokia N9 and N950) - downloadable from Nokia Store
+* MeeGo 1.2 Harmattan (Nokia N9 and N950) - downloadable from Nokia Store http://store.ovi.com/content/247838
 * Maemo 5 (Nokia N900) - downloadable from the Extras repository
-* Symbian (in practice, Symbian^3 and higher) - soon to be released to Nokia Store
+* Symbian (in practice, Symbian^3 and higher) - downloadable from Nokia Store http://store.ovi.com/content/330667
 * BlackBerry PlayBook - soon to be released to BlackBerry AppWorld
 * BlackBerry 10 (BlackBerry Z10) - soon to be released to BlackBerry AppWorld
 
