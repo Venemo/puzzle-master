@@ -67,25 +67,6 @@ Haluatko varmasti jatkaa?</translation>
     </message>
 </context>
 <context>
-    <name>FileSelectorDialog</name>
-    <message>
-        <source>Select a picture</source>
-        <translation>Valitse kuva.</translation>
-    </message>
-    <message>
-        <source>Select</source>
-        <translation>Valitse</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Peruuta</translation>
-    </message>
-    <message>
-        <source>An error has occoured</source>
-        <translation>Odottamaton virhe</translation>
-    </message>
-</context>
-<context>
     <name>GallerySelectorDialog</name>
     <message>
         <source>Select a picture</source>
@@ -109,10 +90,6 @@ Haluatko varmasti jatkaa?</translation>
     <message>
         <source>The selected image is being processed.</source>
         <translation>Käsitellään valittua kuvaa.</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
     </message>
     <message>
         <source>Puzzle Master</source>
@@ -200,14 +177,6 @@ Jos haluat vihjeen, paina &quot;Vihje!&quot; -nappulaa.</translation>
         <translation>Tervetuloa! Valitse kuva.</translation>
     </message>
     <message>
-        <source>Start game</source>
-        <translation>Aloita peli</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
-    </message>
-    <message>
         <source>Please choose</source>
         <translation>Valitse vaihtoehdoista</translation>
     </message>
@@ -226,14 +195,6 @@ Jos haluat vihjeen, paina &quot;Vihje!&quot; -nappulaa.</translation>
     <message>
         <source>About</source>
         <translation>Tietoja</translation>
-    </message>
-    <message>
-        <source>Add custom image</source>
-        <translation>Lisää omavalintainen kuva</translation>
-    </message>
-    <message>
-        <source>Remove custom image</source>
-        <translation>Poista lisäämäsi kuva</translation>
     </message>
     <message>
         <source>Quit</source>

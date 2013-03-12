@@ -67,25 +67,6 @@ Biztosan folytatod?</translation>
     </message>
 </context>
 <context>
-    <name>FileSelectorDialog</name>
-    <message>
-        <source>Select a picture</source>
-        <translation>Válassz egy képet</translation>
-    </message>
-    <message>
-        <source>Select</source>
-        <translation>Választ</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Mégsem</translation>
-    </message>
-    <message>
-        <source>An error has occoured</source>
-        <translation>Hiba történt!</translation>
-    </message>
-</context>
-<context>
     <name>GallerySelectorDialog</name>
     <message>
         <source>Select a picture</source>
@@ -109,10 +90,6 @@ Biztosan folytatod?</translation>
     <message>
         <source>The selected image is being processed.</source>
         <translation>A választott kép feldolgozása...</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
     </message>
     <message>
         <source>Wait...</source>
@@ -204,14 +181,6 @@ Ha feladod, már nem folytathatod. Ha tippet szeretnél, akkor válaszd az &quot
         <translation>Üdv! Válassz egy képet!</translation>
     </message>
     <message>
-        <source>Start game</source>
-        <translation>Játék kezdése</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
-    </message>
-    <message>
         <source>Please choose</source>
         <translation>Kérlek, válassz!</translation>
     </message>
@@ -224,20 +193,12 @@ Ha feladod, már nem folytathatod. Ha tippet szeretnél, akkor válaszd az &quot
         <translation>Névjegy</translation>
     </message>
     <message>
-        <source>Add custom image</source>
-        <translation>Egyéni kép hozzáadása</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>Kilépés</translation>
     </message>
     <message>
         <source>Puzzle Master</source>
         <translation>Puzzle Master</translation>
-    </message>
-    <message>
-        <source>Remove custom image</source>
-        <translation>Egyéni kép törlése</translation>
     </message>
 </context>
 <context>

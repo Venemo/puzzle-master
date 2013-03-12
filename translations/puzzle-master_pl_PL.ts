@@ -1,51 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="cs_CZ">
+<TS version="2.0" language="pl">
 <context>
     <name>AppWindow</name>
     <message>
         <source>You&apos;re a winner!</source>
-        <translation>Zvítězil(a) jste!</translation>
+        <translation>Jesteś zwycięzcą!</translation>
     </message>
     <message>
         <source>Congratulations, you have successfully solved the given puzzle.</source>
-        <translation>Gratuluji, úspěšně jste vyřešil(a) zadané puzzle.</translation>
+        <translation>Gratulacje, pomyślnie rozwiązałeś zadane puzzle.</translation>
     </message>
     <message>
         <source>Play again</source>
-        <translation>Hrát znovu</translation>
+        <translation>Zagraj ponownie</translation>
     </message>
     <message>
         <source>Choose other</source>
-        <translation>Vybrat jiné</translation>
+        <translation>Wybierz inny</translation>
     </message>
     <message>
         <source>Are you sure?</source>
-        <translation>Opravdu ukončit hru?</translation>
+        <translation>Jesteś pewien?</translation>
     </message>
     <message>
         <source>Do you wish to quit the game?</source>
-        <translation>Chcete ukončit hru?</translation>
+        <translation>Czy chcesz zakończyć grę?</translation>
     </message>
     <message>
         <source>Yes</source>
-        <translation>Ano</translation>
+        <translation>Tak</translation>
     </message>
     <message>
         <source>No</source>
-        <translation>Ne</translation>
+        <translation>Nie</translation>
     </message>
     <message>
         <source>About Puzzle Master %1</source>
-        <translation>O hře Puzzle Master %1</translation>
+        <translation>O Puzzle Master %1</translation>
     </message>
     <message>
         <source>Brought to you by Timur Kristóf.
 Puzzle Master is a fun and addictive jigsaw puzzle game.
 Using Qt.</source>
-        <translation>Hru pro Vás připravil Timur Kristóf.
-Puzzle Master je zábavná a návyková puzzle hra.
-Za využití Qt.</translation>
+        <translation>Stworzone przez Timura Kristófa.
+Puzzle Master to zabawna i wciągająca gra w układanie puzzli.</translation>
     </message>
     <message>
         <source>Ok</source>
@@ -53,43 +52,43 @@ Za využití Qt.</translation>
     </message>
     <message>
         <source>Isn&apos;t this a bit difficult?</source>
-        <translation>Trochu složité, ne?</translation>
+        <translation>Nie jest to zbyt trudne?</translation>
     </message>
     <message>
         <source>The selected options will make the game VERY difficult.
 Are you sure to proceed?</source>
-        <translation>Zvolené nastavení učiní hru VELMI obtížnou.
-Opravdu chcete pokračovat?</translation>
+        <translation>Wybrane opcje spowodują, że gra będzie BARDZO trudna.
+Jesteś pewien, że chcesz kontynuować?</translation>
     </message>
     <message>
         <source>You have already added the selected image.</source>
-        <translation>Vybraný obrázek byl již přidán.</translation>
+        <translation>Już dodałeś wybrany obrazek.</translation>
     </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
     <message>
         <source>Select a picture</source>
-        <translation>Vyberte obrázek</translation>
+        <translation>Wybierz obrazek</translation>
     </message>
     <message>
         <source>Select</source>
-        <translation>Vybrat</translation>
+        <translation>Wybierz</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Storno</translation>
+        <translation>Anuluj</translation>
     </message>
 </context>
 <context>
     <name>GameBoard</name>
     <message>
         <source>Creating puzzle piece %1 of %2</source>
-        <translation>Připravuji %1 dílek puzzle z %2</translation>
+        <translation>Tworzenie kawałka puzli %1 z %2</translation>
     </message>
     <message>
         <source>The selected image is being processed.</source>
-        <translation>Vybraný obrázek se právě zpracovává.</translation>
+        <translation>Wybrany obrazek jest w trakcie przetwarzania.</translation>
     </message>
     <message>
         <source>Puzzle Master</source>
@@ -97,95 +96,96 @@ Opravdu chcete pokračovat?</translation>
     </message>
     <message>
         <source>Wait...</source>
-        <translation>Čekejte...</translation>
+        <translation>Czekaj...</translation>
     </message>
     <message>
         <source>Continue game</source>
-        <translation>Pokračovat ve hře</translation>
+        <translation>Kontynuj grę</translation>
     </message>
     <message>
         <source>Get a hint!</source>
-        <translation>Poradit!</translation>
+        <translation>Zobacz podpowiedź!</translation>
     </message>
     <message>
         <source>Restart</source>
-        <translation>Začít znovu</translation>
+        <translation>Restart</translation>
     </message>
     <message>
         <source>Surrender</source>
-        <translation>Vzdát se</translation>
+        <translation>Poddaj się</translation>
     </message>
     <message>
         <source>About</source>
-        <translation>O hře</translation>
+        <translation>O</translation>
     </message>
     <message>
         <source>Quit</source>
-        <translation>Ukončit</translation>
+        <translation>Koniec</translation>
     </message>
     <message>
         <source>Please wait...</source>
-        <translation>Prosím čekejte...</translation>
+        <translation>Proszę czekać...</translation>
     </message>
     <message>
         <source>Game paused</source>
-        <translation>Hra pozastavena</translation>
+        <translation>Gra zatrzymana</translation>
     </message>
     <message>
         <source>Switch back to continue it.</source>
-        <translation>Pro pokračování se přepněte zpět do hry.</translation>
+        <translation>Wróc, żeby kontynuować.</translation>
     </message>
     <message>
         <source>Are you sure?</source>
-        <translation>Vzdát hru?</translation>
+        <translation>Jesteś pewien?</translation>
     </message>
     <message>
         <source>Do you want to give up this game?
 You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.</source>
-        <translation>Chcete opravdu vzdát hru? Nebudete v ní moci pokračovat. Pokud potřebujete nakopnout, použijte &quot;Poradit!&quot;.</translation>
+        <translation>Czy chcesz się poddać w tej grze?
+Nie będziesz mógł jej kontynuować wtedy. Użyj &quot;Zobacz podpowiedź&quot; jeśli potrzebujesz wskazówki.</translation>
     </message>
     <message>
         <source>Yes</source>
-        <translation>Ano</translation>
+        <translation>Tak</translation>
     </message>
     <message>
         <source>No</source>
-        <translation>Ne</translation>
+        <translation>Nie</translation>
     </message>
     <message>
         <source>Do you want to restart this game?</source>
-        <translation>Chcete znovu začít tuhle hru?</translation>
+        <translation>Czy chcesz zrestartować tę grę?</translation>
     </message>
     <message>
         <source>An error has occoured</source>
-        <translation>Nastala chyba</translation>
+        <translation>Wystąpił błąd</translation>
     </message>
     <message>
         <source>Sorry, we couldn&apos;t start the game. Please try to start it with another picture.</source>
-        <translation>Nemohu začít hru. Zkuste prosím vybrat jiný obrázek.</translation>
+        <translation>Przepraszamy, nie mogiliśmy rozpocząć gry. Spróbuj z innym obrazkiem.</translation>
     </message>
     <message>
         <source>Ok</source>
-        <translation>Dobře</translation>
+        <translation>Ok</translation>
     </message>
 </context>
 <context>
     <name>ImageChooser</name>
     <message>
         <source>Welcome! Choose an image.</source>
-        <translation>Vítejte! Vyberte si obrázek.</translation>
+        <translation>Witaj! Wybierz obrazek.</translation>
     </message>
     <message>
         <source>Please choose</source>
-        <translation>Prosím vyberte obrázek</translation>
+        <translation>Proszę wybrać</translation>
     </message>
     <message>
         <source>You must choose an image before continuing.</source>
-        <translation>Než budete moci pokračovat, musíte si vybrat obrázek puzzle.</translation>
+        <translation>Musisz wybrać obrazek przed kontynuacją.</translation>
     </message>
     <message>
         <source>Ok</source>
-        <translation>Dobře</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <source>Puzzle Master</source>
@@ -193,50 +193,50 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     </message>
     <message>
         <source>About</source>
-        <translation>O hře</translation>
+        <translation>O</translation>
     </message>
     <message>
         <source>Quit</source>
-        <translation>Ukončit</translation>
+        <translation>Zakończ</translation>
     </message>
 </context>
 <context>
     <name>OptionsDialog</name>
     <message>
         <source>Game difficulty</source>
-        <translation>Obtížnost hry</translation>
+        <translation>Trudność gry</translation>
     </message>
     <message>
         <source>Play</source>
-        <translation>Hrát</translation>
+        <translation>Graj</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Storno</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <source>Columns</source>
-        <translation>Sloupce</translation>
+        <translation>Kolumny</translation>
     </message>
     <message>
         <source>Rows</source>
-        <translation>Řádky</translation>
+        <translation>Wiersze</translation>
     </message>
     <message>
         <source>Snap</source>
-        <translation>Přichytávání</translation>
+        <translation>Przyciągnie</translation>
     </message>
     <message>
         <source>Easy</source>
-        <translation>Jednoduché</translation>
+        <translation>Łatwe</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>Normální</translation>
+        <translation>Normalne</translation>
     </message>
     <message>
         <source>Difficult</source>
-        <translation>Složité</translation>
+        <translation>Trudne</translation>
     </message>
 </context>
 </TS>

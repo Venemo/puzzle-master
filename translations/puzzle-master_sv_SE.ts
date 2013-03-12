@@ -68,25 +68,6 @@ Are you sure to proceed?</source>
     </message>
 </context>
 <context>
-    <name>FileSelectorDialog</name>
-    <message>
-        <source>Select a picture</source>
-        <translation>Välj en bild</translation>
-    </message>
-    <message>
-        <source>Select</source>
-        <translation>Välj</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Avbryt</translation>
-    </message>
-    <message>
-        <source>An error has occoured</source>
-        <translation>Ett fel uppstod!</translation>
-    </message>
-</context>
-<context>
     <name>GallerySelectorDialog</name>
     <message>
         <source>Select a picture</source>
@@ -110,10 +91,6 @@ Are you sure to proceed?</source>
     <message>
         <source>The selected image is being processed.</source>
         <translation>Den valda pusselbilden bearbetas...</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
     </message>
     <message>
         <source>Wait...</source>
@@ -205,14 +182,6 @@ Du kan inte fortsätta senare. Använd &quot;Få en ledtråd&quot; om du behöve
         <translation>Välkommen! Välj en bild.</translation>
     </message>
     <message>
-        <source>Start game</source>
-        <translation>Starta spelet</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
-    </message>
-    <message>
         <source>Please choose</source>
         <translation>Välj!</translation>
     </message>
@@ -225,20 +194,12 @@ Du kan inte fortsätta senare. Använd &quot;Få en ledtråd&quot; om du behöve
         <translation>Om</translation>
     </message>
     <message>
-        <source>Add custom image</source>
-        <translation>Välj en anpassad bild</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>Avsluta</translation>
     </message>
     <message>
         <source>Puzzle Master</source>
         <translation>Puzzle Master</translation>
-    </message>
-    <message>
-        <source>Remove custom image</source>
-        <translation>Ta bort anpassad bild</translation>
     </message>
 </context>
 <context>

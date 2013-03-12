@@ -82,7 +82,8 @@ TRANSLATIONS += \
     translations/puzzle-master_cs_CZ.ts \
     translations/puzzle-master_he_IL.ts \
     translations/puzzle-master_tr_TR.ts \
-    translations/puzzle-master_fi_FI.ts
+    translations/puzzle-master_fi_FI.ts \
+    translations/puzzle-master_pl_PL.ts
 
 OTHER_FILES += \
     AUTHORS \

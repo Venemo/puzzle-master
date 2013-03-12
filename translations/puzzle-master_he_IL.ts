@@ -66,25 +66,6 @@ Are you sure to proceed?</source>
     </message>
 </context>
 <context>
-    <name>FileSelectorDialog</name>
-    <message>
-        <source>Select a picture</source>
-        <translation>בחרו תמונה</translation>
-    </message>
-    <message>
-        <source>Select</source>
-        <translation>בחר</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>ביטול</translation>
-    </message>
-    <message>
-        <source>An error has occoured</source>
-        <translation>התרחשה תקלה</translation>
-    </message>
-</context>
-<context>
     <name>GallerySelectorDialog</name>
     <message>
         <source>Select a picture</source>
@@ -108,10 +89,6 @@ Are you sure to proceed?</source>
     <message>
         <source>The selected image is being processed.</source>
         <translation>התמונה שנבחרה בתהליכי עיבוד</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
     </message>
     <message>
         <source>Wait...</source>
@@ -203,14 +180,6 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
         <translation>ברוכים הבאים! אנא בחרו תמונה</translation>
     </message>
     <message>
-        <source>Start game</source>
-        <translation>התחל משחק</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
-    </message>
-    <message>
         <source>Please choose</source>
         <translation>אנא בחרו</translation>
     </message>
@@ -223,20 +192,12 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
         <translation>אודות</translation>
     </message>
     <message>
-        <source>Add custom image</source>
-        <translation>הוסף תמונה</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>יציאה</translation>
     </message>
     <message>
         <source>Puzzle Master</source>
         <translation>פאזל מאסטר</translation>
-    </message>
-    <message>
-        <source>Remove custom image</source>
-        <translation>הסר תמונה</translation>
     </message>
 </context>
 <context>

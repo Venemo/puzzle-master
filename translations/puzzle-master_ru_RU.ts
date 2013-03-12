@@ -67,25 +67,6 @@ Are you sure to proceed?</source>
     </message>
 </context>
 <context>
-    <name>FileSelectorDialog</name>
-    <message>
-        <source>Select a picture</source>
-        <translation>Выбрать картинку</translation>
-    </message>
-    <message>
-        <source>Select</source>
-        <translation>Выбрать</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Отменить</translation>
-    </message>
-    <message>
-        <source>An error has occoured</source>
-        <translation>Произошла ошибка!</translation>
-    </message>
-</context>
-<context>
     <name>GallerySelectorDialog</name>
     <message>
         <source>Select a picture</source>
@@ -109,10 +90,6 @@ Are you sure to proceed?</source>
     <message>
         <source>The selected image is being processed.</source>
         <translation>Загрузка картинки</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
     </message>
     <message>
         <source>Wait...</source>
@@ -204,14 +181,6 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
         <translation>Привет!Выбери картинку</translation>
     </message>
     <message>
-        <source>Start game</source>
-        <translation>Играть!</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
-    </message>
-    <message>
         <source>Please choose</source>
         <translation>Пожалуйста, выберите картинку</translation>
     </message>
@@ -224,20 +193,12 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
         <translation>О программе</translation>
     </message>
     <message>
-        <source>Add custom image</source>
-        <translation>Добавить картинку</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
     <message>
         <source>Puzzle Master</source>
         <translation>Puzzle Master</translation>
-    </message>
-    <message>
-        <source>Remove custom image</source>
-        <translation>Убрать картинку</translation>
     </message>
 </context>
 <context>

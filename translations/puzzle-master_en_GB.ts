@@ -67,25 +67,6 @@ Are you sure to proceed?</translation>
     </message>
 </context>
 <context>
-    <name>FileSelectorDialog</name>
-    <message>
-        <source>Select a picture</source>
-        <translation>Select a picture</translation>
-    </message>
-    <message>
-        <source>Select</source>
-        <translation>Select</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Cancel</translation>
-    </message>
-    <message>
-        <source>An error has occoured</source>
-        <translation>An error has occoured</translation>
-    </message>
-</context>
-<context>
     <name>GallerySelectorDialog</name>
     <message>
         <source>Select a picture</source>
@@ -109,10 +90,6 @@ Are you sure to proceed?</translation>
     <message>
         <source>The selected image is being processed.</source>
         <translation>The selected image is being processed.</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
     </message>
     <message>
         <source>Puzzle Master</source>
@@ -200,14 +177,6 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
         <translation>Welcome! Choose an image.</translation>
     </message>
     <message>
-        <source>Start game</source>
-        <translation>Start game</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
-    </message>
-    <message>
         <source>Please choose</source>
         <translation>Please choose</translation>
     </message>
@@ -226,14 +195,6 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     <message>
         <source>About</source>
         <translation>About</translation>
-    </message>
-    <message>
-        <source>Add custom image</source>
-        <translation>Add custom image</translation>
-    </message>
-    <message>
-        <source>Remove custom image</source>
-        <translation>Remove custom image</translation>
     </message>
     <message>
         <source>Quit</source>

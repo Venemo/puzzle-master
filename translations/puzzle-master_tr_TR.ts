@@ -67,25 +67,6 @@ Emin misiniz?</translation>
     </message>
 </context>
 <context>
-    <name>FileSelectorDialog</name>
-    <message>
-        <source>Select a picture</source>
-        <translation>Resim seç</translation>
-    </message>
-    <message>
-        <source>Select</source>
-        <translation>Seç</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>İptal</translation>
-    </message>
-    <message>
-        <source>An error has occoured</source>
-        <translation>Hata oluştu</translation>
-    </message>
-</context>
-<context>
     <name>GallerySelectorDialog</name>
     <message>
         <source>Select a picture</source>
@@ -109,10 +90,6 @@ Emin misiniz?</translation>
     <message>
         <source>The selected image is being processed.</source>
         <translation>Seçilen resim işleniyor.</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
     </message>
     <message>
         <source>Wait...</source>
@@ -204,14 +181,6 @@ Bu şekilde devam edemezsin. &quot;Yardım al!&quot; seçmelisin.</translation>
         <translation>Hoşgeldin! Resim seç.</translation>
     </message>
     <message>
-        <source>Start game</source>
-        <translation>Oyunu başlat</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
-    </message>
-    <message>
         <source>Please choose</source>
         <translation>Lütfen seçiniz</translation>
     </message>
@@ -224,20 +193,12 @@ Bu şekilde devam edemezsin. &quot;Yardım al!&quot; seçmelisin.</translation>
         <translation>Hakkında</translation>
     </message>
     <message>
-        <source>Add custom image</source>
-        <translation>Diğer resim ekle</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>Çıkış</translation>
     </message>
     <message>
         <source>Puzzle Master</source>
         <translation>Puzzle Efendisi</translation>
-    </message>
-    <message>
-        <source>Remove custom image</source>
-        <translation>Diğer resmi kaldır</translation>
     </message>
 </context>
 <context>

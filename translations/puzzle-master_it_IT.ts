@@ -67,25 +67,6 @@ Sei sicuro di voler procedere?</translation>
     </message>
 </context>
 <context>
-    <name>FileSelectorDialog</name>
-    <message>
-        <source>Select a picture</source>
-        <translation>Seleziona una immagine</translation>
-    </message>
-    <message>
-        <source>Select</source>
-        <translation>Seleziona</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Indietro</translation>
-    </message>
-    <message>
-        <source>An error has occoured</source>
-        <translation>C&apos;è stato un errore</translation>
-    </message>
-</context>
-<context>
     <name>GallerySelectorDialog</name>
     <message>
         <source>Select a picture</source>
@@ -109,10 +90,6 @@ Sei sicuro di voler procedere?</translation>
     <message>
         <source>The selected image is being processed.</source>
         <translation>L&apos;immagine selezionata è in fase di elaborazione.</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
     </message>
     <message>
         <source>Puzzle Master</source>
@@ -200,14 +177,6 @@ Non potrai riprenderla dopo. Usa &quot;Chiedi un suggerimento!&quot; se hai biso
         <translation>Benvenuto! Scegli una immagine.</translation>
     </message>
     <message>
-        <source>Start game</source>
-        <translation>Nuova partita</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation>...</translation>
-    </message>
-    <message>
         <source>Please choose</source>
         <translation>Scegliere prego</translation>
     </message>
@@ -226,14 +195,6 @@ Non potrai riprenderla dopo. Usa &quot;Chiedi un suggerimento!&quot; se hai biso
     <message>
         <source>About</source>
         <translation>Info su</translation>
-    </message>
-    <message>
-        <source>Add custom image</source>
-        <translation>Aggiungi immagine personalizzata</translation>
-    </message>
-    <message>
-        <source>Remove custom image</source>
-        <translation>Rimuovi immagine personalizzata</translation>
     </message>
     <message>
         <source>Quit</source>
