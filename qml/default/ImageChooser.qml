@@ -191,13 +191,15 @@ Panel {
                 Component.onCompleted: {
                     // These are the built-in images
                     imagesModel.append({ path: ":/pics/image1.jpg" });
-                    imagesModel.append({ path: ":/pics/image2.jpg" });
-                    imagesModel.append({ path: ":/pics/image3.jpg" });
                     imagesModel.append({ path: ":/pics/image4.jpg" });
+                    imagesModel.append({ path: ":/pics/image16.jpg" });
+                    imagesModel.append({ path: ":/pics/image18.jpg" });
                     imagesModel.append({ path: ":/pics/image10.jpg" });
+                    imagesModel.append({ path: ":/pics/image3.jpg" });
                     imagesModel.append({ path: ":/pics/image6.jpg" });
                     imagesModel.append({ path: ":/pics/image5.jpg" });
                     imagesModel.append({ path: ":/pics/image11.jpg" });
+                    imagesModel.append({ path: ":/pics/image17.jpg" });
                     imagesModel.append({ path: ":/pics/image12.jpg" });
                     imagesModel.append({ path: ":/pics/image13.jpg" });
                     imagesModel.append({ path: ":/pics/image7.jpg" });
@@ -205,6 +207,7 @@ Panel {
                     imagesModel.append({ path: ":/pics/image9.jpg" });
                     imagesModel.append({ path: ":/pics/image14.jpg" });
                     imagesModel.append({ path: ":/pics/image15.jpg" });
+                    imagesModel.append({ path: ":/pics/image2.jpg" });
 
                     // Set initial count
                     imagesModel.initialImageCount = imagesModel.count;

@@ -84,6 +84,12 @@ TRANSLATIONS += \
     translations/puzzle-master_tr_TR.ts \
     translations/puzzle-master_fi_FI.ts
 
+OTHER_FILES += \
+    AUTHORS \
+    LICENSE \
+    LICENSE-DOCS \
+    README.md
+
 # Qt4 default UI
 
 OTHER_FILES += \

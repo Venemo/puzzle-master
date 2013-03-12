@@ -15,5 +15,8 @@
         <file alias="image14.jpg">pics/original/image14.jpg</file>
         <file alias="image15.jpg">pics/original/image15.jpg</file>
         <file alias="image11.jpg">pics/original/image11.jpg</file>
+        <file alias="image16.jpg">pics/original/image16.jpg</file>
+        <file alias="image18.jpg">pics/original/image18.jpg</file>
+        <file alias="image17.jpg">pics/original/image17.jpg</file>
     </qresource>
 </RCC>
