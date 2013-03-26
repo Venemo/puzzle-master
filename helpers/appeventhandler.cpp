@@ -56,6 +56,11 @@
 #include <QFileDialog>
 #endif
 
+#if defined(Q_OS_BLACKBERRY) && !defined(Q_OS_BLACKBERRY_TABLET)
+#include <bb/cascades/pickers/FilePicker>
+using namespace bb::cascades::pickers;
+#endif
+
 #if defined(Q_OS_BLACKBERRY_TABLET)
 #include <bps/event.h>
 #include <bps/dialog.h>
@@ -225,16 +230,31 @@ bool AppEventHandler::showPlatformFileDialog()
 #endif
 }
 
+void AppEventHandler::filesSelected(QStringList files)
+{
+    foreach (const QString &s, files)
+    {
+        emit this->platformFileDialogAccepted(s);
+    }
+}
+
 // Displays the platform file selector dialog when available
 void AppEventHandler::displayPlatformFileDialog()
 {
-#if defined(Q_OS_BLACKBERRY)
+#if defined(Q_OS_BLACKBERRY_TABLET)
     // On BlackBerry, we must use a specific API to display the platform file dialog
     if (bbDialog)
         dialog_destroy(bbDialog);
     dialog_create_filebrowse(&bbDialog);
     dialog_set_filebrowse_filter(bbDialog, bbDialogFilters, 1);
     dialog_show(bbDialog);
+#elif defined(Q_OS_BLACKBERRY) && !defined(Q_OS_BLACKBERRY_TABLET)
+    FilePicker* filePicker = new FilePicker();
+    filePicker->setType(FileType::Picture);
+    filePicker->setMode(FilePickerMode::Picker);
+    connect(filePicker, SIGNAL(fileSelected(QStringList)), this, SLOT(filesSelected(QStringList)));
+    connect(filePicker, SIGNAL(pickerClosed()), filePicker, SLOT(deleteLater()));
+    filePicker->open();
 #elif defined(FORCE_PLATFORM_FILE_DIALOG)
     // Where there is no platform-specific dialog to use, fallback to good old QFileDialog
     QString path = QFileDialog::getOpenFileName(static_cast<QWidget*>(parent()), QString(), "/home/user/MyDocs", "Images (*.png *.jpeg *.jpg *.gif *.bmp)");

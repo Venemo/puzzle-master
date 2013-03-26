@@ -20,6 +20,7 @@
 #define APPEVENTHANDLER_H
 
 #include <QObject>
+#include <QStringList>
 
 class QTimer;
 
@@ -44,6 +45,9 @@ signals:
     void windowActivated();
     void windowDeactivated();
     void platformFileDialogAccepted(QString filePath);
+
+private slots:
+    void filesSelected(QStringList files);
     
 public slots:
     void adjustForPlaying();

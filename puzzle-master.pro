@@ -198,6 +198,12 @@ blackberry {
 
     DEFINES += DISABLE_SCROLLBARS HAVE_OPENGL
 
+
+    QMAKE_EXTRA_TARGETS += package
+}
+blackberry:contains(DEFINES, Q_OS_BLACKBERRY_TABLET) {
+    message("Current build is for BlackBerry PlayBook")
+
     # NOTE: this will bundle Qt with the app and hack the rpath to make it find Qt
     QMAKE_LFLAGS += '-Wl,-rpath,\'./app/native/lib\''
     package.target = $${TARGET}.bar
@@ -220,8 +226,11 @@ blackberry {
         -e $$[QT_INSTALL_LIBS]/libQtXmlPatterns.so.4 lib/libQtXmlPatterns.so.4 \
         -e $$[QT_INSTALL_PLUGINS]/imageformats/libqjpeg.so plugins/imageformats/libqjpeg.so \
         -e $$[QT_INSTALL_PLUGINS]/platforms/libblackberry.so plugins/platforms/libblackberry.so
-
-    QMAKE_EXTRA_TARGETS += package
+}
+blackberry:!contains(DEFINES, Q_OS_BLACKBERRY_TABLET) {
+    message("Current build is for BlackBerry 10")
+    QT += xml
+    LIBS += -lbbcascadespickers
 }
 
 # Features

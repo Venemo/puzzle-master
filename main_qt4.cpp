@@ -158,7 +158,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setRenderHint(QPainter::SmoothPixmapTransform, false);
     view->setRenderHint(QPainter::Antialiasing, false);
     view->setRenderHint(QPainter::HighQualityAntialiasing, false);
-#if Q_OS_BLACKBERRY_TABLET
+#if defined(Q_OS_BLACKBERRY_TABLET) || defined(Q_OS_BLACKBERRY)
     view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 #else
     view->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
