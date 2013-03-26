@@ -37,8 +37,8 @@ PuzzleBoard {
     property bool waitForHint: false
 
     id: gameBoard
-    game.tolerance: (- appSettings.snapDifficulty + 3) * 7
-    game.rotationTolerance: (- appSettings.snapDifficulty + 3) * 9
+    game.tolerance: (- appSettings.snapDifficulty + 3) * 7 * uiScalingFactor
+    game.rotationTolerance: (- appSettings.snapDifficulty + 3) * 9 * uiScalingFactor
     z: 0
     onVisibleChanged: {
         menuButtonPanel.visible = false
@@ -99,8 +99,8 @@ PuzzleBoard {
         id: menuButtonPanel
         z: 200
         visible: false
-        width: 80
-        height: 60
+        width: 80 * uiScalingFactor
+        height: 60 * uiScalingFactor
         color: "#99a909a7"
         anchors {
             fill: null
@@ -111,9 +111,9 @@ PuzzleBoard {
         MenuButton {
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
-            anchors.rightMargin: 6
-            width: 65
-            height: 45
+            anchors.rightMargin: 6 * uiScalingFactor
+            width: 65 * uiScalingFactor
+            height: 45 * uiScalingFactor
             style: purpleButtonStyle
             onClicked: menuDialog.open()
         }
@@ -137,10 +137,10 @@ PuzzleBoard {
         }
         content: Column {
             id: menuDialogColumn
-            spacing: 10
+            spacing: 10 * uiScalingFactor
 
             Button {
-                width: 500
+                width: 500 * uiScalingFactor
                 text: waitForHint ? qsTr("Wait...") : (gameBoard.isHintDisplayed ? qsTr("Continue game") : qsTr("Get a hint!"))
                 onClicked: {
                     if (!waitForHint) {
@@ -160,21 +160,21 @@ PuzzleBoard {
                 style: greenButtonStyle
             }
             Row {
-                spacing: 10
+                spacing: 10 * uiScalingFactor
 
                 Button {
-                    width: 245
+                    width: 245 * uiScalingFactor
                     text: qsTr("Restart")
                     onClicked: areYouSureToRestartDialog.open()
                 }
                 Button {
-                    width: 245
+                    width: 245 * uiScalingFactor
                     text: qsTr("Surrender")
                     onClicked: areYouSureToSurrenderDialog.open()
                 }
             }
             Button {
-                width: 500
+                width: 500 * uiScalingFactor
                 text: qsTr("About")
                 onClicked: {
                     menuDialog.close()
@@ -182,7 +182,7 @@ PuzzleBoard {
                 }
             }
             Button {
-                width: 500
+                width: 500 * uiScalingFactor
                 text: qsTr("Quit")
                 style: redButtonStyle
                 onClicked: {
@@ -198,8 +198,8 @@ PuzzleBoard {
             anchors.left: parent.left
             anchors.leftMargin: 6
             anchors.topMargin: 6
-            width: 70
-            height: 48
+            width: 70 * uiScalingFactor
+            height: 48 * uiScalingFactor
             text: ""
             style: greenButtonStyle
             onClicked: {
@@ -209,8 +209,8 @@ PuzzleBoard {
                 color: "#FFFFFF"
                 border.color: "#7DB72F"
                 border.width: 1
-                width: 25
-                height: 25
+                width: 25 * uiScalingFactor
+                height: 25 * uiScalingFactor
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: -5
                 anchors.horizontalCenterOffset: -5
@@ -219,8 +219,8 @@ PuzzleBoard {
                 color: "#FFFFFF"
                 border.color: "#7DB72F"
                 border.width: 1
-                width: 25
-                height: 25
+                width: 25 * uiScalingFactor
+                height: 25 * uiScalingFactor
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: 5
                 anchors.horizontalCenterOffset: 5

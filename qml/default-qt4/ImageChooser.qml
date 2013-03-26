@@ -57,7 +57,7 @@ Panel {
     }
     Rectangle {
         id: imageChooserTop
-        height: 60
+        height: 60 * uiScalingFactor
         color: "transparent"
         anchors {
             top: parent.top
@@ -71,8 +71,8 @@ Panel {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 6
-            width: 65
-            height: 45
+            width: 65 * uiScalingFactor
+            height: 45 * uiScalingFactor
             text: ""
             style: purpleButtonStyle
             onClicked: {
@@ -82,8 +82,8 @@ Panel {
                 color: "#FFFFFF"
                 border.color: "#7DB72F"
                 border.width: 1
-                width: 25
-                height: 25
+                width: 25 * uiScalingFactor
+                height: 25 * uiScalingFactor
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: -5
                 anchors.horizontalCenterOffset: -5
@@ -92,8 +92,8 @@ Panel {
                 color: "#FFFFFF"
                 border.color: "#7DB72F"
                 border.width: 1
-                width: 25
-                height: 25
+                width: 25 * uiScalingFactor
+                height: 25 * uiScalingFactor
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: 5
                 anchors.horizontalCenterOffset: 5
@@ -103,13 +103,13 @@ Panel {
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: menuButton.left
-                rightMargin: 6
+                rightMargin: 6 * uiScalingFactor
             }
-            width: 65
-            height: 45
+            width: 65 * uiScalingFactor
+            height: 45 * uiScalingFactor
             style: purpleButtonStyle
             text: "+"
-            font.pixelSize: 40
+            font.pixelSize: 40 * textScalingFactor
             visible: (typeof(fileSelectorDialog) != "undefined" && fileSelectorDialog !== null) || appEventHandler.showPlatformFileDialog()
             onClicked: {
                 menuDialog.close()
@@ -126,17 +126,17 @@ Panel {
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
-                rightMargin: 6
+                rightMargin: 6 * uiScalingFactor
             }
-            width: 65
-            height: 45
+            width: 65 * uiScalingFactor
+            height: 45 * uiScalingFactor
             style: purpleButtonStyle
             onClicked: menuDialog.open()
         }
         TextEdit {
             text: qsTr("Welcome! Choose an image.")
             anchors.centerIn: parent
-            font.pixelSize: 30
+            font.pixelSize: 30 * textScalingFactor
             color: "#ffffff"
             activeFocusOnPress: false
         }
@@ -253,8 +253,9 @@ Panel {
                 Button {
                     style: redButtonStyle
                     text: "-"
-                    width: 50
-                    height: 50
+                    width: 50 * uiScalingFactor
+                    height: 50 * uiScalingFactor
+                    font.pixelSize: 25 * textScalingFactor
                     anchors {
                         bottom: parent.bottom
                         right: parent.right
@@ -294,10 +295,10 @@ Panel {
         contentWidth: menuDialogColumn.width
         content: Column {
             id: menuDialogColumn
-            spacing: 10
+            spacing: 10 * uiScalingFactor
 
             Button {
-                width: 500
+                width: 500 * uiScalingFactor
                 text: qsTr("About")
                 onClicked: {
                     menuDialog.close()
@@ -305,7 +306,7 @@ Panel {
                 }
             }
             Button {
-                width: 500
+                width: 500 * uiScalingFactor
                 text: qsTr("Quit")
                 style: redButtonStyle
                 onClicked: {

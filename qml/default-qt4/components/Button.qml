@@ -37,7 +37,7 @@ Rectangle {
     TextEdit {
         id: buttonText
         anchors.centerIn: parent
-        font.pixelSize: 25
+        font.pixelSize: 25 * textScalingFactor
         color: button.style.fontColor
         activeFocusOnPress: false
     }

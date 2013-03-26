@@ -35,21 +35,21 @@ Dialog {
         property int leftColumnWidth: Math.max(Math.max(columnsCaption.width, rowsCaption.width), snapDifficultyCaption.width)
 
         id: optionsGrid
-        spacing: 20
-        width: 500
+        spacing: 20 * uiScalingFactor
+        width: 500 * uiScalingFactor
         columns: 2
 
         TextEdit {
             id: columnsCaption
             color: "#ffffff"
-            font.pixelSize: 25
+            font.pixelSize: 25 * textScalingFactor
             text: qsTr("Columns")
             activeFocusOnPress: false
         }
         Row {
             id: columnsRow
             width: parent.width - optionsGrid.leftColumnWidth - 20
-            spacing: 10
+            spacing: 10 * uiScalingFactor
 
             Slider {
                 id: columnsSlider
@@ -66,7 +66,7 @@ Dialog {
             TextEdit {
                 id: columnsLabel
                 color: "#ffffff"
-                font.pixelSize: 25
+                font.pixelSize: 25 * textScalingFactor
                 text: columnsSlider.value
                 activeFocusOnPress: false
                 anchors.verticalCenter: columnsSlider.verticalCenter
@@ -75,14 +75,14 @@ Dialog {
         TextEdit {
             id: rowsCaption
             color: "#ffffff"
-            font.pixelSize: 25
+            font.pixelSize: 25 * textScalingFactor
             text: qsTr("Rows")
             activeFocusOnPress: false
         }
         Row {
             id: rowsRow
             width: parent.width - optionsGrid.leftColumnWidth - 20
-            spacing: 10
+            spacing: 10 * uiScalingFactor
 
             Slider {
                 id: rowsSlider
@@ -99,7 +99,7 @@ Dialog {
             TextEdit {
                 id: rowsLabel
                 color: "#ffffff"
-                font.pixelSize: 25
+                font.pixelSize: 25 * textScalingFactor
                 text: rowsSlider.value
                 activeFocusOnPress: false
                 anchors.verticalCenter: rowsSlider.verticalCenter
@@ -108,14 +108,14 @@ Dialog {
         TextEdit {
             id: snapDifficultyCaption
             color: "#ffffff"
-            font.pixelSize: 25
+            font.pixelSize: 25 * textScalingFactor
             text: qsTr("Snap")
             activeFocusOnPress: false
         }
         Row {
             id: snapDifficultyRow
             width: parent.width - optionsGrid.leftColumnWidth - 20
-            spacing: 10
+            spacing: 10 * uiScalingFactor
 
             Slider {
                 id: snapDifficultySlider
@@ -132,7 +132,7 @@ Dialog {
             TextEdit {
                 id: snapDifficultyLabel
                 color: "#ffffff"
-                font.pixelSize: 25
+                font.pixelSize: 25 * textScalingFactor
                 text: snapDifficultySlider.value == 0 ? qsTr("Easy") : (snapDifficultySlider.value == 1 ? qsTr("Normal") : qsTr("Difficult"))
                 activeFocusOnPress: false
                 anchors.verticalCenter: snapDifficultySlider.verticalCenter

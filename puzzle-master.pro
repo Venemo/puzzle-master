@@ -231,6 +231,17 @@ blackberry:!contains(DEFINES, Q_OS_BLACKBERRY_TABLET) {
     message("Current build is for BlackBerry 10")
     QT += xml
     LIBS += -lbbcascadespickers
+    DEFINES += TEXT_SCALING_FACTOR=1.65 UI_SCALING_FACTOR=1.75
+
+    package.target = $${TARGET}.bar
+    package.depends = $$TARGET
+    package.commands = blackberry-nativepackager \
+        # NOTE: you need to put your debug token here
+        -devMode -debugToken ~/dev/TimurBb10Token.bar \
+        -package $${TARGET}.bar -arg -platform -arg blackberry \
+        # NOTE: bar-descriptor.xml and installables/puzzle-master-bb10.png must be in the build directory
+        bar-descriptor.xml $$TARGET \
+        -e installables/puzzle-master-bb10.png puzzle-master-bb10.png
 }
 
 # Features
