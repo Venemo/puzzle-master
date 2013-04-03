@@ -161,6 +161,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     // Checking the size
 
     QSize initialSize = QApplication::desktop()->screenGeometry(view).size();
+#if defined(Q_OS_BLACKBERRY)
+    if (initialSize.height() > initialSize.width())
+        initialSize = QSize(initialSize.height(), initialSize.width());
+#endif
+
     qDebug() << "initial size is" << initialSize;
 
     // Setting up the view
@@ -180,7 +185,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setAttribute(Qt::WA_NoSystemBackground);
     view->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
     view->viewport()->setAttribute(Qt::WA_NoSystemBackground);
-    view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     view->rootContext()->setContextProperty("initialSize", initialSize);
     view->rootContext()->setContextProperty("allowRotation", allowRotation);
     view->rootContext()->setContextProperty("allowScrollbars", allowScrollbars);
@@ -196,6 +200,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setSource(QUrl("qrc:/qml/default-qt4/AppWindow.qml"));
     view->setWindowTitle(QObject::tr("Puzzle Master"));
     view->showFullScreen();
+    view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
 
     qDebug() << Q_FUNC_INFO << "setting the qml source took" << timer->elapsed() << "ms";
     delete timer;
