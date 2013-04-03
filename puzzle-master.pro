@@ -174,6 +174,7 @@ symbian {
     QMAKE_CXXFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden -O3 -ffast-math
     # No OpenGL, no scrollbars and custom appversion hack
     DEFINES += QT_NO_OPENGL APP_VERSION=\"$$VERSION\" DISABLE_SCROLLBARS
+    DEFINES += TEXT_SCALING_FACTOR=0.9 UI_SCALING_FACTOR=0.9
     DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY FORCE_PLATFORM_FILE_DIALOG APP_VERSION=\\\"$$VERSION\\\"
     QT -= opengl
     CONFIG += mobility
@@ -195,10 +196,7 @@ win32 {
 }
 blackberry {
     message("Building Puzzle Master for BlackBerry!")
-
     DEFINES += DISABLE_SCROLLBARS HAVE_OPENGL
-
-
     QMAKE_EXTRA_TARGETS += package
 }
 blackberry:contains(DEFINES, Q_OS_BLACKBERRY_TABLET) {
