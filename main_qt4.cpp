@@ -91,6 +91,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view = new QDeclarativeView();
 #endif
 
+#if Q_OS_BLACKBERRY
+    app->setStartDragTime(600);
+    app->setStartDragDistance(20);
+#endif
+
     // Some wireup
 
     AppEventHandler *appEventHandler = new AppEventHandler(view);

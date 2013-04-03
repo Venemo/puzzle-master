@@ -184,6 +184,8 @@ Panel {
             cellHeight: imageSelectorGrid.cellWidth / imageChooser.width * imageChooser.height
             width: imageSelectorGrid.cellWidth * imageChooser.columnNumber
             currentIndex: -1
+            flickableDirection: Flickable.VerticalFlick
+            interactive: true
             model: ListModel {
                 property int initialImageCount: 0
 
