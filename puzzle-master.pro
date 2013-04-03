@@ -89,7 +89,9 @@ OTHER_FILES += \
     AUTHORS \
     LICENSE \
     LICENSE-DOCS \
-    README.md
+    README.md \
+    installables/puzzle-master-harmattan.desktop \
+    installables/puzzle-master-applauncherd.desktop
 
 # Qt4 default UI
 
@@ -148,15 +150,18 @@ unix:!symbian {
     desktopfile.files = installables/puzzle-master.desktop
 }
 contains(MEEGO_EDITION, harmattan) {
+    message("Puzzle Master is building for Harmattan")
     # We want to use applauncherd here + harmattan specifics and the touchscreen
     DEFINES += HAVE_APPLAUNCHERD HAVE_SWIPELOCK MEEGO_EDITION_HARMATTAN DISABLE_SCROLLBARS
     # The MeeGo graphics system is better than using QGLWidget
     DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY FORCE_PLATFORM_FILE_DIALOG
     # Optification is needed by the Nokia Store
     target.path = /opt/puzzle-master
-    INSTALLS += splash
-    splash.files = installables/puzzle-master-splash.jpg
-    splash.path = /opt/puzzle-master
+}
+contains(NEMO, true) {
+    message("Puzzle Master is building for Nemo")
+    DEFINES += HAVE_APPLAUNCHERD HAVE_SWIPELOCK DISABLE_SCROLLBARS
+    DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY FORCE_PLATFORM_FILE_DIALOG
 }
 maemo5 {
     QT += dbus
@@ -249,10 +254,24 @@ contains(DEFINES, HAVE_APPLAUNCHERD) {
     CONFIG += qdeclarative-boostable link_pkgconfig
     PKGCONFIG += qdeclarative-boostable
     INCLUDEPATH += /usr/include/applauncherd
+
+    # Special desktop file for applauncherd
     desktopfile.files = installables/puzzle-master-applauncherd.desktop
+
+    # Splash image
+    INSTALLS += splash
+    splash.files = installables/puzzle-master-splash.jpg
+    splash.path = /usr/share/puzzle-master
+
     contains(MEEGO_EDITION, harmattan) {
         desktopfile.files = installables/puzzle-master-harmattan.desktop
+        splash.path = /opt/puzzle-master
     }
+}
+contains(DEFINES, HAVE_SWIPELOCK) {
+    # If we want to have swipe lock on MeeGo/Harmattan or Nemo
+    CONFIG += link_pkgconfig
+    PKGCONFIG += x11
 }
 contains(DEFINES, HAVE_OPENGL) {
     # If we want QGLWidget as viewport
