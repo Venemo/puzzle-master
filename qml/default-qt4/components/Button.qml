@@ -44,8 +44,18 @@ Rectangle {
     MouseArea {
         id: buttonMouseArea
         anchors.fill: parent
+        anchors.margins: enableMobileTweaks ? -10 : 0
         onPressed: button.gradient = button.style.pressedGradient
-        onReleased: button.gradient = button.style.normalGradient
-        onClicked: button.clicked()
+        onReleased: {
+            button.gradient = button.style.normalGradient;
+            if (enableMobileTweaks) {
+                button.clicked();
+            }
+        }
+        onClicked: {
+            if (!enableMobileTweaks) {
+                button.clicked();
+            }
+        }
     }
 }

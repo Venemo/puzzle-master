@@ -201,7 +201,7 @@ win32 {
 }
 blackberry {
     message("Building Puzzle Master for BlackBerry!")
-    DEFINES += DISABLE_SCROLLBARS HAVE_OPENGL
+    DEFINES += DISABLE_SCROLLBARS HAVE_OPENGL ENABLE_MOBILE_TWEAKS=true
     QMAKE_EXTRA_TARGETS += package
 }
 blackberry:contains(DEFINES, Q_OS_BLACKBERRY_TABLET) {

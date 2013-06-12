@@ -100,10 +100,11 @@ Panel {
             }
         }
         Button {
+            id: addButton
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: menuButton.left
-                rightMargin: 6 * uiScalingFactor
+                rightMargin: 7 * uiScalingFactor
             }
             width: 65 * uiScalingFactor
             height: 45 * uiScalingFactor
@@ -126,7 +127,7 @@ Panel {
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
-                rightMargin: 6 * uiScalingFactor
+                rightMargin: 7 * uiScalingFactor
             }
             width: 65 * uiScalingFactor
             height: 45 * uiScalingFactor
@@ -135,7 +136,15 @@ Panel {
         }
         TextEdit {
             text: qsTr("Welcome! Choose an image.")
-            anchors.centerIn: parent
+            anchors {
+                left: parent.left
+                right: addButton.left
+                top: parent.top
+                bottom: parent.bottom
+                leftMargin: 7 * uiScalingFactor
+            }
+            horizontalAlignment: TextEdit.AlignLeft
+            verticalAlignment: TextEdit.AlignVCenter
             font.pixelSize: 30 * textScalingFactor
             color: "#ffffff"
             activeFocusOnPress: false

@@ -47,6 +47,9 @@
 #ifndef UI_SCALING_FACTOR
 #define UI_SCALING_FACTOR 1
 #endif
+#ifndef ENABLE_MOBILE_TWEAKS
+#define ENABLE_MOBILE_TWEAKS true
+#endif
 
 #include "puzzleboarditem_qt4.h"
 #include "helpers/appsettings.h"
@@ -168,6 +171,28 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     qDebug() << "initial size is" << initialSize;
 
+    // Check scaling factors
+
+    double uiScalingFactor = UI_SCALING_FACTOR;
+    double textScalingFactor = TEXT_SCALING_FACTOR;
+    bool enableMobileTweaks = ENABLE_MOBILE_TWEAKS;
+
+#if defined(Q_OS_BLACKBERRY)
+    // This is for the blackberry Q10 and Dev Alpha C
+    if (initialSize.height() == initialSize.width())
+    {
+        uiScalingFactor = 1.3;
+        textScalingFactor = 1.08;
+        view->setAttribute(Qt::WA_LockPortraitOrientation);
+    }
+    else
+    {
+        view->setAttribute(Qt::WA_LockLandscapeOrientation);
+    }
+#endif
+
+    qDebug() << "UI scaling factor:" << uiScalingFactor << "text scaling factor:" << textScalingFactor;
+
     // Setting up the view
 
     view->setOptimizationFlag(QGraphicsView::DontAdjustForAntialiasing);
@@ -177,7 +202,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->setRenderHint(QPainter::HighQualityAntialiasing, false);
 #if defined(Q_OS_BLACKBERRY_TABLET) || defined(Q_OS_BLACKBERRY)
     view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-    view->setAttribute(Qt::WA_LockLandscapeOrientation);
 #else
     view->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
 #endif
@@ -191,8 +215,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("allowGalleryModel", allowGalleryModel);
     view->rootContext()->setContextProperty("appVersion", QString(APP_VERSION));
     view->rootContext()->setContextProperty("appEventHandler", appEventHandler);
-    view->rootContext()->setContextProperty("uiScalingFactor", UI_SCALING_FACTOR);
-    view->rootContext()->setContextProperty("textScalingFactor", TEXT_SCALING_FACTOR);
+    view->rootContext()->setContextProperty("uiScalingFactor", uiScalingFactor);
+    view->rootContext()->setContextProperty("textScalingFactor", textScalingFactor);
+    view->rootContext()->setContextProperty("enableMobileTweaks", enableMobileTweaks);
 
     qDebug() << Q_FUNC_INFO << "initialization took" << timer->elapsed() << "ms";
     timer->restart();
