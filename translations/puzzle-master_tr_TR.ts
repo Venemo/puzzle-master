@@ -92,6 +92,10 @@ Emin misiniz?</translation>
         <translation>Seçilen resim işleniyor.</translation>
     </message>
     <message>
+        <source>Puzzle Master</source>
+        <translation>Puzzle Efendisi</translation>
+    </message>
+    <message>
         <source>Wait...</source>
         <translation>Bekle...</translation>
     </message>
@@ -165,17 +169,9 @@ Bu şekilde devam edemezsin. &quot;Yardım al!&quot; seçmelisin.</translation>
         <source>Ok</source>
         <translation>Tamam</translation>
     </message>
-    <message>
-        <source>Puzzle Master</source>
-        <translation>Puzzle Efendisi</translation>
-    </message>
 </context>
 <context>
     <name>ImageChooser</name>
-    <message>
-        <source>Ok</source>
-        <translation>Tamam</translation>
-    </message>
     <message>
         <source>Welcome! Choose an image.</source>
         <translation>Hoşgeldin! Resim seç.</translation>
@@ -189,16 +185,20 @@ Bu şekilde devam edemezsin. &quot;Yardım al!&quot; seçmelisin.</translation>
         <translation>Devam etmeden önce bir resim seçmelisiniz.</translation>
     </message>
     <message>
+        <source>Ok</source>
+        <translation>Tamam</translation>
+    </message>
+    <message>
+        <source>Puzzle Master</source>
+        <translation>Puzzle Efendisi</translation>
+    </message>
+    <message>
         <source>About</source>
         <translation>Hakkında</translation>
     </message>
     <message>
         <source>Quit</source>
         <translation>Çıkış</translation>
-    </message>
-    <message>
-        <source>Puzzle Master</source>
-        <translation>Puzzle Efendisi</translation>
     </message>
 </context>
 <context>

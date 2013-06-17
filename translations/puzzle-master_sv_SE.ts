@@ -5,11 +5,11 @@
     <name>AppWindow</name>
     <message>
         <source>You&apos;re a winner!</source>
-        <translation>Du har vunnit!</translation>
+        <translation>Du är en vinnare!</translation>
     </message>
     <message>
         <source>Congratulations, you have successfully solved the given puzzle.</source>
-        <translation>Grattis, du har framgångsrikt löst pusslet!</translation>
+        <translation>Grattis, du ha successfullt löst pusslet!</translation>
     </message>
     <message>
         <source>Play again</source>
@@ -44,8 +44,7 @@
 Puzzle Master is a fun and addictive jigsaw puzzle game.
 Using Qt.</source>
         <translation>Skapad av Kristóf Timur.
-Översatt till svenska av Daniel Sandman
-Puzzle Master är ett skoj och beroendeframkallande pussel.
+Puzzle Master är ett skoj och beroendeframkallande pussel
 Gjord med Qt.</translation>
     </message>
     <message>
@@ -64,7 +63,7 @@ Are you sure to proceed?</source>
     </message>
     <message>
         <source>You have already added the selected image.</source>
-        <translation>Du har redan lagt till den markerade bilden.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -91,6 +90,10 @@ Are you sure to proceed?</source>
     <message>
         <source>The selected image is being processed.</source>
         <translation>Den valda pusselbilden bearbetas...</translation>
+    </message>
+    <message>
+        <source>Puzzle Master</source>
+        <translation>Puzzle Master</translation>
     </message>
     <message>
         <source>Wait...</source>
@@ -166,17 +169,9 @@ Du kan inte fortsätta senare. Använd &quot;Få en ledtråd&quot; om du behöve
         <source>Ok</source>
         <translation>Okej</translation>
     </message>
-    <message>
-        <source>Puzzle Master</source>
-        <translation>Puzzle Master</translation>
-    </message>
 </context>
 <context>
     <name>ImageChooser</name>
-    <message>
-        <source>Ok</source>
-        <translation>Okej</translation>
-    </message>
     <message>
         <source>Welcome! Choose an image.</source>
         <translation>Välkommen! Välj en bild.</translation>
@@ -190,16 +185,20 @@ Du kan inte fortsätta senare. Använd &quot;Få en ledtråd&quot; om du behöve
         <translation>Du måste välja en bild innan du kan fortsätta.</translation>
     </message>
     <message>
+        <source>Ok</source>
+        <translation>Okej</translation>
+    </message>
+    <message>
+        <source>Puzzle Master</source>
+        <translation>Puzzle Master</translation>
+    </message>
+    <message>
         <source>About</source>
         <translation>Om</translation>
     </message>
     <message>
         <source>Quit</source>
         <translation>Avsluta</translation>
-    </message>
-    <message>
-        <source>Puzzle Master</source>
-        <translation>Puzzle Master</translation>
     </message>
 </context>
 <context>
@@ -226,7 +225,7 @@ Du kan inte fortsätta senare. Använd &quot;Få en ledtråd&quot; om du behöve
     </message>
     <message>
         <source>Snap</source>
-        <translation>Fästkänslighet</translation>
+        <translation>Fästa</translation>
     </message>
     <message>
         <source>Easy</source>
@@ -238,7 +237,7 @@ Du kan inte fortsätta senare. Använd &quot;Få en ledtråd&quot; om du behöve
     </message>
     <message>
         <source>Difficult</source>
-        <translation>Svår</translation>
+        <translation>Svårt</translation>
     </message>
 </context>
 </TS>

@@ -91,6 +91,10 @@ Are you sure to proceed?</source>
         <translation>התמונה שנבחרה בתהליכי עיבוד</translation>
     </message>
     <message>
+        <source>Puzzle Master</source>
+        <translation>פאזל מאסטר</translation>
+    </message>
+    <message>
         <source>Wait...</source>
         <translation>המתינו...</translation>
     </message>
@@ -164,17 +168,9 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
-    <message>
-        <source>Puzzle Master</source>
-        <translation>פאזל מאסטר</translation>
-    </message>
 </context>
 <context>
     <name>ImageChooser</name>
-    <message>
-        <source>Ok</source>
-        <translation>Ok</translation>
-    </message>
     <message>
         <source>Welcome! Choose an image.</source>
         <translation>ברוכים הבאים! אנא בחרו תמונה</translation>
@@ -188,16 +184,20 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
         <translation>עליכם לבחור תמונה בטרם תוכלו להמשיך</translation>
     </message>
     <message>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Puzzle Master</source>
+        <translation>פאזל מאסטר</translation>
+    </message>
+    <message>
         <source>About</source>
         <translation>אודות</translation>
     </message>
     <message>
         <source>Quit</source>
         <translation>יציאה</translation>
-    </message>
-    <message>
-        <source>Puzzle Master</source>
-        <translation>פאזל מאסטר</translation>
     </message>
 </context>
 <context>

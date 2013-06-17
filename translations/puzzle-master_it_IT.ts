@@ -44,7 +44,7 @@
 Puzzle Master is a fun and addictive jigsaw puzzle game.
 Using Qt.</source>
         <translation>Sviluppato da Timur Kristóf.
-Puzzle Master è un puzzle-game divertente e coinvolgente.
+Puzzle Master è puzzle-game divertente e coinvolgente.
 Scritto in Qt.</translation>
     </message>
     <message>

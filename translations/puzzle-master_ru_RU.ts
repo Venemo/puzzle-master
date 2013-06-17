@@ -92,6 +92,10 @@ Are you sure to proceed?</source>
         <translation>Загрузка картинки</translation>
     </message>
     <message>
+        <source>Puzzle Master</source>
+        <translation>Puzzle Master</translation>
+    </message>
+    <message>
         <source>Wait...</source>
         <translation>Подождите...</translation>
     </message>
@@ -165,17 +169,9 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
         <source>Ok</source>
         <translation>Ок</translation>
     </message>
-    <message>
-        <source>Puzzle Master</source>
-        <translation>Puzzle Master</translation>
-    </message>
 </context>
 <context>
     <name>ImageChooser</name>
-    <message>
-        <source>Ok</source>
-        <translation>Ок</translation>
-    </message>
     <message>
         <source>Welcome! Choose an image.</source>
         <translation>Привет!Выбери картинку</translation>
@@ -189,16 +185,20 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
         <translation>Вы должны сначала выбрать картинку.</translation>
     </message>
     <message>
+        <source>Ok</source>
+        <translation>Ок</translation>
+    </message>
+    <message>
+        <source>Puzzle Master</source>
+        <translation>Puzzle Master</translation>
+    </message>
+    <message>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
         <source>Quit</source>
         <translation>Выйти</translation>
-    </message>
-    <message>
-        <source>Puzzle Master</source>
-        <translation>Puzzle Master</translation>
     </message>
 </context>
 <context>

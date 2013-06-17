@@ -92,6 +92,10 @@ Biztosan folytatod?</translation>
         <translation>A választott kép feldolgozása...</translation>
     </message>
     <message>
+        <source>Puzzle Master</source>
+        <translation>Puzzle Master</translation>
+    </message>
+    <message>
         <source>Wait...</source>
         <translation>Várj...</translation>
     </message>
@@ -165,17 +169,9 @@ Ha feladod, már nem folytathatod. Ha tippet szeretnél, akkor válaszd az &quot
         <source>Ok</source>
         <translation>Oké</translation>
     </message>
-    <message>
-        <source>Puzzle Master</source>
-        <translation>Puzzle Master</translation>
-    </message>
 </context>
 <context>
     <name>ImageChooser</name>
-    <message>
-        <source>Ok</source>
-        <translation>Oké</translation>
-    </message>
     <message>
         <source>Welcome! Choose an image.</source>
         <translation>Üdv! Válassz egy képet!</translation>
@@ -189,16 +185,20 @@ Ha feladod, már nem folytathatod. Ha tippet szeretnél, akkor válaszd az &quot
         <translation>Választanod kell egy képet a kezdés előtt.</translation>
     </message>
     <message>
+        <source>Ok</source>
+        <translation>Oké</translation>
+    </message>
+    <message>
+        <source>Puzzle Master</source>
+        <translation>Puzzle Master</translation>
+    </message>
+    <message>
         <source>About</source>
         <translation>Névjegy</translation>
     </message>
     <message>
         <source>Quit</source>
         <translation>Kilépés</translation>
-    </message>
-    <message>
-        <source>Puzzle Master</source>
-        <translation>Puzzle Master</translation>
     </message>
 </context>
 <context>
