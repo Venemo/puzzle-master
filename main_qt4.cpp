@@ -48,7 +48,7 @@
 #define UI_SCALING_FACTOR 1
 #endif
 #ifndef ENABLE_MOBILE_TWEAKS
-#define ENABLE_MOBILE_TWEAKS true
+#define ENABLE_MOBILE_TWEAKS false
 #endif
 
 #include "puzzleboarditem_qt4.h"

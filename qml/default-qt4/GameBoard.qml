@@ -108,6 +108,9 @@ PuzzleBoard {
                         game.rotateWithGuide(x, y);
                     }
                 }
+                onPressed: {
+                    gameBoard.enableAutoRepaint();
+                }
                 onReleased: {
                     gameBoard.disableAutoRepaint();
                     game.stopRotateWithGuide();
