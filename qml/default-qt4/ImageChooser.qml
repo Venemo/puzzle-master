@@ -37,6 +37,13 @@ Panel {
     color: "#a909a7"
     radius: 15
 
+    Keys.onEscapePressed: {
+        if (areYouSureToQuitDialog.visible)
+            areYouSureToQuitDialog.close();
+        else
+            areYouSureToQuitDialog.open();
+    }
+
     Component.onCompleted: {
         var selectorComponent = null
 
