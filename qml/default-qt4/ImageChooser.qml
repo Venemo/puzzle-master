@@ -219,6 +219,7 @@ Panel {
                     anchors.margins: -5
                     border.width: 3
                     border.color: "#33000000"
+                    visible: typeof(model.specialThing) === "undefined"
                 }
 
                 Image {
