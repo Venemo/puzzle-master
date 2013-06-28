@@ -108,14 +108,9 @@ PuzzleBoard {
                         game.rotateWithGuide(x, y);
                     }
                 }
-                onPressed: {
-                    gameBoard.enableAutoRepaint();
-                    var x = rotationGuide.x + mouse.x;
-                    var y = rotationGuide.y + mouse.y;
-                    game.startRotateWithGuide(x, y);
-                }
                 onReleased: {
                     gameBoard.disableAutoRepaint();
+                    game.stopRotateWithGuide();
                 }
             }
         }

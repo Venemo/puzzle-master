@@ -31,7 +31,7 @@
 #include "puzzle/creation/imageprocessor.h"
 #include "puzzle/creation/shapeprocessor.h"
 
-static QPointF defaultRotationGuideCoordinates(-100, -100);
+static QPointF defaultRotationGuideCoordinates(-1000, -1000);
 
 static QPointF getBottomRight(const PuzzlePiece *piece, const PuzzleGame *game)
 {
@@ -67,6 +67,7 @@ PuzzleGame::PuzzleGame(QObject *parent)
     , _allowRotation(true)
     , _tolerance(5)
     , _rotationTolerance(10)
+    , _rotatingWithGuide(false)
 {
     _mouseSubject = 0;
     _strokeThickness = 3;
@@ -101,6 +102,8 @@ bool PuzzleGame::startGame(const QString &imageUrl, int rows, int cols, bool all
     emit loadProgressChanged(0);
     deleteAllPieces();
     disable();
+    setRotationGuideCoordinates(defaultRotationGuideCoordinates);
+
     QCoreApplication::instance()->processEvents();
 
     if (height() == 0 || height() == 0)
@@ -311,6 +314,7 @@ void PuzzleGame::assemble()
 
     if (_puzzleItems.count() == 1)
     {
+        setRotationGuideCoordinates(defaultRotationGuideCoordinates);
         emit this->gameAboutToBeWon();
         connect(group, SIGNAL(finished()), this, SIGNAL(gameWon()));
     }
@@ -482,6 +486,8 @@ void PuzzleGame::handleTouchEvent(QTouchEvent *event)
 
     // For each item, handle the touch points it has grabbed
 
+    unsigned totalGrabbedTouchPoints = 0;
+
     foreach (PuzzlePiece *item, puzzleItems)
     {
         // Remove all non-existent touch points (they might exist on a glitchy touchscreen)
@@ -491,6 +497,7 @@ void PuzzleGame::handleTouchEvent(QTouchEvent *event)
 
         // Examine the current touch point count and decide what to do
         int currentTouchPointCount = item->grabbedTouchPointIds().count();
+        totalGrabbedTouchPoints += currentTouchPointCount;
         if (currentTouchPointCount == 0)
         {
             if (item->dragging())
@@ -506,37 +513,44 @@ void PuzzleGame::handleTouchEvent(QTouchEvent *event)
         midPoint /= currentTouchPointCount;
         midPoint = item->mapFromParent(midPoint);
 
-        // Set the transform origin point to the midpoint
-        item->setTransformOriginPoint(midPoint);
+        if (!_rotatingWithGuide)
+        {
+            // Set the transform origin point to the midpoint
+            item->setTransformOriginPoint(midPoint);
 
-        // Perform dragging
-        if (!item->dragging())
-        {
-            item->startDrag(midPoint, true);
-        }
-        else
-        {
-            if (item->previousTouchPointCount() != currentTouchPointCount)
-                item->startDrag(item->mapToParent(midPoint) - item->pos(), true);
-            item->doDrag(midPoint);
-        }
-
-        // Perform rotation
-        if (allowRotation() && currentTouchPointCount >= 2)
-        {
-            if (item->previousTouchPointCount() < 2 || item->previousTouchPointCount() != currentTouchPointCount)
-                item->startRotation(m[*(++item->grabbedTouchPointIds().begin())]->screenPos() - m[*(item->grabbedTouchPointIds().begin())]->screenPos());
+            // Perform dragging
+            if (!item->dragging())
+            {
+                item->startDrag(midPoint, true);
+            }
             else
-                item->handleRotation(m[*(++item->grabbedTouchPointIds().begin())]->screenPos() - m[*(item->grabbedTouchPointIds().begin())]->screenPos());
+            {
+                if (item->previousTouchPointCount() != currentTouchPointCount)
+                    item->startDrag(item->mapToParent(midPoint) - item->pos(), true);
+
+                item->doDrag(midPoint);
+            }
+
+            // Perform rotation
+            if (allowRotation() && currentTouchPointCount >= 2)
+            {
+                if (item->previousTouchPointCount() < 2 || item->previousTouchPointCount() != currentTouchPointCount)
+                    item->startRotation(m[*(++item->grabbedTouchPointIds().begin())]->screenPos() - m[*(item->grabbedTouchPointIds().begin())]->screenPos());
+                else
+                    item->handleRotation(m[*(++item->grabbedTouchPointIds().begin())]->screenPos() - m[*(item->grabbedTouchPointIds().begin())]->screenPos());
+            }
         }
 
+        // Take care of rotation guide
         if (currentTouchPointCount == 1 && event->touchPoints().count() == 1)
         {
+            // If exactly one piece has exactly one touch point, let's say that is the "mouse subject"
             _mouseSubject = item;
             setRotationGuideCoordinates(_mouseSubject->mapToParent(getBottomRight(_mouseSubject, this)));
         }
         else
         {
+            // Otherwise, hide the rotation guide
             setRotationGuideCoordinates(defaultRotationGuideCoordinates);
         }
 
@@ -545,10 +559,17 @@ void PuzzleGame::handleTouchEvent(QTouchEvent *event)
         // Check mergeable neighbours of the piece
         item->checkMergeableSiblings();
     }
+
+    if (totalGrabbedTouchPoints == 0 && event->touchPoints().count() == 1 && event->touchPoints().at(0).state() == Qt::TouchPointPressed)
+    {
+        // User touched the board, remove guide
+        setRotationGuideCoordinates(defaultRotationGuideCoordinates);
+    }
 }
 
 void PuzzleGame::startRotateWithGuide(qreal x, qreal y)
 {
+    _rotatingWithGuide = true;
     _mouseSubject->setTransformOriginPoint(_mouseSubject->centerPoint());
     QPointF rp = QPointF(x, y) - _mouseSubject->mapToParent(_mouseSubject->centerPoint());
     _mouseSubject->startRotation(rp);
@@ -556,7 +577,18 @@ void PuzzleGame::startRotateWithGuide(qreal x, qreal y)
 
 void PuzzleGame::rotateWithGuide(qreal x, qreal y)
 {
+    if (!_rotatingWithGuide)
+    {
+        startRotateWithGuide(x, y);
+        return;
+    }
+
     QPointF rp = QPointF(x, y) - _mouseSubject->mapToParent(_mouseSubject->centerPoint());
     _mouseSubject->handleRotation(rp);
     setRotationGuideCoordinates(_mouseSubject->mapToParent(getBottomRight(_mouseSubject, this)));
+}
+
+void PuzzleGame::stopRotateWithGuide()
+{
+    _rotatingWithGuide = false;
 }

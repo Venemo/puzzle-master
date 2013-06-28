@@ -51,12 +51,14 @@ class PuzzleGame : public QObject
 
     QHash<PuzzlePiece*, QPair<QPointF, int> > _restorablePositions;
     PuzzlePiece *_mouseSubject;
+    bool _rotatingWithGuide;
 
 public:
     explicit PuzzleGame(QObject *parent = 0);
     Q_INVOKABLE bool startGame(const QString &imageUrl, int rows, int cols, bool allowRotation);
     Q_INVOKABLE void startRotateWithGuide(qreal x, qreal y);
     Q_INVOKABLE void rotateWithGuide(qreal x, qreal y);
+    Q_INVOKABLE void stopRotateWithGuide();
     void setNeighbours(int x, int y);
     PuzzlePiece *find(const QPoint &puzzleCoordinates);
     void removePuzzleItem(PuzzlePiece *item);
