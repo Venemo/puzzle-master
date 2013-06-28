@@ -25,20 +25,20 @@ Button {
 
     Rectangle {
         color: menuButton.style.fontColor
-        height: 3
+        height: 3 * uiScalingFactor
         anchors {
             verticalCenter: parent.verticalCenter
             left: parent.left
             right: parent.right
             leftMargin: 16
             rightMargin: 16
-            verticalCenterOffset: -10
+            verticalCenterOffset: -10 * uiScalingFactor
         }
     }
 
     Rectangle {
         color: menuButton.style.fontColor
-        height: 3
+        height: 3 * uiScalingFactor
         anchors {
             verticalCenter: parent.verticalCenter
             left: parent.left
@@ -50,14 +50,14 @@ Button {
 
     Rectangle {
         color: menuButton.style.fontColor
-        height: 3
+        height: 3 * uiScalingFactor
         anchors {
             verticalCenter: parent.verticalCenter
             left: parent.left
             right: parent.right
             leftMargin: 16
             rightMargin: 16
-            verticalCenterOffset: 10
+            verticalCenterOffset: 10 * uiScalingFactor
         }
     }
 }

@@ -26,11 +26,24 @@
 #include <QQmlEngine>
 #include <QDebug>
 #include <qqml.h>
+#if defined(FORCE_PLATFORM_FILE_DIALOG)
+#include <QApplication>
+#endif
 
 #include "puzzleboarditem.h"
 #include "helpers/appsettings.h"
 #include "helpers/appeventhandler.h"
 #include "puzzle/puzzlegame.h"
+
+#ifndef TEXT_SCALING_FACTOR
+#define TEXT_SCALING_FACTOR 1
+#endif
+#ifndef UI_SCALING_FACTOR
+#define UI_SCALING_FACTOR 1
+#endif
+#ifndef ENABLE_MOBILE_TWEAKS
+#define ENABLE_MOBILE_TWEAKS false
+#endif
 
 extern void loadTranslations();
 QQuickView *view;
@@ -53,7 +66,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     // Initializing app and view
 
+#if defined(FORCE_PLATFORM_FILE_DIALOG)
+    QGuiApplication *app = new QApplication(argc, argv);
+#else
     QGuiApplication *app = new QGuiApplication(argc, argv);
+#endif
     view = new QQuickView();
 
     // Some wireup
@@ -95,6 +112,12 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QSize initialSize = view->screen()->size();
     qDebug() << "initial size is" << initialSize;
 
+    // Check scaling factors
+
+    double uiScalingFactor = UI_SCALING_FACTOR;
+    double textScalingFactor = TEXT_SCALING_FACTOR;
+    bool enableMobileTweaks = ENABLE_MOBILE_TWEAKS;
+
     // Setting up the view
 
     view->setResizeMode(QQuickView::SizeRootObjectToView);
@@ -104,6 +127,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("allowGalleryModel", allowGalleryModel);
     view->rootContext()->setContextProperty("appVersion", QString(APP_VERSION));
     view->rootContext()->setContextProperty("appEventHandler", appEventHandler);
+    view->rootContext()->setContextProperty("uiScalingFactor", uiScalingFactor);
+    view->rootContext()->setContextProperty("textScalingFactor", textScalingFactor);
+    view->rootContext()->setContextProperty("enableMobileTweaks", enableMobileTweaks);
 
     qDebug() << Q_FUNC_INFO << "initialization took" << timer->elapsed() << "ms";
     timer->restart();

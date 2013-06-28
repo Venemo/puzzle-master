@@ -45,7 +45,7 @@ Rectangle {
 
     Rectangle {
         id: picker
-        width: 15
+        width: 15 * uiScalingFactor
         gradient: Gradient {
             GradientStop {
                 position: 0
@@ -65,8 +65,8 @@ Rectangle {
     Button {
         id: handle
         y: 0
-        width: verticalSlider.width - 4
-        height: verticalSlider.width - 4
+        width: verticalSlider.width * uiScalingFactor - 4
+        height: verticalSlider.width * uiScalingFactor - 4
         radius: height / 2 - 1
         anchors.horizontalCenter: parent.horizontalCenter
     }

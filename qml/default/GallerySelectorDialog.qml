@@ -26,18 +26,9 @@ Dialog
 
     onOpened: {
         console.log("Creating DocumentGalleryModel");
-        if (!imageSelectorGrid.model)
-            imageSelectorGrid.model = Qt.createQmlObject(" \
-                import QtQuick 1.0; \
-                import QtMobility.gallery 1.1; \
-                 \
-                DocumentGalleryModel { \
-                    id: picsModel; \
-                    rootType: DocumentGallery.Image; \
-                    properties: [ 'url', 'filePath' ]; \
-                    sortProperties: [ '-dateTaken' ]; \
-                    autoUpdate: true; \
-                }", imageSelectorGrid, "DocumentGalleryModelSnippet.qml");
+        if (!imageSelectorGrid.model) {
+            imageSelectorGrid.model = modelComponent.createObject(fileSelectorDialog);
+        }
     }
 
     id: fileSelectorDialog
@@ -93,6 +84,32 @@ Dialog
         highlight: Rectangle {
             color: "#a909a7"
             radius: 2
+        }
+
+        TextEdit {
+            id: modelLoadIndicator
+            anchors.centerIn: parent
+            font.pixelSize: 50
+            color: "#fff"
+            activeFocusOnPress: false
+            text: "..."
+        }
+
+        Component {
+            id: modelComponent
+
+            DocumentGalleryModel {
+                id: picsModel
+                rootType: DocumentGallery.Image
+                properties: [ 'url', 'filePath' ]
+                sortProperties: [ '-dateTaken' ]
+                autoUpdate: true
+                onStatusChanged: {
+                    if (status === DocumentGalleryModel.Idle || status === DocumentGalleryModel.Finished || status === DocumentGalleryModel.Canceled) {
+                        modelLoadIndicator.visible = false;
+                    }
+                }
+            }
         }
     }
 }

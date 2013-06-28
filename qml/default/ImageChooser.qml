@@ -29,12 +29,20 @@ Panel {
     property string selectedImagePath: ""
     property int columnNumber: 3
     property variant fileSelectorDialog: null
+    property bool canAddCustomImage: (typeof(fileSelectorDialog) != "undefined" && fileSelectorDialog !== null) || appEventHandler.showPlatformFileDialog()
 
     signal accepted
 
     id: imageChooser
     color: "#a909a7"
     radius: 15
+
+    Keys.onEscapePressed: {
+        if (areYouSureToQuitDialog.visible)
+            areYouSureToQuitDialog.close();
+        else
+            areYouSureToQuitDialog.open();
+    }
 
     Component.onCompleted: {
         var selectorComponent = null
@@ -57,7 +65,7 @@ Panel {
     }
     Rectangle {
         id: imageChooserTop
-        height: 60
+        height: 60 * uiScalingFactor
         color: "transparent"
         anchors {
             top: parent.top
@@ -71,8 +79,8 @@ Panel {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 6
-            width: 65
-            height: 45
+            width: 65 * uiScalingFactor
+            height: 45 * uiScalingFactor
             text: ""
             style: purpleButtonStyle
             onClicked: {
@@ -82,8 +90,8 @@ Panel {
                 color: "#FFFFFF"
                 border.color: "#7DB72F"
                 border.width: 1
-                width: 25
-                height: 25
+                width: 25 * uiScalingFactor
+                height: 25 * uiScalingFactor
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: -5
                 anchors.horizontalCenterOffset: -5
@@ -92,33 +100,11 @@ Panel {
                 color: "#FFFFFF"
                 border.color: "#7DB72F"
                 border.width: 1
-                width: 25
-                height: 25
+                width: 25 * uiScalingFactor
+                height: 25 * uiScalingFactor
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: 5
                 anchors.horizontalCenterOffset: 5
-            }
-        }
-        Button {
-            anchors {
-                verticalCenter: parent.verticalCenter
-                right: menuButton.left
-                rightMargin: 6
-            }
-            width: 65
-            height: 45
-            style: purpleButtonStyle
-            text: "+"
-            font.pixelSize: 40
-            visible: (typeof(fileSelectorDialog) != "undefined" && fileSelectorDialog !== null) || appEventHandler.showPlatformFileDialog()
-            onClicked: {
-                menuDialog.close()
-                if (appEventHandler.showPlatformFileDialog()) {
-                    appEventHandler.displayPlatformFileDialog();
-                }
-                else {
-                    fileSelectorDialog.open()
-                }
             }
         }
         MenuButton {
@@ -126,17 +112,24 @@ Panel {
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
-                rightMargin: 6
+                rightMargin: 7 * uiScalingFactor
             }
-            width: 65
-            height: 45
+            width: 65 * uiScalingFactor
+            height: 45 * uiScalingFactor
             style: purpleButtonStyle
             onClicked: menuDialog.open()
         }
         TextEdit {
             text: qsTr("Welcome! Choose an image.")
-            anchors.centerIn: parent
-            font.pixelSize: 30
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: parent.top
+                bottom: parent.bottom
+            }
+            horizontalAlignment: TextEdit.AlignHCenter
+            verticalAlignment: TextEdit.AlignVCenter
+            font.pixelSize: 30 * textScalingFactor
             color: "#ffffff"
             activeFocusOnPress: false
         }
@@ -184,37 +177,42 @@ Panel {
             cellHeight: imageSelectorGrid.cellWidth / imageChooser.width * imageChooser.height
             width: imageSelectorGrid.cellWidth * imageChooser.columnNumber
             currentIndex: -1
+            flickableDirection: Flickable.VerticalFlick
+            interactive: true
             model: ListModel {
                 property int initialImageCount: 0
 
                 id: imagesModel
                 Component.onCompleted: {
                     // These are the built-in images
-                    imagesModel.append({ path: ":/pics/image1.jpg" });
-                    imagesModel.append({ path: ":/pics/image4.jpg" });
-                    imagesModel.append({ path: ":/pics/image16.jpg" });
-                    imagesModel.append({ path: ":/pics/image18.jpg" });
-                    imagesModel.append({ path: ":/pics/image10.jpg" });
-                    imagesModel.append({ path: ":/pics/image3.jpg" });
-                    imagesModel.append({ path: ":/pics/image6.jpg" });
-                    imagesModel.append({ path: ":/pics/image5.jpg" });
-                    imagesModel.append({ path: ":/pics/image11.jpg" });
-                    imagesModel.append({ path: ":/pics/image17.jpg" });
-                    imagesModel.append({ path: ":/pics/image12.jpg" });
-                    imagesModel.append({ path: ":/pics/image13.jpg" });
-                    imagesModel.append({ path: ":/pics/image7.jpg" });
-                    imagesModel.append({ path: ":/pics/image8.jpg" });
-                    imagesModel.append({ path: ":/pics/image9.jpg" });
-                    imagesModel.append({ path: ":/pics/image14.jpg" });
-                    imagesModel.append({ path: ":/pics/image15.jpg" });
-                    imagesModel.append({ path: ":/pics/image2.jpg" });
+                    if (canAddCustomImage) {
+                        imagesModel.append({ path: ":/pics/add-image.png", specialThing: "add-image", isBuiltIn: true });
+                    }
+                    imagesModel.append({ path: ":/pics/image1.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image4.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image16.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image18.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image10.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image3.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image6.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image5.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image11.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image17.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image12.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image13.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image7.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image8.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image9.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image14.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image15.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image2.jpg", isBuiltIn: true });
 
                     // Set initial count
                     imagesModel.initialImageCount = imagesModel.count;
                     // Load custom images
                     var paths = appSettings.loadCustomImages();
                     for (var i = 0; i < paths.length; i++) {
-                        imagesModel.insert(0, { path: paths[i] });
+                        imagesModel.insert(canAddCustomImage ? 1 : 0, { path: paths[i] });
                     }
                 }
             }
@@ -228,6 +226,7 @@ Panel {
                     anchors.margins: -5
                     border.width: 3
                     border.color: "#33000000"
+                    visible: typeof(model.specialThing) === "undefined"
                 }
 
                 Image {
@@ -246,20 +245,34 @@ Panel {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        imageSelectorGrid.currentIndex = index;
-                        imageChooser.accepted();
+
+                        var selected = imagesModel.get(index);
+                        if (selected.specialThing === "add-image") {
+                            menuDialog.close()
+                            if (appEventHandler.showPlatformFileDialog()) {
+                                appEventHandler.displayPlatformFileDialog();
+                            }
+                            else {
+                                fileSelectorDialog.open()
+                            }
+                        }
+                        else {
+                            imageSelectorGrid.currentIndex = index;
+                            imageChooser.accepted();
+                        }
                     }
                 }
                 Button {
                     style: redButtonStyle
                     text: "-"
-                    width: 50
-                    height: 50
+                    width: 50 * uiScalingFactor
+                    height: 50 * uiScalingFactor
+                    font.pixelSize: 25 * textScalingFactor
                     anchors {
                         bottom: parent.bottom
                         right: parent.right
                     }
-                    visible: index < imagesModel.count - imagesModel.initialImageCount
+                    visible: !model.isBuiltIn
                     onClicked: {
                         var selected = imagesModel.get(index);
                         appSettings.removeCustomImage(decodeURI(selected.path));
@@ -294,10 +307,10 @@ Panel {
         contentWidth: menuDialogColumn.width
         content: Column {
             id: menuDialogColumn
-            spacing: 10
+            spacing: 10 * uiScalingFactor
 
             Button {
-                width: 500
+                width: 500 * uiScalingFactor
                 text: qsTr("About")
                 onClicked: {
                     menuDialog.close()
@@ -305,7 +318,7 @@ Panel {
                 }
             }
             Button {
-                width: 500
+                width: 500 * uiScalingFactor
                 text: qsTr("Quit")
                 style: redButtonStyle
                 onClicked: {
@@ -319,14 +332,14 @@ Panel {
         target: fileSelectorDialog ? fileSelectorDialog : null
         onAccepted: {
             if (appSettings.addCustomImage(decodeURI(fileSelectorDialog.selectedImagePath)))
-                imagesModel.insert(0, { path: fileSelectorDialog.selectedImagePath })
+                imagesModel.insert(canAddCustomImage ? 1 : 0, { path: fileSelectorDialog.selectedImagePath })
         }
     }
     Connections {
         target: appEventHandler
         onPlatformFileDialogAccepted: {
             if (appSettings.addCustomImage(decodeURI(filePath)))
-                imagesModel.insert(0, { path: filePath })
+                imagesModel.insert(canAddCustomImage ? 1 : 0, { path: filePath })
         }
     }
 }

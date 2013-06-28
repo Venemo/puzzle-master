@@ -37,15 +37,25 @@ Rectangle {
     TextEdit {
         id: buttonText
         anchors.centerIn: parent
-        font.pixelSize: 25
+        font.pixelSize: 25 * textScalingFactor
         color: button.style.fontColor
         activeFocusOnPress: false
     }
     MouseArea {
         id: buttonMouseArea
         anchors.fill: parent
+        anchors.margins: enableMobileTweaks ? -10 : 0
         onPressed: button.gradient = button.style.pressedGradient
-        onReleased: button.gradient = button.style.normalGradient
-        onClicked: button.clicked()
+        onReleased: {
+            button.gradient = button.style.normalGradient;
+            if (enableMobileTweaks) {
+                button.clicked();
+            }
+        }
+        onClicked: {
+            if (!enableMobileTweaks) {
+                button.clicked();
+            }
+        }
     }
 }

@@ -28,7 +28,7 @@ Panel {
     property string rejectButtonText: ""
     property alias content: contentField.children
     property int contentHeight: 0
-    property int contentWidth: 500
+    property int contentWidth: 500 * uiScalingFactor
     property bool enableBackgroundClicking: true
     property bool shouldAccept: false
 
@@ -72,13 +72,13 @@ Panel {
         id: titleText
         color: dialog.fontColor
         text: dialog.title
-        font.pixelSize: 35
+        font.pixelSize: 35 * textScalingFactor
         visible: dialog.title != ""
         activeFocusOnPress: false
 
         anchors.left: separatorRect.left
         anchors.bottom: separatorRect.top
-        anchors.bottomMargin: 10
+        anchors.bottomMargin: 10 * uiScalingFactor
     }
     Rectangle {
         id: separatorRect
@@ -89,13 +89,13 @@ Panel {
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: textText.visible ? textText.top : contentField.top
-        anchors.bottomMargin: 10
+        anchors.bottomMargin: 10 * uiScalingFactor
     }
     TextEdit {
         id: textText
         color: dialog.fontColor
         text: dialog.text
-        font.pixelSize: 25
+        font.pixelSize: 25 * textScalingFactor
         visible: dialog.text != ""
         width: dialog.contentWidth
         wrapMode: Text.Wrap
@@ -104,7 +104,7 @@ Panel {
         anchors.left: separatorRect.left
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: contentField.top
-        anchors.bottomMargin: 10
+        anchors.bottomMargin: 10 * uiScalingFactor
     }
     Item {
         id: contentField
@@ -113,20 +113,20 @@ Panel {
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: (titleText.height + separatorRect.height + (dialog.text != "" ? textText.height : 0)) / 2 - 30
+        anchors.verticalCenterOffset: uiScalingFactor * (titleText.height + separatorRect.height + (dialog.text != "" ? textText.height : 0)) / 2 - 30
     }
     Row {
         id: buttonRow
-        spacing: 10
+        spacing: 10 * uiScalingFactor
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: contentField.bottom
-        anchors.topMargin: 10
+        anchors.topMargin: 10 * uiScalingFactor
 
         Button {
             id: acceptButton
             text: acceptButtonText
-            width: 240
+            width: 240 * uiScalingFactor
             onClicked: dialog.accept()
             visible: acceptButtonText != ""
             style: GreenButtonStyle { }
@@ -134,7 +134,7 @@ Panel {
         Button {
             id: rejectButton
             text: rejectButtonText
-            width: 240
+            width: 240 * uiScalingFactor
             onClicked: dialog.reject()
             visible: rejectButtonText != ""
             style: RedButtonStyle { }
