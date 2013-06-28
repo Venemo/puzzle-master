@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>pics/background.jpg</file>
+        <file>pics/rotation-guide.png</file>
     </qresource>
 </RCC>

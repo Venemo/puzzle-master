@@ -21,6 +21,7 @@
 #include <QTouchEvent>
 #include <QMap>
 #include <QGraphicsSceneMouseEvent>
+#include <cmath>
 
 #include "puzzleboarditem_qt4.h"
 #include "puzzle/puzzlepieceprimitive.h"
@@ -61,6 +62,18 @@ bool PuzzleBoardItem::sceneEvent(QEvent *event)
     if (event->type() == QEvent::TouchBegin || event->type() == QEvent::TouchUpdate || event->type() == QEvent::TouchEnd)
     {
         QTouchEvent *te = static_cast<QTouchEvent*>(event);
+
+        if (te->touchPoints().count() == 1)
+        {
+            QTouchEvent::TouchPoint tp = te->touchPoints().first();
+            QPointF diff = tp.screenPos() - this->game()->rotationGuideCoordinates();
+            if (abs(diff.x()) < 32 && abs(diff.y()) < 32)
+            {
+                event->ignore();
+                return false;
+            }
+        }
+
         event->accept();
         _game->handleTouchEvent(te);
         if (!_autoRepainter->isActive())

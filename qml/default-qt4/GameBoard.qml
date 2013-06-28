@@ -79,7 +79,7 @@ PuzzleBoard {
     Rectangle {
         id: rotationGuide
         color: "#fff"
-        width: 50 * uiScalingFactor
+        width: 64 * uiScalingFactor
         height: width
         radius: width / 2
         x: game.rotationGuideCoordinates.x - width / 2
@@ -87,16 +87,15 @@ PuzzleBoard {
 
         Rectangle {
             color: "#9fce00"
-            width: parent.width - 6
+            width: 64 * uiScalingFactor - 6
             height: width
             radius: width / 2
             anchors.centerIn: parent
 
-            Text {
-                anchors.centerIn: parent
-                color: "#fff"
-                text: "R"
-                font.pixelSize: 40
+            Image {
+                anchors.fill: parent
+                fillMode: Image.Stretch
+                source: "qrc:/pics/rotation-guide.png"
             }
 
             MouseArea {
