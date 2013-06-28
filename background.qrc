@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>pics/background.jpg</file>
         <file>pics/rotation-guide.png</file>
+        <file>pics/add-image.png</file>
     </qresource>
 </RCC>

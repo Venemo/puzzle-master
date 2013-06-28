@@ -29,6 +29,7 @@ Panel {
     property string selectedImagePath: ""
     property int columnNumber: 3
     property variant fileSelectorDialog: null
+    property bool canAddCustomImage: (typeof(fileSelectorDialog) != "undefined" && fileSelectorDialog !== null) || appEventHandler.showPlatformFileDialog()
 
     signal accepted
 
@@ -99,29 +100,6 @@ Panel {
                 anchors.horizontalCenterOffset: 5
             }
         }
-        Button {
-            id: addButton
-            anchors {
-                verticalCenter: parent.verticalCenter
-                right: menuButton.left
-                rightMargin: 7 * uiScalingFactor
-            }
-            width: 65 * uiScalingFactor
-            height: 45 * uiScalingFactor
-            style: purpleButtonStyle
-            text: "+"
-            font.pixelSize: 40 * textScalingFactor
-            visible: (typeof(fileSelectorDialog) != "undefined" && fileSelectorDialog !== null) || appEventHandler.showPlatformFileDialog()
-            onClicked: {
-                menuDialog.close()
-                if (appEventHandler.showPlatformFileDialog()) {
-                    appEventHandler.displayPlatformFileDialog();
-                }
-                else {
-                    fileSelectorDialog.open()
-                }
-            }
-        }
         MenuButton {
             id: menuButton
             anchors {
@@ -138,12 +116,11 @@ Panel {
             text: qsTr("Welcome! Choose an image.")
             anchors {
                 left: parent.left
-                right: addButton.left
+                right: parent.right
                 top: parent.top
                 bottom: parent.bottom
-                leftMargin: 7 * uiScalingFactor
             }
-            horizontalAlignment: TextEdit.AlignLeft
+            horizontalAlignment: TextEdit.AlignHCenter
             verticalAlignment: TextEdit.AlignVCenter
             font.pixelSize: 30 * textScalingFactor
             color: "#ffffff"
@@ -201,31 +178,34 @@ Panel {
                 id: imagesModel
                 Component.onCompleted: {
                     // These are the built-in images
-                    imagesModel.append({ path: ":/pics/image1.jpg" });
-                    imagesModel.append({ path: ":/pics/image4.jpg" });
-                    imagesModel.append({ path: ":/pics/image16.jpg" });
-                    imagesModel.append({ path: ":/pics/image18.jpg" });
-                    imagesModel.append({ path: ":/pics/image10.jpg" });
-                    imagesModel.append({ path: ":/pics/image3.jpg" });
-                    imagesModel.append({ path: ":/pics/image6.jpg" });
-                    imagesModel.append({ path: ":/pics/image5.jpg" });
-                    imagesModel.append({ path: ":/pics/image11.jpg" });
-                    imagesModel.append({ path: ":/pics/image17.jpg" });
-                    imagesModel.append({ path: ":/pics/image12.jpg" });
-                    imagesModel.append({ path: ":/pics/image13.jpg" });
-                    imagesModel.append({ path: ":/pics/image7.jpg" });
-                    imagesModel.append({ path: ":/pics/image8.jpg" });
-                    imagesModel.append({ path: ":/pics/image9.jpg" });
-                    imagesModel.append({ path: ":/pics/image14.jpg" });
-                    imagesModel.append({ path: ":/pics/image15.jpg" });
-                    imagesModel.append({ path: ":/pics/image2.jpg" });
+                    if (canAddCustomImage) {
+                        imagesModel.append({ path: ":/pics/add-image.png", specialThing: "add-image", isBuiltIn: true });
+                    }
+                    imagesModel.append({ path: ":/pics/image1.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image4.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image16.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image18.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image10.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image3.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image6.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image5.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image11.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image17.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image12.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image13.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image7.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image8.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image9.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image14.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image15.jpg", isBuiltIn: true });
+                    imagesModel.append({ path: ":/pics/image2.jpg", isBuiltIn: true });
 
                     // Set initial count
                     imagesModel.initialImageCount = imagesModel.count;
                     // Load custom images
                     var paths = appSettings.loadCustomImages();
                     for (var i = 0; i < paths.length; i++) {
-                        imagesModel.insert(0, { path: paths[i] });
+                        imagesModel.insert(canAddCustomImage ? 1 : 0, { path: paths[i] });
                     }
                 }
             }
@@ -257,8 +237,21 @@ Panel {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        imageSelectorGrid.currentIndex = index;
-                        imageChooser.accepted();
+
+                        var selected = imagesModel.get(index);
+                        if (selected.specialThing === "add-image") {
+                            menuDialog.close()
+                            if (appEventHandler.showPlatformFileDialog()) {
+                                appEventHandler.displayPlatformFileDialog();
+                            }
+                            else {
+                                fileSelectorDialog.open()
+                            }
+                        }
+                        else {
+                            imageSelectorGrid.currentIndex = index;
+                            imageChooser.accepted();
+                        }
                     }
                 }
                 Button {
@@ -271,7 +264,7 @@ Panel {
                         bottom: parent.bottom
                         right: parent.right
                     }
-                    visible: index < imagesModel.count - imagesModel.initialImageCount
+                    visible: !model.isBuiltIn
                     onClicked: {
                         var selected = imagesModel.get(index);
                         appSettings.removeCustomImage(decodeURI(selected.path));
@@ -331,14 +324,14 @@ Panel {
         target: fileSelectorDialog ? fileSelectorDialog : null
         onAccepted: {
             if (appSettings.addCustomImage(decodeURI(fileSelectorDialog.selectedImagePath)))
-                imagesModel.insert(0, { path: fileSelectorDialog.selectedImagePath })
+                imagesModel.insert(canAddCustomImage ? 1 : 0, { path: fileSelectorDialog.selectedImagePath })
         }
     }
     Connections {
         target: appEventHandler
         onPlatformFileDialogAccepted: {
             if (appSettings.addCustomImage(decodeURI(filePath)))
-                imagesModel.insert(0, { path: filePath })
+                imagesModel.insert(canAddCustomImage ? 1 : 0, { path: filePath })
         }
     }
 }
