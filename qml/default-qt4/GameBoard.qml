@@ -76,6 +76,52 @@ PuzzleBoard {
         gameBoard.waitForHint = false
     }
 
+    Rectangle {
+        id: rotationGuide
+        color: "#fff"
+        width: 50 * uiScalingFactor
+        height: width
+        radius: width / 2
+        x: game.rotationGuideCoordinates.x - width / 2
+        y: game.rotationGuideCoordinates.y - height / 2
+
+        Rectangle {
+            color: "#9fce00"
+            width: parent.width - 6
+            height: width
+            radius: width / 2
+            anchors.centerIn: parent
+
+            Text {
+                anchors.centerIn: parent
+                color: "#fff"
+                text: "R"
+                font.pixelSize: 40
+            }
+
+            MouseArea {
+                id: rotationGuideMouseArea
+                anchors.fill: parent
+                onMousePositionChanged: {
+                    if (rotationGuideMouseArea.pressed) {
+                        var x = rotationGuide.x + mouse.x;
+                        var y = rotationGuide.y + mouse.y;
+                        game.rotateWithGuide(x, y);
+                    }
+                }
+                onPressed: {
+                    gameBoard.enableAutoRepaint();
+                    var x = rotationGuide.x + mouse.x;
+                    var y = rotationGuide.y + mouse.y;
+                    game.startRotateWithGuide(x, y);
+                }
+                onReleased: {
+                    gameBoard.disableAutoRepaint();
+                }
+            }
+        }
+    }
+
     Image {
         anchors.fill: parent
         source: "qrc:/pics/background.jpg"

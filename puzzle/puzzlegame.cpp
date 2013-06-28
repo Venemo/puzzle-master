@@ -31,6 +31,17 @@
 #include "puzzle/creation/imageprocessor.h"
 #include "puzzle/creation/shapeprocessor.h"
 
+static QPointF defaultRotationGuideCoordinates(-100, -100);
+
+static QPointF getBottomRight(const PuzzlePiece *piece, const PuzzleGame *game)
+{
+    qreal r = game->tabSizes() * 2 / 3;
+    QPointF f(piece->tabStatus() & Puzzle::Creation::RightTab ? r : 0, piece->tabStatus() & Puzzle::Creation::BottomTab ? r : 0);
+    QPointF p = piece->bottomRight() - f;
+    return p;
+
+}
+
 static PuzzlePiece *findPuzzleItem(QPointF p, const QList<PuzzlePiece*> &puzzleItems)
 {
     foreach (PuzzlePiece *item, puzzleItems)
@@ -61,6 +72,7 @@ PuzzleGame::PuzzleGame(QObject *parent)
     _mouseSubject = 0;
     _strokeThickness = 3;
     _enabled = false;
+    setRotationGuideCoordinates(defaultRotationGuideCoordinates);
 }
 
 void PuzzleGame::setNeighbours(int x, int y)
@@ -377,11 +389,15 @@ void PuzzleGame::handleMousePress(Qt::MouseButton button, QPointF pos)
     _mouseSubject = findPuzzleItem(pos, puzzleItems);
 
     if (!_enabled || !_mouseSubject || _mouseSubject->isDraggingWithTouch())
+    {
+        setRotationGuideCoordinates(defaultRotationGuideCoordinates);
         return;
+    }
 
     if (button == Qt::LeftButton)
     {
         _mouseSubject->startDrag(_mouseSubject->mapFromParent(pos));
+        setRotationGuideCoordinates(_mouseSubject->mapToParent(getBottomRight(_mouseSubject, this)));
     }
     else if (button == Qt::RightButton && allowRotation())
     {
@@ -423,6 +439,7 @@ void PuzzleGame::handleMouseMove(QPointF pos)
     else
         _mouseSubject->doDrag(p);
 
+    setRotationGuideCoordinates(_mouseSubject->mapToParent(getBottomRight(_mouseSubject, this)));
     _mouseSubject->checkMergeableSiblings();
 }
 
@@ -520,3 +537,16 @@ void PuzzleGame::handleTouchEvent(QTouchEvent *event)
     }
 }
 
+void PuzzleGame::startRotateWithGuide(qreal x, qreal y)
+{
+    _mouseSubject->setTransformOriginPoint(_mouseSubject->centerPoint());
+    QPointF rp = _mouseSubject->centerPoint() - QPointF(x, y);
+    _mouseSubject->startRotation(rp);
+}
+
+void PuzzleGame::rotateWithGuide(qreal x, qreal y)
+{
+    QPointF rp = _mouseSubject->centerPoint() - QPointF(x, y);
+    _mouseSubject->handleRotation(rp);
+    setRotationGuideCoordinates(_mouseSubject->mapToParent(getBottomRight(_mouseSubject, this)));
+}

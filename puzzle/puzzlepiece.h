@@ -65,6 +65,7 @@ public:
     QPointF mapToParent(const QPointF &p) const;
     QPointF mapFromParent(const QPointF &p) const;
     QPointF mapToItem(const PuzzlePiece *item, const QPointF &p) const;
+    const QPointF &bottomRight() const { return this->_bottomRight; }
 
     void startDrag(const QPointF &pos, bool touch = false);
     void stopDrag();

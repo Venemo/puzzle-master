@@ -45,6 +45,8 @@ class PuzzleGame : public QObject
     GENPROPERTY_F(int, _rotationTolerance, rotationTolerance, setRotationTolerance, rotationToleranceChanged)
     Q_PROPERTY(int rotationTolerance READ rotationTolerance WRITE setRotationTolerance NOTIFY rotationToleranceChanged)
     GENPROPERTY_R(QSet<PuzzlePiece*>, _puzzleItems, puzzleItems)
+    GENPROPERTY_F(QPointF, _rotationGuideCoordinates, rotationGuideCoordinates, setRotationGuideCoordinates, rotationGuideCoordinatesChanged)
+    Q_PROPERTY(QPointF rotationGuideCoordinates READ rotationGuideCoordinates WRITE setRotationGuideCoordinates NOTIFY rotationGuideCoordinatesChanged)
 
     QHash<PuzzlePiece*, QPair<QPointF, int> > _restorablePositions;
     PuzzlePiece *_mouseSubject;
@@ -52,6 +54,8 @@ class PuzzleGame : public QObject
 public:
     explicit PuzzleGame(QObject *parent = 0);
     Q_INVOKABLE bool startGame(const QString &imageUrl, int rows, int cols, bool allowRotation);
+    Q_INVOKABLE void startRotateWithGuide(qreal x, qreal y);
+    Q_INVOKABLE void rotateWithGuide(qreal x, qreal y);
     void setNeighbours(int x, int y);
     PuzzlePiece *find(const QPoint &puzzleCoordinates);
     void removePuzzleItem(PuzzlePiece *item);
@@ -64,6 +68,7 @@ public:
 signals:
     void toleranceChanged();
     void rotationToleranceChanged();
+    void rotationGuideCoordinatesChanged();
 
     void animationStarting();
     void animationStopped();
