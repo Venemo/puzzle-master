@@ -36,13 +36,14 @@ Supported platforms
 
 ### Mobile ###
 
-* MeeGo 1.2 Harmattan (Nokia N9 and N950) - downloadable from Nokia Store http://store.ovi.com/content/247838
+* MeeGo 1.2 Harmattan (Nokia N9 and N950) - download from Nokia Store http://store.ovi.com/content/247838
 * Maemo 5 (Nokia N900) - downloadable from the Extras repository
-* Symbian (in practice, Symbian^3 and higher) - downloadable from Nokia Store http://store.ovi.com/content/330667
-* BlackBerry PlayBook - soon to be released to BlackBerry AppWorld
-* BlackBerry 10 (BlackBerry Z10) - soon to be released to BlackBerry AppWorld
+* Symbian (Symbian^3 and higher) - download from Nokia Store http://store.ovi.com/content/330667
+* BlackBerry PlayBook - download from BlackBerry World http://appworld.blackberry.com/webstore/content/25059913/
+* BlackBerry 10 - download from BlackBerry World http://appworld.blackberry.com/webstore/content/25059913/
 
 ### Other, legacy ###
 
-* A working port existed for the Windows Phone 7 platform
-* A very-very old port exists for Maemo 4 (Nokia N8x0) devices in their Extras repo
+* Port for Windows Phone: http://windowsphone.com/s?appId=1b35c03e-638d-4e3f-99da-87c3228381e3
+* A very-very old port exists for Maemo 4 (Nokia N8x0) devices in their Extras repository
+
