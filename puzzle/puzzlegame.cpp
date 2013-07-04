@@ -155,76 +155,91 @@ bool PuzzleGame::startGame(const QString &imageUrl, int rows, int cols, bool all
     emit this->newGameStarting();
     QCoreApplication::instance()->processEvents();
 
-    for (int i = 0; i < cols; i++)
+    int totalCount = rows * cols, i = cols - 1, j = rows - 1;
+
+    for (int x = 0; x < totalCount; x++)
     {
-        for (int j = 0; j < rows; j++)
+        i = cols - 1 - i;
+        j = rows - 1 - j;
+
+        if (x % 2 == 0 && x != 0)
         {
-            timer.restart();
-
-            QElapsedTimer t;
-            t.start();
-
-            // Creating the shape of the piece
-
-            Puzzle::Creation::Correction corr = shapeProcessor->getCorrectionFor(statuses[i * rows + j]);
-            int &sxCorrection = corr.sxCorrection, &syCorrection = corr.syCorrection, &xCorrection = corr.xCorrection, &yCorrection = corr.yCorrection;
-
-            // Create shapes
-
-            QPainterPath clip = shapeProcessor->getPuzzlePieceShape(statuses[i * rows + j])
-                    .translated(xCorrection, yCorrection);;
-            QPainterPath strokePath = shapeProcessor->getPuzzlePieceStrokeShape(statuses[i * rows + j])
-                    .translated(xCorrection, yCorrection);
-
-            QPainterPath realShape;
-            realShape.addRect(xCorrection + desc.tabFull - 10, yCorrection + desc.tabFull - 10, desc.unitSize.width() + 20, desc.unitSize.height() + 20);
-            realShape += strokePath;
-
-            QPainterPath fakeShape;
-            fakeShape.addRect(desc.tabFull - 1, desc.tabFull - 1, desc.unitSize.width() + 1 + desc.usabilityThickness * 2, desc.unitSize.height() + 1 + desc.usabilityThickness * 2);
-            fakeShape.translate(xCorrection - desc.usabilityThickness, yCorrection - desc.usabilityThickness);
-
-            tShape += t.elapsed();
-            t.restart();
-
-            // Paint pixmaps
-
-            QPixmap px = imageProcessor.drawPiece(i, j, clip, corr);
-            QPixmap stroke = imageProcessor.drawStroke(strokePath, px.size());
-
-            tPaint += t.elapsed();
-            t.restart();
-
-            QPointF supposed(w0 + (i * desc.unitSize.width()) + sxCorrection,
-                             h0 + (j * desc.unitSize.height()) + syCorrection);
-
-            // Create the puzzle piece primitive
-            PuzzlePiecePrimitive *primitive = new PuzzlePiecePrimitive();
-            primitive->setPixmap(px);
-            primitive->setStroke(stroke);
-            primitive->setPixmapOffset(QPoint(0, 0));
-            primitive->setStrokeOffset(primitive->pixmapOffset() - QPoint(_strokeThickness, _strokeThickness));
-            primitive->setFakeShape(fakeShape);
-            primitive->setRealShape(realShape);
-
-            // Creating the piece item
-            PuzzlePiece *item = new PuzzlePiece(this);
-            item->addPrimitive(primitive, QPointF(0, 0));
-            item->setPuzzleCoordinates(QPoint(i, j));
-            item->setSupposedPosition(supposed);
-            item->setPos(supposed);
-            item->setTabStatus(statuses[i * rows + j]);
-            item->setZValue(i * rows + j + 1);
-
-            item->setTransformOriginPoint(QPointF(randomInt(0, desc.unitSize.width()), randomInt(0, desc.unitSize.height())));
-
-            connect(item, SIGNAL(noNeighbours()), this, SLOT(assemble()));
-            _puzzleItems.insert(item);
-
-            qDebug() << timer.elapsed() << "ms spent with generating piece" << i * rows + j + 1 << item->puzzleCoordinates();
-            emit loadProgressChanged(i * rows + j + 1);
-            QCoreApplication::instance()->processEvents();
+            if (j == rows - 1)
+            {
+                j = 0;
+                i++;
+            }
+            else
+            {
+                j++;
+            }
         }
+
+        timer.restart();
+
+        QElapsedTimer t;
+        t.start();
+
+        // Creating the shape of the piece
+
+        Puzzle::Creation::Correction corr = shapeProcessor->getCorrectionFor(statuses[i * rows + j]);
+        int &sxCorrection = corr.sxCorrection, &syCorrection = corr.syCorrection, &xCorrection = corr.xCorrection, &yCorrection = corr.yCorrection;
+
+        // Create shapes
+
+        QPainterPath clip = shapeProcessor->getPuzzlePieceShape(statuses[i * rows + j])
+                .translated(xCorrection, yCorrection);;
+        QPainterPath strokePath = shapeProcessor->getPuzzlePieceStrokeShape(statuses[i * rows + j])
+                .translated(xCorrection, yCorrection);
+
+        QPainterPath realShape;
+        realShape.addRect(xCorrection + desc.tabFull - 10, yCorrection + desc.tabFull - 10, desc.unitSize.width() + 20, desc.unitSize.height() + 20);
+        realShape += strokePath;
+
+        QPainterPath fakeShape;
+        fakeShape.addRect(desc.tabFull - 1, desc.tabFull - 1, desc.unitSize.width() + 1 + desc.usabilityThickness * 2, desc.unitSize.height() + 1 + desc.usabilityThickness * 2);
+        fakeShape.translate(xCorrection - desc.usabilityThickness, yCorrection - desc.usabilityThickness);
+
+        tShape += t.elapsed();
+        t.restart();
+
+        // Paint pixmaps
+
+        QPixmap px = imageProcessor.drawPiece(i, j, clip, corr);
+        QPixmap stroke = imageProcessor.drawStroke(strokePath, px.size());
+
+        tPaint += t.elapsed();
+        t.restart();
+
+        QPointF supposed(w0 + (i * desc.unitSize.width()) + sxCorrection,
+                         h0 + (j * desc.unitSize.height()) + syCorrection);
+
+        // Create the puzzle piece primitive
+        PuzzlePiecePrimitive *primitive = new PuzzlePiecePrimitive();
+        primitive->setPixmap(px);
+        primitive->setStroke(stroke);
+        primitive->setPixmapOffset(QPoint(0, 0));
+        primitive->setStrokeOffset(primitive->pixmapOffset() - QPoint(_strokeThickness, _strokeThickness));
+        primitive->setFakeShape(fakeShape);
+        primitive->setRealShape(realShape);
+
+        // Creating the piece item
+        PuzzlePiece *item = new PuzzlePiece(this);
+        item->addPrimitive(primitive, QPointF(0, 0));
+        item->setPuzzleCoordinates(QPoint(i, j));
+        item->setSupposedPosition(supposed);
+        item->setPos(supposed);
+        item->setTabStatus(statuses[i * rows + j]);
+        item->setZValue(i * rows + j + 1);
+
+        item->setTransformOriginPoint(QPointF(randomInt(0, desc.unitSize.width()), randomInt(0, desc.unitSize.height())));
+
+        connect(item, SIGNAL(noNeighbours()), this, SLOT(assemble()));
+        _puzzleItems.insert(item);
+
+        qDebug() << timer.elapsed() << "ms spent with generating piece" << i * rows + j + 1 << item->puzzleCoordinates();
+        emit loadProgressChanged(i * rows + j + 1);
+        QCoreApplication::instance()->processEvents();
     }
 
     qDebug() << "time spent" << "creating shapes:" << tShape << "painting:" << tPaint;
