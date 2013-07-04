@@ -138,5 +138,9 @@ Dialog {
                 anchors.verticalCenter: snapDifficultySlider.verticalCenter
             }
         }
+        Item {
+            height: 10 * uiScalingFactor
+            width: 10
+        }
     }
 }
