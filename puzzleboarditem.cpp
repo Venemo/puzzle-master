@@ -27,8 +27,6 @@
 #include "puzzle/puzzlepiece.h"
 #include "puzzle/puzzlepieceprimitive.h"
 
-extern QQuickView *view;
-
 PuzzleBoardItem::PuzzleBoardItem(QQuickItem *parent)
     : QQuickItem(parent)
 {
@@ -204,7 +202,7 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
                 // Create child nodes for its primitives if they don't exist yet
                 foreach (const PuzzlePiecePrimitive *pr, piece->primitives())
                 {
-                    QSGTexture *strokeTex = view->createTextureFromImage(pr->stroke().toImage());
+                    QSGTexture *strokeTex = this->window()->createTextureFromImage(pr->stroke().toImage());
                     QSGSimpleTextureNode *strokeNode = new QSGSimpleTextureNode();
                     strokeNode->setRect(pr->strokeOffset().x(), pr->strokeOffset().y(), pr->stroke().width(), pr->stroke().height());
                     strokeNode->setTexture(strokeTex);
@@ -213,7 +211,7 @@ QSGNode *PuzzleBoardItem::updatePaintNode(QSGNode *mainNode, UpdatePaintNodeData
                     _textures.append(strokeTex);
                     trn->appendChildNode(strokeNode);
 
-                    QSGTexture *pieceTex = view->createTextureFromImage(pr->pixmap().toImage());
+                    QSGTexture *pieceTex = this->window()->createTextureFromImage(pr->pixmap().toImage());
                     QSGSimpleTextureNode *pieceNode = new QSGSimpleTextureNode();
                     pieceNode->setRect(pr->pixmapOffset().x(), pr->pixmapOffset().y(), pr->pixmap().width(), pr->pixmap().height());
                     pieceNode->setTexture(pieceTex);

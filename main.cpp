@@ -46,7 +46,6 @@
 #endif
 
 extern void loadTranslations();
-QQuickView *view;
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -71,7 +70,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 #else
     QGuiApplication *app = new QGuiApplication(argc, argv);
 #endif
-    view = new QQuickView();
+    QQuickView *view = new QQuickView();
 
     // Some wireup
 
