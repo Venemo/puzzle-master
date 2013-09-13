@@ -67,7 +67,7 @@ Dialog
             }
             TextEdit {
                 activeFocusOnPress: false
-                color: "#fff"
+                color: "#ffffff"
                 text: "..."
                 font.pixelSize: imageSelectorGrid.cellHeight / 3
                 anchors.centerIn: imageItem
@@ -90,7 +90,7 @@ Dialog
             id: modelLoadIndicator
             anchors.centerIn: parent
             font.pixelSize: 50
-            color: "#fff"
+            color: "#ffffff"
             activeFocusOnPress: false
             text: "..."
         }

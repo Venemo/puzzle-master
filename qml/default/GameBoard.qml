@@ -78,7 +78,7 @@ PuzzleBoard {
 
     Rectangle {
         id: rotationGuide
-        color: "#fff"
+        color: "#ffffff"
         width: 64 * uiScalingFactor
         height: width
         radius: width / 2

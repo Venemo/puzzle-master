@@ -221,7 +221,7 @@ Panel {
                 height: imageSelectorGrid.cellHeight
 
                 Rectangle {
-                    color: "#fff"
+                    color: "#ffffff"
                     anchors.fill: delegateImage
                     anchors.margins: -5
                     border.width: 3

@@ -24,7 +24,7 @@ import "./components/style"
 Rectangle {
     width: initialSize.width
     height: initialSize.height
-    color: "#000"
+    color: "#000000"
     id: appWindow
 
     function pathToUrl(path) {
