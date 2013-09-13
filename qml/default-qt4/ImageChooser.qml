@@ -73,6 +73,20 @@ Panel {
             right: parent.right
         }
 
+        TextEdit {
+            text: qsTr("Welcome! Choose an image.")
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: parent.top
+                bottom: parent.bottom
+            }
+            horizontalAlignment: TextEdit.AlignHCenter
+            verticalAlignment: TextEdit.AlignVCenter
+            font.pixelSize: 30 * textScalingFactor
+            color: "#ffffff"
+            activeFocusOnPress: false
+        }
         Button {
             id: appSwitcherButton
             visible: appEventHandler.showAppSwitcherButton()
@@ -118,20 +132,6 @@ Panel {
             height: 45 * uiScalingFactor
             style: purpleButtonStyle
             onClicked: menuDialog.open()
-        }
-        TextEdit {
-            text: qsTr("Welcome! Choose an image.")
-            anchors {
-                left: parent.left
-                right: parent.right
-                top: parent.top
-                bottom: parent.bottom
-            }
-            horizontalAlignment: TextEdit.AlignHCenter
-            verticalAlignment: TextEdit.AlignVCenter
-            font.pixelSize: 30 * textScalingFactor
-            color: "#ffffff"
-            activeFocusOnPress: false
         }
     }
     Item {
