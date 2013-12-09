@@ -158,6 +158,27 @@ unix:!symbian {
     desktopfile.path = /usr/share/applications
     desktopfile.files = installables/puzzle-master.desktop
 }
+packagesExist(sailfishapp) {
+    message("Puzzle Master is building for Sailfish")
+
+    # Resources:
+    # https://harbour.jolla.com/faq
+    # https://sailfishos.org/wiki/Porting/Harmattan
+
+    # Remove all desktop defines
+    DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY FORCE_PLATFORM_FILE_DIALOG
+    # Add Sailfish specific defines
+    DEFINES += USE_MDECLARATIVECACHE5 PUZZLE_MASTER_SAILFISH DISABLE_SCROLLBARS
+
+    # Rename executable to use the Sailfish name prefix
+    TARGET = harbour-puzzle-master
+
+    target.path = /usr/bin
+    iconfile.path = /usr/share/icons/hicolor/86x86/apps
+    iconfile.files = installables/$TARGET.png
+    desktopfile.path = /usr/share/applications
+    desktopfile.files = installables/$TARGET.desktop
+}
 contains(MEEGO_EDITION, harmattan) {
     message("Puzzle Master is building for Harmattan")
     # We want to use applauncherd here + harmattan specifics and the touchscreen
@@ -258,6 +279,12 @@ blackberry:!contains(DEFINES, Q_OS_BLACKBERRY_TABLET) {
 
 # Features
 
+contains(DEFINES, USE_MDECLARATIVECACHE5) {
+    # lib is called mdeclarativecache5
+    message("using qdeclarative5-boostable")
+    PKGCONFIG += qdeclarative5-boostable
+    LIBS += -lmdeclarativecache5
+}
 contains(DEFINES, HAVE_APPLAUNCHERD) {
     # If we want to use applauncherd from MeeGo/Harmattan
     CONFIG += qdeclarative-boostable link_pkgconfig

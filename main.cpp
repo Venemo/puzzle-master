@@ -29,6 +29,9 @@
 #if defined(FORCE_PLATFORM_FILE_DIALOG)
 #include <QApplication>
 #endif
+#if defined(USE_MDECLARATIVECACHE5)
+#include <mdeclarativecache5/MDeclarativeCache>
+#endif
 
 #include "puzzleboarditem.h"
 #include "helpers/appsettings.h"
@@ -67,10 +70,17 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
 #if defined(FORCE_PLATFORM_FILE_DIALOG)
     QGuiApplication *app = new QApplication(argc, argv);
+#elif defined(USE_MDECLARATIVECACHE5)
+    QGuiApplication *app = MDeclarativeCache::qApplication(argc, argv);
 #else
     QGuiApplication *app = new QGuiApplication(argc, argv);
 #endif
+
+#if defined(USE_MDECLARATIVECACHE5)
+    QQuickView *view = MDeclarativeCache::qQuickView();
+#else
     QQuickView *view = new QQuickView();
+#endif
 
     // Some wireup
 

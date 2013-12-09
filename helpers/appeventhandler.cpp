@@ -26,7 +26,11 @@
 #include <QWidget>
 #include <QApplication>
 #include <QDesktopWidget>
-#elif FORCE_PLATFORM_FILE_DIALOG
+#elif QT_VERSION > 0x050000
+#include <QQuickView>
+#endif
+
+#if FORCE_PLATFORM_FILE_DIALOG
 #include <QWidget>
 #endif
 
@@ -189,6 +193,9 @@ void AppEventHandler::adjustForPlaying()
 {
 #if defined(HAVE_SWIPELOCK)
     XChangeProperty(QX11Info::display(), static_cast<QWidget*>(parent())->winId(), customRegionAtom, XA_CARDINAL, 32, PropModeReplace, reinterpret_cast<unsigned char*>(customRegion), 4);
+#elif defined(PUZZLE_MASTER_SAILFISH)
+    QQuickView *view = static_cast<QQuickView*>(this->parent());
+    view->setFlags(view->flags() | Qt::WindowOverridesSystemGestures);
 #endif
 }
 
@@ -197,6 +204,9 @@ void AppEventHandler::adjustForUi()
 {
 #if defined(HAVE_SWIPELOCK)
     XChangeProperty(QX11Info::display(), static_cast<QWidget*>(parent())->winId(), customRegionAtom, XA_CARDINAL, 32, PropModeReplace, reinterpret_cast<unsigned char*>(defaultRegion), 4);
+#elif defined(PUZZLE_MASTER_SAILFISH)
+    QQuickView *view = static_cast<QQuickView*>(this->parent());
+    view->setFlags(view->flags() & ~(Qt::WindowOverridesSystemGestures));
 #endif
 }
 
