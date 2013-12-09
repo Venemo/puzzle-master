@@ -17,7 +17,7 @@
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
 import QtQuick 2.0
-import QtMobility.gallery 1.1
+import QtDocGallery 5.0
 import "./components"
 
 Dialog

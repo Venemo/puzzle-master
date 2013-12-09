@@ -29,7 +29,7 @@ Panel {
     property string selectedImagePath: ""
     property int columnNumber: 3
     property variant fileSelectorDialog: null
-    property bool canAddCustomImage: (typeof(fileSelectorDialog) != "undefined" && fileSelectorDialog !== null) || appEventHandler.showPlatformFileDialog()
+    property bool canAddCustomImage: (typeof(fileSelectorDialog) !== "undefined" && fileSelectorDialog !== null) || appEventHandler.showPlatformFileDialog()
 
     signal accepted
 
@@ -56,7 +56,7 @@ Panel {
                 selectorComponent = Qt.createComponent("GallerySelectorDialog.qml")
             }
             if (selectorComponent === null || selectorComponent.status === Component.Error || selectorComponent.status === Component.Null) {
-                console.log("Nor FileSelectorDialog neither GallerySelectorDialog could be loaded! Adding custom images will not be possible.")
+                console.log("GallerySelectorDialog could not be loaded! Adding custom images will not be possible.")
             }
             else {
                 fileSelectorDialog = selectorComponent.createObject(imageChooser)
