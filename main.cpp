@@ -131,6 +131,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     // Setting up the view
 
     view->setResizeMode(QQuickView::SizeRootObjectToView);
+    view->setTitle(QObject::tr("Puzzle Master"));
+
     view->rootContext()->setContextProperty("initialSize", initialSize);
     view->rootContext()->setContextProperty("allowRotation", allowRotation);
     view->rootContext()->setContextProperty("allowScrollbars", allowScrollbars);
@@ -149,7 +151,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 #else
     view->setSource(QUrl("qrc:/qml/default/AppWindow.qml"));
 #endif
-    view->setTitle(QObject::tr("Puzzle Master"));
     view->showFullScreen();
 
     qDebug() << Q_FUNC_INFO << "setting the qml source took" << timer->elapsed() << "ms";
@@ -157,6 +158,5 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     // Launching the app
 
-    int result = app->exec();
-    return result;
+    return app->exec();
 }
