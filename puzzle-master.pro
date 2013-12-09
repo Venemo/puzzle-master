@@ -100,7 +100,8 @@ OTHER_FILES += \
     LICENSE-DOCS \
     README.md \
     installables/puzzle-master-harmattan.desktop \
-    installables/puzzle-master-applauncherd.desktop
+    installables/puzzle-master-applauncherd.desktop \
+    qml/default/RotatedAppWindow.qml
 
 # Qt4 default UI
 
@@ -168,7 +169,7 @@ packagesExist(sailfishapp) {
     # Remove all desktop defines
     DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY FORCE_PLATFORM_FILE_DIALOG
     # Add Sailfish specific defines
-    DEFINES += USE_MDECLARATIVECACHE5 PUZZLE_MASTER_SAILFISH DISABLE_SCROLLBARS
+    DEFINES += USE_MDECLARATIVECACHE5 PUZZLE_MASTER_SAILFISH DISABLE_SCROLLBARS ROTATE_IN_QML
 
     # Rename executable to use the Sailfish name prefix
     TARGET = harbour-puzzle-master

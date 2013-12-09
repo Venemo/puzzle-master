@@ -16,5 +16,6 @@
         <file>qml/default/GallerySelectorDialog.qml</file>
         <file>qml/default/components/MenuButton.qml</file>
         <file>qml/default/components/style/PurpleButtonStyle.qml</file>
+        <file>qml/default/RotatedAppWindow.qml</file>
     </qresource>
 </RCC>

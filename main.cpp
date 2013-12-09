@@ -143,7 +143,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qDebug() << Q_FUNC_INFO << "initialization took" << timer->elapsed() << "ms";
     timer->restart();
 
+#if defined(ROTATE_IN_QML)
+    view->setSource(QUrl("qrc:/qml/default/RotatedAppWindow.qml"));
+#else
     view->setSource(QUrl("qrc:/qml/default/AppWindow.qml"));
+#endif
     view->setTitle(QObject::tr("Puzzle Master"));
     view->showFullScreen();
 
