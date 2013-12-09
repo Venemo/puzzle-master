@@ -25,6 +25,7 @@
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QDebug>
+#include <QScopedPointer>
 #include <qqml.h>
 #if defined(FORCE_PLATFORM_FILE_DIALOG)
 #include <QApplication>
@@ -69,11 +70,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     // Initializing app and view
 
 #if defined(FORCE_PLATFORM_FILE_DIALOG)
-    QGuiApplication *app = new QApplication(argc, argv);
+    QScopedPointer<QGuiApplication> app(new QApplication(argc, argv));
 #elif defined(USE_MDECLARATIVECACHE5)
-    QGuiApplication *app = MDeclarativeCache::qApplication(argc, argv);
+    QScopedPointer<QGuiApplication> app(MDeclarativeCache::qApplication(argc, argv));
 #else
-    QGuiApplication *app = new QGuiApplication(argc, argv);
+    QScopedPointer<QGuiApplication> app(new QGuiApplication(argc, argv));
 #endif
 
 #if defined(USE_MDECLARATIVECACHE5)
@@ -85,7 +86,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     // Some wireup
 
     AppEventHandler *appEventHandler = new AppEventHandler(view);
-    QObject::connect(view->engine(), SIGNAL(quit()), app, SLOT(quit()));
+    QObject::connect(view->engine(), SIGNAL(quit()), app.data(), SLOT(quit()));
     qsrand((uint)QTime::currentTime().msec());
     qmlRegisterType<PuzzleBoardItem>("net.venemo.puzzlemaster", 2, 0, "PuzzleBoard");
     qmlRegisterUncreatableType<PuzzleGame>("net.venemo.puzzlemaster", 2, 0, "PuzzleGame", "This type should not be used from QML.");
@@ -157,7 +158,5 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     // Launching the app
 
     int result = app->exec();
-    delete view;
-    delete app;
     return result;
 }
