@@ -6,8 +6,10 @@ Idea, UI design, interaction design, C++ development, QML development
 
 **Copyright (C) 2010-2013, Timur Kristóf** - http://timur.hu/
 
-Puzzle Master icon
+Other contributors
 ------------------
+
+### Puzzle Master icon
 
 This icon is quite iconic (literally!) to this app; my ethernal gratitude to these guys!
 
@@ -16,10 +18,10 @@ Johannes Siipola (Joppu)
 * Puzzle Master's Sailfish OS icon  
 Stephan Beyerle (Morpog) - https://twitter.com/Morpog
 
-Translations of Puzzle Master
------------------------------
+### Translations of Puzzle Master
 
-Special thanks to everyone who translated!
+Special thanks to everyone who translated!  
+If you are interested in translating, visit https://www.transifex.com/projects/p/puzzle-master/
 
 * Chinese translation **zh_CN**  
 Simon Edhouse (Virtusoft) - http://www.virtusoft.net/
@@ -52,8 +54,7 @@ Oytun Eren Şengül - https://twitter.com/OytunatLinux
 * Vietnamese translation **vi**  
 Anh Phan - https://www.transifex.com/accounts/profile/ppanhh/
 
-Pictures included
------------------
+### Pictures included
 
 * image 1: "Sunglasses" by Alexandra Bálint
 * image 4: "Squirrel" by Gábor Bányász
