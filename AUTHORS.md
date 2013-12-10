@@ -12,9 +12,9 @@ Puzzle Master icon
 This icon is quite iconic (literally!) to this app; my ethernal gratitude to these guys!
 
 * Puzzle Master's MeeGo, Blackberry icon and puzzle shape  
-Copyright (C) 2011, Johannes Siipola (Joppu)
+Johannes Siipola (Joppu)
 * Puzzle Master's Sailfish OS icon  
-Copyright (C) 2013, Stephan Beyerle (Morpog) - https://twitter.com/Morpog
+Stephan Beyerle (Morpog) - https://twitter.com/Morpog
 
 Translations of Puzzle Master
 -----------------------------
@@ -22,44 +22,44 @@ Translations of Puzzle Master
 Special thanks to everyone who translated!
 
 * Chinese translation **zh_CN**  
-Copyright (C) Simon Edhouse (Virtusoft) - http://www.virtusoft.net/
+Simon Edhouse (Virtusoft) - http://www.virtusoft.net/
 * Czech translation **cs_CZ**  
-Copyright (C) Jaroslav Reznik - https://twitter.com/RezzaBuh
+Jaroslav Reznik - https://twitter.com/RezzaBuh
 * Dutch translation **nl_NL**  
-Copyright (C) Paula - https://twitter.com/PaulaCyberFlip
+https://twitter.com/PaulaCyberFlip
 * English, Hungarian translation **en_GB**, **hu_HU**  
-Copyright (C) Timur Kristóf - http://timur.hu/
+Timur Kristóf - http://timur.hu/
 * Estonian translation **et_ET**  
-Copyright (C) Rivo Zängov (Eraser) - https://www.transifex.com/accounts/profile/Eraser/
+Rivo Zängov (Eraser) - https://www.transifex.com/accounts/profile/Eraser/
 * Finnish translation **fi_FI**  
-Copyright (C) Saija Saarenpää - https://twitter.com/setelani
+Saija Saarenpää - https://twitter.com/setelani
 * French translation **fr_FR**  
-Copyright (C) Lucien Xu - https://twitter.com/SfietKonstantin
+Lucien Xu - https://twitter.com/SfietKonstantin
 * German, Greek translation **de_DE**, **at_DE**, **el_EL**  
-Copyright (C) Wasilis Mandratzis - https://www.transifex.com/accounts/profile/wasilis.mandratzis/
+Wasilis Mandratzis - https://www.transifex.com/accounts/profile/wasilis.mandratzis/
 * Hebrew translation **he_IL**  
-Copyright (C) Assaf Paz - https://twitter.com/damagedspline
+Assaf Paz - https://twitter.com/damagedspline
 * Italian translation **it_IT**  
-Copyright (C) Andrea Bernabei (faenil)  - https://twitter.com/faenil
+Andrea Bernabei (faenil)  - https://twitter.com/faenil
 * Polish translation **pl_PL**  
-Copyright (C) Filip Kłębczyk - https://twitter.com/fk_lx
+Filip Kłębczyk - https://twitter.com/fk_lx
 * Russian translation **ru_RU**  
-Copyright (C) ZogG - https://twitter.com/ZogG
+Misha Ketslah (ZogG) - https://twitter.com/ZogG
 * Swedish translation **sv_SE**  
-Copyright (C) Daniel Sandman - https://twitter.com/almehdin
+Daniel Sandman - https://twitter.com/almehdin
 * Turkish translation **tr_TR**  
-Copyright (C) Oytun Eren Şengül - https://twitter.com/OytunatLinux
+Oytun Eren Şengül - https://twitter.com/OytunatLinux
 * Vietnamese translation **vi**  
-Copyright (C) Anh Phan - https://www.transifex.com/accounts/profile/ppanhh/
+Anh Phan - https://www.transifex.com/accounts/profile/ppanhh/
 
 Pictures included
 -----------------
 
-* image 1: "Sunglasses", Copyright (C) Alexandra Bálint
-* image 4: "Squirrel", Copyright (C) Gábor Bányász
-* image 5: "The beach huts", Copyright (C) Greg Roberts
-* image 6: "Flower", Copyright (C) Cosimo Kroll
-* image 7: "Solar", Copyright (C) the Fedora project
-* image 16: "Respect", Copyright (C) Filip Kłębczyk
-* images 2, 3, 8-15, 17-18: Copyright (C) Timur Kristóf
+* image 1: "Sunglasses" by Alexandra Bálint
+* image 4: "Squirrel" by Gábor Bányász
+* image 5: "The beach huts" by Greg Roberts
+* image 6: "Flower" by Cosimo Kroll
+* image 7: "Solar" by the Fedora project
+* image 16: "Respect" by Filip Kłębczyk
+* images 2, 3, 8-15, 17-18: by Timur Kristóf
 
