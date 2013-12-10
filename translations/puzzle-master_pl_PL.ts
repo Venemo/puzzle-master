@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0" language="pl">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="pl" version="2.0">
 <context>
     <name>AppWindow</name>
     <message>
@@ -66,6 +64,25 @@ Jesteś pewien, że chcesz kontynuować?</translation>
     </message>
 </context>
 <context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Select a picture</source>
+        <translation>Wybierz obrazek</translation>
+    </message>
+    <message>
+        <source>Select</source>
+        <translation>Wybierz</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Anuluj</translation>
+    </message>
+    <message>
+        <source>An error has occoured</source>
+        <translation>Wystąpił błąd</translation>
+    </message>
+</context>
+<context>
     <name>GallerySelectorDialog</name>
     <message>
         <source>Select a picture</source>
@@ -89,6 +106,10 @@ Jesteś pewien, że chcesz kontynuować?</translation>
     <message>
         <source>The selected image is being processed.</source>
         <translation>Wybrany obrazek jest w trakcie przetwarzania.</translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation>...</translation>
     </message>
     <message>
         <source>Puzzle Master</source>
@@ -176,6 +197,14 @@ Nie będziesz mógł jej kontynuować wtedy. Użyj &quot;Zobacz podpowiedź&quot
         <translation>Witaj! Wybierz obrazek.</translation>
     </message>
     <message>
+        <source>Start game</source>
+        <translation>Rozpocznij grę</translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
         <source>Please choose</source>
         <translation>Proszę wybrać</translation>
     </message>
@@ -194,6 +223,14 @@ Nie będziesz mógł jej kontynuować wtedy. Użyj &quot;Zobacz podpowiedź&quot
     <message>
         <source>About</source>
         <translation>O grze</translation>
+    </message>
+    <message>
+        <source>Add custom image</source>
+        <translation>Dodaj niestandardowy obrazek</translation>
+    </message>
+    <message>
+        <source>Remove custom image</source>
+        <translation>Usuń niestandardowy obrazek</translation>
     </message>
     <message>
         <source>Quit</source>
