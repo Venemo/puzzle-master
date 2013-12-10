@@ -221,7 +221,7 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     </message>
     <message>
         <source>Snap</source>
-        <translation>合上了</translation>
+        <translation>扣合</translation>
     </message>
     <message>
         <source>Easy</source>
