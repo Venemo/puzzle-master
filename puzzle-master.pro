@@ -306,7 +306,7 @@ contains(DEFINES, HAVE_APPLAUNCHERD) {
     }
 }
 contains(DEFINES, HAVE_SWIPELOCK) {
-    # If we want to have swipe lock on MeeGo/Harmattan or Nemo
+    # If we want to have swipe lock on MeeGo/Harmattan
     CONFIG += link_pkgconfig
     PKGCONFIG += x11
 }

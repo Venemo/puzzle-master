@@ -2,8 +2,9 @@
 Encoding=UTF-8
 Version=1.0
 Type=Application
-Name=PuzzleMaster
-Icon=/usr/share/icons/puzzle-master-sailfish.png
-Exec=/usr/bin/puzzle-master
+Name=Puzzle Master
+Icon=harbour-puzzle-master
+Exec=harbour-puzzle-master
 Categories=Game;LogicGame;
+X-Nemo-Application-Type=silica-qt5
 X-Osso-Type=application/x-executable
