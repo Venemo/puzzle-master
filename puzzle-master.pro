@@ -176,9 +176,9 @@ packagesExist(sailfishapp) {
 
     target.path = /usr/bin
     iconfile.path = /usr/share/icons/hicolor/86x86/apps
-    iconfile.files = installables/$TARGET.png
+    iconfile.files = installables/harbour-puzzle-master.png
     desktopfile.path = /usr/share/applications
-    desktopfile.files = installables/$TARGET.desktop
+    desktopfile.files = installables/harbour-puzzle-master.desktop
 }
 contains(MEEGO_EDITION, harmattan) {
     message("Puzzle Master is building for Harmattan")
