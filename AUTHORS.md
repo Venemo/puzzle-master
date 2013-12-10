@@ -46,7 +46,7 @@ Copyright (C) Filip Kłębczyk - https://twitter.com/fk_lx
 * Russian translation **ru_RU**  
 Copyright (C) ZogG - https://twitter.com/ZogG
 * Swedish translation **sv_SE**  
-Copyright (C) Daniel Sandman
+Copyright (C) Daniel Sandman - https://twitter.com/almehdin
 * Turkish translation **tr_TR**  
 Copyright (C) Oytun Eren Şengül - https://twitter.com/OytunatLinux
 * Vietnamese translation **vi**  
