@@ -40,6 +40,7 @@ public:
     Q_INVOKABLE void displayAppSwitcher();
     Q_INVOKABLE bool showPlatformFileDialog();
     Q_INVOKABLE void displayPlatformFileDialog();
+    Q_INVOKABLE void activateAppWindow();
     
 signals:
     void windowActivated();

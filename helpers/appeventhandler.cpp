@@ -28,6 +28,7 @@
 #include <QDesktopWidget>
 #elif QT_VERSION > 0x050000
 #include <QQuickView>
+#include <QWindow>
 #endif
 
 #if FORCE_PLATFORM_FILE_DIALOG
@@ -272,5 +273,21 @@ void AppEventHandler::displayPlatformFileDialog()
     emit this->platformFileDialogAccepted(path);
 #else
     qDebug() << "displayPlatformFileDialog is not implemented for the current platform";
+#endif
+}
+
+void AppEventHandler::activateAppWindow()
+{
+#if QT_VERSION > 0x050000
+    qDebug() << "activating app window";
+    QWindow *window = static_cast<QWindow*>(this->parent());
+    if (!window->isVisible())
+    {
+        window->showFullScreen();
+    }
+    window->raise();
+    window->requestActivate();
+#else
+    qDebug() << "activating app window is not implemented, sorry";
 #endif
 }
