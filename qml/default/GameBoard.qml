@@ -206,11 +206,13 @@ PuzzleBoard {
                 spacing: 10 * uiScalingFactor
 
                 Button {
-                    width: 245 * uiScalingFactor
+                    width: appWindow.filePickerOnStart ? (500 * uiScalingFactor) : (245 * uiScalingFactor)
                     text: qsTr("Restart")
                     onClicked: areYouSureToRestartDialog.open()
                 }
                 Button {
+                    visible: !appWindow.filePickerOnStart
+
                     width: 245 * uiScalingFactor
                     text: qsTr("Surrender")
                     onClicked: areYouSureToSurrenderDialog.open()

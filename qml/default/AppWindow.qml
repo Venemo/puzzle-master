@@ -17,6 +17,7 @@
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
 import QtQuick 2.0
+import QtQuick.Dialogs 1.0
 import net.venemo.puzzlemaster 2.0
 import "./components"
 import "./components/style"
@@ -26,6 +27,8 @@ Rectangle {
     height: initialSize.height
     color: "#000000"
     id: appWindow
+
+    property bool filePickerOnStart: false
 
     function pathToUrl(path) {
         var newurl = path;
@@ -40,6 +43,67 @@ Rectangle {
         }
 
         return newurl;
+    }
+
+    Component.onCompleted: {
+        // Parse command line parameters, if any
+
+        if (Qt.application.arguments.length <= 1) {
+            // No command-line arguments
+            imageChooser.visible = true;
+        }
+        else {
+            appWindow.filePickerOnStart = (Qt.application.arguments.indexOf("--filepicker-on-start") >= 0);
+
+            // Rows
+            var iRows = Qt.application.arguments.indexOf("--rows");
+            if (iRows >= 0) {
+                var rows = parseInt(Qt.application.arguments[iRows + 1]);
+                if (isNaN(rows)) {
+                    rows = 3;
+                }
+                appSettings.rows = rows;
+            }
+
+            // Columns
+            var iCols = Qt.application.arguments.indexOf("--cols");
+            if (iCols >= 0) {
+                var cols = parseInt(Qt.application.arguments[iCols + 1]);
+                if (isNaN(cols)) {
+                    cols = 3;
+                }
+                appSettings.columns = cols;
+            }
+
+            if (appWindow.filePickerOnStart) {
+                // Show a file picker on start, instead of the start screen
+                // NOTE: This feature can NOT be backported to the Qt4 version without serious hassle.
+                filePicker.open();
+            }
+            else {
+                imageChooser.visible = true;
+            }
+        }
+    }
+
+    FileDialog {
+        id: filePicker
+        title: qsTr("Welcome! Choose an image.")
+        nameFilters: [ "Image files (*.jpg *.jpeg *.png *.bmp)", "All files (*)" ]
+        onAccepted: {
+            var url = filePicker.fileUrl.toString();
+            if (url.indexOf("file://") >= 0) {
+                url = url.substring("file://".length);
+            }
+            imageChooser.selectedImagePath = url;
+            appEventHandler.activateAppWindow();
+            gameBoard.open();
+            gameBoard.play();
+        }
+        onRejected: {
+            console.log("User didn't choose an image, quitting.");
+            Qt.quit();
+        }
     }
 
     RedButtonStyle {
@@ -69,6 +133,7 @@ Rectangle {
 
         id: imageChooser
         anchors.fill: parent
+        visible: false
 
         onAccepted: {
             optionsDialog.open()
@@ -80,6 +145,19 @@ Rectangle {
                 gameBoard.play()
             }
         }
+        onVisibleChanged: {
+            if (imageChooser.visible) {
+                if (appWindow.filePickerOnStart) {
+                    // With "--filepicker-on-start" returning to imageChooser is not allowed,
+                    // and doing so is a sign that the user is done playing.
+                    Qt.quit();
+                }
+                else {
+                    // Activate app window if not yet active
+                    appEventHandler.activateAppWindow();
+                }
+            }
+        }
     }
     Dialog {
         id: gameWonDialog
@@ -87,7 +165,7 @@ Rectangle {
         text: qsTr("Congratulations, you have successfully solved the given puzzle.")
         enableBackgroundClicking: false
         acceptButtonText: qsTr("Play again")
-        rejectButtonText: qsTr("Choose other")
+        rejectButtonText: appWindow.filePickerOnStart ? qsTr("Quit") : qsTr("Choose other")
         backgroundColor: "#99101010"
         onAccepted: {
             gameBoard.play()

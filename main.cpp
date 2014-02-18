@@ -151,7 +151,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 #else
     view->setSource(QUrl("qrc:/qml/default/AppWindow.qml"));
 #endif
-    view->showFullScreen();
+    // NOTE: we no longer need to call show() here, the QML will take care of calling it
+    //view->showFullScreen();
 
     qDebug() << Q_FUNC_INFO << "setting the qml source took" << timer->elapsed() << "ms";
     delete timer;
