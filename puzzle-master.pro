@@ -101,7 +101,8 @@ OTHER_FILES += \
     README.md \
     installables/puzzle-master-harmattan.desktop \
     installables/puzzle-master-applauncherd.desktop \
-    qml/default/RotatedAppWindow.qml
+    qml/default/RotatedAppWindow.qml \
+    android/AndroidManifest.xml
 
 # Qt4 default UI
 
@@ -159,7 +160,7 @@ unix:!symbian {
     desktopfile.path = /usr/share/applications
     desktopfile.files = installables/puzzle-master.desktop
 }
-packagesExist(sailfishapp) {
+contains(DEFINES, PUZZLE_MASTER_SAILFISH) {
     message("Puzzle Master is building for Sailfish")
 
     # Resources:
@@ -224,6 +225,13 @@ symbian {
     LIBS += -lcone -leikcore -lavkon
     # Max. heap size is 20 MiB
     TARGET.EPOCHEAPSIZE = 0x020000 0x20971520
+}
+android {
+    message("Puzzle Master is building for Android")
+    # Remove all desktop defines
+    #DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY FORCE_PLATFORM_FILE_DIALOG
+    # Add Sailfish specific defines
+    DEFINES += DISABLE_SCROLLBARS ENABLE_MOBILE_TWEAKS=true
 }
 win32 {
     TARGET = PuzzleMaster
@@ -320,3 +328,5 @@ contains(DEFINES, HAVE_DEVICEINFO_CHECK) {
     CONFIG += mobility
     MOBILITY += systeminfo
 }
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
