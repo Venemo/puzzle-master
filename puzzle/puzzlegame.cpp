@@ -237,7 +237,7 @@ bool PuzzleGame::startGame(const QString &imageUrl, int rows, int cols, bool all
         connect(item, SIGNAL(noNeighbours()), this, SLOT(assemble()));
         _puzzleItems.insert(item);
 
-        qDebug() << timer.elapsed() << "ms spent with generating piece" << i * rows + j + 1 << item->puzzleCoordinates();
+        //qDebug() << timer.elapsed() << "ms spent with generating piece" << i * rows + j + 1 << item->puzzleCoordinates();
         emit loadProgressChanged(i * rows + j + 1);
         QCoreApplication::instance()->processEvents();
     }
