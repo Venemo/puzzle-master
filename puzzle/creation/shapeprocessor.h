@@ -23,7 +23,7 @@
 #include <QPixmap>
 #include <QPainterPath>
 #include <QList>
-#include "puzzle/creation/helpertypes.h"
+#include "helpertypes.h"
 
 namespace Puzzle
 {

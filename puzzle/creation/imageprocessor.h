@@ -21,7 +21,7 @@
 
 #include <QString>
 #include <QPixmap>
-#include "puzzle/creation/helpertypes.h"
+#include "helpertypes.h"
 
 namespace Puzzle
 {

@@ -17,8 +17,8 @@
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
 #include <QPainter>
-#include "puzzle/creation/imageprocessor.h"
-#include "helpers/util.h"
+#include "imageprocessor.h"
+#include "../../helpers/util.h"
 
 namespace Puzzle
 {

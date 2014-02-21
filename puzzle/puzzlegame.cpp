@@ -25,11 +25,11 @@
 #include <QSequentialAnimationGroup>
 #include <QPropertyAnimation>
 
-#include "puzzle/puzzlegame.h"
-#include "puzzle/puzzlepiece.h"
+#include "puzzlegame.h"
+#include "puzzlepiece.h"
 #include "puzzlepieceprimitive.h"
-#include "puzzle/creation/imageprocessor.h"
-#include "puzzle/creation/shapeprocessor.h"
+#include "creation/imageprocessor.h"
+#include "creation/shapeprocessor.h"
 
 static QPointF defaultRotationGuideCoordinates(-1000, -1000);
 

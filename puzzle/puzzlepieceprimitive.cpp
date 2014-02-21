@@ -16,8 +16,8 @@
 //
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
-#include "puzzle/puzzlepieceprimitive.h"
-#include "puzzle/puzzlepiece.h"
+#include "puzzlepieceprimitive.h"
+#include "puzzlepiece.h"
 
 PuzzlePiecePrimitive::PuzzlePiecePrimitive(PuzzlePiece *parent)
     : QObject(parent)

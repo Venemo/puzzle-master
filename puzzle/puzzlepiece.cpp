@@ -20,9 +20,9 @@
 #include <QDebug>
 #include <cmath>
 
-#include "puzzle/puzzlepiece.h"
-#include "puzzle/puzzlegame.h"
-#include "puzzle/puzzlepieceprimitive.h"
+#include "puzzlepiece.h"
+#include "puzzlegame.h"
+#include "puzzlepieceprimitive.h"
 
 using namespace std;
 

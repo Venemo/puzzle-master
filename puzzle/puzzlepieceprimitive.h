@@ -24,7 +24,7 @@
 #include <QPixmap>
 #include <QPainterPath>
 
-#include "helpers/util.h"
+#include "../helpers/util.h"
 
 class PuzzlePiece;
 

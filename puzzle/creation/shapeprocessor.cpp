@@ -21,8 +21,8 @@
 #include <QPainterPathStroker>
 #include <QDebug>
 
-#include "puzzle/creation/shapeprocessor.h"
-#include "helpers/util.h"
+#include "shapeprocessor.h"
+#include "../../helpers/util.h"
 
 // This function generates puzzle piece shapes.
 // ----------

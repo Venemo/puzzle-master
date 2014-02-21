@@ -25,7 +25,7 @@
 #include <QPointF>
 #include <QSet>
 
-#include "helpers/util.h"
+#include "../helpers/util.h"
 
 class QTouchEvent;
 class PuzzlePiece;

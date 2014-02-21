@@ -22,8 +22,8 @@
 #include <QObject>
 #include <QSet>
 
-#include "helpers/util.h"
-#include "puzzle/creation/shapeprocessor.h"
+#include "../helpers/util.h"
+#include "creation/shapeprocessor.h"
 
 class PuzzlePiecePrimitive;
 class PuzzleGame;

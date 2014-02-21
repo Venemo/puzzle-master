@@ -21,7 +21,7 @@
 #include <QDataStream>
 #include <QRegExp>
 
-#include "helpers/appsettings.h"
+#include "../helpers/appsettings.h"
 
 // Increase this when anything changes in the settings
 // (but don't if you just add a new setting)
