@@ -91,18 +91,20 @@ Rectangle {
         title: qsTr("Welcome! Choose an image.")
         nameFilters: [ "Image files (*.jpg *.jpeg *.png *.bmp)", "All files (*)" ]
         onAccepted: {
-            var url = filePicker.fileUrl.toString();
-            if (url.indexOf("file://") >= 0) {
-                url = url.substring("file://".length);
-            }
-            imageChooser.selectedImagePath = url;
             appEventHandler.activateAppWindow();
-            gameBoard.open();
-            gameBoard.play();
+
+            if (appWindow.filePickerOnStart) {
+                var url = imageChooser.sanitizePath(filePicker.fileUrl.toString());
+                imageChooser.selectedImagePath = url;
+                gameBoard.open();
+                gameBoard.play();
+            }
         }
         onRejected: {
-            console.log("User didn't choose an image, quitting.");
-            Qt.quit();
+            if (appWindow.filePickerOnStart) {
+                console.log("User didn't choose an image, quitting.");
+                Qt.quit();
+            }
         }
     }
 

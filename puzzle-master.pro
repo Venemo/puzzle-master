@@ -151,7 +151,7 @@ unix:!symbian {
     !blackberry {
         QMAKE_LFLAGS += -pie -rdynamic
     }
-    DEFINES += HAVE_OPENGL DISABLE_QMLGALLERY FORCE_PLATFORM_FILE_DIALOG
+    DEFINES += HAVE_OPENGL DISABLE_QMLGALLERY
     INSTALLS += target iconfile desktopfile
 
     target.path = /usr/bin
@@ -234,9 +234,18 @@ android {
     DEFINES += DISABLE_SCROLLBARS ENABLE_MOBILE_TWEAKS=true
 }
 win32 {
+    message("Puzzle Master is building for Windows")
+    DEPENDPATH += .
     TARGET = PuzzleMaster
-    DEFINES += HAVE_OPENGL FORCE_PLATFORM_FILE_DIALOG _USE_MATH_DEFINES _CRT_SECURE_NO_WARNINGS
-    RC_FILE = installables/puzzle-master.rc
+    DEFINES += HAVE_OPENGL _USE_MATH_DEFINES _CRT_SECURE_NO_WARNINGS
+    OTHER_FILES += windows/puzzle-master.ico
+    RC_ICONS = windows/puzzle-master.ico
+    lessThan(QT_MAJOR_VERSION, 5) {
+        message("Puzzle Master is building for Windows on Qt<5")
+        DEFINES += FORCE_PLATFORM_FILE_DIALOG
+    } else {
+        DEFINES -= FORCE_PLATFORM_FILE_DIALOG
+    }
 }
 blackberry {
     message("Building Puzzle Master for BlackBerry!")

@@ -26,6 +26,23 @@ Panel {
         imageChooser.close()
     }
 
+    function sanitizePath(path) {
+        path = decodeURI(path);
+
+        // Take care of some weird cases
+        if (/^file\:\/\/\/[A-Za-z]\:/.test(path)) {
+            // We're on Windows and the URI looks like file:///C:/whatever
+            // but, the C++ parts don't understand file:///, so remove it
+            path = path.substring("file:///".length);
+        }
+        else if (path.indexOf("file://") === 0) {
+            // We're possibly on a UNIX-like system and the URI looks like file:///home/user/whatever
+            // so we still need one / at the beginning of the path
+            path = path.substring("file://".length);
+        }
+        return path;
+    }
+
     property string selectedImagePath: ""
     property int columnNumber: 3
     property variant fileSelectorDialog: null
@@ -56,7 +73,7 @@ Panel {
                 selectorComponent = Qt.createComponent("GallerySelectorDialog.qml")
             }
             if (selectorComponent === null || selectorComponent.status === Component.Error || selectorComponent.status === Component.Null) {
-                console.log("GallerySelectorDialog could not be loaded! Adding custom images will not be possible.")
+                fileSelectorDialog = filePicker;
             }
             else {
                 fileSelectorDialog = selectorComponent.createObject(imageChooser)
@@ -331,8 +348,17 @@ Panel {
     Connections {
         target: fileSelectorDialog ? fileSelectorDialog : null
         onAccepted: {
-            if (appSettings.addCustomImage(decodeURI(fileSelectorDialog.selectedImagePath)))
-                imagesModel.insert(canAddCustomImage ? 1 : 0, { path: fileSelectorDialog.selectedImagePath })
+            var path = fileSelectorDialog.selectedImagePath || (fileSelectorDialog.fileUrl && fileSelectorDialog.fileUrl.toString()) || "";
+            if (path) {
+                path = sanitizePath(path);
+                console.log("Trying to add custom image", path);
+                if (appSettings.addCustomImage(path)) {
+                    imagesModel.insert(canAddCustomImage ? 1 : 0, { path: path });
+                }
+            }
+            else {
+                console.log("No custom image specified.")
+            }
         }
     }
     Connections {
