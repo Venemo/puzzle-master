@@ -64,6 +64,17 @@ Jesteś pewien, że chcesz kontynuować?</translation>
         <source>You have already added the selected image.</source>
         <translation>Już dodałeś wybrany obrazek.</translation>
     </message>
+    <message>
+        <source>Quit</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>Witaj! Wybierz obrazek.</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
@@ -237,6 +248,24 @@ Nie będziesz mógł jej kontynuować wtedy. Użyj &quot;Zobacz podpowiedź&quot
     <message>
         <source>Difficult</source>
         <translation>Trudne</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>Nie jest to zbyt trudne?</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>Wybrane opcje spowodują, że gra będzie BARDZO trudna.
+Jesteś pewien, że chcesz kontynuować?</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Tak</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nie</translation>
     </message>
 </context>
 </TS>

@@ -65,6 +65,17 @@ Are you sure to proceed?</source>
         <source>You have already added the selected image.</source>
         <translation>Έχετε ήδη προσθέσει την επιλεγμένη εικόνα.</translation>
     </message>
+    <message>
+        <source>Quit</source>
+        <translation>Αποχωρηση</translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>Καλώς ήρθατε! Επιλέξτε μια εικόνα.</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
@@ -238,6 +249,24 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     <message>
         <source>Difficult</source>
         <translation>Δύσκολα</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>Αυτό δεν είναι λίγο δύσκολο;</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>Οι επιλεγμένες επιλογές θα κάνουν το παιχνίδι πολύ δύσκολο.⏎
+Είστε σίγουρος ότι θελετε να προχωρήσετε;</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ναι</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Οχι</translation>
     </message>
 </context>
 </TS>

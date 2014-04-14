@@ -65,6 +65,17 @@ Are you sure to proceed?</source>
         <source>You have already added the selected image.</source>
         <translation>Вы уже добавили выбранную картинку</translation>
     </message>
+    <message>
+        <source>Quit</source>
+        <translation>Выйти</translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>Привет!Выбери картинку</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
@@ -238,6 +249,24 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     <message>
         <source>Difficult</source>
         <translation>Сложно</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>Не слишком ли сложно?</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>Вы выбрали ОЧЕНЬ сложный уровень.
+Вы уверенны?</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Да</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Нет</translation>
     </message>
 </context>
 </TS>

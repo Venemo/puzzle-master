@@ -65,6 +65,17 @@ Haluatko varmasti jatkaa?</translation>
         <source>You have already added the selected image.</source>
         <translation>Olet jo lisännyt halutun kuvan.</translation>
     </message>
+    <message>
+        <source>Quit</source>
+        <translation>Lopeta</translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>Tervetuloa! Valitse kuva.</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
@@ -238,6 +249,24 @@ Jos haluat vihjeen, paina &quot;Vihje!&quot; -nappulaa.</translation>
     <message>
         <source>Difficult</source>
         <translation>Vaikea</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>Eikö tämä ole vähän vaikea?</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>Valitut asetukset tekevät pelistä HYVIN vaikean.
+Haluatko varmasti jatkaa?</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Kyllä</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>En</translation>
     </message>
 </context>
 </TS>

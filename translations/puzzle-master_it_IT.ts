@@ -65,6 +65,17 @@ Sei sicuro di voler procedere?</translation>
         <source>You have already added the selected image.</source>
         <translation>Hai già aggiungo l&apos;immagine selezionata.</translation>
     </message>
+    <message>
+        <source>Quit</source>
+        <translation>Esci</translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>Benvenuto! Scegli una immagine.</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
@@ -238,6 +249,24 @@ Non potrai riprenderla dopo. Usa &quot;Chiedi un suggerimento!&quot; se hai biso
     <message>
         <source>Difficult</source>
         <translation>Difficile</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>Non è un po&apos; difficile?</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>Le opzioni selezionate renderanno il gioco MOLTO difficile.
+Sei sicuro di voler procedere?</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Sì</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>No</translation>
     </message>
 </context>
 </TS>

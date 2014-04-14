@@ -65,6 +65,17 @@ Weet je zeker dat je wilt doorgaan?</translation>
         <source>You have already added the selected image.</source>
         <translation>Je hebt de afbeelding al eerder toegevoegd.</translation>
     </message>
+    <message>
+        <source>Quit</source>
+        <translation>Stoppen</translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>Welkom! Kies een afbeelding.</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
@@ -239,6 +250,24 @@ Gebruik &quot;Krijg een Tip!&quot; als je vast zit.</translation>
     <message>
         <source>Difficult</source>
         <translation>Moeilijk</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>Is dit niet een beetje moeilijk?</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>De gekozen opties maken het spel ERG moeilijk.
+Weet je zeker dat je wilt doorgaan?</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation></translation>
     </message>
 </context>
 </TS>

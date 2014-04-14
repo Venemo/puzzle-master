@@ -65,6 +65,17 @@ Emin misiniz?</translation>
         <source>You have already added the selected image.</source>
         <translation>Seçilen resmi zaten eklediniz.</translation>
     </message>
+    <message>
+        <source>Quit</source>
+        <translation>Çıkış</translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>Hoşgeldin! Resim seç.</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
@@ -238,6 +249,24 @@ Bu şekilde devam edemezsin. &quot;Yardım al!&quot; seçmelisin.</translation>
     <message>
         <source>Difficult</source>
         <translation>Zor</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>Biraz zor gelmedi mi?</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>Bu seçilen ayar oyunu EPEY zorlaştıracaktır.
+Emin misiniz?</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Evet</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Hayır</translation>
     </message>
 </context>
 </TS>

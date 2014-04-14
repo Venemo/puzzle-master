@@ -65,6 +65,17 @@ Bạn có chắc là muốn tiếp tục không?</translation>
         <source>You have already added the selected image.</source>
         <translation>Bạn đã thêm vào hình ảnh trước đó.</translation>
     </message>
+    <message>
+        <source>Quit</source>
+        <translation>Thoát</translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>Hãy chọn một tấm hình.</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
@@ -238,6 +249,24 @@ Bạn sẽ không thể tiếp tục chơi tiếp màn chơi này. Click vào &q
     <message>
         <source>Difficult</source>
         <translation>Khó</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>Chẳng phải điều này sẽ khó khăn hơn sao?</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>Các tùy chỉnh được chọn sẽ làm màn chơi này trở nên RẤT khó.
+Bạn có chắc là muốn tiếp tục không?</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Đồng ý</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Không đồng ý</translation>
     </message>
 </context>
 </TS>

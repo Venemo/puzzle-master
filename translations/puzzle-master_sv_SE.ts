@@ -63,7 +63,18 @@ Are you sure to proceed?</source>
     </message>
     <message>
         <source>You have already added the selected image.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Avsluta</translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>Välkommen! Välj en bild.</translation>
     </message>
 </context>
 <context>
@@ -238,6 +249,24 @@ Du kan inte fortsätta senare. Använd &quot;Få en ledtråd&quot; om du behöve
     <message>
         <source>Difficult</source>
         <translation>Svårt</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>Är inte det här lite svårt?</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>Ditt valda alternativ kommer göra spelet VÄLDIGT svårt
+Är du säker att du vill fortsätta?</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nej</translation>
     </message>
 </context>
 </TS>

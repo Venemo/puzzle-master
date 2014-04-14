@@ -65,6 +65,17 @@ Opravdu chcete pokračovat?</translation>
         <source>You have already added the selected image.</source>
         <translation>Vybraný obrázek byl již přidán.</translation>
     </message>
+    <message>
+        <source>Quit</source>
+        <translation>Ukončit</translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>Vítejte! Vyberte si obrázek.</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
@@ -237,6 +248,24 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     <message>
         <source>Difficult</source>
         <translation>Složité</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>Trochu složité, ne?</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>Zvolené nastavení učiní hru VELMI obtížnou.
+Opravdu chcete pokračovat?</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ano</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Ne</translation>
     </message>
 </context>
 </TS>

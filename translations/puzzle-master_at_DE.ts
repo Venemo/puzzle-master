@@ -65,6 +65,17 @@ Sind Sie sicher, dass Sie fortfahren wollen?</translation>
         <source>You have already added the selected image.</source>
         <translation>Sie haben bereits das ausgewählte Bild hinzugefügt.</translation>
     </message>
+    <message>
+        <source>Quit</source>
+        <translation>Beenden</translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>Willkommen! Wählen Sie ein Bild aus.</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
@@ -238,6 +249,24 @@ Das Spiel kann dann nicht fortgesetzt werden. Verwenden Sie &quot;Holen Sie sich
     <message>
         <source>Difficult</source>
         <translation>Schwierig</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>Ist das nicht ein bisschen schwer?</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>Die ausgewählten Optionen machen das Spiel sehr schwierig.⏎
+Sind Sie sicher, dass Sie fortfahren wollen?</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nein</translation>
     </message>
 </context>
 </TS>

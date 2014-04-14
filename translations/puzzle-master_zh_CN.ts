@@ -62,6 +62,17 @@ Are you sure to proceed?</source>
         <source>You have already added the selected image.</source>
         <translation>你已经添加选定的图像</translation>
     </message>
+    <message>
+        <source>Quit</source>
+        <translation>离开</translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>欢迎你! 请选择图像. </translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
@@ -234,6 +245,23 @@ You can&apos;t continue it then. Use &quot;Get a hint!&quot; if you need a clue.
     <message>
         <source>Difficult</source>
         <translation>困难</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>这是不是有点困难？</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>这个选项将会让游戏变得非常困难。⏎ 你确定要继续吗？</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>是</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>否</translation>
     </message>
 </context>
 </TS>

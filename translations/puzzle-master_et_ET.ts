@@ -64,6 +64,17 @@ Are you sure to proceed?</source>
         <source>You have already added the selected image.</source>
         <translation>Sa oled valitud pildi juba lisanud.</translation>
     </message>
+    <message>
+        <source>Quit</source>
+        <translation>Lõpeta</translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>Tere tulemast! Vali pilt.</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
@@ -237,6 +248,23 @@ Sa ei saa seda seljuhul hiljem jätkata. Kui sa vajad abi, siis kasuta valikut &
     <message>
         <source>Difficult</source>
         <translation>Raske</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>Kas pole see mitte natuke raske?</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>Sinu poolt tehtud valikud teevad mängu VÄGA raskeks. Oled sa kindel, et soovid jätkata?</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Jah</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Ei</translation>
     </message>
 </context>
 </TS>

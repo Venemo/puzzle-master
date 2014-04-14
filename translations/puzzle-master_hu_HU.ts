@@ -65,6 +65,17 @@ Biztosan folytatod?</translation>
         <source>You have already added the selected image.</source>
         <translation>Már hozzáadtad a kiválasztott képet.</translation>
     </message>
+    <message>
+        <source>Quit</source>
+        <translation>Kilépés</translation>
+    </message>
+</context>
+<context>
+    <name>FileSelectorDialog</name>
+    <message>
+        <source>Welcome! Choose an image.</source>
+        <translation>Üdv! Válassz egy képet!</translation>
+    </message>
 </context>
 <context>
     <name>GallerySelectorDialog</name>
@@ -238,6 +249,24 @@ Ha feladod, már nem folytathatod. Ha tippet szeretnél, akkor válaszd az &quot
     <message>
         <source>Difficult</source>
         <translation>Nehéz</translation>
+    </message>
+    <message>
+        <source>Isn&apos;t this a bit difficult?</source>
+        <translation>Nem lesz ez egy kicsit nehéz?</translation>
+    </message>
+    <message>
+        <source>The selected options will make the game VERY difficult.
+Are you sure to proceed?</source>
+        <translation>A választott beállítások NAGYON nehézzé teszik a játékot.
+Biztosan folytatod?</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Igen</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nem</translation>
     </message>
 </context>
 </TS>
