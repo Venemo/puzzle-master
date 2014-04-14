@@ -6,6 +6,7 @@ Makefile
 
 # Qt Creator's stuff
 *.pro.user
+*.pro.user*
 qtc_packaging
 
 # Other generated files
