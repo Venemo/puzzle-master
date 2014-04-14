@@ -26,3 +26,13 @@ PuzzleMaster*.mmp
 *.pkg
 *.sis
 bld.inf
+
+# Sailfish OS SDK generated files
+RPMS/*
+debugfiles.list
+debuglinks.list
+debugsources.list
+documentation.list
+harbour-puzzle-master
+
+
