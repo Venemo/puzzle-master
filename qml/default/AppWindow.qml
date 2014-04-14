@@ -206,10 +206,12 @@ Rectangle {
     OptionsDialog {
         id: optionsDialog
         onAccepted: {
-            if (appSettings.rows >= 4 || appSettings.columns >= 6)
-                difficultyDialog.open()
-            else
-                imageChooser.startGame()
+            if (!appSettings.advancedMode && (appSettings.rows >= 4 || appSettings.columns >= 6)) {
+                difficultyDialog.open();
+            }
+            else {
+                imageChooser.startGame();
+            }
         }
     }
     Dialog {

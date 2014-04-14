@@ -55,7 +55,7 @@ Dialog {
                 id: columnsSlider
                 width: parent.width - 30
                 minValue: 2
-                maxValue: 8
+                maxValue: appSettings.advancedMode ? 15 : 8
                 value: appSettings.columns
             }
             Binding {
@@ -88,7 +88,7 @@ Dialog {
                 id: rowsSlider
                 width: parent.width - 30
                 minValue: 2
-                maxValue: 6
+                maxValue: appSettings.advancedMode ? 12 : 6
                 value: appSettings.rows
             }
             Binding {
@@ -141,6 +141,35 @@ Dialog {
         Item {
             height: 10 * uiScalingFactor
             width: 10
+        }
+    }
+    Button {
+        id: advancedDifficultyButton
+        anchors {
+            top: parent.top
+            topMargin: 7 * uiScalingFactor
+            right: parent.right
+            rightMargin: 7 * uiScalingFactor
+        }
+        width: 65 * uiScalingFactor
+        height: 45 * uiScalingFactor
+        text: "..."
+        onClicked: {
+            advancedDifficultyMessageDialog.open();
+        }
+        opacity: 0.7
+    }
+    Dialog {
+        id: advancedDifficultyMessageDialog
+        title: qsTr("Isn't this a bit difficult?")
+        text: qsTr("The selected options will make the game VERY difficult.\nAre you sure to proceed?")
+        acceptButtonText: qsTr("Yes")
+        rejectButtonText: qsTr("No")
+        onAccepted: {
+            appSettings.advancedMode = true;
+        }
+        onRejected: {
+            appSettings.advancedMode = false;
         }
     }
 }

@@ -41,6 +41,7 @@ class AppSettings : public QObject
     Q_PROPERTY(int rows READ rows WRITE setRows NOTIFY rowsChanged)
     Q_PROPERTY(int columns READ columns WRITE setColumns NOTIFY columnsChanged)
     Q_PROPERTY(int snapDifficulty READ snapDifficulty WRITE setSnapDifficulty NOTIFY snapDifficultyChanged)
+    Q_PROPERTY(bool advancedMode READ advancedMode WRITE setAdvancedMode NOTIFY advancedModeChanged)
 
     QSettings _backend;
 
@@ -51,6 +52,7 @@ public:
     SETTINGPROPERTY(int, columns, setColumns, columnsChanged, "columns", 3)
     SETTINGPROPERTY(int, snapDifficulty, setSnapDifficulty, snapDifficultyChanged, "snapDifficulty", 1)
     SETTINGPROPERTY(QByteArray, customImageListData, setCustomImageListData, customImageListDataChanged, "customImageListData", QByteArray())
+    SETTINGPROPERTY(bool, advancedMode, setAdvancedMode, advancedModeChanged, "advancedMode", false)
 
     Q_INVOKABLE QStringList loadCustomImages();
     Q_INVOKABLE bool addCustomImage(const QString &url);
@@ -61,6 +63,7 @@ signals:
     void rowsChanged();
     void columnsChanged();
     void snapDifficultyChanged();
+    void advancedModeChanged();
     void customImageListDataChanged();
     void customImageAlreadyAdded(const QString &url);
 

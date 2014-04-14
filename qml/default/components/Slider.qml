@@ -41,6 +41,13 @@ Rectangle {
         if (!sliderDragArea.pressed)
             adjustHandleX()
     }
+    onMaxValueChanged: {
+        if (value > maxValue)
+            value = maxValue
+        else if (!sliderDragArea.pressed)
+            adjustHandleX()
+    }
+
     onVisibleChanged: adjustHandleX()
 
     Rectangle {
