@@ -145,6 +145,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     qDebug() << Q_FUNC_INFO << "initialization took" << timer->elapsed() << "ms";
     timer->restart();
+    view->reportContentOrientationChange(Qt::LandscapeOrientation);
 
 #if defined(ROTATE_IN_QML)
     view->setSource(QUrl("qrc:/qml/default/RotatedAppWindow.qml"));
