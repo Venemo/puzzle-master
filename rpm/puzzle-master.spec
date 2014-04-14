@@ -1,5 +1,5 @@
 Name:           harbour-puzzle-master
-Version:        2.5.0
+Version:        2.5.2
 Release:        1%{?dist}
 Summary:        Fun jigsaw puzzle game
 
@@ -42,6 +42,8 @@ make INSTALL_ROOT=$RPM_BUILD_ROOT install
 %attr(644,root,root) %{_datadir}/icons/hicolor/86x86/apps/%{name}.png
 
 %changelog
+* Mon Apr 14 2014 Timur Kristóf <venemo@fedoraproject.org> 2.5.1-1
+- Added advanced difficulty mode
 * Tue Dec 10 2013 Timur Kristóf <venemo@fedoraproject.org> 2.5.0-1
 - Sailfish release
 

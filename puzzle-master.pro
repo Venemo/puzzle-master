@@ -66,7 +66,7 @@ lessThan(QT_MAJOR_VERSION, 5) {
 
 TARGET = puzzle-master
 TEMPLATE = app
-VERSION = 2.5.0
+VERSION = 2.5.2
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 RESOURCES += \
