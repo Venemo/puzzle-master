@@ -71,8 +71,25 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 RESOURCES += \
     translations.qrc \
-    pics-original.qrc \
-    background.qrc
+    background.qrc \
+    pics/pic01.qrc \
+    pics/pic02.qrc \
+    pics/pic03.qrc \
+    pics/pic04.qrc \
+    pics/pic05.qrc \
+    pics/pic06.qrc \
+    pics/pic07.qrc \
+    pics/pic08.qrc \
+    pics/pic09.qrc \
+    pics/pic10.qrc \
+    pics/pic11.qrc \
+    pics/pic12.qrc \
+    pics/pic13.qrc \
+    pics/pic14.qrc \
+    pics/pic15.qrc \
+    pics/pic16.qrc \
+    pics/pic17.qrc \
+    pics/pic18.qrc \
 
 TRANSLATIONS += \
     translations/puzzle-master_at_DE.ts \
@@ -101,8 +118,8 @@ OTHER_FILES += \
     README.md \
     installables/puzzle-master-harmattan.desktop \
     installables/puzzle-master-applauncherd.desktop \
-    qml/default/RotatedAppWindow.qml \
-    android/AndroidManifest.xml
+    android/AndroidManifest.xml \
+    rpm/puzzle-master.spec
 
 # Qt4 default UI
 
@@ -135,10 +152,12 @@ OTHER_FILES += \
     qml/default/components/style/GreenButtonStyle.qml \
     qml/default/components/style/RedButtonStyle.qml \
     qml/default/AppWindow.qml \
+    qml/default/RotatedAppWindow.qml \
     qml/default/ImageChooser.qml \
     qml/default/GameBoard.qml \
     qml/default/OptionsDialog.qml \
     qml/default/GallerySelectorDialog.qml \
+    qml/default/FileSelectorDialog.qml \
     qml/default/components/VerticalSlider.qml \
     qml/default/components/VerticalScrollBar.qml \
     qml/default/components/MenuButton.qml \
@@ -166,6 +185,12 @@ contains(DEFINES, PUZZLE_MASTER_SAILFISH) {
     # Resources:
     # https://harbour.jolla.com/faq
     # https://sailfishos.org/wiki/Porting/Harmattan
+
+    # NOTE:
+    # the PUZZLE_MASTER_SAILFISH macro is defined in the .spec file;
+    # if you just want to launch it by copying binaries,
+    # put the following into the qmake arguments in the project settings:
+    #     DEFINES+=PUZZLE_MASTER_SAILFISH -after INSTALLS=target
 
     # Remove all desktop defines
     DEFINES -= HAVE_OPENGL DISABLE_QMLGALLERY FORCE_PLATFORM_FILE_DIALOG

@@ -17,7 +17,6 @@
 // Copyright (C) 2010-2013, Timur Kristóf <venemo@fedoraproject.org>
 
 import QtQuick 2.0
-import QtQuick.Dialogs 1.0
 import net.venemo.puzzlemaster 2.0
 import "./components"
 import "./components/style"
@@ -29,6 +28,7 @@ Rectangle {
     id: appWindow
 
     property bool filePickerOnStart: false
+    property variant filePicker: null
 
     function pathToUrl(path) {
         var newurl = path;
@@ -45,66 +45,78 @@ Rectangle {
         return newurl;
     }
 
-    Component.onCompleted: {
-        // Parse command line parameters, if any
+    // Loads the file picker
+    function loadFilePicker() {
+        // Check if it's already loaded
+        if (typeof(filePicker) !== "undefined" && filePicker !== null) {
+            console.log("AppWindow: filePicker is already loaded");
+            return;
+        }
 
-        if (Qt.application.arguments.length <= 1) {
-            // No command-line arguments
-            imageChooser.visible = true;
+        // Try to load it
+        console.log("AppWindow: trying to load FileSelectorDialog");
+        var selectorComponent = Qt.createComponent("FileSelectorDialog.qml");
+        if (selectorComponent === null || selectorComponent.status === Component.Error || selectorComponent.status === Component.Null) {
+            console.log("Can't load FileSelectorDialog");
         }
         else {
-            appWindow.filePickerOnStart = (Qt.application.arguments.indexOf("--filepicker-on-start") >= 0);
-
-            // Rows
-            var iRows = Qt.application.arguments.indexOf("--rows");
-            if (iRows >= 0) {
-                var rows = parseInt(Qt.application.arguments[iRows + 1]);
-                if (isNaN(rows)) {
-                    rows = 3;
-                }
-                appSettings.rows = rows;
-            }
-
-            // Columns
-            var iCols = Qt.application.arguments.indexOf("--cols");
-            if (iCols >= 0) {
-                var cols = parseInt(Qt.application.arguments[iCols + 1]);
-                if (isNaN(cols)) {
-                    cols = 3;
-                }
-                appSettings.columns = cols;
-            }
-
-            if (appWindow.filePickerOnStart) {
-                // Show a file picker on start, instead of the start screen
-                // NOTE: This feature can NOT be backported to the Qt4 version without serious hassle.
-                filePicker.open();
-            }
-            else {
-                imageChooser.visible = true;
-            }
+            filePicker = selectorComponent.createObject(appWindow);
+            filePicker.appWindow = appWindow;
+            filePicker.imageChooser = imageChooser;
+            filePicker.gameBoard = gameBoard;
         }
     }
 
-    FileDialog {
-        id: filePicker
-        title: qsTr("Welcome! Choose an image.")
-        nameFilters: [ "Image files (*.jpg *.jpeg *.png *.bmp)", "All files (*)" ]
-        onAccepted: {
-            appEventHandler.activateAppWindow();
-
-            if (appWindow.filePickerOnStart) {
-                var url = imageChooser.sanitizePath(filePicker.fileUrl.toString());
-                imageChooser.selectedImagePath = url;
-                gameBoard.open();
-                gameBoard.play();
-            }
+    // Parses command line arguments: returns true if file picker should be shown
+    function parseCommandLine() {
+        if (Qt.application.arguments.length <= 1) {
+            return false;
         }
-        onRejected: {
-            if (appWindow.filePickerOnStart) {
-                console.log("User didn't choose an image, quitting.");
+
+        // Whether to show filepicker on start
+        appWindow.filePickerOnStart = (Qt.application.arguments.indexOf("--filepicker-on-start") >= 0);
+
+        // Rows
+        var iRows = Qt.application.arguments.indexOf("--rows");
+        if (iRows >= 0) {
+            var rows = parseInt(Qt.application.arguments[iRows + 1]);
+            appSettings.rows = isNaN(rows) ? 3 : rows;
+        }
+
+        // Columns
+        var iCols = Qt.application.arguments.indexOf("--cols");
+        if (iCols >= 0) {
+            var cols = parseInt(Qt.application.arguments[iCols + 1]);
+            appSettings.columns = isNaN(cols) ? 3 : cols;
+        }
+
+        if (appWindow.filePickerOnStart) {
+            loadFilePicker();
+            if (filePicker === null) {
+                console.log("Can't show file picker, quitting.");
                 Qt.quit();
+                return false;
             }
+            return true;
+        }
+        return false;
+    }
+
+    Component.onCompleted: {
+        // Check if ImageChooser has a picker component
+        if (typeof(imageChooser.fileSelectorDialog) === "undefined" || imageChooser.fileSelectorDialog === null) {
+            loadFilePicker();
+            imageChooser.fileSelectorDialog = filePicker;
+        }
+
+        // Parse command line parameters, if any
+        if (parseCommandLine()) {
+            // command-line arguments tell that we should start with a file picker
+            filePicker.open();
+        }
+        else {
+            // No command-line arguments
+            imageChooser.visible = true;
         }
     }
 

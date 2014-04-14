@@ -54,6 +54,26 @@ Panel {
     color: "#a909a7"
     radius: 15
 
+    onCanAddCustomImageChanged: {
+        var addImageItem = null;
+
+        for (var i = 0; i < imagesModel.count; i++) {
+            var item = imagesModel.get(i);
+            if (item.specialThing === "add-image" && item.isBuiltIn === true) {
+                console.log("aaaa");
+                addImageItem = item;
+                break;
+            }
+        }
+
+        if (canAddCustomImage && addImageItem === null) {
+            imagesModel.insert(0, { path: ":/pics/add-image.png", specialThing: "add-image", isBuiltIn: true });
+        }
+        else if (!canAddCustomImage && addImageItem !== null) {
+            imagesModel.remove(0, 1);
+        }
+    }
+
     Keys.onEscapePressed: {
         if (areYouSureToQuitDialog.visible)
             areYouSureToQuitDialog.close();
@@ -202,9 +222,6 @@ Panel {
                 id: imagesModel
                 Component.onCompleted: {
                     // These are the built-in images
-                    if (canAddCustomImage) {
-                        imagesModel.append({ path: ":/pics/add-image.png", specialThing: "add-image", isBuiltIn: true });
-                    }
                     imagesModel.append({ path: ":/pics/image1.jpg", isBuiltIn: true });
                     imagesModel.append({ path: ":/pics/image4.jpg", isBuiltIn: true });
                     imagesModel.append({ path: ":/pics/image16.jpg", isBuiltIn: true });
@@ -269,8 +286,8 @@ Panel {
                             if (appEventHandler.showPlatformFileDialog()) {
                                 appEventHandler.displayPlatformFileDialog();
                             }
-                            else {
-                                fileSelectorDialog.open()
+                            else if (typeof(fileSelectorDialog) !== 'undefined' && fileSelectorDialog !== null) {
+                                fileSelectorDialog.open();
                             }
                         }
                         else {
