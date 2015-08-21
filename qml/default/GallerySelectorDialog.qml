@@ -43,7 +43,7 @@ Dialog
         cellWidth: imageSelectorGrid.width / 4 - 5
         cellHeight: imageSelectorGrid.cellWidth / fileSelectorDialog.width * fileSelectorDialog.height
         width: fileSelectorDialog.width * 4 / 5
-        height: fileSelectorDialog.height - 160
+        height: (fileSelectorDialog.height - 160) / uiScalingFactor
         clip: true
         focus: true
         cacheBuffer: imageSelectorGrid.height / 2
