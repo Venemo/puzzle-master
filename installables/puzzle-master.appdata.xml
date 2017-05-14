@@ -1,44 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-​<!-- Copyright 2017 Timur Kristóf <venemo@fedoraproject.org> -->
-​<component type="desktop-application">
-​  <id>net.venemo.puzzle-master</id>
-​  <metadata_license>FSFAP</metadata_license>
-​  <project_license>GPL-2.0+</project_license>
-​  <name>Puzzle Master</name>
-​  <summary>Fun jigsaw puzzle game</summary>
-​
-​  <description>
-​    <p>
+<component type="desktop-application">
+  <id>puzzle-master.desktop</id>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+  <developer_name>Timur Kristóf</developer_name>
+  ​<update_contact>venemo@fedoraproject.org</update_contact>
+  <name>Puzzle Master</name>
+  <summary>Fun jigsaw puzzle game</summary>
+  
+  <translation></translation>
+
+  <description>
+    <p>
       Play with your own pictures as jigsaw puzzles. It's very easy to use, simple to play, and it's a lot of fun! Adjust the size and difficulty of the puzzle. The goal is to assemble the selected picture by dragging the matching pieces to each other. Rotate any piece with a multitouch gesture. Matching pieces will snap together when you move them close enough.
 
       NOTICE: The developer doesn't take responsibility for user-added content.
-​    </p>
-​  </description>
-​
-​  <launchable type="desktop-id">puzzle-master.desktop</launchable>
-​
-​  <screenshots>
-​    <screenshot type="default">
-​      <caption>Welcome screen</caption>
-​      <image>https://github.com/Venemo/puzzle-master/releases/download/v2.5.2/scr1.jpg</image>
-​    </screenshot>
-​    <screenshot>
-​      <caption>In-game</caption>
-​      <image>https://github.com/Venemo/puzzle-master/releases/download/v2.5.2/scr2.jpg</image>
-​    </screenshot>
-​  </screenshots>
-​
-​  <url type="homepage">https://github.com/Venemo/puzzle-master</url>
-​
-​  <provides>
-​    <binary>puzzle-master</binary>
-​  </provides>
-​
-​  <releases>
-​    <release version="2.5.3" date="2017-05-14">
-​      <description>
-​        <p>puzzle-master now appears in gnome-software</p>
-​      </description>
-​    </release>
-​  </releases>
-​</component>
+    </p>
+  </description>
+
+  <launchable type="desktop-id">puzzle-master.desktop</launchable>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>Welcome screen</caption>
+      <image>https://github.com/Venemo/puzzle-master/releases/download/v2.5.2/scr1.jpg</image>
+    </screenshot>
+    <screenshot>
+      <caption>In-game picture</caption>
+      <image>https://github.com/Venemo/puzzle-master/releases/download/v2.5.2/scr2.jpg</image>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://github.com/Venemo/puzzle-master</url>
+
+  <provides>
+    <binary>puzzle-master</binary>
+  </provides>
+
+  <releases>
+    <release version="2.5.3" date="2017-05-14">
+      <description>
+        <p>Play with your own pictures as jigsaw puzzles. This release brings improved look, feel and performance.</p>
+      </description>
+    </release>
+  </releases>
+</component>
