@@ -3,6 +3,7 @@ Encoding=UTF-8
 Version=1.0
 Type=Application
 Name=PuzzleMaster
+Comment=Fun jigsaw puzzle game
 Icon=/usr/share/icons/hicolor/scalable/apps/puzzle-master.svg
 Exec=/usr/bin/puzzle-master
 Categories=Game;LogicGame;

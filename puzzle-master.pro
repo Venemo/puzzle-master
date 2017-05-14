@@ -118,6 +118,7 @@ OTHER_FILES += \
     README.md \
     installables/puzzle-master-harmattan.desktop \
     installables/puzzle-master-applauncherd.desktop \
+    installables/puzzle-master.appdata.xml \
     android/AndroidManifest.xml \
     rpm/puzzle-master.spec
 
@@ -171,13 +172,15 @@ unix:!symbian {
         QMAKE_LFLAGS += -pie -rdynamic
     }
     DEFINES += HAVE_OPENGL DISABLE_QMLGALLERY
-    INSTALLS += target iconfile desktopfile
+    INSTALLS += target iconfile desktopfile appdatafile
 
     target.path = /usr/bin
     iconfile.path = /usr/share/icons/hicolor/scalable/apps
     iconfile.files = installables/puzzle-master.svg
     desktopfile.path = /usr/share/applications
     desktopfile.files = installables/puzzle-master.desktop
+    appdatafile.path = /usr/share/appdata
+    appdatafile.files = installables/puzzle-master.appdata.xml
 }
 contains(DEFINES, PUZZLE_MASTER_SAILFISH) {
     message("Puzzle Master is building for Sailfish")
